@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operadores en Programación · Clase Interactiva</title>
+<style>
+  :root{
+    --bg:#0f1720; --panel:#18222e; --panel2:#1f2c3a; --ink:#e8eef5; --muted:#9fb0c3;
+    --line:#2b3a4d; --accent:#4fd1c5; --accent2:#7c9cff; --good:#48d597; --bad:#ff7a7a;
+    --warn:#ffcf6b; --chip:#243447;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(160deg,#0f1720,#111c27);color:var(--ink);line-height:1.55;}
+  header{padding:28px 22px 18px;text-align:center;border-bottom:1px solid var(--line);
+    background:radial-gradient(1200px 300px at 50% -60px,rgba(79,209,197,.15),transparent);}
+  header h1{margin:0 0 6px;font-size:clamp(1.35rem,3.4vw,2.1rem);letter-spacing:.3px}
+  header p{margin:0;color:var(--muted);font-size:.95rem}
+  .badges{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .badge{background:var(--chip);border:1px solid var(--line);border-radius:999px;
+    padding:4px 12px;font-size:.78rem;color:var(--muted)}
+  .wrap{max-width:960px;margin:0 auto;padding:18px 16px 60px}
+  nav.tabs{position:sticky;top:0;z-index:10;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;
+    padding:12px 6px;background:rgba(15,23,32,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.tabs button{background:var(--panel);color:var(--ink);border:1px solid var(--line);
+    padding:9px 16px;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:600;transition:.15s}
+  nav.tabs button:hover{border-color:var(--accent)}
+  nav.tabs button.active{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border-color:transparent}
+  section.tab{display:none;animation:fade .25s ease}
+  section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2{font-size:1.3rem;margin:26px 0 10px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:1.05rem;margin:20px 0 8px;color:var(--accent)}
+  p{color:#d5deea}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .note{background:rgba(255,207,107,.08);border:1px solid rgba(255,207,107,.35);border-radius:12px;
+    padding:12px 14px;margin:14px 0;font-size:.92rem}
+  .note b{color:var(--warn)}
+  code,.mono{font-family:"SF Mono",Consolas,Menlo,monospace}
+  pre{background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;
+    font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.88rem;color:#d7e3f0}
+  .tok-op{color:var(--accent)} .tok-num{color:var(--accent2)} .tok-com{color:#6f8194;font-style:italic}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.9rem;overflow:hidden;border-radius:12px}
+  th,td{padding:9px 10px;border:1px solid var(--line);text-align:center}
+  th{background:var(--panel2);color:var(--accent);font-weight:700}
+  td:first-child,th:first-child{text-align:left}
+  tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+  td.mono{font-family:"SF Mono",Consolas,monospace;color:var(--accent)}
+  .col-hl{background:rgba(79,209,197,.16)!important;outline:2px solid rgba(79,209,197,.5)}
+  .langbar{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px}
+  .langbar button{background:var(--chip);color:var(--ink);border:1px solid var(--line);
+    padding:7px 14px;border-radius:9px;cursor:pointer;font-weight:600;font-size:.85rem}
+  .langbar button.on{background:var(--accent2);color:#0a1330;border-color:transparent}
+  details{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:10px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--accent)}
+  details[open]{border-color:var(--accent)}
+  /* precedence visualizer */
+  .prec-box{text-align:center}
+  .expr{font-family:"SF Mono",Consolas,monospace;font-size:1.15rem;background:#0c141d;border:1px solid var(--line);
+    border-radius:12px;padding:16px;margin:10px 0;letter-spacing:1px;min-height:56px}
+  .steps{text-align:left;margin:10px 0}
+  .step{background:var(--panel2);border:1px solid var(--line);border-left:4px solid var(--accent);
+    border-radius:8px;padding:8px 12px;margin:8px 0;font-family:monospace;font-size:.9rem;
+    opacity:0;transform:translateX(-8px);transition:.3s}
+  .step.show{opacity:1;transform:none}
+  .step b{color:var(--warn)}
+  .btn{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border:none;
+    padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.92rem}
+  .btn.ghost{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+  .btn:active{transform:translateY(1px)}
+  /* quiz */
+  .scorebar{position:sticky;top:56px;z-index:5;display:flex;justify-content:space-between;align-items:center;
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:12px 0}
+  .scorebar b{color:var(--accent);font-size:1.1rem}
+  .q{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:16px 0}
+  .q h4{margin:0 0 4px;font-size:1rem}
+  .q .tag{font-size:.75rem;color:#06231f;background:var(--accent);padding:2px 9px;border-radius:999px;font-weight:700}
+  .line{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:12px 0;padding:10px;
+    background:#0c141d;border:1px solid var(--line);border-radius:10px}
+  .line code{flex:1;min-width:160px;font-size:.9rem;color:#d7e3f0}
+  .opts{display:flex;gap:6px;flex-wrap:wrap}
+  .opt{background:var(--chip);border:1px solid var(--line);color:var(--ink);padding:6px 12px;border-radius:8px;
+    cursor:pointer;font-family:monospace;font-size:.85rem;transition:.12s}
+  .opt:hover{border-color:var(--accent)}
+  .opt.correct{background:var(--good);color:#052b1c;border-color:transparent;font-weight:700}
+  .opt.wrong{background:var(--bad);color:#2b0505;border-color:transparent}
+  .opt.locked{pointer-events:none;opacity:.9}
+  .feedback{margin-top:8px;font-size:.85rem;color:var(--muted);min-height:1.2em}
+  .feedback.ok{color:var(--good)} .feedback.no{color:var(--bad)}
+  footer{text-align:center;color:var(--muted);font-size:.82rem;padding:24px 12px;border-top:1px solid var(--line)}
+  .tt{width:100%;font-size:.9rem}
+  .cell-v{color:var(--good);font-weight:700}.cell-f{color:var(--bad);font-weight:700}
+</style>
+</head>
+<body>
+<header>
+  <h1>⚙️ Operadores en Programación</h1>
+  <p>Aritméticos · Relacionales · Lógicos — y su precedencia</p>
+  <div class="badges">
+    <span class="badge">Lógica de Programación 1</span>
+    <span class="badge">60 min</span>
+    <span class="badge">PseInt · Python · C++ · Java</span>
+    <span class="badge">Clase interactiva</span>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="active" data-tab="teoria">📘 Teoría</button>
+  <button data-tab="tablas">📊 Tablas</button>
+  <button data-tab="precedencia">🎯 Precedencia</button>
+  <button data-tab="retos">🏆 5 Retos</button>
+  <button data-tab="pro">🔥 Precedencia Pro</button>
+</nav>
+
+<div class="wrap">
+
+<!-- ================= TEORÍA ================= -->
+<section class="tab active" id="teoria">
+  <h2>¿Qué es un operador?</h2>
+  <p>Un <b>operador</b> es un símbolo que le dice al computador que realice una <b>operación</b> sobre unos valores llamados <b>operandos</b>. El resultado es siempre un nuevo valor.</p>
+  <pre>   5     <span class="tok-op">+</span>     3        →      8
+operando  operador  operando       resultado</pre>
+  <div class="card">
+    Los agrupamos en <b>tres familias</b> según lo que producen:
+    <ul>
+      <li><b>Aritméticos</b> → producen un <b>número</b> (sumar, dividir…).</li>
+      <li><b>Relacionales</b> → producen <b>Verdadero / Falso</b> (comparan).</li>
+      <li><b>Lógicos</b> → combinan Verdadero/Falso con <b>y / o / no</b>.</li>
+    </ul>
+  </div>
+
+  <h3>Aritméticos</h3>
+  <p>Hacen cálculos numéricos. La única trampa para principiantes es la <b>división</b>: separar la división con decimales de la división entera y el residuo (módulo).</p>
+  <pre><span class="tok-num">7</span> <span class="tok-op">/</span>  <span class="tok-num">2</span>  → 3.5   <span class="tok-com"># división real</span>
+<span class="tok-num">7</span> <span class="tok-op">//</span> <span class="tok-num">2</span>  → 3     <span class="tok-com"># división entera</span>
+<span class="tok-num">7</span> <span class="tok-op">%</span>  <span class="tok-num">2</span>  → 1     <span class="tok-com"># módulo (residuo)</span></pre>
+
+  <h3>Relacionales</h3>
+  <p>Comparan dos valores y <b>siempre</b> devuelven Verdadero o Falso. Son la base de las decisiones que verás con el <code>Si… Entonces</code>.</p>
+  <div class="note"><b>¡Error clásico!</b> <code>=</code> <b>asigna</b> (guardar un valor); <code>==</code> <b>compara</b> (preguntar si son iguales). En Python, C++ y Java comparar es siempre <code>==</code>.</div>
+
+  <h3>Lógicos</h3>
+  <p>Conectan condiciones como en el lenguaje natural:</p>
+  <div class="card">
+    <b>Y (AND):</b> verdadero solo si <b>ambas</b> son verdaderas — <i>"tengo dinero <b>y</b> hay boletos".</i><br>
+    <b>O (OR):</b> verdadero si <b>al menos una</b> lo es — <i>"es sábado <b>o</b> es domingo".</i><br>
+    <b>NO (NOT):</b> invierte el valor — <i>"<b>no</b> está lloviendo".</i>
+  </div>
+  <h3>Tablas de verdad</h3>
+  <table class="tt">
+    <thead><tr><th>A</th><th>B</th><th>A Y B</th><th>A O B</th></tr></thead>
+    <tbody>
+      <tr><td>V</td><td>V</td><td class="cell-v">V</td><td class="cell-v">V</td></tr>
+      <tr><td>V</td><td>F</td><td class="cell-f">F</td><td class="cell-v">V</td></tr>
+      <tr><td>F</td><td>V</td><td class="cell-f">F</td><td class="cell-v">V</td></tr>
+      <tr><td>F</td><td>F</td><td class="cell-f">F</td><td class="cell-f">F</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================= TABLAS ================= -->
+<section class="tab" id="tablas">
+  <h2>Tablas comparativas de operadores</h2>
+  <p>Resalta un lenguaje para ver su columna. La <b>idea</b> del operador es la misma; solo cambia el símbolo.</p>
+  <div class="langbar" id="langbar">
+    <button data-lang="1" class="on">Resaltar: PseInt</button>
+    <button data-lang="2">Python</button>
+    <button data-lang="3">C++</button>
+    <button data-lang="4">Java</button>
+    <button data-lang="0" class="ghostbtn">Quitar</button>
+  </div>
+
+  <h3>Aritméticos</h3>
+  <table class="optable">
+    <thead><tr><th>Operación</th><th data-c="1">PseInt</th><th data-c="2">Python</th><th data-c="3">C++</th><th data-c="4">Java</th><th>Ejemplo</th></tr></thead>
+    <tbody>
+      <tr><td>Suma</td><td class="mono" data-c="1">+</td><td class="mono" data-c="2">+</td><td class="mono" data-c="3">+</td><td class="mono" data-c="4">+</td><td>5 + 3 → 8</td></tr>
+      <tr><td>Resta</td><td class="mono" data-c="1">-</td><td class="mono" data-c="2">-</td><td class="mono" data-c="3">-</td><td class="mono" data-c="4">-</td><td>5 - 3 → 2</td></tr>
+      <tr><td>Multiplicación</td><td class="mono" data-c="1">*</td><td class="mono" data-c="2">*</td><td class="mono" data-c="3">*</td><td class="mono" data-c="4">*</td><td>5 * 3 → 15</td></tr>
+      <tr><td>División real</td><td class="mono" data-c="1">/</td><td class="mono" data-c="2">/</td><td class="mono" data-c="3">/ *</td><td class="mono" data-c="4">/ *</td><td>7 / 2 → 3.5</td></tr>
+      <tr><td>División entera</td><td class="mono" data-c="1">—</td><td class="mono" data-c="2">//</td><td class="mono" data-c="3">/ (enteros)</td><td class="mono" data-c="4">/ (enteros)</td><td>7 // 2 → 3</td></tr>
+      <tr><td>Módulo (residuo)</td><td class="mono" data-c="1">MOD / %</td><td class="mono" data-c="2">%</td><td class="mono" data-c="3">%</td><td class="mono" data-c="4">%</td><td>7 % 2 → 1</td></tr>
+      <tr><td>Potencia</td><td class="mono" data-c="1">^</td><td class="mono" data-c="2">**</td><td class="mono" data-c="3">pow() **</td><td class="mono" data-c="4">Math.pow() **</td><td>2 ** 3 → 8</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><b>*</b> En C++/Java, dividir dos <b>enteros</b> con <code>/</code> da división entera (7/2 → 3). Para 3.5 un operando debe ser decimal (7.0/2). &nbsp; <b>**</b> C++/Java <b>no</b> tienen operador de potencia: usan <code>pow()</code>.</div>
+
+  <h3>Relacionales</h3>
+  <table class="optable">
+    <thead><tr><th>Operación</th><th data-c="1">PseInt</th><th data-c="2">Python</th><th data-c="3">C++</th><th data-c="4">Java</th><th>Ejemplo</th></tr></thead>
+    <tbody>
+      <tr><td>Igual a</td><td class="mono" data-c="1">=</td><td class="mono" data-c="2">==</td><td class="mono" data-c="3">==</td><td class="mono" data-c="4">==</td><td>edad == 18</td></tr>
+      <tr><td>Distinto de</td><td class="mono" data-c="1">&lt;&gt;</td><td class="mono" data-c="2">!=</td><td class="mono" data-c="3">!=</td><td class="mono" data-c="4">!=</td><td>edad != 20</td></tr>
+      <tr><td>Mayor que</td><td class="mono" data-c="1">&gt;</td><td class="mono" data-c="2">&gt;</td><td class="mono" data-c="3">&gt;</td><td class="mono" data-c="4">&gt;</td><td>nota &gt; 60</td></tr>
+      <tr><td>Menor que</td><td class="mono" data-c="1">&lt;</td><td class="mono" data-c="2">&lt;</td><td class="mono" data-c="3">&lt;</td><td class="mono" data-c="4">&lt;</td><td>nota &lt; 60</td></tr>
+      <tr><td>Mayor o igual</td><td class="mono" data-c="1">&gt;=</td><td class="mono" data-c="2">&gt;=</td><td class="mono" data-c="3">&gt;=</td><td class="mono" data-c="4">&gt;=</td><td>edad &gt;= 18</td></tr>
+      <tr><td>Menor o igual</td><td class="mono" data-c="1">&lt;=</td><td class="mono" data-c="2">&lt;=</td><td class="mono" data-c="3">&lt;=</td><td class="mono" data-c="4">&lt;=</td><td>stock &lt;= 0</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Lógicos</h3>
+  <table class="optable">
+    <thead><tr><th>Operación</th><th data-c="1">PseInt</th><th data-c="2">Python</th><th data-c="3">C++</th><th data-c="4">Java</th><th>Idea</th></tr></thead>
+    <tbody>
+      <tr><td>Y (AND)</td><td class="mono" data-c="1">Y / &amp;</td><td class="mono" data-c="2">and</td><td class="mono" data-c="3">&amp;&amp;</td><td class="mono" data-c="4">&amp;&amp;</td><td>ambas verdaderas</td></tr>
+      <tr><td>O (OR)</td><td class="mono" data-c="1">O / |</td><td class="mono" data-c="2">or</td><td class="mono" data-c="3">||</td><td class="mono" data-c="4">||</td><td>al menos una</td></tr>
+      <tr><td>NO (NOT)</td><td class="mono" data-c="1">NO / ~</td><td class="mono" data-c="2">not</td><td class="mono" data-c="3">!</td><td class="mono" data-c="4">!</td><td>invierte el valor</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ================= PRECEDENCIA ================= -->
+<section class="tab" id="precedencia">
+  <h2>Precedencia: ¿quién va primero?</h2>
+  <p>Con varios operadores, el computador sigue un <b>orden de prioridad</b> (como en matemáticas: primero multiplicas, luego sumas).</p>
+  <table>
+    <thead><tr><th>Prioridad</th><th>Operadores</th><th>Grupo</th></tr></thead>
+    <tbody>
+      <tr><td>1 (alta)</td><td class="mono">( )</td><td>Paréntesis</td></tr>
+      <tr><td>2</td><td class="mono">**</td><td>Potencia</td></tr>
+      <tr><td>3</td><td class="mono">+x  -x</td><td>Signo</td></tr>
+      <tr><td>4</td><td class="mono">*  /  //  %</td><td>Multiplicativos</td></tr>
+      <tr><td>5</td><td class="mono">+  -</td><td>Aditivos</td></tr>
+      <tr><td>6</td><td class="mono">&lt; &lt;= &gt; &gt;= == !=</td><td>Relacionales</td></tr>
+      <tr><td>7</td><td class="mono">not</td><td>Negación</td></tr>
+      <tr><td>8</td><td class="mono">and</td><td>Conjunción</td></tr>
+      <tr><td>9 (baja)</td><td class="mono">or</td><td>Disyunción</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><b>Regla de oro:</b> primero lo <b>aritmético</b>, luego se <b>compara</b>, y al final se <b>razona</b> con lógicos (<code>not → and → or</code>). Los <b>paréntesis siempre mandan</b>.</div>
+
+  <h3>Visualizador paso a paso</h3>
+  <p>Pulsa "Siguiente paso" para ver cómo se evalúa la expresión en orden de prioridad.</p>
+  <div class="card prec-box">
+    <div class="expr" id="expr">2 + 3 * 4 &gt; 10 and not False</div>
+    <div class="steps" id="steps"></div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px">
+      <button class="btn" id="nextStep">Siguiente paso ▶</button>
+      <button class="btn ghost" id="resetStep">Reiniciar</button>
+    </div>
+  </div>
+  <details>
+    <summary>Asociatividad: el caso especial de la potencia</summary>
+    <pre>10 - 4 - 3   → 3   <span class="tok-com"># izq→der: (10-4)-3</span>
+2 ** 3 ** 2  → 512 <span class="tok-com"># der→izq: 2 ** (3**2) = 2**9</span></pre>
+  </details>
+</section>
+
+<!-- ================= RETOS ================= -->
+<section class="tab" id="retos">
+  <h2>🏆 Torneo de predicciones</h2>
+  <p>Para cada línea, <b>predice el resultado</b> y toca la opción que crees correcta. El código está verificado en Python real.</p>
+  <div class="scorebar">
+    <span>Puntaje: <b id="score">0</b> / <b id="total">15</b></span>
+    <button class="btn ghost" id="resetQuiz">Reiniciar torneo</button>
+  </div>
+  <div id="quiz"></div>
+  <div class="card" id="finalMsg" style="display:none;text-align:center"></div>
+</section>
+
+<!-- ================= PRECEDENCIA PRO ================= -->
+<section class="tab" id="pro">
+  <h2>🔥 Precedencia Pro — 10 retos de dificultad creciente</h2>
+  <p>Solo <b>precedencia y asociatividad</b> en Python. Predice el resultado de cada expresión y toca tu respuesta. Del Nivel 1 (aritmética simple) al Nivel 4 (jefe final).</p>
+  <div class="note">Prioridad: <code>()</code> → <code>**</code> → signo <code>-x</code> → <code>* / // %</code> → <code>+ -</code> → relacionales → <code>not</code> → <code>and</code> → <code>or</code>. Empates izq→der, <b>menos <code>**</code> que es der→izq</b>.</div>
+  <div class="scorebar">
+    <span>Puntaje: <b id="score2">0</b> / <b id="total2">10</b></span>
+    <button class="btn ghost" id="resetQuiz2">Reiniciar</button>
+  </div>
+  <div id="quiz2"></div>
+  <div class="card" id="finalMsg2" style="display:none;text-align:center"></div>
+</section>
+
+</div>
+
+<footer>Material interactivo · Lógica de Programación 1 · Operadores y precedencia</footer>
+
+<script>
+/* ---------- Tabs ---------- */
+const tabs=document.querySelectorAll('#tabs button');
+tabs.forEach(b=>b.addEventListener('click',()=>{
+  tabs.forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.remove('active'));
+  b.classList.add('active');
+  document.getElementById(b.dataset.tab).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}));
+
+/* ---------- Language highlight ---------- */
+const langBtns=document.querySelectorAll('#langbar button');
+function highlight(col){
+  document.querySelectorAll('.optable [data-c]').forEach(c=>c.classList.remove('col-hl'));
+  if(col!=='0') document.querySelectorAll('.optable [data-c="'+col+'"]').forEach(c=>c.classList.add('col-hl'));
+}
+langBtns.forEach(b=>b.addEventListener('click',()=>{
+  langBtns.forEach(x=>x.classList.remove('on'));
+  if(b.dataset.lang!=='0') b.classList.add('on');
+  highlight(b.dataset.lang);
+}));
+highlight('1');
+
+/* ---------- Precedence stepper ---------- */
+const steps=[
+  {expr:'2 + 3 * 4 > 10 and not False', txt:'Expresión inicial'},
+  {expr:'2 + <b>12</b> > 10 and not False', txt:'Multiplicación (prio 4): 3 * 4 = 12'},
+  {expr:'<b>14</b> > 10 and not False', txt:'Suma (prio 5): 2 + 12 = 14'},
+  {expr:'<b>True</b> and not False', txt:'Relacional (prio 6): 14 > 10 = True'},
+  {expr:'True and <b>True</b>', txt:'not (prio 7): not False = True'},
+  {expr:'✅ <b>True</b>', txt:'and (prio 8): True and True = True'}
+];
+let sIdx=0;
+const exprEl=document.getElementById('expr'), stepsEl=document.getElementById('steps');
+document.getElementById('nextStep').addEventListener('click',()=>{
+  if(sIdx>=steps.length-1)return;
+  sIdx++;
+  exprEl.innerHTML=steps[sIdx].expr;
+  const d=document.createElement('div');
+  d.className='step'; d.innerHTML='<b>Paso '+sIdx+':</b> '+steps[sIdx].txt;
+  stepsEl.appendChild(d); requestAnimationFrame(()=>d.classList.add('show'));
+});
+document.getElementById('resetStep').addEventListener('click',()=>{
+  sIdx=0; exprEl.innerHTML=steps[0].expr; stepsEl.innerHTML='';
+});
+
+/* ---------- Quiz ---------- */
+const quizData=[
+  {tag:'Aritméticos', title:'Ej. 1 — La división "traicionera"',
+   setup:'', lines:[
+    {code:'print(7 / 2)',  opts:['3.5','3','3,5'], ans:'3.5', why:'/ es división real (con decimales).'},
+    {code:'print(7 // 2)', opts:['3','3.5','1'], ans:'3', why:'// toma solo la parte entera.'},
+    {code:'print(7 % 2)',  opts:['1','3','0'], ans:'1', why:'% es el residuo de 7÷2.'},
+    {code:'print(2 ** 3)', opts:['8','6','9'], ans:'8', why:'** es potencia: 2·2·2 = 8.'}
+  ]},
+  {tag:'Relacionales', title:'Ej. 2 — Comparar edades', setup:'edad = 18',
+   lines:[
+    {code:'print(edad >= 18)', opts:['True','False'], ans:'True', why:'18 es mayor o igual a 18.'},
+    {code:'print(edad == 18)', opts:['True','False'], ans:'True', why:'18 es igual a 18.'},
+    {code:'print(edad != 20)', opts:['True','False'], ans:'True', why:'18 es distinto de 20.'},
+    {code:'print(edad < 15)',  opts:['True','False'], ans:'False', why:'18 NO es menor que 15.'}
+  ]},
+  {tag:'Lógicos', title:'Ej. 3 — ¿Salgo con paraguas?', setup:'llueve = True\ntengo_paraguas = False',
+   lines:[
+    {code:'print(llueve and tengo_paraguas)', opts:['True','False'], ans:'False', why:'AND necesita ambas; falta el paraguas.'},
+    {code:'print(llueve or tengo_paraguas)',  opts:['True','False'], ans:'True', why:'OR basta con una; sí llueve.'},
+    {code:'print(not llueve)', opts:['True','False'], ans:'False', why:'not invierte True a False.'}
+  ]},
+  {tag:'Precedencia', title:'Ej. 4 — ¿Quién va primero?', setup:'',
+   lines:[
+    {code:'print(2 + 3 * 4)',   opts:['14','20','24'], ans:'14', why:'Primero 3*4=12, luego 2+12.'},
+    {code:'print((2 + 3) * 4)', opts:['20','14','9'], ans:'20', why:'Los paréntesis mandan: 5*4.'},
+    {code:'print(2 ** 3 ** 2)', opts:['512','64','36'], ans:'512', why:'Potencia der→izq: 2**(3**2)=2**9.'},
+    {code:'print(10 - 4 - 3)',  opts:['3','9','11'], ans:'3', why:'Resta izq→der: (10-4)-3.'}
+  ]},
+  {tag:'Combinado', title:'Ej. 5 — ¿El estudiante aprueba?', setup:'nota = 75\nasistencia = 90',
+   lines:[
+    {code:'print(nota >= 60 and asistencia >= 80)', opts:['True','False'], ans:'True', why:'True and True = True.'},
+    {code:'print(nota >= 60 and asistencia >= 95)', opts:['True','False'], ans:'False', why:'True and False = False.'},
+    {code:'print(nota > 90 or asistencia > 80)',    opts:['True','False'], ans:'True', why:'False or True = True.'}
+  ]}
+];
+
+let score=0, totalLines=0, answered=new Set();
+quizData.forEach(q=>totalLines+=q.lines.length);
+document.getElementById('total').textContent=totalLines;
+
+function buildQuiz(){
+  const box=document.getElementById('quiz'); box.innerHTML='';
+  score=0; answered.clear();
+  document.getElementById('score').textContent='0';
+  document.getElementById('finalMsg').style.display='none';
+  quizData.forEach((q,qi)=>{
+    const card=document.createElement('div'); card.className='q';
+    let html='<span class="tag">'+q.tag+'</span><h4 style="margin-top:8px">'+q.title+'</h4>';
+    if(q.setup) html+='<pre style="margin:8px 0">'+q.setup.replace(/</g,'&lt;')+'</pre>';
+    card.innerHTML=html;
+    q.lines.forEach((ln,li)=>{
+      const id=qi+'-'+li;
+      const row=document.createElement('div'); row.className='line';
+      const c=document.createElement('code'); c.textContent=ln.code; row.appendChild(c);
+      const opts=document.createElement('div'); opts.className='opts';
+      ln.opts.forEach(o=>{
+        const btn=document.createElement('button'); btn.className='opt'; btn.textContent=o;
+        btn.addEventListener('click',()=>{
+          if(answered.has(id))return;
+          answered.add(id);
+          opts.querySelectorAll('.opt').forEach(x=>x.classList.add('locked'));
+          const fb=row.nextElementSibling;
+          if(o===ln.ans){
+            btn.classList.add('correct'); score++;
+            document.getElementById('score').textContent=score;
+            fb.textContent='✔ ¡Correcto! '+ln.why; fb.className='feedback ok';
+          }else{
+            btn.classList.add('wrong');
+            opts.querySelectorAll('.opt').forEach(x=>{if(x.textContent===ln.ans)x.classList.add('correct');});
+            fb.textContent='✘ Era '+ln.ans+'. '+ln.why; fb.className='feedback no';
+          }
+          if(answered.size===totalLines) showFinal();
+        });
+        opts.appendChild(btn);
+      });
+      row.appendChild(opts);
+      card.appendChild(row);
+      const fb=document.createElement('div'); fb.className='feedback'; card.appendChild(fb);
+    });
+    box.appendChild(card);
+  });
+}
+function showFinal(){
+  const m=document.getElementById('finalMsg'); m.style.display='block';
+  let msg;
+  if(score===totalLines) msg='🌟 ¡Perfecto! '+score+'/'+totalLines+'. Dominas los operadores.';
+  else if(score>=totalLines*0.7) msg='👏 ¡Muy bien! '+score+'/'+totalLines+'. Repasa las que fallaste.';
+  else msg='💪 '+score+'/'+totalLines+'. Vuelve a la pestaña Teoría y reintenta el torneo.';
+  m.innerHTML='<h3 style="margin:4px 0">'+msg+'</h3>';
+  m.scrollIntoView({behavior:'smooth'});
+}
+document.getElementById('resetQuiz').addEventListener('click',buildQuiz);
+buildQuiz();
+
+/* ---------- Quiz 2: Precedencia Pro ---------- */
+const proData=[
+  {lvl:'Nivel 1', code:'5 + 2 * 3 - 1', opts:['10','20','16'], ans:'10',
+   why:'2*3=6 → 5+6-1 = 10. La multiplicación va antes que suma/resta.'},
+  {lvl:'Nivel 1', code:'10 % 3 + 2 * 2', opts:['5','8','0'], ans:'5',
+   why:'10%3=1 y 2*2=4 → 1+4 = 5.'},
+  {lvl:'Nivel 1', code:'7 // 2 + 7 % 2 * 3', opts:['6','12','4'], ans:'6',
+   why:'7//2=3; 7%2=1; 1*3=3 → 3+3 = 6.'},
+  {lvl:'Nivel 2', code:'(4 + 2) * 3 - 8 // 2', opts:['14','5','22'], ans:'14',
+   why:'(4+2)=6; 6*3=18; 8//2=4 → 18-4 = 14.'},
+  {lvl:'Nivel 2', code:'-3 ** 2', opts:['-9','9','6'], ans:'-9',
+   why:'** va antes que el signo: -(3**2) = -9.'},
+  {lvl:'Nivel 2', code:'2 ** 2 ** 3', opts:['256','64','12'], ans:'256',
+   why:'Potencia der→izq: 2**3=8, luego 2**8 = 256.'},
+  {lvl:'Nivel 3', code:'5 > 3 and 2 < 1 or 4 == 4', opts:['True','False'], ans:'True',
+   why:'(True and False)=False → False or True = True. and va antes que or.'},
+  {lvl:'Nivel 3', code:'not 5 > 3 and 2 < 1', opts:['True','False'], ans:'False',
+   why:'not True=False → False and False = False.'},
+  {lvl:'Nivel 3', code:'2 + 3 * 4 ** 2 // 5 - 1', opts:['10','27','9'], ans:'10',
+   why:'4**2=16; 3*16=48; 48//5=9 → 2+9-1 = 10.'},
+  {lvl:'Nivel 4', code:'10 - 2 ** 3 % 4 > 5 and not 0', opts:['True','False'], ans:'True',
+   why:'2**3=8; 8%4=0; 10-0=10; 10>5=True; not 0=True → True and True = True.'}
+];
+let score2=0, answered2=new Set();
+document.getElementById('total2').textContent=proData.length;
+function buildQuiz2(){
+  const box=document.getElementById('quiz2'); box.innerHTML='';
+  score2=0; answered2.clear();
+  document.getElementById('score2').textContent='0';
+  document.getElementById('finalMsg2').style.display='none';
+  proData.forEach((q,i)=>{
+    const card=document.createElement('div'); card.className='q';
+    card.innerHTML='<span class="tag">'+q.lvl+'</span><h4 style="margin-top:8px">Reto '+(i+1)+'</h4>';
+    const row=document.createElement('div'); row.className='line';
+    const c=document.createElement('code'); c.textContent='>>> '+q.code; row.appendChild(c);
+    const opts=document.createElement('div'); opts.className='opts';
+    q.opts.forEach(o=>{
+      const btn=document.createElement('button'); btn.className='opt'; btn.textContent=o;
+      btn.addEventListener('click',()=>{
+        if(answered2.has(i))return;
+        answered2.add(i);
+        opts.querySelectorAll('.opt').forEach(x=>x.classList.add('locked'));
+        const fb=row.nextElementSibling;
+        if(o===q.ans){
+          btn.classList.add('correct'); score2++;
+          document.getElementById('score2').textContent=score2;
+          fb.textContent='✔ ¡Correcto! '+q.why; fb.className='feedback ok';
+        }else{
+          btn.classList.add('wrong');
+          opts.querySelectorAll('.opt').forEach(x=>{if(x.textContent===q.ans)x.classList.add('correct');});
+          fb.textContent='✘ Era '+q.ans+'. '+q.why; fb.className='feedback no';
+        }
+        if(answered2.size===proData.length) showFinal2();
+      });
+      opts.appendChild(btn);
+    });
+    row.appendChild(opts); card.appendChild(row);
+    const fb=document.createElement('div'); fb.className='feedback'; card.appendChild(fb);
+    box.appendChild(card);
+  });
+}
+function showFinal2(){
+  const m=document.getElementById('finalMsg2'); m.style.display='block';
+  let msg;
+  if(score2===proData.length) msg='🏅 ¡Impecable! '+score2+'/'+proData.length+'. Dominas la precedencia.';
+  else if(score2>=7) msg='🔥 ¡Muy bien! '+score2+'/'+proData.length+'. Revisa los niveles 3 y 4.';
+  else msg='📚 '+score2+'/'+proData.length+'. Vuelve a la pestaña Precedencia y reintenta.';
+  m.innerHTML='<h3 style="margin:4px 0">'+msg+'</h3>';
+  m.scrollIntoView({behavior:'smooth'});
+}
+document.getElementById('resetQuiz2').addEventListener('click',buildQuiz2);
+buildQuiz2();
+</script>
+</body>
+</html>
