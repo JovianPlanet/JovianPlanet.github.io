@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ciclo Mientras (while) · Clase Interactiva</title>
+<style>
+  :root{
+    --bg:#0f1720; --panel:#18222e; --panel2:#1f2c3a; --ink:#e8eef5; --muted:#9fb0c3;
+    --line:#2b3a4d; --accent:#4fd1c5; --accent2:#7c9cff; --good:#48d597; --bad:#ff7a7a;
+    --warn:#ffcf6b; --chip:#243447; --py:#8bd450; --xp:#ffcf6b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(160deg,#0f1720,#111c27);color:var(--ink);line-height:1.55}
+  header{padding:24px 22px 14px;text-align:center;border-bottom:1px solid var(--line);background:radial-gradient(1200px 300px at 50% -60px,rgba(79,209,197,.15),transparent)}
+  header h1{margin:0 0 6px;font-size:clamp(1.3rem,3.4vw,2rem)}
+  header p{margin:0;color:var(--muted);font-size:.92rem}
+  /* XP bar */
+  .xpwrap{max-width:640px;margin:14px auto 4px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+  .xprow{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);margin-bottom:6px}
+  .xprow b{color:var(--xp)}
+  .xpbar{height:12px;background:#0c141d;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .xpfill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--xp));transition:width .5s}
+  .badges2{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+  .bdg{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:.75rem;color:#5f7085;opacity:.55;transition:.3s}
+  .bdg.on{opacity:1;color:var(--ink);border-color:var(--warn);box-shadow:0 0 0 2px rgba(255,207,107,.15)}
+  .wrap{max-width:960px;margin:0 auto;padding:16px 16px 60px}
+  nav.tabs{position:sticky;top:0;z-index:10;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:12px 6px;background:rgba(15,23,32,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.tabs button{background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:8px 12px;border-radius:10px;cursor:pointer;font-size:.82rem;font-weight:600;transition:.15s}
+  nav.tabs button:hover{border-color:var(--accent)}
+  nav.tabs button.active{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border-color:transparent}
+  section.tab{display:none;animation:fade .25s ease}
+  section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2{font-size:1.3rem;margin:20px 0 10px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:1.05rem;margin:18px 0 8px;color:var(--accent)}
+  p{color:#d5deea}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .note{background:rgba(255,207,107,.08);border:1px solid rgba(255,207,107,.35);border-radius:12px;padding:12px 14px;margin:14px 0;font-size:.92rem}
+  .note b{color:var(--warn)}
+  .py{background:rgba(139,212,80,.09);border:1px solid rgba(139,212,80,.4);border-left:4px solid var(--py);border-radius:10px;padding:12px 14px;margin:14px 0;font-size:.9rem}
+  .py .h{color:var(--py);font-weight:700;margin-bottom:4px}
+  code{font-family:"SF Mono",Consolas,Menlo,monospace}
+  pre{background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.85rem;color:#d7e3f0}
+  pre.pyc{border-left:3px solid var(--py)}
+  .kw{color:var(--accent);font-weight:600}.st{color:#9fe6b0}.cm{color:#6f8194;font-style:italic}.pk{color:var(--py);font-weight:600}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.87rem;overflow:hidden;border-radius:12px}
+  th,td{padding:8px 10px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:var(--accent);font-weight:700}
+  tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+  td.mono,code.mono{font-family:"SF Mono",Consolas,monospace;color:var(--accent)}
+  details{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:10px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--accent)}
+  details[open]{border-color:var(--accent)}
+  .flowsvg{display:block;margin:10px auto;max-width:100%;height:auto}
+  .btn{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.88rem}
+  .btn.ghost{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .scorebar{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:12px 0}
+  .scorebar b{color:var(--accent);font-size:1.1rem}
+  .q{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .q .tag{font-size:.72rem;color:#0a1330;background:var(--accent2);padding:2px 9px;border-radius:999px;font-weight:700}
+  .q .scn{font-style:italic;color:#cfe0ff;margin:8px 0 2px}
+  .opts{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  .opt{background:#0c141d;border:1px solid var(--line);color:var(--ink);padding:9px 12px;border-radius:9px;cursor:pointer;font-family:monospace;font-size:.85rem;text-align:left;transition:.12s}
+  .opt:hover{border-color:var(--accent)}
+  .opt.correct{background:var(--good);color:#052b1c;border-color:transparent;font-weight:700}
+  .opt.wrong{background:var(--bad);color:#2b0505;border-color:transparent}
+  .opt.locked{pointer-events:none}
+  .feedback{margin-top:8px;font-size:.84rem;min-height:1.1em}
+  .feedback.ok{color:var(--good)}.feedback.no{color:var(--bad)}
+  .center{text-align:center}
+  .xppop{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--warn);color:#2a1e00;font-weight:800;padding:10px 18px;border-radius:999px;opacity:0;transition:.35s;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+  .xppop.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  /* game */
+  .game{background:linear-gradient(160deg,#16212e,#1b2a3a);border:1px solid var(--line);border-radius:16px;padding:18px}
+  .ginput{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+  .ginput input{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:10px 12px;font-size:1rem;width:120px}
+  .gstat{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+  .gchip{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:6px 12px;font-family:monospace;font-size:.9rem}
+  .gchip b{color:var(--accent)}
+  .hint{font-size:1.4rem;text-align:center;margin:10px 0;min-height:1.6em;font-weight:700}
+  .hist{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .hchip{background:#0c141d;border:1px solid var(--line);border-radius:8px;padding:4px 9px;font-family:monospace;font-size:.8rem}
+  .hchip.hi{border-color:var(--bad)}.hchip.lo{border-color:var(--accent2)}.hchip.win{border-color:var(--good);color:var(--good)}
+  /* traza */
+  .traza-ctrls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+  .traza-ctrls select,.traza-ctrls input{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:8px 10px;font-size:.85rem}
+  .tt{width:auto;min-width:60%}
+  .tt td,.tt th{text-align:center;font-family:monospace}
+  .tt tr.cur{background:rgba(79,209,197,.18)}
+  .statebox{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+  .chipv{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-family:monospace;font-size:.92rem}
+  .chipv b{color:var(--accent)}
+  footer{text-align:center;color:var(--muted);font-size:.82rem;padding:24px 12px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header>
+  <h1>🔄 Ciclo <code>Mientras</code> (while)</h1>
+  <p>Repetir mientras se cumpla una condición — en PSeInt, con notas de Python 🐍 · <b>modo juego</b></p>
+  <div class="xpwrap">
+    <div class="xprow"><span>Nivel <b id="lvl">1</b> · <span id="lvlname">Aprendiz del bucle</span></span><span><b id="xp">0</b> XP</span></div>
+    <div class="xpbar"><div class="xpfill" id="xpfill"></div></div>
+    <div class="badges2" id="badges"></div>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="active" data-tab="intro">💡 ¿Por qué?</button>
+  <button data-tab="sintaxis">📝 Sintaxis</button>
+  <button data-tab="infinito">♾️ Bucle infinito</button>
+  <button data-tab="centbandera">🚦 Centinela y bandera</button>
+  <button data-tab="juego">🎮 Adivina el número</button>
+  <button data-tab="traza">📊 Traza</button>
+  <button data-tab="predice">🎯 Predice</button>
+  <button data-tab="taller">🏆 Taller</button>
+</nav>
+
+<div class="wrap">
+
+<!-- INTRO -->
+<section class="tab active" id="intro">
+  <h2>Cuando no sabes cuántas veces repetir</h2>
+  <p>Con el ciclo <b>Para</b> repetíamos un número <b>conocido</b> de veces (de 1 a N). Pero, ¿cuántos intentos necesita alguien para adivinar un número? ¿Cuántos datos ingresará antes de escribir "0"? <b>No lo sabemos de antemano.</b> Para eso existe el ciclo <b>Mientras</b>: repite <b>mientras una condición sea Verdadera</b>.</p>
+
+  <table>
+    <thead><tr><th></th><th>🔁 Para (for)</th><th>🔄 Mientras (while)</th></tr></thead>
+    <tbody>
+      <tr><td>¿Cuántas veces?</td><td><b>Conocido</b> (1..N)</td><td><b>Desconocido</b>: depende de una condición</td></tr>
+      <tr><td>Se usa cuando…</td><td>recorres un rango fijo</td><td>repites "hasta que pase algo"</td></tr>
+      <tr><td>Ejemplo</td><td>tabla de multiplicar</td><td>pedir clave hasta acertar</td></tr>
+    </tbody>
+  </table>
+
+  <div class="card">
+    <b>La regla de oro del <code>Mientras</code> (3 partes):</b>
+    <ol>
+      <li><b>Antes:</b> se prepara la variable de control.</li>
+      <li><b>Condición:</b> se revisa <i>antes</i> de cada vuelta.</li>
+      <li><b>Actualización:</b> dentro del cuerpo, <b>algo cambia</b> para que la condición, algún día, sea Falsa.</li>
+    </ol>
+    Si falta la parte 3 → <b>bucle infinito</b> (lo cazamos en su pestaña).
+  </div>
+  <div class="note">🎮 <b>Modo juego:</b> a lo largo de esta lección ganas <b>XP</b> por acertar quizzes, cazar bucles infinitos y ganar el juego de adivinar. ¡Sube de nivel y desbloquea insignias!</div>
+</section>
+
+<!-- SINTAXIS -->
+<section class="tab" id="sintaxis">
+  <h2>📝 Definición y sintaxis</h2>
+  <p>El <b>Mientras</b> ejecuta un bloque <b>repetidamente mientras una condición se cumpla</b>. Cuando deja de cumplirse, sale del ciclo. Cada ejecución completa del bloque es una <b>iteración</b>. La condición se evalúa <b>antes</b> de cada vuelta: si al entrar ya es Falsa, el cuerpo <b>no se ejecuta ni una vez</b>.</p>
+  <pre><span class="kw">Mientras</span> condicion <span class="kw">Hacer</span>
+    <span class="cm">// cuerpo (instrucciones que se repiten)</span>
+    <span class="cm">// actualización de la variable de control</span>
+<span class="kw">FinMientras</span></pre>
+  <table>
+    <thead><tr><th>Pieza</th><th>Qué es</th></tr></thead>
+    <tbody>
+      <tr><td><b>Condición</b></td><td>Se evalúa antes de cada iteración. Verdadera → ejecuta; Falsa → termina.</td></tr>
+      <tr><td><b>Cuerpo</b></td><td>Las instrucciones que se repiten.</td></tr>
+      <tr><td><b>Actualización</b></td><td>Modifica la variable de la condición para que el ciclo pueda terminar.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Ejemplo base — contador con Mientras</h3>
+  <pre><span class="kw">Algoritmo</span> ContadorMientras
+    <span class="kw">Definir</span> contador <span class="kw">Como Entero</span>
+    contador <span class="kw">&lt;-</span> 1                    <span class="cm">// (1) preparar ANTES</span>
+    <span class="kw">Mientras</span> contador &lt;= 5 <span class="kw">Hacer</span>     <span class="cm">// (2) condición</span>
+        <span class="kw">Escribir</span> contador
+        contador <span class="kw">&lt;-</span> contador + 1     <span class="cm">// (3) actualización</span>
+    <span class="kw">FinMientras</span>
+<span class="kw">FinAlgoritmo</span>
+<span class="cm">// Salida: 1 2 3 4 5</span></pre>
+
+  <h3>¿Cómo funciona por dentro? (diagrama)</h3>
+  <svg class="flowsvg" viewBox="0 0 460 330" width="360" role="img" aria-label="Diagrama del ciclo Mientras">
+    <defs><marker id="am" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4fd1c5"/></marker></defs>
+    <g fill="#1f2c3a" stroke="#4fd1c5" stroke-width="1.5" font-family="monospace" font-size="11" text-anchor="middle">
+      <ellipse cx="220" cy="24" rx="42" ry="17"/><text x="220" y="28" fill="#e8eef5" stroke="none">Inicio</text>
+      <rect x="150" y="54" width="140" height="30" rx="4"/><text x="220" y="73" fill="#e8eef5" stroke="none">preparar control</text>
+      <polygon points="220,106 320,140 220,174 120,140"/><text x="220" y="144" fill="#e8eef5" stroke="none">¿condición?</text>
+      <polygon points="130,198 300,198 284,228 114,228"/><text x="200" y="217" fill="#e8eef5" stroke="none">cuerpo (instrucciones)</text>
+      <rect x="140" y="250" width="160" height="30" rx="4"/><text x="220" y="269" fill="#e8eef5" stroke="none">actualización</text>
+      <ellipse cx="400" cy="140" rx="40" ry="17"/><text x="400" y="144" fill="#e8eef5" stroke="none">Fin</text>
+    </g>
+    <g stroke="#4fd1c5" stroke-width="1.5" marker-end="url(#am)" fill="none">
+      <line x1="220" y1="41" x2="220" y2="52"/>
+      <line x1="220" y1="84" x2="220" y2="104"/>
+      <line x1="220" y1="174" x2="220" y2="196"/>
+      <line x1="220" y1="228" x2="220" y2="248"/>
+      <path d="M320,140 H358"/>
+      <path d="M140,265 H36 V140 H120"/>
+    </g>
+    <text x="226" y="192" fill="#ffcf6b" font-family="monospace" font-size="11">Sí</text>
+    <text x="332" y="134" fill="#ffcf6b" font-family="monospace" font-size="11">No</text>
+    <text x="42" y="134" fill="#8bd450" font-family="monospace" font-size="10">repite</text>
+  </svg>
+
+  <div class="py"><div class="h">🐍 En Python</div>
+  Es la palabra <code>while</code> con <b>dos puntos</b> e indentación (no hay <code>FinMientras</code>):
+  <pre class="pyc">contador = <span class="st">1</span>
+<span class="pk">while</span> contador &lt;= <span class="st">5</span>:
+    <span class="pk">print</span>(contador)
+    contador = contador + <span class="st">1</span>   <span class="cm"># ¡la actualización!</span></pre></div>
+</section>
+
+<!-- INFINITO -->
+<section class="tab" id="infinito">
+  <h2>♾️ Bucle infinito</h2>
+  <p>Si la condición <b>siempre</b> es Verdadera, el ciclo <b>nunca termina</b>. Casi siempre es un <b>error</b> (se olvidó la actualización), aunque a veces es <b>deseable</b> (un servidor que debe estar siempre activo).</p>
+  <pre><span class="kw">Mientras</span> Verdadero <span class="kw">Hacer</span>
+    <span class="cm">// se repite para siempre…</span>
+<span class="kw">FinMientras</span></pre>
+  <div class="note">🔎 <b>Pregúntate siempre:</b> <i>"¿qué instrucción del cuerpo hará que, algún día, la condición sea Falsa?"</i> Si no hay ninguna → bucle infinito.</div>
+  <div class="py"><div class="h">🐍 En Python</div> El infinito clásico es <code>while True:</code> y para salir se usa <code>break</code>. En PSeInt lo controlamos con una <b>bandera</b> que se vuelve Falsa.</div>
+
+  <h3>🕵️ Cazador de bucles infinitos</h3>
+  <p>Para cada fragmento decide si <b>Termina</b> o es <b>Infinito ♾️</b>. ¡Ganas XP por acierto!</p>
+  <div class="scorebar"><span>Cazados: <b id="hunterScore">0</b> / <b id="hunterTotal">6</b></span><button class="btn ghost" id="hunterReset">Reiniciar</button></div>
+  <div id="hunterQuiz"></div>
+</section>
+
+<!-- CENTINELA Y BANDERA -->
+<section class="tab" id="centbandera">
+  <h2>🚦 Variables centinela y bandera</h2>
+
+  <h3>🎯 Variable centinela</h3>
+  <p>Una variable de control que hace que el ciclo se repita <b>hasta que su valor sea un valor "señal"</b> (el centinela). Ideal cuando el usuario ingresa datos y un valor especial dice "ya terminé".</p>
+  <pre><span class="kw">Algoritmo</span> SumaConCentinela
+    <span class="kw">Definir</span> numero, suma <span class="kw">Como Entero</span>
+    suma <span class="kw">&lt;-</span> 0
+    <span class="kw">Leer</span> numero                      <span class="cm">// primer dato ANTES del ciclo</span>
+    <span class="kw">Mientras</span> numero &lt;&gt; 0 <span class="kw">Hacer</span>       <span class="cm">// 0 = centinela</span>
+        suma <span class="kw">&lt;-</span> suma + numero
+        <span class="kw">Leer</span> numero                  <span class="cm">// actualización: pedir el siguiente</span>
+    <span class="kw">FinMientras</span>
+    <span class="kw">Escribir</span> <span class="st">"Suma total: "</span>, suma
+<span class="kw">FinAlgoritmo</span></pre>
+  <p><i>Prueba:</i> 4, 7, 9, 0 → suma = 20. El 0 <b>no</b> se suma; solo marca el fin.</p>
+  <div class="note"><b>Patrón "leer antes y al final":</b> se lee el primer dato <b>antes</b> del ciclo y el siguiente <b>al final del cuerpo</b>, para que la condición siempre use el dato más reciente.</div>
+
+  <h3>🚩 Variable bandera (flag)</h3>
+  <p>Una variable <b>booleana</b> (Lógico) que controla el ciclo: se repite <b>mientras la bandera sea Verdadera</b> y se sale cuando pasa a <b>Falsa</b>. Útil cuando la salida depende de que "ocurra algo" (acertar una clave, encontrar un dato).</p>
+  <pre><span class="kw">Algoritmo</span> SistemaAcceso
+    <span class="kw">Definir</span> clave, intento <span class="kw">Como Caracter</span>
+    <span class="kw">Definir</span> intentos <span class="kw">Como Entero</span>
+    <span class="kw">Definir</span> ok <span class="kw">Como Logico</span>
+    clave <span class="kw">&lt;-</span> <span class="st">"admin123"</span>
+    intentos <span class="kw">&lt;-</span> 0
+    ok <span class="kw">&lt;-</span> Falso
+    <span class="kw">Mientras</span> intentos &lt; 3 <span class="kw">Y</span> <span class="kw">NO</span> ok <span class="kw">Hacer</span>
+        <span class="kw">Leer</span> intento
+        <span class="kw">Si</span> intento = clave <span class="kw">Entonces</span>
+            ok <span class="kw">&lt;-</span> Verdadero        <span class="cm">// baja la bandera de "seguir"</span>
+        <span class="kw">SiNo</span>
+            intentos <span class="kw">&lt;-</span> intentos + 1
+        <span class="kw">FinSi</span>
+    <span class="kw">FinMientras</span>
+    <span class="kw">Si</span> ok <span class="kw">Entonces</span> <span class="kw">Escribir</span> <span class="st">"✅ Bienvenido"</span> <span class="kw">SiNo</span> <span class="kw">Escribir</span> <span class="st">"🔒 Bloqueada"</span> <span class="kw">FinSi</span>
+<span class="kw">FinAlgoritmo</span></pre>
+  <div class="note"><b>Centinela vs bandera:</b> la <b>centinela</b> compara un <b>valor</b> (numero = 0). La <b>bandera</b> es un <b>Verdadero/Falso</b> que "bajas" cuando pasa algo dentro del ciclo. ¡A menudo se combinan!</div>
+  <div class="py"><div class="h">🐍 En Python</div>
+  <pre class="pyc">ok = <span class="pk">False</span>
+<span class="pk">while</span> intentos &lt; <span class="st">3</span> <span class="pk">and</span> <span class="pk">not</span> ok:
+    ...</pre></div>
+</section>
+
+<!-- JUEGO -->
+<section class="tab" id="juego">
+  <h2>🎮 Adivina el número</h2>
+  <p>El programa "piensa" un número del <b>1 al 100</b>. Tienes <b>7 intentos</b>. Es exactamente un ciclo <code>Mientras</code>: se repite <b>mientras te queden intentos Y no aciertes</b>. ¡Gana XP si lo logras!</p>
+  <div class="game">
+    <div class="hint" id="gHint">Pulsa <b>Nuevo juego</b> para empezar 🎲</div>
+    <div class="ginput">
+      <input id="gGuess" type="number" min="1" max="100" placeholder="1-100" disabled>
+      <button class="btn" id="gTry" disabled>Intentar</button>
+      <button class="btn ghost" id="gNew">Nuevo juego</button>
+    </div>
+    <div class="gstat">
+      <div class="gchip">Intentos restantes: <b id="gLeft">—</b></div>
+      <div class="gchip">Intento nº: <b id="gCount">0</b></div>
+    </div>
+    <div class="hist" id="gHist"></div>
+  </div>
+  <div class="py"><div class="h">🐍 El ciclo detrás del juego</div>
+  <pre class="pyc"><span class="pk">import</span> random
+secreto = random.randint(<span class="st">1</span>, <span class="st">100</span>)
+intentos, acerto = <span class="st">0</span>, <span class="pk">False</span>
+<span class="pk">while</span> intentos &lt; <span class="st">7</span> <span class="pk">and</span> <span class="pk">not</span> acerto:
+    g = <span class="pk">int</span>(<span class="pk">input</span>(<span class="st">"Adivina: "</span>))
+    intentos += <span class="st">1</span>
+    <span class="pk">if</span> g == secreto: acerto = <span class="pk">True</span>
+    <span class="pk">elif</span> g &lt; secreto: <span class="pk">print</span>(<span class="st">"más alto"</span>)
+    <span class="pk">else</span>: <span class="pk">print</span>(<span class="st">"más bajo"</span>)</pre></div>
+</section>
+
+<!-- TRAZA -->
+<section class="tab" id="traza">
+  <h2>📊 Traza en vivo — tabla de seguimiento</h2>
+  <p>Avanza <b>iteración por iteración</b> y observa cómo se evalúa la <b>condición</b> y cómo cambia la variable de control. Así "ves" el <code>Mientras</code> por dentro.</p>
+  <div class="card">
+    <div class="traza-ctrls">
+      <label>Algoritmo:
+        <select id="trazaMode">
+          <option value="cuenta">Cuenta regresiva de N</option>
+          <option value="digitos">Suma de dígitos de un número</option>
+          <option value="centinela">Sumar lista hasta 0 (centinela)</option>
+        </select>
+      </label>
+      <label id="trazaNwrap">N = <input id="trazaN" type="number" value="5" min="1" max="20" style="width:64px"></label>
+      <button class="btn" id="trazaStep">Siguiente iteración ▶</button>
+      <button class="btn ghost" id="trazaAuto">Auto ⏩</button>
+      <button class="btn ghost" id="trazaReset">Reiniciar</button>
+    </div>
+    <div class="statebox" id="trazaState"></div>
+    <div style="overflow-x:auto"><table class="tt" id="trazaTable"></table></div>
+    <div class="feedback" id="trazaMsg"></div>
+  </div>
+</section>
+
+<!-- PREDICE -->
+<section class="tab" id="predice">
+  <h2>🎯 Predice la salida</h2>
+  <p>Lee cada fragmento de PSeInt y elige el resultado. Cada acierto suma XP.</p>
+  <div class="scorebar"><span>Puntaje: <b id="pScore">0</b> / <b id="pTotal">6</b></span><button class="btn ghost" id="pReset">Reiniciar</button></div>
+  <div id="pQuiz"></div>
+</section>
+
+<!-- TALLER -->
+<section class="tab" id="taller">
+  <h2>🏆 Taller — 8 ejercicios en PSeInt</h2>
+  <p><b>Programación en pareja:</b> identifica si usarás <b>contador</b>, <b>centinela</b> o <b>bandera</b> → escríbelo en PSeInt → <b>Ejecuta</b> con varios datos → usa la <b>tabla de seguimiento</b>. Intenta antes de abrir la solución.</p>
+  <div id="ejercicios"></div>
+</section>
+
+</div>
+<div class="xppop" id="xppop"></div>
+<footer>Material interactivo · Lógica de Programación 1 · Ciclo Mientras / while (PSeInt + Python)</footer>
+
+<script>
+/* ---------- XP / gamificación ---------- */
+const LEVELS=[{n:'Aprendiz del bucle'},{n:'Explorador de iteraciones'},{n:'Domador de condiciones'},{n:'Maestro del Mientras'}];
+const PER_LEVEL=100;
+let XP=0; const awarded=new Set();
+const badgeDefs=[
+  {id:'first',icon:'🥉',label:'Primer paso',test:()=>XP>=30},
+  {id:'hunter',icon:'🕵️',label:'Cazador de infinitos',test:()=>flags.hunter},
+  {id:'guru',icon:'🎯',label:'Adivino',test:()=>flags.game},
+  {id:'master',icon:'🧠',label:'Maestro del Mientras',test:()=>XP>=250}
+];
+const flags={hunter:false,game:false};
+function renderBadges(){
+  const box=document.getElementById('badges');box.innerHTML='';
+  badgeDefs.forEach(b=>{
+    const on=b.test();
+    const el=document.createElement('span');el.className='bdg'+(on?' on':'');
+    el.textContent=b.icon+' '+b.label;box.appendChild(el);
+  });
+}
+function renderXP(){
+  const lvl=Math.min(LEVELS.length,Math.floor(XP/PER_LEVEL)+1);
+  document.getElementById('lvl').textContent=lvl;
+  document.getElementById('lvlname').textContent=LEVELS[lvl-1].n;
+  document.getElementById('xp').textContent=XP;
+  const within=XP%PER_LEVEL; document.getElementById('xpfill').style.width=(within)+'%';
+  renderBadges();
+}
+function pop(txt){
+  const p=document.getElementById('xppop');p.textContent=txt;p.classList.add('show');
+  clearTimeout(p._t);p._t=setTimeout(()=>p.classList.remove('show'),1300);
+}
+function addXP(key,amount,label){
+  if(awarded.has(key))return; awarded.add(key);
+  XP+=amount; renderXP(); pop('+'+amount+' XP'+(label?' · '+label:''));
+}
+renderXP();
+
+/* ---------- Tabs ---------- */
+const tabs=document.querySelectorAll('#tabs button');
+tabs.forEach(b=>b.addEventListener('click',()=>{
+  tabs.forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.remove('active'));
+  b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}));
+
+/* ---------- Quiz genérico con XP ---------- */
+function makeQuiz(cfg){
+  let ans=new Set(), correct=0;
+  document.getElementById(cfg.totalId).textContent=cfg.data.length;
+  function build(){
+    const box=document.getElementById(cfg.boxId);box.innerHTML='';ans.clear();correct=0;
+    document.getElementById(cfg.scoreId).textContent='0';
+    cfg.data.forEach((q,i)=>{
+      const c=document.createElement('div');c.className='q';
+      c.innerHTML='<span class="tag">'+(q.tag||('#'+(i+1)))+'</span>'+
+        (q.scn?'<p class="scn">'+q.scn+'</p>':'')+
+        (q.code?'<pre>'+q.code.replace(/</g,'&lt;')+'</pre>':'');
+      const opts=document.createElement('div');opts.className='opts';
+      q.opts.forEach(o=>{
+        const b=document.createElement('button');b.className='opt';b.textContent=o;
+        b.addEventListener('click',()=>{
+          if(ans.has(i))return;ans.add(i);
+          opts.querySelectorAll('.opt').forEach(x=>x.classList.add('locked'));
+          const fb=c.querySelector('.feedback');
+          if(o===q.ans){b.classList.add('correct');correct++;document.getElementById(cfg.scoreId).textContent=correct;
+            fb.textContent='✔ ¡Correcto! '+q.why;fb.className='feedback ok';
+            addXP(cfg.boxId+':'+i,cfg.xp||10);}
+          else{b.classList.add('wrong');opts.querySelectorAll('.opt').forEach(x=>{if(x.textContent===q.ans)x.classList.add('correct');});
+            fb.textContent='✘ Respuesta: '+q.ans+'. '+q.why;fb.className='feedback no';}
+          if(ans.size===cfg.data.length && cfg.onDone) cfg.onDone();
+        });
+        opts.appendChild(b);
+      });
+      c.appendChild(opts);const fb=document.createElement('div');fb.className='feedback';c.appendChild(fb);
+      box.appendChild(c);
+    });
+  }
+  document.getElementById(cfg.resetId).addEventListener('click',build);build();
+}
+
+/* Cazador de bucles infinitos */
+makeQuiz({boxId:'hunterQuiz',scoreId:'hunterScore',totalId:'hunterTotal',resetId:'hunterReset',xp:12,
+  onDone:()=>{flags.hunter=true;addXP('hunter-done',20,'insignia');renderBadges();},
+  data:[
+  {tag:'Fragmento 1',code:'x <- 1\nMientras x <= 3 Hacer\n    Escribir x\n    x <- x + 1\nFinMientras',
+   opts:['Termina','Infinito ♾️'],ans:'Termina',why:'x crece hasta superar 3.'},
+  {tag:'Fragmento 2',code:'x <- 1\nMientras x <= 3 Hacer\n    Escribir x\nFinMientras',
+   opts:['Termina','Infinito ♾️'],ans:'Infinito ♾️',why:'Falta la actualización: x nunca cambia.'},
+  {tag:'Fragmento 3',code:'n <- 5\nMientras n > 0 Hacer\n    Escribir n\n    n <- n - 1\nFinMientras',
+   opts:['Termina','Infinito ♾️'],ans:'Termina',why:'n baja hasta llegar a 0.'},
+  {tag:'Fragmento 4',code:'Mientras Verdadero Hacer\n    Escribir "hola"\nFinMientras',
+   opts:['Termina','Infinito ♾️'],ans:'Infinito ♾️',why:'La condición siempre es Verdadera.'},
+  {tag:'Fragmento 5',code:'x <- 10\nMientras x <> 0 Hacer\n    x <- x - 2\nFinMientras',
+   opts:['Termina','Infinito ♾️'],ans:'Termina',why:'10,8,6,4,2,0 → llega exacto a 0.'},
+  {tag:'Fragmento 6 (¡truco!)',code:'x <- 1\nMientras x <> 10 Hacer\n    x <- x + 2\nFinMientras',
+   opts:['Termina','Infinito ♾️'],ans:'Infinito ♾️',why:'1,3,5,7,9,11… nunca es exactamente 10.'}
+]});
+
+/* Predice */
+makeQuiz({boxId:'pQuiz',scoreId:'pScore',totalId:'pTotal',resetId:'pReset',xp:10,data:[
+  {tag:'Contador',code:'c <- 1\nMientras c <= 3 Hacer\n    Escribir c\n    c <- c + 1\nFinMientras',
+   opts:['1 2 3','1 2 3 4','1 2'],ans:'1 2 3',why:'Imprime y luego sube; para cuando c=4 (>3).'},
+  {tag:'Cuenta regresiva',code:'n <- 3\nMientras n > 0 Hacer\n    Escribir n\n    n <- n - 1\nFinMientras\nEscribir "Ya"',
+   opts:['3 2 1 Ya','3 2 1 0 Ya','3 2 1'],ans:'3 2 1 Ya',why:'Al llegar n=0 la condición es Falsa; sale y escribe Ya.'},
+  {tag:'¿Entra?',code:'x <- 10\nMientras x < 5 Hacer\n    Escribir x\n    x <- x + 1\nFinMientras',
+   opts:['No imprime nada','10','5 6 7 8 9'],ans:'No imprime nada',why:'La condición es Falsa desde el inicio: el cuerpo no se ejecuta.'},
+  {tag:'Centinela',code:'suma <- 0\n// se leen: 5, 8, 0\nLeer numero\nMientras numero <> 0 Hacer\n    suma <- suma + numero\n    Leer numero\nFinMientras\nEscribir suma',
+   opts:['13','0','5'],ans:'13',why:'5+8=13; el 0 solo detiene, no se suma.'},
+  {tag:'Suma dígitos',code:'n <- 123\nsuma <- 0\nMientras n > 0 Hacer\n    suma <- suma + (n MOD 10)\n    n <- trunc(n / 10)\nFinMientras\nEscribir suma',
+   opts:['6','123','3'],ans:'6',why:'3+2+1 = 6.'},
+  {tag:'Paso 2',code:'x <- 0\nMientras x < 6 Hacer\n    Escribir x\n    x <- x + 2\nFinMientras',
+   opts:['0 2 4','0 2 4 6','2 4 6'],ans:'0 2 4',why:'0,2,4; con x=6 la condición x<6 es Falsa.'}
+]});
+
+/* ---------- Juego Adivina el número ---------- */
+(function(){
+  const hint=document.getElementById('gHint'), guess=document.getElementById('gGuess'),
+        tryB=document.getElementById('gTry'), newB=document.getElementById('gNew'),
+        left=document.getElementById('gLeft'), count=document.getElementById('gCount'), hist=document.getElementById('gHist');
+  const MAX=7; let secret=0, used=0, over=true;
+  function start(){
+    secret=Math.floor(Math.random()*100)+1; used=0; over=false;
+    hint.innerHTML='Pensé un número del 1 al 100 🤔';
+    guess.disabled=false; tryB.disabled=false; guess.value=''; guess.focus();
+    left.textContent=MAX; count.textContent=0; hist.innerHTML='';
+  }
+  function end(msg){ over=true; guess.disabled=true; tryB.disabled=true; hint.innerHTML=msg; }
+  function tryGuess(){
+    if(over)return;
+    const g=parseInt(guess.value);
+    if(isNaN(g)||g<1||g>100){hint.innerHTML='Escribe un número del 1 al 100 🙃';return;}
+    used++; count.textContent=used; left.textContent=MAX-used;
+    const chip=document.createElement('span');chip.className='hchip';chip.textContent=g;
+    if(g===secret){
+      chip.classList.add('win');hist.appendChild(chip);
+      end('🎉 ¡Correcto! Lo lograste en <b>'+used+'</b> intento'+(used>1?'s':''));
+      flags.game=true; addXP('game-win',40,'insignia Adivino'); renderBadges();
+    }else{
+      if(g<secret){chip.classList.add('lo');hint.innerHTML='Más alto ⬆️';}
+      else{chip.classList.add('hi');hint.innerHTML='Más bajo ⬇️';}
+      hist.appendChild(chip);
+      if(used>=MAX){ end('😅 Sin intentos. El número era <b>'+secret+'</b>. ¡Prueba otra vez!'); }
+    }
+    guess.value=''; guess.focus();
+  }
+  tryB.addEventListener('click',tryGuess);
+  guess.addEventListener('keydown',e=>{if(e.key==='Enter')tryGuess();});
+  newB.addEventListener('click',start);
+})();
+
+/* ---------- Traza while ---------- */
+(function(){
+  const modeSel=document.getElementById('trazaMode'), Ninp=document.getElementById('trazaN'), Nwrap=document.getElementById('trazaNwrap');
+  const table=document.getElementById('trazaTable'), stateBox=document.getElementById('trazaState'), msg=document.getElementById('trazaMsg');
+  let st={};
+  function cfgFor(){
+    const mode=modeSel.value; let N=parseInt(Ninp.value)||5;
+    if(mode==='cuenta'){N=Math.max(1,Math.min(20,N)); return {mode,var:'n',val:N,cond:'n > 0',
+      cols:['iteración','¿n &gt; 0?','Escribir n','n &lt;- n - 1'],
+      step:(s)=>{const cond=s.val>0; if(!cond)return{cond,end:true}; const out=s.val; s.val=s.val-1; return{cond,out,after:s.val};}}; }
+    if(mode==='digitos'){ // usar N como el número
+      let num=Math.max(1,Math.min(999999,parseInt(Ninp.value)||123));
+      return {mode,var:'n',val:num,extra:{suma:0},cond:'n > 0',
+      cols:['iteración','¿n &gt; 0?','suma + (n MOD 10)','n &lt;- trunc(n/10)'],
+      step:(s)=>{const cond=s.val>0; if(!cond)return{cond,end:true}; const d=s.val%10; s.extra.suma+=d; const before=s.val; s.val=Math.trunc(s.val/10); return{cond,out:'suma='+s.extra.suma+' (+'+d+')',after:s.val};}}; }
+    // centinela
+    const lista=[5,8,3,0];
+    return {mode,var:'numero',lista,idx:0,val:lista[0],extra:{suma:0},cond:'numero <> 0',
+      cols:['iteración','¿numero &lt;&gt; 0?','suma + numero','Leer numero'],
+      step:(s)=>{const cond=s.val!==0; if(!cond)return{cond,end:true}; s.extra.suma+=s.val; s.idx++; const nxt=s.lista[s.idx]; const before=s.val; s.val=nxt; return{cond,out:'suma='+s.extra.suma,after:nxt};}};
+  }
+  function build(){
+    const c=cfgFor();
+    st={c,i:0,done:false,val:c.val,extra:c.extra?{...c.extra}:{},idx:c.idx||0,lista:c.lista};
+    // re-bind step to st
+    table.innerHTML='<thead><tr><th>'+c.cols[0]+'</th><th>'+c.cols[1]+'</th><th>'+c.cols[2]+'</th><th>'+c.cols[3]+'</th></tr></thead><tbody></tbody>';
+    msg.textContent=''; msg.className='feedback'; renderState();
+  }
+  function renderState(){
+    let chips='<div class="chipv">'+st.c.var+' = <b>'+st.val+'</b></div>';
+    if(st.c.mode==='digitos'||st.c.mode==='centinela') chips+='<div class="chipv">suma = <b>'+(st.extra.suma||0)+'</b></div>';
+    chips+='<div class="chipv" style="color:#9fb0c3">condición: '+st.c.cond+'</div>';
+    stateBox.innerHTML=chips;
+  }
+  function step(){
+    if(st.done)return;
+    // evaluar condición según modo
+    let cond;
+    if(st.c.mode==='cuenta') cond=st.val>0;
+    else if(st.c.mode==='digitos') cond=st.val>0;
+    else cond=st.val!==0;
+    if(!cond){ st.done=true; msg.textContent='✔ La condición es Falsa → fin del ciclo.'+((st.c.mode!=='cuenta')?' Resultado suma = '+st.extra.suma+'.':''); msg.className='feedback ok'; renderState(); return; }
+    st.i++;
+    const tb=table.querySelector('tbody');[...tb.querySelectorAll('tr')].forEach(r=>r.classList.remove('cur'));
+    let col2,col3,col4;
+    if(st.c.mode==='cuenta'){ col2='Verdadero'; col3=st.val; const before=st.val; st.val=st.val-1; col4=before+' - 1 = '+st.val; }
+    else if(st.c.mode==='digitos'){ col2='Verdadero'; const d=st.val%10; st.extra.suma+=d; col3=(st.extra.suma-d)+' + '+d+' = '+st.extra.suma; const before=st.val; st.val=Math.trunc(st.val/10); col4=before+' → '+st.val; }
+    else { col2='Verdadero'; const before=st.extra.suma; st.extra.suma+=st.val; col3=before+' + '+st.val+' = '+st.extra.suma; st.idx++; const nxt=st.lista[st.idx]; col4='numero = '+nxt; st.val=nxt; }
+    const row=document.createElement('tr');row.className='cur';
+    row.innerHTML='<td>'+st.i+'</td><td>'+col2+'</td><td>'+col3+'</td><td>'+col4+'</td>';
+    tb.appendChild(row); renderState();
+  }
+  document.getElementById('trazaStep').addEventListener('click',step);
+  document.getElementById('trazaReset').addEventListener('click',build);
+  document.getElementById('trazaAuto').addEventListener('click',()=>{const iv=setInterval(()=>{if(st.done){clearInterval(iv);return;}step();},650);});
+  modeSel.addEventListener('change',()=>{
+    if(modeSel.value==='cuenta'){Nwrap.style.display='';Nwrap.firstChild.textContent='N = ';Ninp.value=5;}
+    else if(modeSel.value==='digitos'){Nwrap.style.display='';Nwrap.firstChild.textContent='número = ';Ninp.value=123;}
+    else{Nwrap.style.display='none';}
+    build();
+  });
+  Ninp.addEventListener('change',build);
+  build();
+})();
+
+/* ---------- Taller ---------- */
+const ejercicios=[
+  {t:'1. Cuenta regresiva 🚀', d:'Pedir N y mostrar la cuenta de N a 1, luego "¡Despegue!".', tag:'contador',
+   sol:`Algoritmo CuentaRegresiva
+    Definir n Como Entero
+    Leer n
+    Mientras n > 0 Hacer
+        Escribir n
+        n <- n - 1
+    FinMientras
+    Escribir "¡Despegue!"
+FinAlgoritmo`},
+  {t:'2. Suma hasta el centinela', d:'Sumar números hasta que el usuario escriba 0.', tag:'centinela',
+   sol:`Algoritmo SumaCentinela
+    Definir numero, suma Como Entero
+    suma <- 0
+    Leer numero
+    Mientras numero <> 0 Hacer
+        suma <- suma + numero
+        Leer numero
+    FinMientras
+    Escribir "Suma total: ", suma
+FinAlgoritmo`},
+  {t:'3. Contar positivos hasta un negativo', d:'Contar positivos ingresados hasta leer un negativo.', tag:'centinela + contador',
+   sol:`Algoritmo ContarPositivos
+    Definir numero, cuenta Como Entero
+    cuenta <- 0
+    Leer numero
+    Mientras numero >= 0 Hacer
+        Si numero > 0 Entonces
+            cuenta <- cuenta + 1
+        FinSi
+        Leer numero
+    FinMientras
+    Escribir "Positivos: ", cuenta
+FinAlgoritmo`},
+  {t:'4. Validar una edad', d:'Repetir la petición mientras la edad no esté entre 1 y 120.', tag:'validación',
+   sol:`Algoritmo ValidarEdad
+    Definir edad Como Entero
+    Escribir "Edad (1 a 120):"
+    Leer edad
+    Mientras edad < 1 O edad > 120 Hacer
+        Escribir "Inválido. Intente de nuevo:"
+        Leer edad
+    FinMientras
+    Escribir "Edad válida: ", edad
+FinAlgoritmo`},
+  {t:'5. Suma de los dígitos', d:'Sumar los dígitos de un número usando Mientras.', tag:'while matemático',
+   sol:`Algoritmo SumaDigitos
+    Definir numero, suma Como Entero
+    Leer numero
+    numero <- abs(numero)
+    suma <- 0
+    Mientras numero > 0 Hacer
+        suma <- suma + (numero MOD 10)
+        numero <- trunc(numero / 10)
+    FinMientras
+    Escribir "Suma de dígitos: ", suma
+FinAlgoritmo`},
+  {t:'6. Potencia con Mientras', d:'Calcular base^exponente multiplicando repetidamente.', tag:'contador + acumulador',
+   sol:`Algoritmo Potencia
+    Definir base, exp, i, resultado Como Entero
+    Leer base
+    Leer exp
+    resultado <- 1
+    i <- 0
+    Mientras i < exp Hacer
+        resultado <- resultado * base
+        i <- i + 1
+    FinMientras
+    Escribir base, "^", exp, " = ", resultado
+FinAlgoritmo`},
+  {t:'7. Adivina el número 🎯', d:'Número secreto 1..100, varios intentos, pistas mayor/menor.', tag:'bandera + intentos',
+   sol:`Algoritmo AdivinaNumero
+    Definir secreto, intento, intentos Como Entero
+    Definir acerto Como Logico
+    secreto <- azar(100) + 1
+    intentos <- 0
+    acerto <- Falso
+    Mientras intentos < 7 Y NO acerto Hacer
+        Leer intento
+        intentos <- intentos + 1
+        Si intento = secreto Entonces
+            acerto <- Verdadero
+        SiNo
+            Si intento < secreto Entonces
+                Escribir "Más alto"
+            SiNo
+                Escribir "Más bajo"
+            FinSi
+        FinSi
+    FinMientras
+    Si acerto Entonces
+        Escribir "¡Correcto en ", intentos, " intentos!"
+    SiNo
+        Escribir "El número era ", secreto
+    FinSi
+FinAlgoritmo`},
+  {t:'8. Sistema de acceso 🔐', d:'Clave con 3 intentos; bienvenida o cuenta bloqueada.', tag:'bandera + contador',
+   sol:`Algoritmo Acceso
+    Definir clave, intento Como Caracter
+    Definir intentos Como Entero
+    Definir ok Como Logico
+    clave <- "admin123"
+    intentos <- 0
+    ok <- Falso
+    Mientras intentos < 3 Y NO ok Hacer
+        Leer intento
+        Si intento = clave Entonces
+            ok <- Verdadero
+        SiNo
+            intentos <- intentos + 1
+            Escribir "Incorrecta (", intentos, "/3)"
+        FinSi
+    FinMientras
+    Si ok Entonces
+        Escribir "✅ Bienvenido"
+    SiNo
+        Escribir "🔒 Cuenta bloqueada"
+    FinSi
+FinAlgoritmo`}
+];
+const ejBox=document.getElementById('ejercicios');
+ejercicios.forEach((e,idx)=>{
+  const c=document.createElement('div');c.className='q';
+  c.innerHTML='<span class="tag">'+e.tag+'</span><h3 style="margin:8px 0 4px">'+e.t+'</h3><p style="margin:2px 0">'+e.d+'</p>'+
+    '<details><summary>Ver solución PSeInt</summary><pre>'+e.sol.replace(/</g,'&lt;')+'</pre></details>';
+  ejBox.appendChild(c);
+  c.querySelector('details').addEventListener('toggle',function(){ if(this.open) addXP('ej:'+idx,5); });
+});
+</script>
+</body>
+</html>
