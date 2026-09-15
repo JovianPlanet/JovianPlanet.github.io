@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lógica de Programación 1 · Lecciones interactivas</title>
+<style>
+  :root{
+    --bg:#0f1720; --panel:#18222e; --panel2:#1f2c3a; --ink:#e8eef5; --muted:#9fb0c3;
+    --line:#2b3a4d; --accent:#4fd1c5; --accent2:#7c9cff; --warn:#ffcf6b; --chip:#243447; --py:#8bd450;
+  }
+  :root[data-theme="light"]{
+    --bg:#f3f6f8; --panel:#ffffff; --panel2:#eef3f6; --ink:#1a2230; --muted:#5a6b7d;
+    --line:#d3dde3; --accent:#0c8579; --accent2:#4f63c0; --warn:#a9791b; --chip:#e7f1ef; --py:#4f8a1e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(160deg,var(--bg),color-mix(in srgb,var(--bg) 88%, #000)) fixed;color:var(--ink);line-height:1.55;min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  header{position:relative;padding:40px 22px 26px;text-align:center;border-bottom:1px solid var(--line);
+    background:radial-gradient(1200px 340px at 50% -80px,rgba(79,209,197,.18),transparent)}
+  header h1{margin:0 0 8px;font-size:clamp(1.5rem,4vw,2.4rem);letter-spacing:.3px}
+  header p{margin:0 auto;max-width:640px;color:var(--muted);font-size:1rem}
+  .badges{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .badge{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:5px 13px;font-size:.8rem;color:var(--muted)}
+  .toggle{position:absolute;top:16px;right:16px;background:var(--chip);border:1px solid var(--line);color:var(--ink);
+    border-radius:10px;padding:8px 12px;cursor:pointer;font-size:.85rem;font-weight:600}
+  .wrap{max-width:1020px;margin:0 auto;padding:26px 18px 70px}
+  .lead{color:var(--muted);text-align:center;margin:0 0 22px;font-size:.95rem}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+  .card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 20px 18px;
+    display:flex;flex-direction:column;transition:transform .15s, border-color .15s, box-shadow .15s;overflow:hidden}
+  .card::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+  .card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 12px 30px rgba(0,0,0,.25)}
+  .lnum{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;color:var(--muted);font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+  .lnum .n{background:var(--chip);border:1px solid var(--line);border-radius:8px;width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;color:var(--accent);font-size:.9rem}
+  .card h2{font-size:1.18rem;margin:12px 0 6px;display:flex;align-items:center;gap:8px}
+  .emoji{font-size:1.4rem}
+  .card p.desc{color:var(--muted);font-size:.9rem;margin:0 0 12px;flex:1}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .tag{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:.72rem;color:var(--muted)}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+  .btn{flex:1;min-width:130px;text-align:center;background:linear-gradient(180deg,var(--accent),color-mix(in srgb,var(--accent) 80%, #000));
+    color:#06231f;border:none;padding:11px 14px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.9rem;transition:filter .15s}
+  :root[data-theme="light"] .btn{color:#fff}
+  .btn:hover{filter:brightness(1.08)}
+  .btn.pdf{flex:0 0 auto;min-width:0;background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+  .soon{margin-top:34px;background:var(--panel);border:1px dashed var(--line);border-radius:16px;padding:18px 20px;text-align:center;color:var(--muted)}
+  .soon b{color:var(--ink)}
+  footer{text-align:center;color:var(--muted);font-size:.82rem;padding:26px 16px;border-top:1px solid var(--line)}
+  footer a{color:var(--accent);font-weight:600}
+</style>
+</head>
+<body>
+<header>
+  <button class="toggle" id="themeBtn" aria-label="Cambiar tema">🌙 Tema</button>
+  <h1>🧠 Lógica de Programación 1</h1>
+  <p>Lecciones interactivas para aprender a pensar como programador — con <strong>PseInt</strong> como herramienta y una introducción a <strong>Python</strong> al margen.</p>
+  <div class="badges">
+    <span class="badge">4 lecciones</span>
+    <span class="badge">Teoría + ejemplos + ejercicios</span>
+    <span class="badge">PseInt · Python</span>
+    <span class="badge">100% en tu navegador</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <p class="lead">Elige una lección para abrirla. Cada una incluye contenido teórico, ejemplos, diagramas y ejercicios con retroalimentación.</p>
+
+  <div class="grid">
+
+    <!-- 1 -->
+    <div class="card">
+      <span class="lnum"><span class="n">1</span> Lección</span>
+      <h2><span class="emoji">⚙️</span> Operadores</h2>
+      <p class="desc">Operadores aritméticos, relacionales y lógicos, con tablas comparativas en varios lenguajes y precedencia. Incluye retos de "predice el resultado".</p>
+      <div class="tags"><span class="tag">Aritméticos</span><span class="tag">Relacionales</span><span class="tag">Lógicos</span><span class="tag">Precedencia</span></div>
+      <div class="actions">
+        <a class="btn" href="clase_operadores.html">Abrir lección ▶</a>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="card">
+      <span class="lnum"><span class="n">2</span> Lección</span>
+      <h2><span class="emoji">🧭</span> Representación de algoritmos</h2>
+      <p class="desc">Lenguaje natural, pseudocódigo y diagrama de flujo: el mismo algoritmo en tres "idiomas". Con constructor de diagramas y quiz de traducción.</p>
+      <div class="tags"><span class="tag">Lenguaje natural</span><span class="tag">Pseudocódigo</span><span class="tag">Diagrama de flujo</span></div>
+      <div class="actions">
+        <a class="btn" href="clase_representacion_algoritmos.html">Abrir lección ▶</a>
+        <a class="btn pdf" href="Guia_estudiante_Representacion_de_Algoritmos.pdf">📄 Guía PDF</a>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="card">
+      <span class="lnum"><span class="n">3</span> Lección</span>
+      <h2><span class="emoji">🔀</span> Estructuras condicionales</h2>
+      <p class="desc">Condicional simple, doble, múltiple (SiNo Si / Segun) y anidado, en PseInt con notas de Python. Con diagramas y quizzes de "¿qué condicional usar?".</p>
+      <div class="tags"><span class="tag">Simple</span><span class="tag">Doble</span><span class="tag">Múltiple</span><span class="tag">Anidado</span></div>
+      <div class="actions">
+        <a class="btn" href="clase_condicionales.html">Abrir lección ▶</a>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="card">
+      <span class="lnum"><span class="n">4</span> Lección</span>
+      <h2><span class="emoji">🔁</span> Contador, acumulador y ciclo FOR</h2>
+      <p class="desc">Variables contador y acumulador, y el ciclo <code>Para</code>. Incluye una tabla de seguimiento en vivo que traza el ciclo vuelta por vuelta.</p>
+      <div class="tags"><span class="tag">Contador</span><span class="tag">Acumulador</span><span class="tag">Ciclo FOR</span><span class="tag">Traza en vivo</span></div>
+      <div class="actions">
+        <a class="btn" href="clase_contador_acumulador_for.html">Abrir lección ▶</a>
+        <a class="btn pdf" href="Guia_estudiante_Contador_Acumulador_FOR.pdf">📄 Guía PDF</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="soon">
+    <b>Próximamente:</b> Ciclos <code>Mientras</code> y <code>Repetir</code> · Arreglos (vectores) — se irán añadiendo aquí conforme se creen.
+  </div>
+</div>
+
+<footer>
+  Lógica de Programación 1 · Material didáctico interactivo · Hecho con PseInt y Python<br>
+  <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">↑ Volver arriba</a>
+</footer>
+
+<script>
+  // Tema claro/oscuro con preferencia recordada
+  const root=document.documentElement, btn=document.getElementById('themeBtn');
+  function apply(t){
+    if(t==='light'){root.setAttribute('data-theme','light');btn.textContent='☀️ Tema';}
+    else{root.removeAttribute('data-theme');btn.textContent='🌙 Tema';}
+  }
+  let saved=null;
+  try{saved=localStorage.getItem('lp1-theme');}catch(e){}
+  if(!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) saved='light';
+  apply(saved==='light'?'light':'dark');
+  btn.addEventListener('click',()=>{
+    const next=root.getAttribute('data-theme')==='light'?'dark':'light';
+    apply(next);
+    try{localStorage.setItem('lp1-theme',next);}catch(e){}
+  });
+</script>
+</body>
+</html>
