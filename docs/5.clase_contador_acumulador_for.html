@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contador, Acumulador y FOR · Clase Interactiva</title>
+<style>
+  :root{
+    --bg:#0f1720; --panel:#18222e; --panel2:#1f2c3a; --ink:#e8eef5; --muted:#9fb0c3;
+    --line:#2b3a4d; --accent:#4fd1c5; --accent2:#7c9cff; --good:#48d597; --bad:#ff7a7a;
+    --warn:#ffcf6b; --chip:#243447; --py:#8bd450;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(160deg,#0f1720,#111c27);color:var(--ink);line-height:1.55}
+  header{padding:28px 22px 18px;text-align:center;border-bottom:1px solid var(--line);background:radial-gradient(1200px 300px at 50% -60px,rgba(79,209,197,.15),transparent)}
+  header h1{margin:0 0 6px;font-size:clamp(1.35rem,3.4vw,2.1rem)}
+  header p{margin:0;color:var(--muted);font-size:.95rem}
+  .badges{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .badge{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:.78rem;color:var(--muted)}
+  .wrap{max-width:960px;margin:0 auto;padding:18px 16px 60px}
+  nav.tabs{position:sticky;top:0;z-index:10;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:12px 6px;background:rgba(15,23,32,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.tabs button{background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:9px 13px;border-radius:10px;cursor:pointer;font-size:.84rem;font-weight:600;transition:.15s}
+  nav.tabs button:hover{border-color:var(--accent)}
+  nav.tabs button.active{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border-color:transparent}
+  section.tab{display:none;animation:fade .25s ease}
+  section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2{font-size:1.3rem;margin:20px 0 10px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:1.05rem;margin:18px 0 8px;color:var(--accent)}
+  p{color:#d5deea}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .note{background:rgba(255,207,107,.08);border:1px solid rgba(255,207,107,.35);border-radius:12px;padding:12px 14px;margin:14px 0;font-size:.92rem}
+  .note b{color:var(--warn)}
+  .py{background:rgba(139,212,80,.09);border:1px solid rgba(139,212,80,.4);border-left:4px solid var(--py);border-radius:10px;padding:12px 14px;margin:14px 0;font-size:.9rem}
+  .py .h{color:var(--py);font-weight:700;margin-bottom:4px}
+  code{font-family:"SF Mono",Consolas,Menlo,monospace}
+  pre{background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.85rem;color:#d7e3f0}
+  pre.pyc{border-left:3px solid var(--py)}
+  .kw{color:var(--accent);font-weight:600}.st{color:#9fe6b0}.cm{color:#6f8194;font-style:italic}.pk{color:var(--py);font-weight:600}.hl{background:rgba(255,207,107,.25);border-radius:3px;padding:0 2px}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.87rem;overflow:hidden;border-radius:12px}
+  th,td{padding:8px 10px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:var(--accent);font-weight:700}
+  tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+  td.mono,code.mono{font-family:"SF Mono",Consolas,monospace;color:var(--accent)}
+  .flowsvg{display:block;margin:10px auto;max-width:100%;height:auto}
+  .btn{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.88rem}
+  .btn.ghost{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .scorebar{position:sticky;top:56px;z-index:5;display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:12px 0}
+  .scorebar b{color:var(--accent);font-size:1.1rem}
+  .q{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .q .tag{font-size:.72rem;color:#0a1330;background:var(--accent2);padding:2px 9px;border-radius:999px;font-weight:700}
+  .q .scn{font-style:italic;color:#cfe0ff;margin:8px 0 2px}
+  .opts{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  .opt{background:#0c141d;border:1px solid var(--line);color:var(--ink);padding:9px 12px;border-radius:9px;cursor:pointer;font-family:monospace;font-size:.85rem;text-align:left;transition:.12s}
+  .opt:hover{border-color:var(--accent)}
+  .opt.correct{background:var(--good);color:#052b1c;border-color:transparent;font-weight:700}
+  .opt.wrong{background:var(--bad);color:#2b0505;border-color:transparent}
+  .opt.locked{pointer-events:none}
+  .feedback{margin-top:8px;font-size:.84rem;min-height:1.1em}
+  .feedback.ok{color:var(--good)}.feedback.no{color:var(--bad)}
+  .center{text-align:center}
+  /* traza */
+  .traza-ctrls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+  .traza-ctrls select,.traza-ctrls input{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:8px 10px;font-size:.85rem}
+  .tt{width:auto;min-width:60%}
+  .tt td,.tt th{text-align:center;font-family:monospace}
+  .tt tr.cur{background:rgba(79,209,197,.18)}
+  .statebox{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
+  .chipv{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-family:monospace;font-size:.95rem}
+  .chipv b{color:var(--accent)}
+  footer{text-align:center;color:var(--muted);font-size:.82rem;padding:24px 12px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header>
+  <h1>🔁 Contador, Acumulador y Ciclo FOR</h1>
+  <p>Repetir con propósito — en PSeInt, con notas de Python 🐍</p>
+  <div class="badges">
+    <span class="badge">Lógica de Programación 1</span>
+    <span class="badge">Clase 8</span>
+    <span class="badge">PSeInt + Python</span>
+    <span class="badge">Clase interactiva</span>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="active" data-tab="intro">💡 ¿Por qué repetir?</button>
+  <button data-tab="contador">🔢 Contador</button>
+  <button data-tab="acumulador">➕ Acumulador</button>
+  <button data-tab="for">🔁 Ciclo FOR</button>
+  <button data-tab="traza">📊 Traza en vivo</button>
+  <button data-tab="predice">🎯 Predice</button>
+  <button data-tab="taller">🏆 Taller</button>
+</nav>
+
+<div class="wrap">
+
+<!-- INTRO -->
+<section class="tab active" id="intro">
+  <h2>Repetir sin reescribir</h2>
+  <p>Imagina que quieres sumar los números del 1 al 100. ¿Escribirías 100 líneas? Un <b>ciclo</b> repite un bloque de instrucciones muchas veces por ti. Pero para que la repetición <b>sirva</b>, necesitamos variables que "recuerden" algo de una vuelta a la siguiente: el <b>contador</b> y el <b>acumulador</b>.</p>
+
+  <div class="card">
+    <b>El patrón que verás toda la carrera:</b>
+    <table>
+      <thead><tr><th>Momento</th><th>Dónde</th><th>Qué se hace</th></tr></thead>
+      <tbody>
+        <tr><td>1. Inicializar</td><td><b>Antes</b> del ciclo</td><td class="mono">contador &lt;- 0 · suma &lt;- 0 · producto &lt;- 1</td></tr>
+        <tr><td>2. Actualizar</td><td><b>Dentro</b> del ciclo</td><td class="mono">contador &lt;- contador + 1 · suma &lt;- suma + x</td></tr>
+        <tr><td>3. Usar</td><td><b>Después</b> del ciclo</td><td class="mono">Escribir suma</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Contador vs Acumulador — la diferencia clave</h3>
+  <table>
+    <thead><tr><th></th><th>🔢 Contador</th><th>➕ Acumulador</th></tr></thead>
+    <tbody>
+      <tr><td>¿Qué suma?</td><td>Una cantidad <b>fija</b> (casi siempre 1)</td><td>Un valor <b>variable</b> (cambia cada vuelta)</td></tr>
+      <tr><td>Responde</td><td>¿<b>Cuántas</b> veces?</td><td>¿<b>Cuánto</b> en total?</td></tr>
+      <tr><td>Inicio típico</td><td class="mono">0</td><td class="mono">0 (sumar) · 1 (multiplicar)</td></tr>
+      <tr><td>Actualización</td><td class="mono">c &lt;- c + 1</td><td class="mono">a &lt;- a + valor</td></tr>
+    </tbody>
+  </table>
+  <div class="note">Ve a la pestaña <b>📊 Traza en vivo</b> para ver, vuelta por vuelta, cómo cambian estas variables dentro de un ciclo.</div>
+</section>
+
+<!-- CONTADOR -->
+<section class="tab" id="contador">
+  <h2>🔢 Variable contador</h2>
+  <p>Una variable que <b>aumenta en una cantidad fija</b> (casi siempre +1) cada vez que ocurre algo. Sirve para responder <b>"¿cuántas veces…?"</b>.</p>
+  <div class="card">
+    <b>Sus tres momentos:</b>
+    <ol>
+      <li><b>Inicializar</b> antes del ciclo, en 0: <code>contador &lt;- 0</code></li>
+      <li><b>Actualizar</b> dentro, con paso fijo: <code>contador &lt;- contador + 1</code></li>
+      <li><b>Usar</b> el valor final después del ciclo</li>
+    </ol>
+  </div>
+
+  <h3>Ejemplo — Contar cuántos números son pares</h3>
+  <pre><span class="kw">Algoritmo</span> ContarPares
+    <span class="kw">Definir</span> i, n, contador <span class="kw">Como Entero</span>
+    <span class="kw">Leer</span> n
+    contador <span class="kw">&lt;-</span> 0                     <span class="cm">// inicializar</span>
+    <span class="kw">Para</span> i <span class="kw">&lt;-</span> 1 <span class="kw">Hasta</span> n <span class="kw">Con Paso</span> 1 <span class="kw">Hacer</span>
+        <span class="kw">Si</span> i MOD 2 = 0 <span class="kw">Entonces</span>
+            contador <span class="kw">&lt;-</span> contador + 1  <span class="cm">// +1 fijo</span>
+        <span class="kw">FinSi</span>
+    <span class="kw">FinPara</span>
+    <span class="kw">Escribir</span> <span class="st">"Cantidad de pares: "</span>, contador
+<span class="kw">FinAlgoritmo</span></pre>
+  <p><i>Prueba:</i> n=10 → 5 · n=7 → 3 · n=1 → 0.</p>
+
+  <div class="py"><div class="h">🐍 En Python</div>
+  Igual, y suele abreviarse con <code>+=</code>:
+  <pre class="pyc">contador = <span class="st">0</span>
+contador = contador + <span class="st">1</span>   <span class="cm"># o, más corto:</span>  contador += <span class="st">1</span></pre></div>
+</section>
+
+<!-- ACUMULADOR -->
+<section class="tab" id="acumulador">
+  <h2>➕ Variable acumulador</h2>
+  <p>Una variable que <b>va juntando</b> valores que <b>cambian</b> en cada vuelta. Sirve para responder <b>"¿cuál es el total / la suma / el producto?"</b>.</p>
+
+  <h3>Ejemplo — Sumar los primeros N números</h3>
+  <pre><span class="kw">Algoritmo</span> SumarNumeros
+    <span class="kw">Definir</span> i, n, suma <span class="kw">Como Entero</span>
+    <span class="kw">Leer</span> n
+    suma <span class="kw">&lt;-</span> 0                     <span class="cm">// inicializar acumulador</span>
+    <span class="kw">Para</span> i <span class="kw">&lt;-</span> 1 <span class="kw">Hasta</span> n <span class="kw">Con Paso</span> 1 <span class="kw">Hacer</span>
+        suma <span class="kw">&lt;-</span> suma + i         <span class="cm">// valor VARIABLE (i)</span>
+    <span class="kw">FinPara</span>
+    <span class="kw">Escribir</span> <span class="st">"La suma es: "</span>, suma
+<span class="kw">FinAlgoritmo</span></pre>
+  <p><i>Prueba:</i> N=5 → 15 · N=10 → 55 · N=100 → 5050.</p>
+
+  <div class="note"><b>⚠️ Inicialización:</b> si vas a <b>sumar</b>, empieza en <b>0</b> (sumar 0 no cambia nada). Si vas a <b>multiplicar</b>, empieza en <b>1</b> (multiplicar por 1 no cambia nada). Un producto que empiece en 0 daría siempre 0.</p></div>
+
+  <div class="py"><div class="h">🐍 En Python</div>
+  <pre class="pyc">suma = <span class="st">0</span>
+suma = suma + i        <span class="cm"># o:</span>  suma += i
+<span class="cm"># producto (multiplicativo):</span>
+producto = <span class="st">1</span>
+producto = producto * i   <span class="cm"># o:</span>  producto *= i</pre></div>
+</section>
+
+<!-- FOR -->
+<section class="tab" id="for">
+  <h2>🔁 Ciclo FOR — la estructura <code>Para</code></h2>
+  <p>Repite un bloque un <b>número conocido de veces</b>. Tiene una <b>variable de control</b> que va <b>desde</b> un inicio <b>hasta</b> un fin, avanzando con un <b>paso</b>. El ciclo mismo la inicializa, la compara y la aumenta: <b>¡tú no la tocas!</b></p>
+  <pre><span class="kw">Para</span> variable <span class="kw">&lt;-</span> inicio <span class="kw">Hasta</span> fin <span class="kw">Con Paso</span> salto <span class="kw">Hacer</span>
+    <span class="cm">// instrucciones que se repiten</span>
+<span class="kw">FinPara</span></pre>
+  <ul>
+    <li><b>inicio</b>: valor con el que arranca la variable.</li>
+    <li><b>fin</b>: último valor — en PSeInt, <code>Hasta N</code> <b>incluye</b> a N.</li>
+    <li><b>paso</b> (<code>Con Paso</code>): cuánto sube cada vuelta (si es 1, puede omitirse).</li>
+  </ul>
+
+  <h3>Ejemplo mínimo — Mostrar del 1 al 5</h3>
+  <pre><span class="kw">Para</span> i <span class="kw">&lt;-</span> 1 <span class="kw">Hasta</span> 5 <span class="kw">Con Paso</span> 1 <span class="kw">Hacer</span>
+    <span class="kw">Escribir</span> i
+<span class="kw">FinPara</span>
+<span class="cm">// Salida: 1 2 3 4 5</span></pre>
+
+  <h3>¿Cómo funciona por dentro? (diagrama)</h3>
+  <svg class="flowsvg" viewBox="0 0 440 320" width="340" role="img" aria-label="Diagrama del ciclo Para">
+    <defs><marker id="af" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4fd1c5"/></marker></defs>
+    <g fill="#1f2c3a" stroke="#4fd1c5" stroke-width="1.5" font-family="monospace" font-size="11" text-anchor="middle">
+      <ellipse cx="210" cy="24" rx="42" ry="17"/><text x="210" y="28" fill="#e8eef5" stroke="none">Inicio</text>
+      <rect x="160" y="54" width="100" height="30" rx="4"/><text x="210" y="73" fill="#e8eef5" stroke="none">i &lt;- 1</text>
+      <polygon points="210,104 300,138 210,172 120,138"/><text x="210" y="142" fill="#e8eef5" stroke="none">i &lt;= 5 ?</text>
+      <polygon points="130,196 290,196 274,226 114,226"/><text x="200" y="215" fill="#e8eef5" stroke="none">Escribir i</text>
+      <rect x="150" y="248" width="120" height="30" rx="4"/><text x="210" y="267" fill="#e8eef5" stroke="none">i &lt;- i + 1</text>
+      <ellipse cx="380" cy="138" rx="42" ry="17"/><text x="380" y="142" fill="#e8eef5" stroke="none">Fin</text>
+    </g>
+    <g stroke="#4fd1c5" stroke-width="1.5" marker-end="url(#af)" fill="none">
+      <line x1="210" y1="41" x2="210" y2="52"/>
+      <line x1="210" y1="84" x2="210" y2="102"/>
+      <line x1="210" y1="172" x2="210" y2="194"/>
+      <line x1="210" y1="226" x2="210" y2="246"/>
+      <path d="M300,138 H338"/>
+      <path d="M150,263 H40 V138 H120"/>
+    </g>
+    <text x="216" y="190" fill="#ffcf6b" font-family="monospace" font-size="11">Sí</text>
+    <text x="312" y="132" fill="#ffcf6b" font-family="monospace" font-size="11">No</text>
+    <text x="46" y="132" fill="#8bd450" font-family="monospace" font-size="10">repite</text>
+  </svg>
+
+  <div class="py"><div class="h">🐍 En Python</div>
+  El <code>Para</code> es <code>for</code> con <code>range(inicio, fin, paso)</code>. <b>¡Ojo!</b> el límite superior de <code>range</code> <b>NO se incluye</b>: para llegar hasta N se escribe <code>range(1, N+1)</code>.
+  <pre class="pyc"><span class="pk">for</span> i <span class="pk">in</span> <span class="pk">range</span>(<span class="st">1</span>, <span class="st">6</span>):     <span class="cm"># 1,2,3,4,5 (el 6 NO entra)</span>
+    <span class="pk">print</span>(i)</pre>
+  <b>Diferencia clave:</b> en PSeInt <code>Hasta 5</code> <b>sí</b> incluye el 5; en Python <code>range(1,6)</code> llega hasta 5 (excluye el 6).</div>
+</section>
+
+<!-- TRAZA -->
+<section class="tab" id="traza">
+  <h2>📊 Traza en vivo — tabla de seguimiento</h2>
+  <p>Elige un algoritmo y avanza <b>vuelta por vuelta</b> para ver cómo cambian la variable de control y el contador/acumulador. Es la mejor forma de "ver" un ciclo por dentro.</p>
+  <div class="card">
+    <div class="traza-ctrls">
+      <label>Algoritmo:
+        <select id="trazaMode">
+          <option value="suma">Sumar 1..N (acumulador)</option>
+          <option value="pares">Contar pares 1..N (contador)</option>
+          <option value="fact">Factorial de N (producto)</option>
+        </select>
+      </label>
+      <label>N = <input id="trazaN" type="number" value="5" min="1" max="12" style="width:64px"></label>
+      <button class="btn" id="trazaStep">Siguiente vuelta ▶</button>
+      <button class="btn ghost" id="trazaAuto">Auto ⏩</button>
+      <button class="btn ghost" id="trazaReset">Reiniciar</button>
+    </div>
+    <div class="statebox" id="trazaState"></div>
+    <div style="overflow-x:auto"><table class="tt" id="trazaTable"></table></div>
+    <div class="feedback" id="trazaMsg"></div>
+  </div>
+</section>
+
+<!-- PREDICE -->
+<section class="tab" id="predice">
+  <h2>🎯 Predice</h2>
+  <p>Lee cada fragmento de PSeInt y elige el resultado o el valor final.</p>
+  <div class="scorebar"><span>Puntaje: <b id="pScore">0</b> / <b id="pTotal">6</b></span><button class="btn ghost" id="pReset">Reiniciar</button></div>
+  <div id="pQuiz"></div>
+</section>
+
+<!-- TALLER -->
+<section class="tab" id="taller">
+  <h2>🏆 Taller — 8 ejercicios en PSeInt</h2>
+  <p><b>Programación en pareja:</b> por ejercicio, identifica si necesitas <b>contador</b>, <b>acumulador</b> o ambos → escríbelo en PSeInt → <b>Ejecuta</b> con varios datos → usa la <b>tabla de seguimiento</b>. Intenta antes de abrir la solución.</p>
+  <div id="ejercicios"></div>
+</section>
+
+</div>
+<footer>Material interactivo · Lógica de Programación 1 · Contador, acumulador y ciclo FOR (PSeInt + Python)</footer>
+
+<script>
+/* Tabs */
+const tabs=document.querySelectorAll('#tabs button');
+tabs.forEach(b=>b.addEventListener('click',()=>{
+  tabs.forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.remove('active'));
+  b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}));
+
+/* Generic single-choice quiz */
+function makeQuiz(cfg){
+  let score=0, ans=new Set();
+  document.getElementById(cfg.totalId).textContent=cfg.data.length;
+  function build(){
+    const box=document.getElementById(cfg.boxId);box.innerHTML='';score=0;ans.clear();
+    document.getElementById(cfg.scoreId).textContent='0';
+    cfg.data.forEach((q,i)=>{
+      const c=document.createElement('div');c.className='q';
+      c.innerHTML='<span class="tag">'+(q.tag||('#'+(i+1)))+'</span>'+
+        (q.scn?'<p class="scn">'+q.scn+'</p>':'')+
+        (q.code?'<pre>'+q.code.replace(/</g,'&lt;')+'</pre>':'');
+      const opts=document.createElement('div');opts.className='opts';
+      q.opts.forEach(o=>{
+        const b=document.createElement('button');b.className='opt';b.textContent=o;
+        b.addEventListener('click',()=>{
+          if(ans.has(i))return;ans.add(i);
+          opts.querySelectorAll('.opt').forEach(x=>x.classList.add('locked'));
+          const fb=c.querySelector('.feedback');
+          if(o===q.ans){b.classList.add('correct');score++;document.getElementById(cfg.scoreId).textContent=score;
+            fb.textContent='✔ ¡Correcto! '+q.why;fb.className='feedback ok';}
+          else{b.classList.add('wrong');opts.querySelectorAll('.opt').forEach(x=>{if(x.textContent===q.ans)x.classList.add('correct');});
+            fb.textContent='✘ Respuesta: '+q.ans+'. '+q.why;fb.className='feedback no';}
+        });
+        opts.appendChild(b);
+      });
+      c.appendChild(opts);
+      const fb=document.createElement('div');fb.className='feedback';c.appendChild(fb);
+      box.appendChild(c);
+    });
+  }
+  document.getElementById(cfg.resetId).addEventListener('click',build);build();
+}
+
+/* Predice */
+makeQuiz({boxId:'pQuiz',scoreId:'pScore',totalId:'pTotal',resetId:'pReset',data:[
+  {tag:'¿Contador o acumulador?',scn:'"Quiero saber CUÁNTOS alumnos aprobaron."',
+   opts:['Contador','Acumulador'],ans:'Contador',why:'Cuenta ocurrencias con un paso fijo (+1).'},
+  {tag:'¿Contador o acumulador?',scn:'"Quiero la SUMA total de todas las ventas."',
+   opts:['Contador','Acumulador'],ans:'Acumulador',why:'Junta valores que cambian cada vuelta.'},
+  {tag:'Inicialización',scn:'Voy a calcular un producto (factorial). ¿Con qué valor inicializo?',
+   opts:['0','1','No hace falta'],ans:'1',why:'Multiplicar por 1 no altera; empezar en 0 daría siempre 0.'},
+  {tag:'Salida · N=5',code:'suma <- 0\nPara i <- 1 Hasta 5 Con Paso 1 Hacer\n    suma <- suma + i\nFinPara\nEscribir suma',
+   opts:['15','5','10'],ans:'15',why:'1+2+3+4+5 = 15.'},
+  {tag:'Salida',code:'Para i <- 2 Hasta 10 Con Paso 2 Hacer\n    Escribir i\nFinPara',
+   opts:['2 4 6 8 10','2 3 4 ... 10','2 4 6 8'],ans:'2 4 6 8 10',why:'Con Paso 2 avanza de 2 en 2, y Hasta 10 incluye el 10.'},
+  {tag:'Salida · producto',code:'producto <- 1\nPara i <- 1 Hasta 4 Con Paso 1 Hacer\n    producto <- producto * i\nFinPara\nEscribir producto',
+   opts:['24','10','0'],ans:'24',why:'1*1*2*3*4 = 24 (es 4!).'}
+]});
+
+/* Traza en vivo */
+const trazaMode=document.getElementById('trazaMode'), trazaN=document.getElementById('trazaN');
+const trazaTable=document.getElementById('trazaTable'), trazaState=document.getElementById('trazaState'), trazaMsg=document.getElementById('trazaMsg');
+let tr={};
+function trazaConfig(){
+  const mode=trazaMode.value; let N=parseInt(trazaN.value)||5; N=Math.max(1,Math.min(12,N));
+  const cfg={
+    suma:{acc:'suma',init:0,cols:['i','suma &lt;- suma + i','suma'],upd:(acc,i)=>acc+i, cond:'i <= N', desc:'acumulador (suma)'},
+    pares:{acc:'contador',init:0,cols:['i','¿i par? → contador+1','contador'],upd:(acc,i)=>acc+(i%2===0?1:0), cond:'i <= N', desc:'contador'},
+    fact:{acc:'producto',init:1,cols:['i','producto &lt;- producto * i','producto'],upd:(acc,i)=>acc*i, cond:'i <= N', desc:'acumulador (producto)'}
+  }[mode];
+  return {mode,N,cfg};
+}
+function trazaBuild(){
+  const {N,cfg}=trazaConfig();
+  tr={i:0,acc:cfg.init,N,cfg,done:false,started:false};
+  trazaTable.innerHTML='<thead><tr><th>'+cfg.cols[0]+'</th><th>'+cfg.cols[1]+'</th><th>'+cfg.cols[2]+'</th></tr></thead><tbody></tbody>';
+  renderState();
+  trazaMsg.textContent='';trazaMsg.className='feedback';
+}
+function renderState(){
+  const initTxt = tr.cfg.acc+' <- '+tr.cfg.init;
+  trazaState.innerHTML='<div class="chipv">N = <b>'+tr.N+'</b></div>'+
+    '<div class="chipv">i = <b>'+(tr.started?tr.i:'—')+'</b></div>'+
+    '<div class="chipv">'+tr.cfg.acc+' = <b>'+tr.acc+'</b></div>'+
+    (tr.started?'':'<div class="chipv" style="color:#9fb0c3">antes del ciclo: '+initTxt+'</div>');
+}
+function trazaStep(){
+  if(tr.done)return;
+  if(tr.i>=tr.N){ // terminar
+    tr.done=true;
+    trazaMsg.textContent='✔ Fin del ciclo. Resultado: '+tr.cfg.acc+' = '+tr.acc+'.';trazaMsg.className='feedback ok';
+    renderState();return;
+  }
+  tr.started=true;tr.i++;
+  const before=tr.acc; tr.acc=tr.cfg.upd(tr.acc,tr.i);
+  let mid;
+  if(tr.mode==='pares'||tr.cfg.acc==='contador'){mid=(tr.i%2===0)?(before+' + 1 = '+tr.acc+' (par)'):(tr.acc+' (impar, no suma)');}
+  else if(tr.cfg.acc==='producto'){mid=before+' * '+tr.i+' = '+tr.acc;}
+  else {mid=before+' + '+tr.i+' = '+tr.acc;}
+  const tb=trazaTable.querySelector('tbody');
+  [...tb.querySelectorAll('tr')].forEach(r=>r.classList.remove('cur'));
+  const row=document.createElement('tr');row.className='cur';
+  row.innerHTML='<td>'+tr.i+'</td><td>'+mid+'</td><td><b>'+tr.acc+'</b></td>';
+  tb.appendChild(row);renderState();
+  if(tr.i>=tr.N){trazaMsg.textContent='Última vuelta. Pulsa una vez más para terminar el ciclo.';trazaMsg.className='feedback';}
+}
+document.getElementById('trazaStep').addEventListener('click',trazaStep);
+document.getElementById('trazaReset').addEventListener('click',trazaBuild);
+document.getElementById('trazaAuto').addEventListener('click',()=>{
+  const iv=setInterval(()=>{ if(tr.done){clearInterval(iv);return;} trazaStep(); },600);
+});
+trazaMode.addEventListener('change',trazaBuild);
+trazaN.addEventListener('change',trazaBuild);
+trazaBuild();
+
+/* Taller */
+const ejercicios=[
+  {t:'1. Contar del 1 al 10', d:'Mostrar los números del 1 al 10.', tag:'FOR básico',
+   sol:`Algoritmo ContarDiez
+    Definir i Como Entero
+    Para i <- 1 Hasta 10 Con Paso 1 Hacer
+        Escribir i
+    FinPara
+FinAlgoritmo`},
+  {t:'2. Suma de los primeros N naturales', d:'Pedir N y sumar 1 + 2 + … + N.', tag:'acumulador',
+   sol:`Algoritmo SumaNaturales
+    Definir i, n, suma Como Entero
+    Leer n
+    suma <- 0
+    Para i <- 1 Hasta n Con Paso 1 Hacer
+        suma <- suma + i
+    FinPara
+    Escribir "La suma es: ", suma
+FinAlgoritmo`},
+  {t:'3. Contar los pares entre 1 y N', d:'Contar cuántos pares hay del 1 al N.', tag:'contador',
+   sol:`Algoritmo ContarPares
+    Definir i, n, contador Como Entero
+    Leer n
+    contador <- 0
+    Para i <- 1 Hasta n Con Paso 1 Hacer
+        Si i MOD 2 = 0 Entonces
+            contador <- contador + 1
+        FinSi
+    FinPara
+    Escribir "Cantidad de pares: ", contador
+FinAlgoritmo`},
+  {t:'4. Factorial de N', d:'Calcular N! = 1 × 2 × … × N.', tag:'acumulador (producto)',
+   sol:`Algoritmo Factorial
+    Definir i, n, producto Como Entero
+    Leer n
+    producto <- 1
+    Para i <- 1 Hasta n Con Paso 1 Hacer
+        producto <- producto * i
+    FinPara
+    Escribir n, "! = ", producto
+FinAlgoritmo`},
+  {t:'5. Promedio de N números', d:'Pedir N números y calcular su promedio.', tag:'acumulador + N',
+   sol:`Algoritmo Promedio
+    Definir i, n Como Entero
+    Definir numero, suma, promedio Como Real
+    Leer n
+    suma <- 0
+    Para i <- 1 Hasta n Con Paso 1 Hacer
+        Escribir "Número ", i, ":"
+        Leer numero
+        suma <- suma + numero
+    FinPara
+    promedio <- suma / n
+    Escribir "Promedio: ", promedio
+FinAlgoritmo`},
+  {t:'6. Tabla de multiplicar', d:'Pedir un número y mostrar su tabla del 1 al 10.', tag:'FOR + operación',
+   sol:`Algoritmo TablaMultiplicar
+    Definir i, num Como Entero
+    Leer num
+    Para i <- 1 Hasta 10 Con Paso 1 Hacer
+        Escribir num, " x ", i, " = ", num * i
+    FinPara
+FinAlgoritmo`},
+  {t:'7. Contar aprobados', d:'Pedir N notas y contar cuántas son ≥ 60.', tag:'contador con condición',
+   sol:`Algoritmo ContarAprobados
+    Definir i, n, aprobados Como Entero
+    Definir nota Como Real
+    Leer n
+    aprobados <- 0
+    Para i <- 1 Hasta n Con Paso 1 Hacer
+        Escribir "Nota ", i, ":"
+        Leer nota
+        Si nota >= 60 Entonces
+            aprobados <- aprobados + 1
+        FinSi
+    FinPara
+    Escribir "Aprobados: ", aprobados
+FinAlgoritmo`},
+  {t:'8. Sumar solo los pares del 1 al N', d:'Sumar únicamente los números pares.', tag:'acumulador con condición',
+   sol:`Algoritmo SumarPares
+    Definir i, n, suma Como Entero
+    Leer n
+    suma <- 0
+    Para i <- 1 Hasta n Con Paso 1 Hacer
+        Si i MOD 2 = 0 Entonces
+            suma <- suma + i
+        FinSi
+    FinPara
+    Escribir "Suma de pares: ", suma
+FinAlgoritmo`}
+];
+const ejBox=document.getElementById('ejercicios');
+ejercicios.forEach(e=>{
+  const c=document.createElement('div');c.className='q';
+  c.innerHTML='<span class="tag">'+e.tag+'</span><h3 style="margin:8px 0 4px">'+e.t+'</h3><p style="margin:2px 0">'+e.d+'</p>'+
+    '<details><summary>Ver solución PSeInt</summary><pre>'+e.sol.replace(/</g,'&lt;')+'</pre></details>';
+  ejBox.appendChild(c);
+});
+</script>
+</body>
+</html>

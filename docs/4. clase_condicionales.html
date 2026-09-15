@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Condicionales · Clase Interactiva</title>
+<style>
+  :root{
+    --bg:#0f1720; --panel:#18222e; --panel2:#1f2c3a; --ink:#e8eef5; --muted:#9fb0c3;
+    --line:#2b3a4d; --accent:#4fd1c5; --accent2:#7c9cff; --good:#48d597; --bad:#ff7a7a;
+    --warn:#ffcf6b; --chip:#243447; --py:#8bd450;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(160deg,#0f1720,#111c27);color:var(--ink);line-height:1.55}
+  header{padding:28px 22px 18px;text-align:center;border-bottom:1px solid var(--line);background:radial-gradient(1200px 300px at 50% -60px,rgba(79,209,197,.15),transparent)}
+  header h1{margin:0 0 6px;font-size:clamp(1.35rem,3.4vw,2.1rem)}
+  header p{margin:0;color:var(--muted);font-size:.95rem}
+  .badges{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .badge{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:.78rem;color:var(--muted)}
+  .wrap{max-width:960px;margin:0 auto;padding:18px 16px 60px}
+  nav.tabs{position:sticky;top:0;z-index:10;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:12px 6px;background:rgba(15,23,32,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.tabs button{background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:9px 14px;border-radius:10px;cursor:pointer;font-size:.86rem;font-weight:600;transition:.15s}
+  nav.tabs button:hover{border-color:var(--accent)}
+  nav.tabs button.active{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border-color:transparent}
+  section.tab{display:none;animation:fade .25s ease}
+  section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2{font-size:1.3rem;margin:20px 0 10px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:1.05rem;margin:18px 0 8px;color:var(--accent)}
+  p{color:#d5deea}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .note{background:rgba(255,207,107,.08);border:1px solid rgba(255,207,107,.35);border-radius:12px;padding:12px 14px;margin:14px 0;font-size:.92rem}
+  .note b{color:var(--warn)}
+  .py{background:rgba(139,212,80,.09);border:1px solid rgba(139,212,80,.4);border-left:4px solid var(--py);border-radius:10px;padding:12px 14px;margin:14px 0;font-size:.9rem}
+  .py .h{color:var(--py);font-weight:700;margin-bottom:4px}
+  code{font-family:"SF Mono",Consolas,Menlo,monospace}
+  pre{background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.85rem;color:#d7e3f0}
+  pre.pyc{border-left:3px solid var(--py)}
+  .kw{color:var(--accent);font-weight:600}.st{color:#9fe6b0}.cm{color:#6f8194;font-style:italic}.pk{color:var(--py);font-weight:600}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.87rem;overflow:hidden;border-radius:12px}
+  th,td{padding:9px 10px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:var(--accent);font-weight:700}
+  tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+  td.mono,code.mono{font-family:"SF Mono",Consolas,monospace;color:var(--accent)}
+  details{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:10px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--accent)}
+  details[open]{border-color:var(--accent)}
+  .flowsvg{display:block;margin:10px auto;max-width:100%;height:auto}
+  .btn{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.9rem}
+  .btn.ghost{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+  .btn:active{transform:translateY(1px)}
+  .scorebar{position:sticky;top:56px;z-index:5;display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:12px 0}
+  .scorebar b{color:var(--accent);font-size:1.1rem}
+  .q{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .q .tag{font-size:.72rem;color:#0a1330;background:var(--accent2);padding:2px 9px;border-radius:999px;font-weight:700}
+  .q .scn{font-style:italic;color:#cfe0ff;margin:8px 0 2px}
+  .opts{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  .opt{background:#0c141d;border:1px solid var(--line);color:var(--ink);padding:9px 12px;border-radius:9px;cursor:pointer;font-family:monospace;font-size:.85rem;text-align:left;transition:.12s}
+  .opt:hover{border-color:var(--accent)}
+  .opt.correct{background:var(--good);color:#052b1c;border-color:transparent;font-weight:700}
+  .opt.wrong{background:var(--bad);color:#2b0505;border-color:transparent}
+  .opt.locked{pointer-events:none}
+  .feedback{margin-top:8px;font-size:.84rem;min-height:1.1em}
+  .feedback.ok{color:var(--good)}.feedback.no{color:var(--bad)}
+  .center{text-align:center}
+  footer{text-align:center;color:var(--muted);font-size:.82rem;padding:24px 12px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header>
+  <h1>🔀 Estructuras Condicionales</h1>
+  <p>Simple · Doble · Múltiple · Anidado — en PSeInt, con notas de Python 🐍</p>
+  <div class="badges">
+    <span class="badge">Lógica de Programación 1</span>
+    <span class="badge">Clase 7</span>
+    <span class="badge">PSeInt + Python</span>
+    <span class="badge">Clase interactiva</span>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="active" data-tab="intro">💡 ¿Qué es?</button>
+  <button data-tab="simple">1️⃣ Simple</button>
+  <button data-tab="doble">2️⃣ Doble</button>
+  <button data-tab="multiple">3️⃣ Múltiple</button>
+  <button data-tab="anidado">4️⃣ Anidado</button>
+  <button data-tab="predice">🎯 Predice</button>
+  <button data-tab="taller">🏆 Taller</button>
+</nav>
+
+<div class="wrap">
+
+<!-- INTRO -->
+<section class="tab active" id="intro">
+  <h2>El programa aprende a decidir</h2>
+  <p>Hasta ahora el programa iba en <b>línea recta</b>: una instrucción tras otra. Una <b>estructura condicional</b> es la primera <b>bifurcación del camino</b>: <i>"SI se cumple esto, haz aquello."</i></p>
+  <p>La decisión nace de una <b>condición</b> que se evalúa como <b>Verdadero</b> o <b>Falso</b> (¡aquí usamos los operadores relacionales y lógicos!). En el diagrama de flujo, toda decisión es un <b>rombo</b> con salidas <b>Sí</b> y <b>No</b>.</p>
+
+  <svg class="flowsvg" viewBox="0 0 300 150" width="260" role="img" aria-label="Rombo de decisión">
+    <defs><marker id="a0" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4fd1c5"/></marker></defs>
+    <polygon points="150,10 240,55 150,100 60,55" fill="#1f2c3a" stroke="#4fd1c5" stroke-width="1.6"/>
+    <text x="150" y="59" fill="#e8eef5" font-family="monospace" font-size="12" text-anchor="middle">¿condición?</text>
+    <g stroke="#4fd1c5" stroke-width="1.6" marker-end="url(#a0)" fill="none">
+      <path d="M60,55 H20 V130"/><path d="M240,55 H280 V130"/>
+    </g>
+    <text x="34" y="50" fill="#ffcf6b" font-family="monospace" font-size="12">Sí</text>
+    <text x="250" y="50" fill="#ffcf6b" font-family="monospace" font-size="12">No</text>
+    <text x="20" y="145" fill="#9fb0c3" font-family="monospace" font-size="10" text-anchor="middle">hacer algo</text>
+    <text x="280" y="145" fill="#9fb0c3" font-family="monospace" font-size="10" text-anchor="middle">otra cosa</text>
+  </svg>
+
+  <h3>Los cuatro tipos de un vistazo</h3>
+  <table>
+    <thead><tr><th>Tipo</th><th>¿Cuándo?</th><th>PSeInt</th><th>🐍 Python</th></tr></thead>
+    <tbody>
+      <tr><td>Simple</td><td>Hacer algo <b>solo si</b> se cumple</td><td class="mono">Si…Entonces…FinSi</td><td class="mono">if</td></tr>
+      <tr><td>Doble</td><td>Elegir entre <b>dos</b> caminos</td><td class="mono">Si…SiNo…FinSi</td><td class="mono">if / else</td></tr>
+      <tr><td>Múltiple</td><td>Elegir entre <b>varias</b> opciones</td><td class="mono">SiNo Si… / Segun</td><td class="mono">elif / match</td></tr>
+      <tr><td>Anidado</td><td>Una decisión <b>dentro</b> de otra</td><td class="mono">Si dentro de Si</td><td class="mono">if dentro de if</td></tr>
+    </tbody>
+  </table>
+
+  <h3>🎲 ¿Qué condicional usar?</h3>
+  <p>Lee cada situación y elige el tipo más adecuado.</p>
+  <div class="scorebar"><span>Puntaje: <b id="tipoScore">0</b> / <b id="tipoTotal">6</b></span><button class="btn ghost" id="tipoReset">Reiniciar</button></div>
+  <div id="tipoQuiz"></div>
+</section>
+
+<!-- SIMPLE -->
+<section class="tab" id="simple">
+  <h2>1️⃣ Condicional simple</h2>
+  <p>Ejecuta un bloque <b>solo si</b> la condición es verdadera. Si es falsa, <b>no hace nada</b> y sigue de largo.</p>
+  <pre><span class="kw">Si</span> condicion <span class="kw">Entonces</span>
+    <span class="cm">// instrucciones si es Verdadero</span>
+<span class="kw">FinSi</span></pre>
+
+  <h3>Ejemplo — Descuento por compra grande</h3>
+  <pre><span class="kw">Algoritmo</span> DescuentoSimple
+    <span class="kw">Definir</span> compra, total <span class="kw">Como Real</span>
+    <span class="kw">Leer</span> compra
+    total <span class="kw">&lt;-</span> compra
+    <span class="kw">Si</span> compra &gt; 100 <span class="kw">Entonces</span>
+        total <span class="kw">&lt;-</span> compra - (compra * 0.10)   <span class="cm">// 10% desc.</span>
+    <span class="kw">FinSi</span>
+    <span class="kw">Escribir</span> <span class="st">"Total a pagar: "</span>, total
+<span class="kw">FinAlgoritmo</span></pre>
+
+  <svg class="flowsvg" viewBox="0 0 430 470" width="340" role="img" aria-label="Diagrama condicional simple">
+    <defs><marker id="a1" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4fd1c5"/></marker></defs>
+    <g fill="#1f2c3a" stroke="#4fd1c5" stroke-width="1.5" font-family="monospace" font-size="11" text-anchor="middle">
+      <ellipse cx="210" cy="24" rx="44" ry="17"/><text x="210" y="28" fill="#e8eef5" stroke="none">Inicio</text>
+      <rect x="95" y="52" width="230" height="32" rx="4"/><text x="210" y="72" fill="#e8eef5" stroke="none" font-size="10.5">Definir compra, total Como Real</text>
+      <polygon points="155,104 275,104 257,136 137,136"/><text x="206" y="124" fill="#e8eef5" stroke="none">Leer compra</text>
+      <rect x="140" y="156" width="140" height="32" rx="4"/><text x="210" y="176" fill="#e8eef5" stroke="none">total &lt;- compra</text>
+      <polygon points="210,196 300,224 210,252 120,224"/><text x="210" y="228" fill="#e8eef5" stroke="none">compra &gt; 100 ?</text>
+      <rect x="20" y="286" width="256" height="34" rx="4"/><text x="148" y="307" fill="#e8eef5" stroke="none" font-size="10.5">total &lt;- compra - (compra * 0.10)</text>
+      <polygon points="155,360 280,360 264,392 139,392"/><text x="209" y="380" fill="#e8eef5" stroke="none">Escribir total</text>
+      <ellipse cx="210" cy="428" rx="44" ry="17"/><text x="210" y="432" fill="#e8eef5" stroke="none">Fin</text>
+    </g>
+    <g stroke="#4fd1c5" stroke-width="1.5" marker-end="url(#a1)" fill="none">
+      <line x1="210" y1="41" x2="210" y2="50"/>
+      <line x1="210" y1="84" x2="210" y2="102"/>
+      <line x1="210" y1="136" x2="210" y2="154"/>
+      <line x1="210" y1="188" x2="210" y2="194"/>
+      <path d="M120,224 H148 V284"/>
+      <path d="M300,224 H352 V376 H266"/>
+      <path d="M148,320 V376 H152"/>
+      <line x1="210" y1="392" x2="210" y2="409"/>
+    </g>
+    <text x="126" y="218" fill="#ffcf6b" font-family="monospace" font-size="11">Sí</text>
+    <text x="306" y="218" fill="#ffcf6b" font-family="monospace" font-size="11">No</text>
+  </svg>
+
+  <div class="py"><div class="h">🐍 En Python</div>
+  Se usa <code>if</code> con <b>dos puntos</b>; el bloque va <b>indentado</b> (no hay <code>FinSi</code>: el fin lo marca la sangría).
+  <pre class="pyc"><span class="pk">if</span> compra &gt; <span class="st">100</span>:
+    total = compra - compra * <span class="st">0.10</span></pre></div>
+</section>
+
+<!-- DOBLE -->
+<section class="tab" id="doble">
+  <h2>2️⃣ Condicional doble</h2>
+  <p>Elige entre <b>dos</b> caminos: uno si la condición es verdadera y otro si es falsa. Siempre se ejecuta <b>exactamente uno</b>.</p>
+  <pre><span class="kw">Si</span> condicion <span class="kw">Entonces</span>
+    <span class="cm">// camino Verdadero</span>
+<span class="kw">SiNo</span>
+    <span class="cm">// camino Falso</span>
+<span class="kw">FinSi</span></pre>
+
+  <h3>Ejemplo — ¿Aprobó o reprobó?</h3>
+  <pre><span class="kw">Algoritmo</span> AproboReprobo
+    <span class="kw">Definir</span> nota <span class="kw">Como Real</span>
+    <span class="kw">Leer</span> nota
+    <span class="kw">Si</span> nota &gt;= 60 <span class="kw">Entonces</span>
+        <span class="kw">Escribir</span> <span class="st">"APROBADO"</span>
+    <span class="kw">SiNo</span>
+        <span class="kw">Escribir</span> <span class="st">"REPROBADO"</span>
+    <span class="kw">FinSi</span>
+<span class="kw">FinAlgoritmo</span></pre>
+
+  <svg class="flowsvg" viewBox="0 0 380 280" width="320" role="img" aria-label="Diagrama condicional doble">
+    <defs><marker id="a2" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4fd1c5"/></marker></defs>
+    <g fill="#1f2c3a" stroke="#4fd1c5" stroke-width="1.5" font-family="monospace" font-size="11" text-anchor="middle">
+      <ellipse cx="190" cy="22" rx="44" ry="17"/><text x="190" y="26" fill="#e8eef5" stroke="none">Inicio</text>
+      <polygon points="132,58 248,58 232,88 116,88"/><text x="190" y="77" fill="#e8eef5" stroke="none">Leer nota</text>
+      <polygon points="190,110 280,146 190,182 100,146"/><text x="190" y="150" fill="#e8eef5" stroke="none">nota &gt;= 60 ?</text>
+      <rect x="30" y="214" width="130" height="34" rx="4"/><text x="95" y="235" fill="#e8eef5" stroke="none">Escribir APROBADO</text>
+      <rect x="222" y="214" width="132" height="34" rx="4"/><text x="288" y="235" fill="#e8eef5" stroke="none">Escribir REPROBADO</text>
+    </g>
+    <g stroke="#4fd1c5" stroke-width="1.5" marker-end="url(#a2)" fill="none">
+      <line x1="190" y1="39" x2="190" y2="54"/>
+      <line x1="190" y1="88" x2="190" y2="106"/>
+      <path d="M100,146 H95 V210"/>
+      <path d="M280,146 H288 V210"/>
+    </g>
+    <text x="80" y="182" fill="#ffcf6b" font-family="monospace" font-size="11">Sí</text>
+    <text x="288" y="182" fill="#ffcf6b" font-family="monospace" font-size="11">No</text>
+  </svg>
+
+  <div class="py"><div class="h">🐍 En Python</div>
+  El <code>SiNo</code> es <code>else</code>:
+  <pre class="pyc"><span class="pk">if</span> nota &gt;= <span class="st">60</span>:
+    <span class="pk">print</span>(<span class="st">"APROBADO"</span>)
+<span class="pk">else</span>:
+    <span class="pk">print</span>(<span class="st">"REPROBADO"</span>)</pre></div>
+</section>
+
+<!-- MULTIPLE -->
+<section class="tab" id="multiple">
+  <h2>3️⃣ Condicional múltiple</h2>
+  <p>Cuando hay <b>más de dos</b> caminos. Dos formas en PSeInt:</p>
+
+  <h3>Forma A — Escalera <code>SiNo Si</code> (para rangos)</h3>
+  <p>Ideal cuando las opciones dependen de <b>rangos</b> o condiciones distintas.</p>
+  <pre><span class="kw">Si</span> nota &gt;= 90 <span class="kw">Entonces</span>
+    <span class="kw">Escribir</span> <span class="st">"A"</span>
+<span class="kw">SiNo</span>
+    <span class="kw">Si</span> nota &gt;= 80 <span class="kw">Entonces</span>
+        <span class="kw">Escribir</span> <span class="st">"B"</span>
+    <span class="kw">SiNo</span>
+        <span class="kw">Si</span> nota &gt;= 70 <span class="kw">Entonces</span>
+            <span class="kw">Escribir</span> <span class="st">"C"</span>
+        <span class="kw">SiNo</span>
+            <span class="kw">Escribir</span> <span class="st">"D o F…"</span>
+        <span class="kw">FinSi</span>
+    <span class="kw">FinSi</span>
+<span class="kw">FinSi</span></pre>
+
+  <h3>Forma B — Estructura <code>Segun</code> (para valores exactos)</h3>
+  <p>Ideal cuando comparamos <b>una variable contra valores concretos</b> (un menú, un día, un número de opción).</p>
+  <pre><span class="kw">Segun</span> opcion <span class="kw">Hacer</span>
+    1:
+        <span class="kw">Escribir</span> <span class="st">"Resultado: "</span>, a + b
+    2:
+        <span class="kw">Escribir</span> <span class="st">"Resultado: "</span>, a - b
+    3:
+        <span class="kw">Escribir</span> <span class="st">"Resultado: "</span>, a * b
+    <span class="kw">De Otro Modo</span>:
+        <span class="kw">Escribir</span> <span class="st">"Opción inválida"</span>
+<span class="kw">FinSegun</span></pre>
+  <div class="note"><b>¿Escalera o Segun?</b> Usa <code>Segun</code> cuando comparas <b>igualdad</b> contra valores exactos (1, 2, 3…). Usa la <b>escalera</b> cuando hay <b>rangos</b> o comparaciones con <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>.</div>
+
+  <div class="py"><div class="h">🐍 En Python</div>
+  La escalera se escribe con <code>elif</code> (contracción de <i>else if</i>), mucho más corta que anidar. El <code>Segun</code> se parece a <code>match</code> (Python 3.10+).
+  <pre class="pyc"><span class="pk">if</span>   nota &gt;= <span class="st">90</span>: <span class="pk">print</span>(<span class="st">"A"</span>)
+<span class="pk">elif</span> nota &gt;= <span class="st">80</span>: <span class="pk">print</span>(<span class="st">"B"</span>)
+<span class="pk">elif</span> nota &gt;= <span class="st">70</span>: <span class="pk">print</span>(<span class="st">"C"</span>)
+<span class="pk">elif</span> nota &gt;= <span class="st">60</span>: <span class="pk">print</span>(<span class="st">"D"</span>)
+<span class="pk">else</span>:            <span class="pk">print</span>(<span class="st">"F"</span>)</pre></div>
+</section>
+
+<!-- ANIDADO -->
+<section class="tab" id="anidado">
+  <h2>4️⃣ Condicional anidado</h2>
+  <p>Un condicional <b>dentro</b> de otro: se plantea una <b>segunda pregunta solo si</b> la primera se cumplió (decisiones "en capas").</p>
+  <div class="note"><b>Múltiple vs anidado:</b> la escalera múltiple elige <b>una</b> opción entre varias del mismo nivel. El anidado hace una segunda decisión <b>dependiente</b> de la primera.</div>
+
+  <h3>Ejemplo — Clasificar un número</h3>
+  <pre><span class="kw">Algoritmo</span> ClasificarNumero
+    <span class="kw">Definir</span> numero <span class="kw">Como Entero</span>
+    <span class="kw">Leer</span> numero
+    <span class="kw">Si</span> numero &gt; 0 <span class="kw">Entonces</span>
+        <span class="kw">Si</span> numero MOD 2 = 0 <span class="kw">Entonces</span>   <span class="cm">// anidado</span>
+            <span class="kw">Escribir</span> <span class="st">"Positivo y PAR"</span>
+        <span class="kw">SiNo</span>
+            <span class="kw">Escribir</span> <span class="st">"Positivo e IMPAR"</span>
+        <span class="kw">FinSi</span>
+    <span class="kw">SiNo</span>
+        <span class="kw">Si</span> numero &lt; 0 <span class="kw">Entonces</span>
+            <span class="kw">Escribir</span> <span class="st">"Negativo"</span>
+        <span class="kw">SiNo</span>
+            <span class="kw">Escribir</span> <span class="st">"Cero"</span>
+        <span class="kw">FinSi</span>
+    <span class="kw">FinSi</span>
+<span class="kw">FinAlgoritmo</span></pre>
+
+  <svg class="flowsvg" viewBox="0 0 420 320" width="360" role="img" aria-label="Diagrama condicional anidado">
+    <defs><marker id="a3" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4fd1c5"/></marker></defs>
+    <g fill="#1f2c3a" stroke="#4fd1c5" stroke-width="1.5" font-family="monospace" font-size="10.5" text-anchor="middle">
+      <polygon points="210,12 300,44 210,76 120,44"/><text x="210" y="48" fill="#e8eef5" stroke="none">numero &gt; 0 ?</text>
+      <polygon points="120,104 210,136 120,168 30,136"/><text x="120" y="140" fill="#e8eef5" stroke="none">MOD 2 = 0 ?</text>
+      <polygon points="320,104 400,136 320,168 240,136"/><text x="320" y="140" fill="#e8eef5" stroke="none">numero &lt; 0 ?</text>
+      <rect x="8" y="206" width="98" height="30" rx="4"/><text x="57" y="225" fill="#e8eef5" stroke="none">Pos. PAR</text>
+      <rect x="120" y="206" width="104" height="30" rx="4"/><text x="172" y="225" fill="#e8eef5" stroke="none">Pos. IMPAR</text>
+      <rect x="244" y="206" width="86" height="30" rx="4"/><text x="287" y="225" fill="#e8eef5" stroke="none">Negativo</text>
+      <rect x="344" y="206" width="68" height="30" rx="4"/><text x="378" y="225" fill="#e8eef5" stroke="none">Cero</text>
+    </g>
+    <g stroke="#4fd1c5" stroke-width="1.5" marker-end="url(#a3)" fill="none">
+      <path d="M120,44 H120 V100"/>
+      <path d="M300,44 H320 V100"/>
+      <path d="M30,136 H15 V202"/>
+      <path d="M210,136 H172 V202"/>
+      <path d="M240,136 H287 V202"/>
+      <path d="M400,136 H412 V190 H378 V202"/>
+    </g>
+    <g fill="#ffcf6b" font-family="monospace" font-size="10">
+      <text x="128" y="96">Sí</text><text x="305" y="96">No</text>
+      <text x="20" y="188">Sí</text><text x="176" y="188">No</text>
+      <text x="250" y="188">Sí</text><text x="404" y="188">No</text>
+    </g>
+  </svg>
+
+  <div class="py"><div class="h">🐍 En Python</div>
+  El anidamiento se ve <b>por la sangría</b>: cada nivel indenta más. Por eso Python es tan estricto con la indentación — es la que marca "qué está dentro de qué".
+  <pre class="pyc"><span class="pk">if</span> numero &gt; <span class="st">0</span>:
+    <span class="pk">if</span> numero % <span class="st">2</span> == <span class="st">0</span>:
+        <span class="pk">print</span>(<span class="st">"Positivo y PAR"</span>)
+    <span class="pk">else</span>:
+        <span class="pk">print</span>(<span class="st">"Positivo e IMPAR"</span>)</pre></div>
+</section>
+
+<!-- PREDICE -->
+<section class="tab" id="predice">
+  <h2>🎯 Predice la salida</h2>
+  <p>Lee cada fragmento de PSeInt con el dato indicado y elige qué imprime.</p>
+  <div class="scorebar"><span>Puntaje: <b id="pScore">0</b> / <b id="pTotal">6</b></span><button class="btn ghost" id="pReset">Reiniciar</button></div>
+  <div id="pQuiz"></div>
+</section>
+
+<!-- TALLER -->
+<section class="tab" id="taller">
+  <h2>🏆 Taller — 8 ejercicios en PSeInt</h2>
+  <p><b>Programación en pareja:</b> por ejercicio, identifica el tipo de condicional → escríbelo en PSeInt → <b>Ejecuta</b> con varios datos → <b>Dibuja el diagrama</b>. Intenta antes de abrir la solución.</p>
+  <div id="ejercicios"></div>
+</section>
+
+</div>
+<footer>Material interactivo · Lógica de Programación 1 · Estructuras condicionales (PSeInt + Python)</footer>
+
+<script>
+/* Tabs */
+const tabs=document.querySelectorAll('#tabs button');
+tabs.forEach(b=>b.addEventListener('click',()=>{
+  tabs.forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.remove('active'));
+  b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}));
+
+/* Generic single-choice quiz builder */
+function makeQuiz(cfg){
+  let score=0, ans=new Set();
+  document.getElementById(cfg.totalId).textContent=cfg.data.length;
+  function build(){
+    const box=document.getElementById(cfg.boxId);box.innerHTML='';score=0;ans.clear();
+    document.getElementById(cfg.scoreId).textContent='0';
+    cfg.data.forEach((q,i)=>{
+      const c=document.createElement('div');c.className='q';
+      c.innerHTML='<span class="tag">'+(q.tag||('#'+(i+1)))+'</span>'+
+        (q.scn?'<p class="scn">'+q.scn+'</p>':'')+
+        (q.code?'<pre>'+q.code.replace(/</g,'&lt;')+'</pre>':'');
+      const opts=document.createElement('div');opts.className='opts';
+      q.opts.forEach(o=>{
+        const b=document.createElement('button');b.className='opt';b.textContent=o;
+        b.addEventListener('click',()=>{
+          if(ans.has(i))return;ans.add(i);
+          opts.querySelectorAll('.opt').forEach(x=>x.classList.add('locked'));
+          const fb=c.querySelector('.feedback');
+          if(o===q.ans){b.classList.add('correct');score++;document.getElementById(cfg.scoreId).textContent=score;
+            fb.textContent='✔ ¡Correcto! '+q.why;fb.className='feedback ok';}
+          else{b.classList.add('wrong');opts.querySelectorAll('.opt').forEach(x=>{if(x.textContent===q.ans)x.classList.add('correct');});
+            fb.textContent='✘ Respuesta: '+q.ans+'. '+q.why;fb.className='feedback no';}
+        });
+        opts.appendChild(b);
+      });
+      c.appendChild(opts);
+      const fb=document.createElement('div');fb.className='feedback';c.appendChild(fb);
+      box.appendChild(c);
+    });
+  }
+  document.getElementById(cfg.resetId).addEventListener('click',build);build();
+}
+
+/* ¿Qué condicional usar? */
+makeQuiz({boxId:'tipoQuiz',scoreId:'tipoScore',totalId:'tipoTotal',resetId:'tipoReset',data:[
+  {tag:'Situación 1',scn:'"Si el usuario es mayor de edad, mostrar un mensaje de bienvenida (y si no, nada)."',
+   opts:['Simple','Doble','Múltiple','Anidado'],ans:'Simple',why:'Solo se hace algo cuando se cumple; no hay caso contrario.'},
+  {tag:'Situación 2',scn:'"Mostrar APROBADO o REPROBADO según la nota."',
+   opts:['Simple','Doble','Múltiple','Anidado'],ans:'Doble',why:'Dos caminos excluyentes: se cumple o no.'},
+  {tag:'Situación 3',scn:'"Convertir la nota numérica en una letra: A, B, C, D o F."',
+   opts:['Simple','Doble','Múltiple','Anidado'],ans:'Múltiple',why:'Varias opciones por rangos → escalera SiNo Si.'},
+  {tag:'Situación 4',scn:'"Un menú 1/2/3 que elige entre sumar, restar o multiplicar."',
+   opts:['Simple','Doble','Múltiple','Anidado'],ans:'Múltiple',why:'Valores exactos → estructura Segun.'},
+  {tag:'Situación 5',scn:'"Si el número es positivo, además decir si es par o impar."',
+   opts:['Simple','Doble','Múltiple','Anidado'],ans:'Anidado',why:'La 2ª pregunta depende de que la 1ª se cumpla.'},
+  {tag:'Situación 6',scn:'"Si llueve, llevar paraguas (si no, no hacer nada)."',
+   opts:['Simple','Doble','Múltiple','Anidado'],ans:'Simple',why:'Una sola acción condicionada, sin alternativa.'}
+]});
+
+/* Predice la salida */
+makeQuiz({boxId:'pQuiz',scoreId:'pScore',totalId:'pTotal',resetId:'pReset',data:[
+  {tag:'Simple · compra=150',code:'total <- compra\nSi compra > 100 Entonces\n    total <- compra - (compra * 0.10)\nFinSi\nEscribir "Total: ", total',
+   opts:['Total: 135','Total: 150','Total: 15'],ans:'Total: 135',why:'150>100 → 150 - 15 = 135.'},
+  {tag:'Simple · compra=80',code:'total <- compra\nSi compra > 100 Entonces\n    total <- compra - (compra * 0.10)\nFinSi\nEscribir "Total: ", total',
+   opts:['Total: 72','Total: 80','No imprime nada'],ans:'Total: 80',why:'80 no es > 100: el Si no se ejecuta, total sigue en 80.'},
+  {tag:'Doble · nota=60',code:'Si nota >= 60 Entonces\n    Escribir "APROBADO"\nSiNo\n    Escribir "REPROBADO"\nFinSi',
+   opts:['APROBADO','REPROBADO'],ans:'APROBADO',why:'60 >= 60 es Verdadero (incluye el 60).'},
+  {tag:'Múltiple · nota=72',code:'Si nota >= 90 Entonces Escribir "A"\nSiNo Si nota >= 80 Entonces Escribir "B"\nSiNo Si nota >= 70 Entonces Escribir "C"\nSiNo Escribir "D o menos"',
+   opts:['A','B','C'],ans:'C',why:'72 no es >=90 ni >=80, pero sí >=70 → C.'},
+  {tag:'Segun · dia=8',code:'Segun dia Hacer\n    6: Escribir "Sábado"\n    7: Escribir "Domingo"\n    De Otro Modo: Escribir "Inválido"\nFinSegun',
+   opts:['Sábado','Domingo','Inválido'],ans:'Inválido',why:'8 no coincide con ningún caso → De Otro Modo.'},
+  {tag:'Anidado · numero=7',code:'Si numero > 0 Entonces\n    Si numero MOD 2 = 0 Entonces\n        Escribir "Positivo y PAR"\n    SiNo\n        Escribir "Positivo e IMPAR"\n    FinSi\nSiNo\n    Escribir "No positivo"\nFinSi',
+   opts:['Positivo y PAR','Positivo e IMPAR','No positivo'],ans:'Positivo e IMPAR',why:'7>0 (entra) y 7 MOD 2 = 1 (no es 0) → impar.'}
+]});
+
+/* Taller */
+const ejercicios=[
+  {t:'1. Mayor de edad', d:'Si la edad es 18 o más, mostrar "Puede votar".', tag:'simple',
+   sol:`Algoritmo MayorEdad
+    Definir edad Como Entero
+    Leer edad
+    Si edad >= 18 Entonces
+        Escribir "Puede votar"
+    FinSi
+FinAlgoritmo`},
+  {t:'2. Mayor de dos números', d:'Pedir dos números y mostrar el mayor.', tag:'doble',
+   sol:`Algoritmo MayorDeDos
+    Definir a, b Como Real
+    Leer a, b
+    Si a >= b Entonces
+        Escribir "El mayor es: ", a
+    SiNo
+        Escribir "El mayor es: ", b
+    FinSi
+FinAlgoritmo`},
+  {t:'3. Par o impar', d:'Indicar si un número es par o impar.', tag:'doble',
+   sol:`Algoritmo ParImpar
+    Definir numero Como Entero
+    Leer numero
+    Si numero MOD 2 = 0 Entonces
+        Escribir "PAR"
+    SiNo
+        Escribir "IMPAR"
+    FinSi
+FinAlgoritmo`},
+  {t:'4. Calificación por letra', d:'>=90 A, >=80 B, >=70 C, >=60 D, si no F.', tag:'múltiple (escalera)',
+   sol:`Algoritmo CalificacionLetra
+    Definir nota Como Real
+    Leer nota
+    Si nota >= 90 Entonces
+        Escribir "A"
+    SiNo
+        Si nota >= 80 Entonces
+            Escribir "B"
+        SiNo
+            Si nota >= 70 Entonces
+                Escribir "C"
+            SiNo
+                Si nota >= 60 Entonces
+                    Escribir "D"
+                SiNo
+                    Escribir "F"
+                FinSi
+            FinSi
+        FinSi
+    FinSi
+FinAlgoritmo`},
+  {t:'5. Día de la semana', d:'Número 1..7 → nombre del día.', tag:'múltiple (Segun)',
+   sol:`Algoritmo DiaSemana
+    Definir dia Como Entero
+    Leer dia
+    Segun dia Hacer
+        1: Escribir "Lunes"
+        2: Escribir "Martes"
+        3: Escribir "Miércoles"
+        4: Escribir "Jueves"
+        5: Escribir "Viernes"
+        6: Escribir "Sábado"
+        7: Escribir "Domingo"
+        De Otro Modo:
+            Escribir "Número inválido"
+    FinSegun
+FinAlgoritmo`},
+  {t:'6. Menú calculadora', d:'1 sumar, 2 restar, 3 multiplicar dos números.', tag:'múltiple (Segun)',
+   sol:`Algoritmo MenuCalculadora
+    Definir opcion, a, b Como Entero
+    Escribir "1) Sumar 2) Restar 3) Multiplicar"
+    Leer opcion
+    Leer a, b
+    Segun opcion Hacer
+        1: Escribir a + b
+        2: Escribir a - b
+        3: Escribir a * b
+        De Otro Modo:
+            Escribir "Opción inválida"
+    FinSegun
+FinAlgoritmo`},
+  {t:'7. Clasificar un número', d:'Positivo/negativo/cero; si es positivo, par o impar.', tag:'anidado',
+   sol:`Algoritmo ClasificarNumero
+    Definir numero Como Entero
+    Leer numero
+    Si numero > 0 Entonces
+        Si numero MOD 2 = 0 Entonces
+            Escribir "Positivo y PAR"
+        SiNo
+            Escribir "Positivo e IMPAR"
+        FinSi
+    SiNo
+        Si numero < 0 Entonces
+            Escribir "Negativo"
+        SiNo
+            Escribir "Cero"
+        FinSi
+    FinSi
+FinAlgoritmo`},
+  {t:'8. Mayor de tres números', d:'Pedir tres números y mostrar el mayor.', tag:'anidado / compuesto',
+   sol:`Algoritmo MayorDeTres
+    Definir a, b, c Como Real
+    Leer a, b, c
+    Si a >= b Y a >= c Entonces
+        Escribir "El mayor es: ", a
+    SiNo
+        Si b >= a Y b >= c Entonces
+            Escribir "El mayor es: ", b
+        SiNo
+            Escribir "El mayor es: ", c
+        FinSi
+    FinSi
+FinAlgoritmo`}
+];
+const ejBox=document.getElementById('ejercicios');
+ejercicios.forEach(e=>{
+  const c=document.createElement('div');c.className='q';
+  c.innerHTML='<span class="tag">'+e.tag+'</span><h3 style="margin:8px 0 4px">'+e.t+'</h3><p style="margin:2px 0">'+e.d+'</p>'+
+    '<details><summary>Ver solución PSeInt</summary><pre>'+e.sol.replace(/</g,'&lt;')+'</pre></details>';
+  ejBox.appendChild(c);
+});
+</script>
+</body>
+</html>

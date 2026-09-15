@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Representación de Algoritmos · Clase Interactiva</title>
+<style>
+  :root{
+    --bg:#0f1720; --panel:#18222e; --panel2:#1f2c3a; --ink:#e8eef5; --muted:#9fb0c3;
+    --line:#2b3a4d; --accent:#4fd1c5; --accent2:#7c9cff; --good:#48d597; --bad:#ff7a7a;
+    --warn:#ffcf6b; --chip:#243447;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(160deg,#0f1720,#111c27);color:var(--ink);line-height:1.55}
+  header{padding:28px 22px 18px;text-align:center;border-bottom:1px solid var(--line);
+    background:radial-gradient(1200px 300px at 50% -60px,rgba(79,209,197,.15),transparent)}
+  header h1{margin:0 0 6px;font-size:clamp(1.35rem,3.4vw,2.1rem)}
+  header p{margin:0;color:var(--muted);font-size:.95rem}
+  .badges{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .badge{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:.78rem;color:var(--muted)}
+  .wrap{max-width:960px;margin:0 auto;padding:18px 16px 60px}
+  nav.tabs{position:sticky;top:0;z-index:10;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;
+    padding:12px 6px;background:rgba(15,23,32,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.tabs button{background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:9px 15px;border-radius:10px;cursor:pointer;font-size:.88rem;font-weight:600;transition:.15s}
+  nav.tabs button:hover{border-color:var(--accent)}
+  nav.tabs button.active{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border-color:transparent}
+  section.tab{display:none;animation:fade .25s ease}
+  section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2{font-size:1.3rem;margin:22px 0 10px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:1.05rem;margin:20px 0 8px;color:var(--accent)}
+  p{color:#d5deea}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .note{background:rgba(255,207,107,.08);border:1px solid rgba(255,207,107,.35);border-radius:12px;padding:12px 14px;margin:14px 0;font-size:.92rem}
+  .note b{color:var(--warn)}
+  code{font-family:"SF Mono",Consolas,Menlo,monospace}
+  pre{background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.86rem;color:#d7e3f0}
+  .kw{color:var(--accent);font-weight:600}.st{color:#9fe6b0}.cm{color:#6f8194;font-style:italic}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.88rem;overflow:hidden;border-radius:12px}
+  th,td{padding:9px 10px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:var(--accent);font-weight:700}
+  tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+  td.mono,code.mono{font-family:"SF Mono",Consolas,monospace;color:var(--accent)}
+  details{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:10px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--accent)}
+  details[open]{border-color:var(--accent)}
+  .btn{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border:none;padding:10px 18px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.9rem}
+  .btn.ghost{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+  .btn:active{transform:translateY(1px)}
+  .ladder{display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:center;margin:14px 0;text-align:center}
+  .rung{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;min-width:120px}
+  .rung small{display:block;color:var(--muted);font-size:.72rem;margin-top:3px}
+  .arrow{color:var(--accent);font-size:1.3rem;font-weight:700}
+  .flowsvg{display:block;margin:10px auto;max-width:100%;height:auto}
+  /* builder */
+  .slots{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+  .slot{min-height:44px;border:2px dashed var(--line);border-radius:10px;display:flex;align-items:center;
+    justify-content:center;padding:8px;color:var(--muted);font-size:.85rem;background:#0c141d;cursor:pointer}
+  .slot.filled{border-style:solid;color:var(--ink);background:var(--panel2);cursor:pointer}
+  .slot.ok{border-color:var(--good);background:rgba(72,213,151,.14)}
+  .slot.no{border-color:var(--bad);background:rgba(255,122,122,.14)}
+  .pool{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .piece{background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 13px;
+    cursor:pointer;font-size:.85rem;font-family:monospace;transition:.12s}
+  .piece:hover{border-color:var(--accent)}
+  .piece.used{opacity:.35;pointer-events:none}
+  /* quiz */
+  .scorebar{position:sticky;top:56px;z-index:5;display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:12px 0}
+  .scorebar b{color:var(--accent);font-size:1.1rem}
+  .q{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .q .nl{font-style:italic;color:#cfe0ff}
+  .q .tag{font-size:.72rem;color:#0a1330;background:var(--accent2);padding:2px 9px;border-radius:999px;font-weight:700}
+  .opts{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  .opt{background:#0c141d;border:1px solid var(--line);color:var(--ink);padding:9px 12px;border-radius:9px;cursor:pointer;font-family:monospace;font-size:.85rem;text-align:left;transition:.12s}
+  .opt:hover{border-color:var(--accent)}
+  .opt.correct{background:var(--good);color:#052b1c;border-color:transparent;font-weight:700}
+  .opt.wrong{background:var(--bad);color:#2b0505;border-color:transparent}
+  .opt.locked{pointer-events:none}
+  .feedback{margin-top:8px;font-size:.84rem;min-height:1.1em}
+  .feedback.ok{color:var(--good)}.feedback.no{color:var(--bad)}
+  .center{text-align:center}
+  footer{text-align:center;color:var(--muted);font-size:.82rem;padding:24px 12px;border-top:1px solid var(--line)}
+  .pill{display:inline-block;background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:.75rem;color:var(--muted);margin:2px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🧭 Representación de Algoritmos</h1>
+  <p>Lenguaje natural · Pseudocódigo (PSeInt) · Diagrama de flujo</p>
+  <div class="badges">
+    <span class="badge">Lógica de Programación 1</span>
+    <span class="badge">Clase 6</span>
+    <span class="badge">PSeInt</span>
+    <span class="badge">Clase interactiva</span>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="active" data-tab="natural">🗣️ Lenguaje natural</button>
+  <button data-tab="pseudo">📝 Pseudocódigo</button>
+  <button data-tab="flujo">🔷 Diagrama de flujo</button>
+  <button data-tab="sintesis">🔀 Síntesis</button>
+  <button data-tab="taller">🏆 Taller</button>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ LENGUAJE NATURAL ============ -->
+<section class="tab active" id="natural">
+  <h2>¿Qué es un algoritmo?</h2>
+  <p>Un <b>algoritmo</b> es una <b>secuencia finita y ordenada de pasos</b> que resuelve un problema. La misma idea puede escribirse de tres formas, de lo más humano a lo más formal:</p>
+  <div class="ladder">
+    <div class="rung">Lenguaje natural<small>hablamos</small></div>
+    <span class="arrow">→</span>
+    <div class="rung">Pseudocódigo<small>semi-código</small></div>
+    <span class="arrow">→</span>
+    <div class="rung">Diagrama de flujo<small>dibujamos</small></div>
+    <span class="arrow">→</span>
+    <div class="rung">Código real<small>Python, C++…</small></div>
+  </div>
+
+  <h3>Lenguaje natural</h3>
+  <p>Es describir el algoritmo <b>con nuestras propias palabras</b>, como se lo explicaríamos a otra persona. No tiene reglas de sintaxis.</p>
+  <div class="card">
+    <b>Ejemplo — Ganancia de un comerciante:</b><br>
+    <span class="q nl">"Le pregunto a qué precio compró y a qué precio vendió el producto. Le resto al precio de venta el de compra para obtener la ganancia. Finalmente, le muestro cuánto ganó."</span>
+  </div>
+
+  <h3>Ventajas y límites</h3>
+  <table>
+    <thead><tr><th>✅ Ventajas</th><th>⚠️ Límites</th></tr></thead>
+    <tbody>
+      <tr><td>Cualquiera lo entiende, sin saber programar</td><td>Es <b>ambiguo</b>: una frase se interpreta de varias formas</td></tr>
+      <tr><td>Rápido para pensar la idea inicial</td><td>No marca bien el <b>orden</b> ni las <b>decisiones</b></td></tr>
+      <tr><td>No exige aprender símbolos ni reglas</td><td>Difícil de traducir directo a código</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><b>Por eso existen</b> el pseudocódigo y el diagrama de flujo: quitan la ambigüedad y acercan la idea al código.</div>
+
+  <h3>🎲 Cazadores de ambigüedad</h3>
+  <div class="card">
+    <p>Lee esta instrucción. ¿De cuántas formas distintas se puede entender?</p>
+    <p class="center" style="font-size:1.1rem"><b>"Suma los números y divídelos entre 2."</b></p>
+    <div class="center"><button class="btn" onclick="document.getElementById('amb').style.display='block';this.style.display='none'">Revelar interpretaciones</button></div>
+    <div id="amb" style="display:none;margin-top:10px">
+      <ul>
+        <li>¿"Los números" son dos, o una lista completa? (¿es un promedio?)</li>
+        <li>¿Se divide <b>la suma</b> entre 2, o <b>cada número</b> entre 2?</li>
+        <li>¿En qué orden ocurre? La frase no lo fija.</li>
+      </ul>
+      <p><b>Conclusión:</b> el lenguaje natural es cómodo pero ambiguo. Necesitamos algo más preciso → el pseudocódigo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PSEUDOCÓDIGO ============ -->
+<section class="tab" id="pseudo">
+  <h2>Pseudocódigo (con PSeInt)</h2>
+  <p>Descripción <b>paso a paso</b> de un algoritmo, en lenguaje simple pero con estructura parecida a un código. Es para que <b>lo entienda un humano</b>; no lo ejecuta directamente la máquina y no usa la sintaxis exacta de ningún lenguaje real (<i>pseudo = falso</i>).</p>
+  <div class="card">
+    <b>Características:</b> combina lenguaje natural con instrucciones tipo programación · no es estricto con la sintaxis, pero sí ordenado y sin ambigüedad · sirve para <b>planear la lógica antes</b> de programar y <b>reducir errores</b>.
+  </div>
+  <p><b>Estructura:</b> <span class="pill">Inicio/Fin</span><span class="pill">Declarar variables</span><span class="pill">Entrada</span><span class="pill">Proceso</span><span class="pill">Salida</span></p>
+
+  <h3>🖥️ Sintaxis esencial de PSeInt</h3>
+  <table>
+    <thead><tr><th>Acción</th><th>En PSeInt</th></tr></thead>
+    <tbody>
+      <tr><td>Inicio / fin</td><td class="mono">Algoritmo nombre … FinAlgoritmo</td></tr>
+      <tr><td>Declarar variable</td><td class="mono">Definir v Como Entero / Real / Caracter / Logico</td></tr>
+      <tr><td>Asignación (guardar)</td><td class="mono">variable &lt;- expresión</td></tr>
+      <tr><td>Entrada (leer)</td><td class="mono">Leer variable</td></tr>
+      <tr><td>Salida (mostrar)</td><td class="mono">Escribir "texto", variable</td></tr>
+      <tr><td>Decisión</td><td class="mono">Si cond Entonces … SiNo … FinSi</td></tr>
+      <tr><td>Ciclo con contador</td><td class="mono">Para i &lt;- 1 Hasta n Con Paso 1 Hacer … FinPara</td></tr>
+      <tr><td>Ciclo condicional</td><td class="mono">Mientras cond Hacer … FinMientras</td></tr>
+      <tr><td>Módulo · lógicos</td><td class="mono">MOD &nbsp;·&nbsp; Y &nbsp; O &nbsp; NO</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><b>¡Ojo!</b> Se guarda un valor con <code>&lt;-</code> (flecha), <b>no</b> con <code>=</code>. El <code>=</code> se usa para <b>comparar</b> dentro de un <code>Si</code>.</div>
+
+  <h3>Ejemplo A — Ganancia del comerciante</h3>
+  <pre><span class="kw">Algoritmo</span> GananciaComerciante
+    <span class="kw">Definir</span> precio_compra, precio_venta, ganancia <span class="kw">Como Real</span>
+    <span class="kw">Escribir</span> <span class="st">"Ingrese el precio de compra:"</span>
+    <span class="kw">Leer</span> precio_compra
+    <span class="kw">Escribir</span> <span class="st">"Ingrese el precio de venta:"</span>
+    <span class="kw">Leer</span> precio_venta
+    ganancia <span class="kw">&lt;-</span> precio_venta - precio_compra
+    <span class="kw">Escribir</span> <span class="st">"La ganancia es: "</span>, ganancia
+<span class="kw">FinAlgoritmo</span></pre>
+
+  <h3>Ejemplo B — Sumar dos números</h3>
+  <pre><span class="kw">Algoritmo</span> SumarDosNumeros
+    <span class="kw">Definir</span> num1, num2, suma <span class="kw">Como Real</span>
+    <span class="kw">Escribir</span> <span class="st">"Ingrese el primer número:"</span>
+    <span class="kw">Leer</span> num1
+    <span class="kw">Escribir</span> <span class="st">"Ingrese el segundo número:"</span>
+    <span class="kw">Leer</span> num2
+    suma <span class="kw">&lt;-</span> num1 + num2
+    <span class="kw">Escribir</span> <span class="st">"La suma es: "</span>, suma
+<span class="kw">FinAlgoritmo</span></pre>
+
+  <h3>🎲 Traduce: del lenguaje natural al PSeInt</h3>
+  <p>Para cada frase, elige la línea de PSeInt correcta.</p>
+  <div class="scorebar"><span>Puntaje: <b id="tscore">0</b> / <b id="ttotal">6</b></span><button class="btn ghost" id="tReset">Reiniciar</button></div>
+  <div id="tquiz"></div>
+</section>
+
+<!-- ============ DIAGRAMA DE FLUJO ============ -->
+<section class="tab" id="flujo">
+  <h2>Diagrama de flujo</h2>
+  <p>Representación <b>gráfica</b> de un algoritmo con <b>símbolos estándar</b> unidos por <b>líneas de flujo</b>. Se lee <b>siguiendo las flechas</b>, casi siempre de arriba hacia abajo.</p>
+  <h3>Los símbolos estándar</h3>
+  <table>
+    <thead><tr><th>Símbolo</th><th>Forma</th><th>¿Para qué?</th></tr></thead>
+    <tbody>
+      <tr><td>Inicio / Fin</td><td>Óvalo</td><td>Dónde empieza y termina</td></tr>
+      <tr><td>Entrada de datos</td><td>Paralelogramo</td><td>Leer datos del usuario</td></tr>
+      <tr><td>Proceso / asignación</td><td>Rectángulo</td><td>Instrucciones y cálculos</td></tr>
+      <tr><td>Decisión</td><td>Rombo</td><td>Comparar; bifurca en Sí / No</td></tr>
+      <tr><td>Repetición</td><td>Símbolo de ciclo</td><td>Ciclos / iteraciones</td></tr>
+      <tr><td>Impresión / salida</td><td>Documento</td><td>Mostrar en pantalla/impresora</td></tr>
+      <tr><td>Líneas / conectores</td><td>Flechas</td><td>Conectan y marcan el flujo</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><b>Regla clave:</b> del <b>rombo</b> (decisión) salen <b>dos</b> flechas (Sí / No); del resto de símbolos sale <b>una</b>.</div>
+
+  <h3>Ejemplo — Sumar dos números</h3>
+  <svg class="flowsvg" viewBox="0 0 300 430" width="270" role="img" aria-label="Diagrama sumar dos números">
+    <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4fd1c5"/></marker></defs>
+    <g fill="#1f2c3a" stroke="#4fd1c5" stroke-width="1.6" font-family="monospace" font-size="12" text-anchor="middle">
+      <ellipse cx="150" cy="28" rx="52" ry="20"/><text x="150" y="32" fill="#e8eef5" stroke="none">Inicio</text>
+      <polygon points="70,78 250,78 230,116 50,116"/><text x="150" y="102" fill="#e8eef5" stroke="none">Leer num1, num2</text>
+      <rect x="60" y="150" width="180" height="38" rx="4"/><text x="150" y="173" fill="#e8eef5" stroke="none">suma &lt;- num1 + num2</text>
+      <rect x="60" y="222" width="180" height="38" rx="4"/><text x="150" y="245" fill="#e8eef5" stroke="none">Escribir suma</text>
+      <ellipse cx="150" cy="300" rx="52" ry="20"/><text x="150" y="304" fill="#e8eef5" stroke="none">Fin</text>
+    </g>
+    <g stroke="#4fd1c5" stroke-width="1.6" marker-end="url(#ar)">
+      <line x1="150" y1="48" x2="150" y2="74"/>
+      <line x1="150" y1="116" x2="150" y2="146"/>
+      <line x1="150" y1="188" x2="150" y2="218"/>
+      <line x1="150" y1="260" x2="150" y2="278"/>
+    </g>
+  </svg>
+
+  <h3>Ejemplo con decisión — ¿Par o impar?</h3>
+  <svg class="flowsvg" viewBox="0 0 380 470" width="330" role="img" aria-label="Diagrama par o impar">
+    <defs><marker id="ar2" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4fd1c5"/></marker></defs>
+    <g fill="#1f2c3a" stroke="#4fd1c5" stroke-width="1.6" font-family="monospace" font-size="12" text-anchor="middle">
+      <ellipse cx="190" cy="26" rx="50" ry="19"/><text x="190" y="30" fill="#e8eef5" stroke="none">Inicio</text>
+      <polygon points="120,72 260,72 244,106 104,106"/><text x="190" y="93" fill="#e8eef5" stroke="none">Leer numero</text>
+      <rect x="96" y="138" width="188" height="36" rx="4"/><text x="190" y="160" fill="#e8eef5" stroke="none">resto &lt;- numero MOD 2</text>
+      <polygon points="190,206 268,244 190,282 112,244"/><text x="190" y="248" fill="#e8eef5" stroke="none">resto = 0 ?</text>
+      <rect x="20" y="320" width="130" height="36" rx="4"/><text x="85" y="342" fill="#e8eef5" stroke="none">Escribir "PAR"</text>
+      <rect x="230" y="320" width="130" height="36" rx="4"/><text x="295" y="342" fill="#e8eef5" stroke="none">Escribir "IMPAR"</text>
+      <ellipse cx="190" cy="418" rx="50" ry="19"/><text x="190" y="422" fill="#e8eef5" stroke="none">Fin</text>
+    </g>
+    <g stroke="#4fd1c5" stroke-width="1.6" marker-end="url(#ar2)" fill="none">
+      <line x1="190" y1="45" x2="190" y2="68"/>
+      <line x1="190" y1="106" x2="190" y2="134"/>
+      <line x1="190" y1="174" x2="190" y2="202"/>
+      <path d="M112,244 H85 V316"/>
+      <path d="M268,244 H295 V316"/>
+      <path d="M85,356 V390 H190 V399"/>
+      <path d="M295,356 V390 H190"/>
+    </g>
+    <g font-family="monospace" font-size="11" fill="#ffcf6b">
+      <text x="78" y="278">Sí</text><text x="300" y="278">No</text>
+    </g>
+  </svg>
+
+  <h3>🎲 Arma el diagrama</h3>
+  <p>Ordena los pasos del algoritmo <b>"Sumar dos números"</b>. Toca las piezas en el orden correcto; luego pulsa <b>Comprobar</b>.</p>
+  <div class="card">
+    <div class="slots" id="slots"></div>
+    <div class="pool" id="pool"></div>
+    <div class="center" style="margin-top:8px">
+      <button class="btn" id="check">Comprobar ✓</button>
+      <button class="btn ghost" id="resetBuild">Reiniciar</button>
+    </div>
+    <div class="feedback center" id="buildFb" style="margin-top:10px"></div>
+  </div>
+</section>
+
+<!-- ============ SÍNTESIS ============ -->
+<section class="tab" id="sintesis">
+  <h2>El mismo algoritmo, tres idiomas</h2>
+  <p>Las tres representaciones describen lo mismo (sumar dos números); cambia el <b>para qué</b> de cada una.</p>
+  <table>
+    <thead><tr><th>Lenguaje natural</th><th>Pseudocódigo (PSeInt)</th><th>Diagrama de flujo</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>"Pido dos números, los sumo y muestro el resultado."</td>
+        <td class="mono">Leer num1, num2<br>suma &lt;- num1 + num2<br>Escribir suma</td>
+        <td>óvalo → paralelogramo → rectángulo → documento → óvalo</td>
+      </tr>
+      <tr>
+        <td><b>Humano, ambiguo</b><br><small>para pensar y comunicar</small></td>
+        <td><b>Ordenado, semi-formal</b><br><small>para planear y programar</small></td>
+        <td><b>Visual</b><br><small>para ver el flujo y las decisiones</small></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="note"><b>PSeInt</b> es cómodo porque une las tres cosas: escribes el <b>pseudocódigo</b>, lo ves como <b>diagrama</b> con un clic, y lo <b>ejecutas</b> — todo en una herramienta.</div>
+</section>
+
+<!-- ============ TALLER ============ -->
+<section class="tab" id="taller">
+  <h2>🏆 Taller — 8 ejercicios en PSeInt</h2>
+  <p><b>Programación en pareja:</b> uno escribe (piloto) y el otro dicta y revisa (copiloto). Por ejercicio: descríbelo en una frase → escríbelo en PSeInt → <b>Ejecuta</b> → <b>Dibuja el diagrama</b>. Intenta resolverlo <b>antes</b> de abrir la solución.</p>
+  <div id="ejercicios"></div>
+</section>
+
+</div>
+<footer>Material interactivo · Lógica de Programación 1 · Representación de algoritmos (PSeInt)</footer>
+
+<script>
+/* Tabs */
+const tabs=document.querySelectorAll('#tabs button');
+tabs.forEach(b=>b.addEventListener('click',()=>{
+  tabs.forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.remove('active'));
+  b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}));
+
+/* Translate quiz */
+const tData=[
+  {nl:'Pedirle al usuario su edad', opts:['Escribir edad','Leer edad','edad <- 18'], ans:'Leer edad', why:'Leer = entrada de datos desde el usuario.'},
+  {nl:'Guardar en "suma" el resultado de a + b', opts:['suma = a + b','Leer suma','suma <- a + b'], ans:'suma <- a + b', why:'Se asigna con la flecha <- , no con =.'},
+  {nl:'Mostrar en pantalla el mensaje Hola', opts:['Escribir "Hola"','Leer "Hola"','Hola <- Escribir'], ans:'Escribir "Hola"', why:'Escribir = salida de datos.'},
+  {nl:'Declarar una variable entera llamada contador', opts:['contador <- Entero','Definir contador Como Entero','Entero contador'], ans:'Definir contador Como Entero', why:'En PSeInt: Definir ... Como Tipo.'},
+  {nl:'Si la edad es 18 o más, hacer algo', opts:['Si edad = 18 Entonces','Mientras edad >= 18 Hacer','Si edad >= 18 Entonces'], ans:'Si edad >= 18 Entonces', why:'Decisión con Si y el relacional >=.'},
+  {nl:'Repetir mientras el número sea mayor que 0', opts:['Para numero > 0 Hacer','Mientras numero > 0 Hacer','Si numero > 0 Entonces'], ans:'Mientras numero > 0 Hacer', why:'Ciclo condicional = Mientras.'}
+];
+let tScore=0, tAns=new Set();
+document.getElementById('ttotal').textContent=tData.length;
+function buildTQuiz(){
+  const box=document.getElementById('tquiz');box.innerHTML='';tScore=0;tAns.clear();
+  document.getElementById('tscore').textContent='0';
+  tData.forEach((q,i)=>{
+    const c=document.createElement('div');c.className='q';
+    c.innerHTML='<span class="tag">Frase '+(i+1)+'</span><p class="nl" style="margin:8px 0 2px">“'+q.nl+'”</p>';
+    const opts=document.createElement('div');opts.className='opts';
+    q.opts.forEach(o=>{
+      const b=document.createElement('button');b.className='opt';b.textContent=o;
+      b.addEventListener('click',()=>{
+        if(tAns.has(i))return;tAns.add(i);
+        opts.querySelectorAll('.opt').forEach(x=>x.classList.add('locked'));
+        const fb=c.querySelector('.feedback');
+        if(o===q.ans){b.classList.add('correct');tScore++;document.getElementById('tscore').textContent=tScore;
+          fb.textContent='✔ ¡Correcto! '+q.why;fb.className='feedback ok';}
+        else{b.classList.add('wrong');opts.querySelectorAll('.opt').forEach(x=>{if(x.textContent===q.ans)x.classList.add('correct');});
+          fb.textContent='✘ Era: '+q.ans+'. '+q.why;fb.className='feedback no';}
+      });
+      opts.appendChild(b);
+    });
+    c.appendChild(opts);
+    const fb=document.createElement('div');fb.className='feedback';c.appendChild(fb);
+    box.appendChild(c);
+  });
+}
+document.getElementById('tReset').addEventListener('click',buildTQuiz);buildTQuiz();
+
+/* Builder: arma el diagrama */
+const correctOrder=['Inicio','Leer num1, num2','suma <- num1 + num2','Escribir suma','Fin'];
+const shuffled=['Escribir suma','Inicio','Fin','suma <- num1 + num2','Leer num1, num2'];
+let placed=[]; // array of piece text in slot order
+function buildBuilder(){
+  placed=[];
+  const slots=document.getElementById('slots');const pool=document.getElementById('pool');
+  slots.innerHTML='';pool.innerHTML='';
+  document.getElementById('buildFb').textContent='';
+  correctOrder.forEach((_,i)=>{
+    const s=document.createElement('div');s.className='slot';s.dataset.idx=i;s.textContent='Paso '+(i+1);
+    s.addEventListener('click',()=>{ // remove from this slot back to pool
+      if(!s.classList.contains('filled'))return;
+      const txt=s.dataset.val;
+      placed=placed.filter(p=>p!==txt);
+      s.classList.remove('filled','ok','no');s.textContent='Paso '+(Number(s.dataset.idx)+1);delete s.dataset.val;
+      [...pool.children].forEach(pc=>{if(pc.textContent===txt)pc.classList.remove('used')});
+    });
+    slots.appendChild(s);
+  });
+  shuffled.forEach(txt=>{
+    const p=document.createElement('button');p.className='piece';p.textContent=txt;
+    p.addEventListener('click',()=>{
+      if(p.classList.contains('used'))return;
+      const empty=[...slots.children].find(sl=>!sl.classList.contains('filled'));
+      if(!empty)return;
+      empty.classList.add('filled');empty.textContent=txt;empty.dataset.val=txt;
+      placed.push(txt);p.classList.add('used');
+    });
+    pool.appendChild(p);
+  });
+}
+document.getElementById('check').addEventListener('click',()=>{
+  const slots=[...document.getElementById('slots').children];
+  let ok=0;
+  slots.forEach((s,i)=>{
+    s.classList.remove('ok','no');
+    if(s.dataset.val===correctOrder[i]){s.classList.add('ok');ok++;}
+    else if(s.classList.contains('filled')){s.classList.add('no');}
+  });
+  const fb=document.getElementById('buildFb');
+  if(ok===correctOrder.length){fb.textContent='🎉 ¡Perfecto! Ese es el flujo correcto.';fb.className='feedback center ok';}
+  else{fb.textContent='Aciertos: '+ok+'/'+correctOrder.length+'. Ajusta los pasos en rojo y vuelve a comprobar.';fb.className='feedback center no';}
+});
+document.getElementById('resetBuild').addEventListener('click',buildBuilder);buildBuilder();
+
+/* Taller: exercises with solutions */
+const ejercicios=[
+  {t:'1. ¿Par o impar?', d:'Pedir un número e indicar si es par o impar.', tag:'decisión',
+   sol:`Algoritmo ParImpar
+    Definir numero, resto Como Entero
+    Escribir "Ingrese un número entero:"
+    Leer numero
+    resto <- numero MOD 2
+    Si resto = 0 Entonces
+        Escribir "El número es PAR"
+    SiNo
+        Escribir "El número es IMPAR"
+    FinSi
+FinAlgoritmo`},
+  {t:'2. Área de un triángulo', d:'Pedir base y altura y calcular el área.', tag:'secuencia',
+   sol:`Algoritmo AreaTriangulo
+    Definir base, altura, area Como Real
+    Escribir "Ingrese la base:"
+    Leer base
+    Escribir "Ingrese la altura:"
+    Leer altura
+    area <- (base * altura) / 2
+    Escribir "El área es: ", area
+FinAlgoritmo`},
+  {t:'3. Celsius a Fahrenheit', d:'Convertir °C a °F.  F = (C × 9/5) + 32', tag:'secuencia',
+   sol:`Algoritmo CelsiusAFahrenheit
+    Definir celsius, fahrenheit Como Real
+    Escribir "Ingrese los grados Celsius:"
+    Leer celsius
+    fahrenheit <- (celsius * 9 / 5) + 32
+    Escribir celsius, " C = ", fahrenheit, " F"
+FinAlgoritmo`},
+  {t:'4. Suma de 1 a N', d:'Pedir N y sumar 1 + 2 + … + N.', tag:'ciclo Para',
+   sol:`Algoritmo SumaNaturales
+    Definir n, i, suma Como Entero
+    Escribir "Ingrese N:"
+    Leer n
+    suma <- 0
+    Para i <- 1 Hasta n Con Paso 1 Hacer
+        suma <- suma + i
+    FinPara
+    Escribir "La suma de 1 a ", n, " es: ", suma
+FinAlgoritmo`},
+  {t:'5. ¿Año bisiesto?', d:'Bisiesto si es divisible por 4 y no por 100, o divisible por 400.', tag:'decisión + lógicos',
+   sol:`Algoritmo AnioBisiesto
+    Definir anio Como Entero
+    Escribir "Ingrese el año:"
+    Leer anio
+    Si (anio MOD 4 = 0 Y anio MOD 100 <> 0) O (anio MOD 400 = 0) Entonces
+        Escribir anio, " ES bisiesto"
+    SiNo
+        Escribir anio, " NO es bisiesto"
+    FinSi
+FinAlgoritmo`},
+  {t:'6. ¿Número primo?', d:'Verificar si un número es primo.', tag:'ciclo + bandera',
+   sol:`Algoritmo NumeroPrimo
+    Definir numero, i Como Entero
+    Definir esPrimo Como Logico
+    Escribir "Ingrese un número:"
+    Leer numero
+    esPrimo <- Verdadero
+    Si numero < 2 Entonces
+        esPrimo <- Falso
+    SiNo
+        Para i <- 2 Hasta numero - 1 Con Paso 1 Hacer
+            Si numero MOD i = 0 Entonces
+                esPrimo <- Falso
+            FinSi
+        FinPara
+    FinSi
+    Si esPrimo Entonces
+        Escribir numero, " es PRIMO"
+    SiNo
+        Escribir numero, " NO es primo"
+    FinSi
+FinAlgoritmo`},
+  {t:'7. Positivo, negativo o cero', d:'Indicar el signo de un número.', tag:'decisión anidada',
+   sol:`Algoritmo SignoNumero
+    Definir numero Como Real
+    Escribir "Ingrese un número:"
+    Leer numero
+    Si numero > 0 Entonces
+        Escribir "POSITIVO"
+    SiNo
+        Si numero < 0 Entonces
+            Escribir "NEGATIVO"
+        SiNo
+            Escribir "CERO"
+        FinSi
+    FinSi
+FinAlgoritmo`},
+  {t:'8. Contar dígitos', d:'Pedir un número entero y contar cuántos dígitos tiene.', tag:'ciclo Mientras',
+   sol:`Algoritmo ContarDigitos
+    Definir numero, contador Como Entero
+    Escribir "Ingrese un número entero:"
+    Leer numero
+    numero <- abs(numero)
+    contador <- 0
+    Si numero = 0 Entonces
+        contador <- 1
+    SiNo
+        Mientras numero > 0 Hacer
+            numero <- trunc(numero / 10)
+            contador <- contador + 1
+        FinMientras
+    FinSi
+    Escribir "Cantidad de dígitos: ", contador
+FinAlgoritmo`}
+];
+const ejBox=document.getElementById('ejercicios');
+ejercicios.forEach(e=>{
+  const c=document.createElement('div');c.className='q';
+  const sol=e.sol.replace(/</g,'&lt;');
+  c.innerHTML='<span class="tag">'+e.tag+'</span><h3 style="margin:8px 0 4px">'+e.t+'</h3><p style="margin:2px 0">'+e.d+'</p>'+
+    '<details><summary>Ver solución PSeInt</summary><pre>'+sol+'</pre></details>';
+  ejBox.appendChild(c);
+});
+</script>
+</body>
+</html>
