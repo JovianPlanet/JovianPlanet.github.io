@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ciclos Anidados · Clase Interactiva</title>
+<style>
+  :root{
+    --bg:#0f1720; --panel:#18222e; --panel2:#1f2c3a; --ink:#e8eef5; --muted:#9fb0c3;
+    --line:#2b3a4d; --accent:#4fd1c5; --i:#7c9cff; --j:#4fd1c5; --good:#48d597; --bad:#ff7a7a;
+    --warn:#ffcf6b; --chip:#243447; --py:#8bd450;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(160deg,#0f1720,#111c27);color:var(--ink);line-height:1.55}
+  header{padding:24px 22px 14px;text-align:center;border-bottom:1px solid var(--line);background:radial-gradient(1200px 300px at 50% -60px,rgba(79,209,197,.15),transparent)}
+  header h1{margin:0 0 6px;font-size:clamp(1.3rem,3.4vw,2rem)}
+  header p{margin:0;color:var(--muted);font-size:.92rem}
+  .badges{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .badge{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:.78rem;color:var(--muted)}
+  .wrap{max-width:980px;margin:0 auto;padding:16px 16px 60px}
+  nav.tabs{position:sticky;top:0;z-index:10;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:12px 6px;background:rgba(15,23,32,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.tabs button{background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:8px 13px;border-radius:10px;cursor:pointer;font-size:.84rem;font-weight:600;transition:.15s}
+  nav.tabs button:hover{border-color:var(--accent)}
+  nav.tabs button.active{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border-color:transparent}
+  section.tab{display:none;animation:fade .25s ease}
+  section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2{font-size:1.3rem;margin:20px 0 10px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:1.05rem;margin:18px 0 8px;color:var(--accent)}
+  p{color:#d5deea}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .note{background:rgba(255,207,107,.08);border:1px solid rgba(255,207,107,.35);border-radius:12px;padding:12px 14px;margin:14px 0;font-size:.92rem}
+  .note b{color:var(--warn)}
+  .py{background:rgba(139,212,80,.09);border:1px solid rgba(139,212,80,.4);border-left:4px solid var(--py);border-radius:10px;padding:12px 14px;margin:14px 0;font-size:.9rem}
+  .py .h{color:var(--py);font-weight:700;margin-bottom:4px}
+  code{font-family:"SF Mono",Consolas,Menlo,monospace}
+  pre{background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.85rem;color:#d7e3f0}
+  pre.pyc{border-left:3px solid var(--py)}
+  .kw{color:var(--accent);font-weight:600}.st{color:#9fe6b0}.cm{color:#6f8194;font-style:italic}.pk{color:var(--py);font-weight:600}
+  .vi{color:var(--i);font-weight:700}.vj{color:var(--j);font-weight:700}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.87rem;overflow:hidden;border-radius:12px}
+  th,td{padding:8px 10px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:var(--accent);font-weight:700}
+  tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+  td.mono,code.mono{font-family:"SF Mono",Consolas,monospace;color:var(--accent)}
+  details{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:10px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--accent)}
+  details[open]{border-color:var(--accent)}
+  .btn{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.88rem}
+  .btn.ghost{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .scorebar{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:12px 0}
+  .scorebar b{color:var(--accent);font-size:1.1rem}
+  .q{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .q .tag{font-size:.72rem;color:#0a1330;background:var(--i);padding:2px 9px;border-radius:999px;font-weight:700}
+  .q .scn{font-style:italic;color:#cfe0ff;margin:8px 0 2px}
+  .opts{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  .opt{background:#0c141d;border:1px solid var(--line);color:var(--ink);padding:9px 12px;border-radius:9px;cursor:pointer;font-family:monospace;font-size:.85rem;text-align:left;transition:.12s}
+  .opt:hover{border-color:var(--accent)}
+  .opt.correct{background:var(--good);color:#052b1c;border-color:transparent;font-weight:700}
+  .opt.wrong{background:var(--bad);color:#2b0505;border-color:transparent}
+  .opt.locked{pointer-events:none}
+  .feedback{margin-top:8px;font-size:.84rem;min-height:1.1em}
+  .feedback.ok{color:var(--good)}.feedback.no{color:var(--bad)}
+  .center{text-align:center}
+  /* clock analogy */
+  .clock{display:flex;gap:18px;align-items:center;justify-content:center;flex-wrap:wrap;margin:10px 0}
+  .dial{text-align:center}
+  .dial .big{font-size:2rem;font-family:monospace;font-weight:800;background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:8px 18px;min-width:74px}
+  .dial small{color:var(--muted);display:block;margin-top:4px}
+  .dial.h .big{color:var(--i);border-color:var(--i)}
+  .dial.m .big{color:var(--j);border-color:var(--j)}
+  /* simulator */
+  .simgrid{display:grid;grid-template-columns:1fr;gap:14px}
+  @media(min-width:760px){.simgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+  .simctrls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+  .simctrls select,.simctrls input{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:8px 10px;font-size:.85rem}
+  .codeblock{background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-family:"SF Mono",Consolas,monospace;font-size:.86rem;line-height:1.7}
+  .codeblock .ln{display:block;padding:2px 8px;border-radius:6px;transition:background .15s}
+  .codeblock .ln.hot{background:rgba(255,207,107,.22);box-shadow:inset 3px 0 0 var(--warn)}
+  .vchips{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+  .vchip{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px 16px;font-family:monospace;font-size:1.05rem}
+  .vchip.i{border-color:var(--i)} .vchip.i b{color:var(--i)}
+  .vchip.j{border-color:var(--j)} .vchip.j b{color:var(--j)}
+  .vchip.tot b{color:var(--warn)}
+  .cellgrid{display:grid;gap:4px;margin:10px 0;justify-content:start}
+  .cell{width:34px;height:34px;border:1px solid var(--line);border-radius:6px;background:#0c141d;display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:.72rem;color:var(--muted)}
+  .cell.done{background:rgba(79,209,197,.16);border-color:var(--j);color:var(--ink)}
+  .cell.cur{background:var(--warn);border-color:var(--warn);color:#2a1e00;font-weight:800;transform:scale(1.08)}
+  .cell.off{opacity:.18}
+  .rowlab{font-family:monospace;font-size:.72rem;color:var(--i);display:flex;align-items:center;justify-content:flex-end;padding-right:4px}
+  .orderlog{background:#0c141d;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-family:monospace;font-size:.82rem;min-height:44px;line-height:1.9;word-break:break-word}
+  .orderlog .pair{display:inline-block;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;margin:2px}
+  .orderlog .pair:last-child{border-color:var(--warn);color:var(--warn)}
+  .simmsg{margin-top:8px;font-size:.9rem;min-height:2.4em;background:var(--panel2);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:8px 12px}
+  .simmsg.reset{border-left-color:var(--i)}
+  .simmsg.done{border-left-color:var(--good)}
+  footer{text-align:center;color:var(--muted);font-size:.82rem;padding:24px 12px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header>
+  <h1>🔁🔁 Ciclos Anidados</h1>
+  <p>Un ciclo dentro de otro — <b>viendo</b> la secuencia de ejecución paso a paso · PSeInt + Python 🐍</p>
+  <div class="badges">
+    <span class="badge">Lógica de Programación 1</span>
+    <span class="badge">Ciclos anidados</span>
+    <span class="badge">PSeInt · Python</span>
+    <span class="badge">Simulador visual</span>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="active" data-tab="intro">💡 ¿Qué es?</button>
+  <button data-tab="secuencia">🔢 Secuencia</button>
+  <button data-tab="sim">▶️ Simulador</button>
+  <button data-tab="patrones">⭐ Patrones</button>
+  <button data-tab="predice">🎯 Predice</button>
+  <button data-tab="taller">🏆 Taller</button>
+</nav>
+
+<div class="wrap">
+
+<!-- INTRO -->
+<section class="tab active" id="intro">
+  <h2>Un ciclo dentro de otro</h2>
+  <p>Un <b>ciclo anidado</b> es un ciclo colocado <b>dentro del cuerpo</b> de otro ciclo. Hay un ciclo <span class="vi">externo</span> y un ciclo <span class="vj">interno</span>. La clave que hay que entender es la <b>secuencia de ejecución</b>:</p>
+  <div class="card center" style="font-size:1.05rem">
+    Por <b>cada una</b> de las vueltas del ciclo <span class="vi">externo</span>,<br>el ciclo <span class="vj">interno</span> hace <b>TODAS</b> sus vueltas (de principio a fin).
+  </div>
+
+  <h3>🕐 La analogía del reloj</h3>
+  <p>Piensa en un reloj digital. Las <span class="vi">horas</span> son el ciclo externo y los <span class="vj">minutos</span> el interno. Por <b>cada hora</b>, el minutero recorre <b>los 60 minutos completos</b> (0→59) y luego <b>se reinicia</b> a 0 mientras la hora avanza en 1.</p>
+  <div class="clock">
+    <div class="dial h"><div class="big" id="clkH">07</div><small>HORA (externo)</small></div>
+    <div style="font-size:2rem">:</div>
+    <div class="dial m"><div class="big" id="clkM">00</div><small>MINUTO (interno)</small></div>
+  </div>
+  <div class="center"><button class="btn ghost" id="clkBtn">▶ Avanzar el reloj</button></div>
+  <p class="center" style="color:var(--muted);font-size:.86rem">Observa: el minuto da toda su vuelta antes de que la hora cambie. Total de "momentos" = 24 × 60 = <b>1440</b>.</p>
+
+  <h3>La regla de oro 🥇</h3>
+  <div class="note"><b>Total de ejecuciones del cuerpo interno = (iteraciones del externo) × (iteraciones del interno).</b><br>
+  Ejemplo: externo 3 veces × interno 4 veces = <b>12</b> ejecuciones del cuerpo más interno.</div>
+  <div class="note" style="border-color:rgba(124,156,255,.4);background:rgba(124,156,255,.08)"><b style="color:var(--i)">🔄 Lo más importante:</b> el ciclo interno <b>se reinicia</b> por completo en cada vuelta del externo. Su variable vuelve a empezar desde el valor inicial cada vez.</div>
+</section>
+
+<!-- SECUENCIA -->
+<section class="tab" id="secuencia">
+  <h2>🔢 La secuencia de ejecución, paso a paso</h2>
+  <p>Tomemos dos ciclos <code>Para</code> anidados que imprimen la pareja <code>(i, j)</code>:</p>
+  <pre><span class="kw">Para</span> <span class="vi">i</span> <span class="kw">&lt;-</span> 1 <span class="kw">Hasta</span> 3 <span class="kw">Hacer</span>          <span class="cm">// externo</span>
+    <span class="kw">Para</span> <span class="vj">j</span> <span class="kw">&lt;-</span> 1 <span class="kw">Hasta</span> 3 <span class="kw">Hacer</span>      <span class="cm">// interno</span>
+        <span class="kw">Escribir</span> <span class="st">"("</span>, <span class="vi">i</span>, <span class="st">","</span>, <span class="vj">j</span>, <span class="st">")"</span>
+    <span class="kw">FinPara</span>
+<span class="kw">FinPara</span></pre>
+  <p>La salida NO es aleatoria: sigue este <b>orden exacto</b>. Fíjate cómo <span class="vi">i</span> se queda "quieto" mientras <span class="vj">j</span> recorre 1, 2, 3; y solo cuando <span class="vj">j</span> termina, <span class="vi">i</span> avanza y <span class="vj">j</span> <b>vuelve a 1</b>:</p>
+  <table>
+    <thead><tr><th>Orden</th><th><span class="vi">i</span> (externo)</th><th><span class="vj">j</span> (interno)</th><th>Imprime</th><th>¿Qué pasó?</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>1</td><td>1</td><td>(1,1)</td><td>arranca todo</td></tr>
+      <tr><td>2</td><td>1</td><td>2</td><td>(1,2)</td><td>j avanza</td></tr>
+      <tr><td>3</td><td>1</td><td>3</td><td>(1,3)</td><td>j llega al final</td></tr>
+      <tr><td>—</td><td>2</td><td>↩︎ 1</td><td>—</td><td><b style="color:var(--i)">i avanza, j se REINICIA</b></td></tr>
+      <tr><td>4</td><td>2</td><td>1</td><td>(2,1)</td><td>segunda vuelta del externo</td></tr>
+      <tr><td>5</td><td>2</td><td>2</td><td>(2,2)</td><td>j avanza</td></tr>
+      <tr><td>6</td><td>2</td><td>3</td><td>(2,3)</td><td>j llega al final</td></tr>
+      <tr><td>—</td><td>3</td><td>↩︎ 1</td><td>—</td><td><b style="color:var(--i)">i avanza, j se REINICIA</b></td></tr>
+      <tr><td>7</td><td>3</td><td>1</td><td>(3,1)</td><td>tercera vuelta</td></tr>
+      <tr><td>8</td><td>3</td><td>2</td><td>(3,2)</td><td>j avanza</td></tr>
+      <tr><td>9</td><td>3</td><td>3</td><td>(3,3)</td><td>fin: 3×3 = 9 ejecuciones</td></tr>
+    </tbody>
+  </table>
+  <div class="note">👉 Ve a la pestaña <b>▶️ Simulador</b> para ver esto <b>animado</b>, con la línea de código que se ejecuta resaltada y la cuadrícula llenándose en orden.</div>
+  <div class="py"><div class="h">🐍 En Python</div>
+  <pre class="pyc"><span class="pk">for</span> i <span class="pk">in</span> <span class="pk">range</span>(<span class="st">1</span>,<span class="st">4</span>):
+    <span class="pk">for</span> j <span class="pk">in</span> <span class="pk">range</span>(<span class="st">1</span>,<span class="st">4</span>):
+        <span class="pk">print</span>(i, j)</pre>
+  La indentación deja clarísimo qué está "dentro de" qué: el <code>for</code> de <code>j</code> vive dentro del cuerpo del <code>for</code> de <code>i</code>.</div>
+</section>
+
+<!-- SIMULADOR -->
+<section class="tab" id="sim">
+  <h2>▶️ Simulador de ejecución</h2>
+  <p>Avanza paso a paso y observa <b>al mismo tiempo</b>: la línea de código que corre, los valores de <span class="vi">i</span> y <span class="vj">j</span>, la cuadrícula que se llena en orden y el mensaje que explica cada movimiento (¡incluido el <b>reinicio</b> del ciclo interno!).</p>
+  <div class="simctrls">
+    <label>Modo:
+      <select id="simMode">
+        <option value="rect">Rectángulo: j de 1 a M (interno fijo)</option>
+        <option value="tri">Triángulo: j de 1 a i (interno depende de i)</option>
+      </select>
+    </label>
+    <label><span class="vi">N</span> (externo)=<input id="simN" type="number" value="3" min="1" max="8" style="width:58px"></label>
+    <label id="simMwrap"><span class="vj">M</span> (interno)=<input id="simM" type="number" value="4" min="1" max="8" style="width:58px"></label>
+    <button class="btn" id="simStep">Siguiente paso ▶</button>
+    <button class="btn ghost" id="simAuto">Auto ⏩</button>
+    <button class="btn ghost" id="simReset">Reiniciar</button>
+  </div>
+
+  <div class="simgrid">
+    <div>
+      <div class="codeblock" id="simCode"></div>
+      <div class="vchips">
+        <div class="vchip i"><span class="vi">i</span> = <b id="simI">—</b></div>
+        <div class="vchip j"><span class="vj">j</span> = <b id="simJ">—</b></div>
+        <div class="vchip tot">cuerpo ejecutado: <b id="simTot">0</b> veces</div>
+      </div>
+      <div class="simmsg" id="simMsg">Pulsa <b>Siguiente paso</b> para comenzar.</div>
+    </div>
+    <div>
+      <div style="color:var(--muted);font-size:.8rem;margin-bottom:4px">Cuadrícula (cada celda = una ejecución del cuerpo, en orden):</div>
+      <div id="simCells"></div>
+      <div style="color:var(--muted);font-size:.8rem;margin:8px 0 4px">Orden de ejecución:</div>
+      <div class="orderlog" id="simOrder"><span style="color:var(--muted)">—</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PATRONES -->
+<section class="tab" id="patrones">
+  <h2>⭐ Patrones: dibujar con ciclos anidados</h2>
+  <p>Los ciclos anidados brillan al construir figuras 2D: el ciclo <span class="vi">externo</span> maneja las <b>filas</b> y el <span class="vj">interno</span> las <b>columnas</b>.</p>
+
+  <h3>Rectángulo de asteriscos (interno fijo)</h3>
+  <pre><span class="kw">Para</span> <span class="vi">fila</span> <span class="kw">&lt;-</span> 1 <span class="kw">Hasta</span> 3 <span class="kw">Hacer</span>
+    <span class="kw">Para</span> <span class="vj">col</span> <span class="kw">&lt;-</span> 1 <span class="kw">Hasta</span> 5 <span class="kw">Hacer</span>
+        <span class="kw">Escribir Sin Saltar</span> <span class="st">"*"</span>
+    <span class="kw">FinPara</span>
+    <span class="kw">Escribir</span> <span class="st">""</span>    <span class="cm">// salto de línea al terminar la fila</span>
+<span class="kw">FinPara</span></pre>
+  <pre style="color:var(--accent)">*****
+*****
+*****</pre>
+
+  <h3>Triángulo (el interno depende del externo)</h3>
+  <p>Si el límite del interno es <span class="vi">i</span> (en vez de un número fijo), cada fila tiene una cantidad distinta de columnas. ¡Aquí se ve por qué la secuencia importa!</p>
+  <pre><span class="kw">Para</span> <span class="vi">i</span> <span class="kw">&lt;-</span> 1 <span class="kw">Hasta</span> 4 <span class="kw">Hacer</span>
+    <span class="kw">Para</span> <span class="vj">j</span> <span class="kw">&lt;-</span> 1 <span class="kw">Hasta</span> <span class="vi">i</span> <span class="kw">Hacer</span>    <span class="cm">// ← hasta i, no fijo</span>
+        <span class="kw">Escribir Sin Saltar</span> <span class="st">"*"</span>
+    <span class="kw">FinPara</span>
+    <span class="kw">Escribir</span> <span class="st">""</span>
+<span class="kw">FinPara</span></pre>
+  <pre style="color:var(--accent)">*
+**
+***
+****</pre>
+  <p class="center" style="color:var(--muted);font-size:.85rem">Fila 1 → 1 asterisco · Fila 2 → 2 · Fila 3 → 3 · Fila 4 → 4. Total = 1+2+3+4 = <b>10</b>.</p>
+
+  <h3>Tabla de multiplicar (cuadrícula)</h3>
+  <pre><span class="kw">Para</span> <span class="vi">i</span> <span class="kw">&lt;-</span> 1 <span class="kw">Hasta</span> 3 <span class="kw">Hacer</span>
+    <span class="kw">Para</span> <span class="vj">j</span> <span class="kw">&lt;-</span> 1 <span class="kw">Hasta</span> 3 <span class="kw">Hacer</span>
+        <span class="kw">Escribir Sin Saltar</span> <span class="vi">i</span>*<span class="vj">j</span>, <span class="st">" "</span>
+    <span class="kw">FinPara</span>
+    <span class="kw">Escribir</span> <span class="st">""</span>
+<span class="kw">FinPara</span></pre>
+  <pre style="color:var(--accent)">1 2 3
+2 4 6
+3 6 9</pre>
+  <div class="py"><div class="h">🐍 En Python</div>
+  <pre class="pyc"><span class="pk">for</span> i <span class="pk">in</span> <span class="pk">range</span>(<span class="st">1</span>,<span class="st">5</span>):
+    <span class="pk">for</span> j <span class="pk">in</span> <span class="pk">range</span>(<span class="st">1</span>, i+<span class="st">1</span>):   <span class="cm"># interno depende de i</span>
+        <span class="pk">print</span>(<span class="st">"*"</span>, end=<span class="st">""</span>)
+    <span class="pk">print</span>()               <span class="cm"># salto de línea por fila</span></pre></div>
+</section>
+
+<!-- PREDICE -->
+<section class="tab" id="predice">
+  <h2>🎯 Predice</h2>
+  <p>Pon a prueba tu comprensión de la secuencia y los conteos.</p>
+  <div class="scorebar"><span>Puntaje: <b id="pScore">0</b> / <b id="pTotal">6</b></span><button class="btn ghost" id="pReset">Reiniciar</button></div>
+  <div id="pQuiz"></div>
+</section>
+
+<!-- TALLER -->
+<section class="tab" id="taller">
+  <h2>🏆 Taller — 8 ejercicios en PSeInt</h2>
+  <p><b>Programación en pareja:</b> antes de escribir, di en voz alta cuántas veces se ejecutará el cuerpo interno. Escríbelo en PSeInt → <b>Ejecuta</b> → compara con tu predicción. Intenta antes de abrir la solución.</p>
+  <div id="ejercicios"></div>
+</section>
+
+</div>
+<footer>Material interactivo · Lógica de Programación 1 · Ciclos anidados (PSeInt + Python)</footer>
+
+<script>
+/* Tabs */
+const tabs=document.querySelectorAll('#tabs button');
+tabs.forEach(b=>b.addEventListener('click',()=>{
+  tabs.forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.remove('active'));
+  b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}));
+
+/* Clock analogy */
+(function(){
+  let h=7,m=0;const H=document.getElementById('clkH'),M=document.getElementById('clkM');
+  const pad=n=>String(n).padStart(2,'0');
+  document.getElementById('clkBtn').addEventListener('click',()=>{
+    m+=10; if(m>=60){m=0;h=(h+1)%24;} H.textContent=pad(h);M.textContent=pad(m);
+    M.style.transform='scale(1.15)';setTimeout(()=>M.style.transform='',150);
+    if(m===0){H.style.transform='scale(1.15)';setTimeout(()=>H.style.transform='',150);}
+  });
+})();
+
+/* ---------- SIMULADOR ---------- */
+(function(){
+  const modeSel=document.getElementById('simMode'), Ninp=document.getElementById('simN'), Minp=document.getElementById('simM'), Mwrap=document.getElementById('simMwrap');
+  const codeEl=document.getElementById('simCode'), cellsEl=document.getElementById('simCells'), orderEl=document.getElementById('simOrder'), msgEl=document.getElementById('simMsg');
+  const iEl=document.getElementById('simI'), jEl=document.getElementById('simJ'), totEl=document.getElementById('simTot');
+  let events=[], ptr=0, total=0, N=3, M=4, mode='rect', autoIv=null;
+
+  function innerLimit(i){ return mode==='rect'? M : i; }
+  function buildEvents(){
+    events=[]; total=0;
+    for(let i=1;i<=N;i++){
+      for(let j=1;j<=innerLimit(i);j++) events.push({t:'exec',i,j});
+      if(i<N) events.push({t:'reset',to:i+1});
+    }
+    events.push({t:'done'});
+  }
+  function renderCode(){
+    const innerTo = mode==='rect'? M : 'i';
+    const lines=[
+      {id:'l1',txt:'Para <span class="vi">i</span> &lt;- 1 Hasta '+N+' Hacer'},
+      {id:'l2',txt:'    Para <span class="vj">j</span> &lt;- 1 Hasta '+innerTo+' Hacer'},
+      {id:'l3',txt:'        Escribir "(", <span class="vi">i</span>, ",", <span class="vj">j</span>, ")"'},
+      {id:'l4',txt:'    FinPara'},
+      {id:'l5',txt:'FinPara'}
+    ];
+    codeEl.innerHTML=lines.map(l=>'<span class="ln" id="'+l.id+'">'+l.txt+'</span>').join('');
+  }
+  function hot(id){ codeEl.querySelectorAll('.ln').forEach(x=>x.classList.remove('hot')); if(id)document.getElementById(id).classList.add('hot'); }
+  function renderGrid(){
+    const cols = mode==='rect'? M : N;
+    cellsEl.innerHTML='';
+    const grid=document.createElement('div'); grid.className='cellgrid';
+    grid.style.gridTemplateColumns='auto repeat('+cols+',34px)';
+    for(let i=1;i<=N;i++){
+      const lab=document.createElement('div'); lab.className='rowlab'; lab.textContent='i='+i; grid.appendChild(lab);
+      for(let j=1;j<=cols;j++){
+        const c=document.createElement('div'); c.className='cell'; c.dataset.i=i; c.dataset.j=j;
+        if(mode==='tri' && j>i) c.classList.add('off');
+        grid.appendChild(c);
+      }
+    }
+    cellsEl.appendChild(grid);
+  }
+  function build(){
+    N=Math.max(1,Math.min(8,parseInt(Ninp.value)||3));
+    M=Math.max(1,Math.min(8,parseInt(Minp.value)||4));
+    mode=modeSel.value; ptr=0; total=0;
+    buildEvents(); renderCode(); renderGrid(); hot(null);
+    iEl.textContent='—'; jEl.textContent='—'; totEl.textContent='0';
+    orderEl.innerHTML='<span style="color:var(--muted)">—</span>';
+    msgEl.className='simmsg'; msgEl.innerHTML='Pulsa <b>Siguiente paso</b> para comenzar.';
+  }
+  function cell(i,j){ return cellsEl.querySelector('.cell[data-i="'+i+'"][data-j="'+j+'"]'); }
+  function step(){
+    if(ptr>=events.length){ return; }
+    const e=events[ptr++];
+    cellsEl.querySelectorAll('.cell.cur').forEach(c=>c.classList.remove('cur'));
+    if(e.t==='exec'){
+      total++; iEl.textContent=e.i; jEl.textContent=e.j; totEl.textContent=total;
+      hot('l3');
+      const c=cell(e.i,e.j); if(c){c.classList.add('done','cur'); c.textContent=total;}
+      if(orderEl.querySelector('span[style]')) orderEl.innerHTML='';
+      const p=document.createElement('span'); p.className='pair'; p.textContent='('+e.i+','+e.j+')'; orderEl.appendChild(p);
+      msgEl.className='simmsg';
+      msgEl.innerHTML='Se ejecuta el <b>cuerpo</b> con <span class="vi">i</span>=<b>'+e.i+'</b>, <span class="vj">j</span>=<b>'+e.j+'</b> → imprime ('+e.i+','+e.j+'). Ejecución nº '+total+'.';
+    } else if(e.t==='reset'){
+      hot('l2');
+      iEl.textContent=e.to; jEl.textContent='1 ↩︎';
+      msgEl.className='simmsg reset';
+      msgEl.innerHTML='🔄 El ciclo <span class="vj">interno</span> terminó (j llegó a su límite). El <span class="vi">externo</span> avanza a <b>i='+e.to+'</b> y <b><span class="vj">j</span> se REINICIA a 1</b>.';
+    } else { // done
+      hot('l5');
+      const rule = mode==='rect' ? (N+' × '+M+' = '+total) : ('1+2+...+'+N+' = '+total);
+      msgEl.className='simmsg done';
+      msgEl.innerHTML='✅ Ambos ciclos terminaron. El cuerpo se ejecutó <b>'+total+'</b> veces ('+rule+').';
+      if(autoIv){clearInterval(autoIv);autoIv=null;}
+    }
+  }
+  document.getElementById('simStep').addEventListener('click',()=>{ if(autoIv){clearInterval(autoIv);autoIv=null;} step(); });
+  document.getElementById('simReset').addEventListener('click',()=>{ if(autoIv){clearInterval(autoIv);autoIv=null;} build(); });
+  document.getElementById('simAuto').addEventListener('click',()=>{
+    if(autoIv){clearInterval(autoIv);autoIv=null;return;}
+    autoIv=setInterval(()=>{ if(ptr>=events.length){clearInterval(autoIv);autoIv=null;return;} step(); },520);
+  });
+  modeSel.addEventListener('change',()=>{ Mwrap.style.display = modeSel.value==='tri'?'none':''; build(); });
+  Ninp.addEventListener('change',build); Minp.addEventListener('change',build);
+  build();
+})();
+
+/* ---------- Quiz ---------- */
+function makeQuiz(cfg){
+  let ans=new Set(), correct=0;
+  document.getElementById(cfg.totalId).textContent=cfg.data.length;
+  function build(){
+    const box=document.getElementById(cfg.boxId);box.innerHTML='';ans.clear();correct=0;
+    document.getElementById(cfg.scoreId).textContent='0';
+    cfg.data.forEach((q,i)=>{
+      const c=document.createElement('div');c.className='q';
+      c.innerHTML='<span class="tag">'+(q.tag||('#'+(i+1)))+'</span>'+
+        (q.scn?'<p class="scn">'+q.scn+'</p>':'')+
+        (q.code?'<pre>'+q.code.replace(/</g,'&lt;')+'</pre>':'');
+      const opts=document.createElement('div');opts.className='opts';
+      q.opts.forEach(o=>{
+        const b=document.createElement('button');b.className='opt';b.textContent=o;
+        b.addEventListener('click',()=>{
+          if(ans.has(i))return;ans.add(i);
+          opts.querySelectorAll('.opt').forEach(x=>x.classList.add('locked'));
+          const fb=c.querySelector('.feedback');
+          if(o===q.ans){b.classList.add('correct');correct++;document.getElementById(cfg.scoreId).textContent=correct;
+            fb.textContent='✔ ¡Correcto! '+q.why;fb.className='feedback ok';}
+          else{b.classList.add('wrong');opts.querySelectorAll('.opt').forEach(x=>{if(x.textContent===q.ans)x.classList.add('correct');});
+            fb.textContent='✘ Respuesta: '+q.ans+'. '+q.why;fb.className='feedback no';}
+        });
+        opts.appendChild(b);
+      });
+      c.appendChild(opts);const fb=document.createElement('div');fb.className='feedback';c.appendChild(fb);
+      box.appendChild(c);
+    });
+  }
+  document.getElementById(cfg.resetId).addEventListener('click',build);build();
+}
+makeQuiz({boxId:'pQuiz',scoreId:'pScore',totalId:'pTotal',resetId:'pReset',data:[
+  {tag:'Conteo',code:'Para i <- 1 Hasta 3 Hacer\n    Para j <- 1 Hasta 4 Hacer\n        Escribir i, j\n    FinPara\nFinPara',
+   opts:['12','7','3','4'],ans:'12',why:'3 (externo) × 4 (interno) = 12 ejecuciones.'},
+  {tag:'Secuencia',scn:'Con i de 1 a 2 y j de 1 a 2, ¿cuál pareja se imprime en 3er lugar?',
+   code:'Para i <- 1 Hasta 2 Hacer\n    Para j <- 1 Hasta 2 Hacer\n        Escribir "(", i, ",", j, ")"',
+   opts:['(2,1)','(1,3)','(2,2)','(1,2)'],ans:'(2,1)',why:'Orden: (1,1)(1,2)(2,1)(2,2). La 3ª es (2,1): j se reinició y i avanzó.'},
+  {tag:'Triángulo',code:'Para i <- 1 Hasta 4 Hacer\n    Para j <- 1 Hasta i Hacer\n        Escribir "*"\n    FinPara\nFinPara',
+   opts:['10','16','4','8'],ans:'10',why:'Filas de 1,2,3,4 asteriscos → 1+2+3+4 = 10.'},
+  {tag:'¿Quién termina primero?',scn:'En cada vuelta del externo, ¿qué hace el ciclo interno?',
+   opts:['Da todas sus vueltas y se reinicia','Da una sola vuelta','No se ejecuta','Se ejecuta al azar'],ans:'Da todas sus vueltas y se reinicia',
+   why:'El interno se completa entero por cada iteración del externo, y luego reinicia.'},
+  {tag:'Reloj',scn:'Horas de 0 a 23 (externo) y minutos de 0 a 59 (interno). ¿Cuántos "momentos" hay en total?',
+   opts:['1440','84','1380','60'],ans:'1440',why:'24 × 60 = 1440.'},
+  {tag:'Reinicio',scn:'En dos For anidados con j de 1 a 5, ¿qué valor tiene j justo al empezar la 2ª vuelta del externo?',
+   opts:['1','5','6','0'],ans:'1',why:'El interno se reinicia: j vuelve a su valor inicial, 1.'}
+]});
+
+/* ---------- Taller ---------- */
+const ejercicios=[
+  {t:'1. Todas las parejas (i,j)', d:'Imprimir las parejas (i,j) con i de 1 a 3 y j de 1 a 3, en orden.', tag:'secuencia',
+   sol:`Algoritmo Parejas
+    Definir i, j Como Entero
+    Para i <- 1 Hasta 3 Con Paso 1 Hacer
+        Para j <- 1 Hasta 3 Con Paso 1 Hacer
+            Escribir "(", i, ",", j, ")"
+        FinPara
+    FinPara
+FinAlgoritmo`},
+  {t:'2. Rectángulo de asteriscos', d:'Pedir N (filas) y M (columnas) y dibujar un rectángulo de asteriscos.', tag:'interno fijo',
+   sol:`Algoritmo Rectangulo
+    Definir i, j, n, m Como Entero
+    Leer n
+    Leer m
+    Para i <- 1 Hasta n Con Paso 1 Hacer
+        Para j <- 1 Hasta m Con Paso 1 Hacer
+            Escribir Sin Saltar "*"
+        FinPara
+        Escribir ""
+    FinPara
+FinAlgoritmo`},
+  {t:'3. Triángulo creciente', d:'Dibujar un triángulo de N filas donde la fila i tiene i asteriscos.', tag:'interno depende de i',
+   sol:`Algoritmo TrianguloCrece
+    Definir i, j, n Como Entero
+    Leer n
+    Para i <- 1 Hasta n Con Paso 1 Hacer
+        Para j <- 1 Hasta i Con Paso 1 Hacer
+            Escribir Sin Saltar "*"
+        FinPara
+        Escribir ""
+    FinPara
+FinAlgoritmo`},
+  {t:'4. Triángulo decreciente (invertido)', d:'La fila i tiene (N - i + 1) asteriscos.', tag:'interno depende de i',
+   sol:`Algoritmo TrianguloDecrece
+    Definir i, j, n Como Entero
+    Leer n
+    Para i <- 1 Hasta n Con Paso 1 Hacer
+        Para j <- 1 Hasta (n - i + 1) Con Paso 1 Hacer
+            Escribir Sin Saltar "*"
+        FinPara
+        Escribir ""
+    FinPara
+FinAlgoritmo`},
+  {t:'5. Tabla de multiplicar completa', d:'Mostrar la cuadrícula de i*j para i y j de 1 a 10.', tag:'cuadrícula',
+   sol:`Algoritmo TablaCompleta
+    Definir i, j Como Entero
+    Para i <- 1 Hasta 10 Con Paso 1 Hacer
+        Para j <- 1 Hasta 10 Con Paso 1 Hacer
+            Escribir Sin Saltar i*j, " "
+        FinPara
+        Escribir ""
+    FinPara
+FinAlgoritmo`},
+  {t:'6. Patrón numérico', d:'La fila i muestra los números del 1 al i (1; 1 2; 1 2 3; ...).', tag:'interno depende de i',
+   sol:`Algoritmo PatronNumeros
+    Definir i, j, n Como Entero
+    Leer n
+    Para i <- 1 Hasta n Con Paso 1 Hacer
+        Para j <- 1 Hasta i Con Paso 1 Hacer
+            Escribir Sin Saltar j, " "
+        FinPara
+        Escribir ""
+    FinPara
+FinAlgoritmo`},
+  {t:'7. Pares que suman S', d:'Con a y b de 1 a N, mostrar todas las parejas (a,b) cuya suma sea S.', tag:'anidado + condición',
+   sol:`Algoritmo ParesQueSuman
+    Definir a, b, n, s Como Entero
+    Leer n
+    Leer s
+    Para a <- 1 Hasta n Con Paso 1 Hacer
+        Para b <- 1 Hasta n Con Paso 1 Hacer
+            Si a + b = s Entonces
+                Escribir "(", a, ",", b, ")"
+            FinSi
+        FinPara
+    FinPara
+FinAlgoritmo`},
+  {t:'8. Reloj digital', d:'Mostrar todas las horas del día en formato hh:mm (horas 0..23, minutos 0..59).', tag:'externo × interno',
+   sol:`Algoritmo RelojDigital
+    Definir h, m Como Entero
+    Para h <- 0 Hasta 23 Con Paso 1 Hacer
+        Para m <- 0 Hasta 59 Con Paso 1 Hacer
+            Escribir h, ":", m
+        FinPara
+    FinPara
+    // Total de líneas impresas: 24 * 60 = 1440
+FinAlgoritmo`}
+];
+const ejBox=document.getElementById('ejercicios');
+ejercicios.forEach(e=>{
+  const c=document.createElement('div');c.className='q';
+  c.innerHTML='<span class="tag">'+e.tag+'</span><h3 style="margin:8px 0 4px">'+e.t+'</h3><p style="margin:2px 0">'+e.d+'</p>'+
+    '<details><summary>Ver solución PSeInt</summary><pre>'+e.sol.replace(/</g,'&lt;')+'</pre></details>';
+  ejBox.appendChild(c);
+});
+</script>
+</body>
+</html>
