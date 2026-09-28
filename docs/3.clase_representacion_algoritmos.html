@@ -412,7 +412,7 @@ document.getElementById('resetBuild').addEventListener('click',buildBuilder);bui
 
 /* Taller: exercises with solutions */
 const ejercicios=[
-  {t:'1. ¿Par o impar?', d:'Pedir un número e indicar si es par o impar.', tag:'decisión',
+  {t:'1. ¿Par o impar?', d:'Escribe un algoritmo que lea un número entero e indique si es <b>par</b> o <b>impar</b>. <b>Entrada:</b> un número entero. <b>Salida:</b> el texto PAR o IMPAR. <br><b>Pista:</b> es par si el residuo de dividirlo entre 2 es 0 (operador MOD). <b>Ejemplo:</b> 8 → PAR; 7 → IMPAR.', tag:'decisión',
    sol:`Algoritmo ParImpar
     Definir numero, resto Como Entero
     Escribir "Ingrese un número entero:"
@@ -424,7 +424,7 @@ const ejercicios=[
         Escribir "El número es IMPAR"
     FinSi
 FinAlgoritmo`},
-  {t:'2. Área de un triángulo', d:'Pedir base y altura y calcular el área.', tag:'secuencia',
+  {t:'2. Área de un triángulo', d:'Escribe un algoritmo que calcule el <b>área de un triángulo</b>. <b>Entrada:</b> la base y la altura. <b>Proceso:</b> área = (base × altura) / 2. <b>Salida:</b> el valor del área. <br><b>Ejemplo:</b> base 10, altura 4 → 20.', tag:'secuencia',
    sol:`Algoritmo AreaTriangulo
     Definir base, altura, area Como Real
     Escribir "Ingrese la base:"
@@ -434,7 +434,7 @@ FinAlgoritmo`},
     area <- (base * altura) / 2
     Escribir "El área es: ", area
 FinAlgoritmo`},
-  {t:'3. Celsius a Fahrenheit', d:'Convertir °C a °F.  F = (C × 9/5) + 32', tag:'secuencia',
+  {t:'3. Celsius a Fahrenheit', d:'Escribe un algoritmo que convierta una temperatura de <b>grados Celsius a Fahrenheit</b>. <b>Entrada:</b> la temperatura en °C. <b>Proceso:</b> F = (C × 9 / 5) + 32. <b>Salida:</b> la temperatura en °F. <br><b>Ejemplo:</b> 0 → 32; 100 → 212; 37 → 98.6.', tag:'secuencia',
    sol:`Algoritmo CelsiusAFahrenheit
     Definir celsius, fahrenheit Como Real
     Escribir "Ingrese los grados Celsius:"
@@ -442,7 +442,7 @@ FinAlgoritmo`},
     fahrenheit <- (celsius * 9 / 5) + 32
     Escribir celsius, " C = ", fahrenheit, " F"
 FinAlgoritmo`},
-  {t:'4. Suma de 1 a N', d:'Pedir N y sumar 1 + 2 + … + N.', tag:'ciclo Para',
+  {t:'4. Suma de 1 a N', d:'Escribe un algoritmo que sume los números del <b>1 hasta N</b>. <b>Entrada:</b> un entero N mayor o igual a 1. <b>Salida:</b> la suma 1 + 2 + … + N. <br><b>Ejemplo:</b> N = 5 → 15; N = 10 → 55.', tag:'ciclo Para',
    sol:`Algoritmo SumaNaturales
     Definir n, i, suma Como Entero
     Escribir "Ingrese N:"
@@ -453,7 +453,7 @@ FinAlgoritmo`},
     FinPara
     Escribir "La suma de 1 a ", n, " es: ", suma
 FinAlgoritmo`},
-  {t:'5. ¿Año bisiesto?', d:'Bisiesto si es divisible por 4 y no por 100, o divisible por 400.', tag:'decisión + lógicos',
+  {t:'5. ¿Año bisiesto?', d:'Escribe un algoritmo que determine si un <b>año es bisiesto</b>. <b>Entrada:</b> un año. <b>Regla:</b> es bisiesto si es divisible por 4 Y no por 100, O si es divisible por 400. <b>Salida:</b> ES bisiesto / NO es bisiesto. <br><b>Ejemplo:</b> 2024 → ES; 1900 → NO; 2000 → ES.', tag:'decisión + lógicos',
    sol:`Algoritmo AnioBisiesto
     Definir anio Como Entero
     Escribir "Ingrese el año:"
@@ -464,7 +464,7 @@ FinAlgoritmo`},
         Escribir anio, " NO es bisiesto"
     FinSi
 FinAlgoritmo`},
-  {t:'6. ¿Número primo?', d:'Verificar si un número es primo.', tag:'ciclo + bandera',
+  {t:'6. ¿Número primo?', d:'Escribe un algoritmo que indique si un número es <b>primo</b> (solo divisible por 1 y por sí mismo). <b>Entrada:</b> un entero mayor o igual a 2. <b>Salida:</b> es PRIMO / NO es primo. <br><b>Pista:</b> divídelo entre los números de 2 a n-1; si alguno lo divide exacto, no es primo. <b>Ejemplo:</b> 7 → PRIMO; 9 → NO.', tag:'ciclo + bandera',
    sol:`Algoritmo NumeroPrimo
     Definir numero, i Como Entero
     Definir esPrimo Como Logico
@@ -486,7 +486,7 @@ FinAlgoritmo`},
         Escribir numero, " NO es primo"
     FinSi
 FinAlgoritmo`},
-  {t:'7. Positivo, negativo o cero', d:'Indicar el signo de un número.', tag:'decisión anidada',
+  {t:'7. Positivo, negativo o cero', d:'Escribe un algoritmo que indique el <b>signo</b> de un número. <b>Entrada:</b> un número. <b>Salida:</b> POSITIVO, NEGATIVO o CERO. <br><b>Ejemplo:</b> 5 → POSITIVO; -3 → NEGATIVO; 0 → CERO.', tag:'decisión anidada',
    sol:`Algoritmo SignoNumero
     Definir numero Como Real
     Escribir "Ingrese un número:"
@@ -501,7 +501,7 @@ FinAlgoritmo`},
         FinSi
     FinSi
 FinAlgoritmo`},
-  {t:'8. Contar dígitos', d:'Pedir un número entero y contar cuántos dígitos tiene.', tag:'ciclo Mientras',
+  {t:'8. Contar dígitos', d:'Escribe un algoritmo que cuente <b>cuántos dígitos</b> tiene un número entero. <b>Entrada:</b> un entero. <b>Salida:</b> la cantidad de dígitos. <br><b>Pista:</b> divide el número entre 10 repetidamente hasta llegar a 0, contando cada división. <b>Ejemplo:</b> 42 → 2; 1000 → 4.', tag:'ciclo Mientras',
    sol:`Algoritmo ContarDigitos
     Definir numero, contador Como Entero
     Escribir "Ingrese un número entero:"

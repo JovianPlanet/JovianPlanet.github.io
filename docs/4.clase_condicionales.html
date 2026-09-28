@@ -425,7 +425,7 @@ makeQuiz({boxId:'pQuiz',scoreId:'pScore',totalId:'pTotal',resetId:'pReset',data:
 
 /* Taller */
 const ejercicios=[
-  {t:'1. Mayor de edad', d:'Si la edad es 18 o más, mostrar "Puede votar".', tag:'simple',
+  {t:'1. Mayor de edad', d:'Escribe un algoritmo que lea la <b>edad</b> de una persona y, <b>solo si</b> es 18 o más, muestre «Puede votar» (condicional simple). <b>Entrada:</b> la edad. <b>Salida:</b> el mensaje cuando corresponde. <br><b>Ejemplo:</b> 20 → Puede votar; 15 → (no muestra nada).', tag:'simple',
    sol:`Algoritmo MayorEdad
     Definir edad Como Entero
     Leer edad
@@ -433,7 +433,7 @@ const ejercicios=[
         Escribir "Puede votar"
     FinSi
 FinAlgoritmo`},
-  {t:'2. Mayor de dos números', d:'Pedir dos números y mostrar el mayor.', tag:'doble',
+  {t:'2. Mayor de dos números', d:'Escribe un algoritmo que lea <b>dos números</b> y muestre el <b>mayor</b> (condicional doble). <b>Entrada:</b> dos números. <b>Salida:</b> el mayor. <br><b>Ejemplo:</b> 7 y 3 → 7; 2 y 9 → 9.', tag:'doble',
    sol:`Algoritmo MayorDeDos
     Definir a, b Como Real
     Leer a, b
@@ -443,7 +443,7 @@ FinAlgoritmo`},
         Escribir "El mayor es: ", b
     FinSi
 FinAlgoritmo`},
-  {t:'3. Par o impar', d:'Indicar si un número es par o impar.', tag:'doble',
+  {t:'3. Par o impar', d:'Escribe un algoritmo que lea un número e indique si es <b>par</b> o <b>impar</b> (condicional doble). <b>Entrada:</b> un entero. <b>Salida:</b> PAR o IMPAR. <br><b>Pista:</b> usa el residuo MOD 2. <b>Ejemplo:</b> 8 → PAR; 5 → IMPAR.', tag:'doble',
    sol:`Algoritmo ParImpar
     Definir numero Como Entero
     Leer numero
@@ -453,7 +453,7 @@ FinAlgoritmo`},
         Escribir "IMPAR"
     FinSi
 FinAlgoritmo`},
-  {t:'4. Calificación por letra', d:'>=90 A, >=80 B, >=70 C, >=60 D, si no F.', tag:'múltiple (escalera)',
+  {t:'4. Calificación por letra', d:'Escribe un algoritmo que convierta una <b>nota numérica en una letra</b> (condicional múltiple por rangos). <b>Entrada:</b> una nota de 0 a 100. <b>Regla:</b> ≥90 A, ≥80 B, ≥70 C, ≥60 D, si no F. <b>Salida:</b> la letra. <br><b>Ejemplo:</b> 95 → A; 72 → C; 50 → F.', tag:'múltiple (escalera)',
    sol:`Algoritmo CalificacionLetra
     Definir nota Como Real
     Leer nota
@@ -475,7 +475,7 @@ FinAlgoritmo`},
         FinSi
     FinSi
 FinAlgoritmo`},
-  {t:'5. Día de la semana', d:'Número 1..7 → nombre del día.', tag:'múltiple (Segun)',
+  {t:'5. Día de la semana', d:'Escribe un algoritmo que reciba un <b>número del 1 al 7</b> y muestre el día de la semana (usa Segun). <b>Entrada:</b> un entero. <b>Salida:</b> el nombre del día, o «Número inválido». <br><b>Ejemplo:</b> 1 → Lunes; 6 → Sábado; 9 → Número inválido.', tag:'múltiple (Segun)',
    sol:`Algoritmo DiaSemana
     Definir dia Como Entero
     Leer dia
@@ -491,7 +491,7 @@ FinAlgoritmo`},
             Escribir "Número inválido"
     FinSegun
 FinAlgoritmo`},
-  {t:'6. Menú calculadora', d:'1 sumar, 2 restar, 3 multiplicar dos números.', tag:'múltiple (Segun)',
+  {t:'6. Menú calculadora', d:'Escribe un algoritmo tipo <b>menú</b> que reciba una opción (1 sumar, 2 restar, 3 multiplicar) y dos números, y muestre el resultado de la operación elegida (usa Segun). <b>Entrada:</b> opción y dos números. <b>Salida:</b> el resultado, o «Opción inválida». <br><b>Ejemplo:</b> opción 1 con 6 y 2 → 8; opción 3 con 6 y 2 → 12.', tag:'múltiple (Segun)',
    sol:`Algoritmo MenuCalculadora
     Definir opcion, a, b Como Entero
     Escribir "1) Sumar 2) Restar 3) Multiplicar"
@@ -505,7 +505,7 @@ FinAlgoritmo`},
             Escribir "Opción inválida"
     FinSegun
 FinAlgoritmo`},
-  {t:'7. Clasificar un número', d:'Positivo/negativo/cero; si es positivo, par o impar.', tag:'anidado',
+  {t:'7. Clasificar un número', d:'Escribe un algoritmo que clasifique un número con condicionales <b>anidados</b>: si es positivo, negativo o cero; y si es positivo, además si es par o impar. <b>Entrada:</b> un entero. <b>Salida:</b> «Positivo y PAR», «Positivo e IMPAR», «Negativo» o «Cero». <br><b>Ejemplo:</b> 8 → Positivo y PAR; 7 → Positivo e IMPAR; -3 → Negativo.', tag:'anidado',
    sol:`Algoritmo ClasificarNumero
     Definir numero Como Entero
     Leer numero
@@ -523,7 +523,7 @@ FinAlgoritmo`},
         FinSi
     FinSi
 FinAlgoritmo`},
-  {t:'8. Mayor de tres números', d:'Pedir tres números y mostrar el mayor.', tag:'anidado / compuesto',
+  {t:'8. Mayor de tres números', d:'Escribe un algoritmo que lea <b>tres números</b> y muestre el <b>mayor</b> (condiciones anidadas o compuestas con Y). <b>Entrada:</b> tres números. <b>Salida:</b> el mayor. <br><b>Ejemplo:</b> 3, 9, 5 → 9; 10, 2, 7 → 10.', tag:'anidado / compuesto',
    sol:`Algoritmo MayorDeTres
     Definir a, b, c Como Real
     Leer a, b, c

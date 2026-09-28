@@ -443,7 +443,7 @@ makeQuiz({boxId:'pQuiz',scoreId:'pScore',totalId:'pTotal',resetId:'pReset',data:
 
 /* ---------- Taller ---------- */
 const ejercicios=[
-  {t:'1. Todas las parejas (i,j)', d:'Imprimir las parejas (i,j) con i de 1 a 3 y j de 1 a 3, en orden.', tag:'secuencia',
+  {t:'1. Todas las parejas (i,j)', d:'Escribe un algoritmo con <b>dos ciclos anidados</b> que imprima todas las parejas (i, j) con i de 1 a 3 y j de 1 a 3, <b>en orden</b>. <b>Salida:</b> (1,1) (1,2) (1,3) (2,1) … (3,3). <br><b>Recuerda:</b> el interno hace todas sus vueltas por cada vuelta del externo. Total: 3 × 3 = 9.', tag:'secuencia',
    sol:`Algoritmo Parejas
     Definir i, j Como Entero
     Para i <- 1 Hasta 3 Con Paso 1 Hacer
@@ -452,7 +452,7 @@ const ejercicios=[
         FinPara
     FinPara
 FinAlgoritmo`},
-  {t:'2. Rectángulo de asteriscos', d:'Pedir N (filas) y M (columnas) y dibujar un rectángulo de asteriscos.', tag:'interno fijo',
+  {t:'2. Rectángulo de asteriscos', d:'Escribe un algoritmo que pida <b>N (filas)</b> y <b>M (columnas)</b> y dibuje un <b>rectángulo de asteriscos</b> (externo = filas, interno = columnas). <b>Salida:</b> N líneas con M asteriscos. <br><b>Ejemplo:</b> N=3, M=5 → tres líneas de «*****».', tag:'interno fijo',
    sol:`Algoritmo Rectangulo
     Definir i, j, n, m Como Entero
     Leer n
@@ -464,7 +464,7 @@ FinAlgoritmo`},
         Escribir ""
     FinPara
 FinAlgoritmo`},
-  {t:'3. Triángulo creciente', d:'Dibujar un triángulo de N filas donde la fila i tiene i asteriscos.', tag:'interno depende de i',
+  {t:'3. Triángulo creciente', d:'Escribe un algoritmo que dibuje un <b>triángulo</b> de N filas donde la fila i tiene <b>i asteriscos</b> (el límite del interno depende de i). <b>Entrada:</b> N. <b>Salida:</b> el triángulo. <br><b>Ejemplo:</b> N=4 → *, **, ***, **** (una por línea).', tag:'interno depende de i',
    sol:`Algoritmo TrianguloCrece
     Definir i, j, n Como Entero
     Leer n
@@ -475,7 +475,7 @@ FinAlgoritmo`},
         Escribir ""
     FinPara
 FinAlgoritmo`},
-  {t:'4. Triángulo decreciente (invertido)', d:'La fila i tiene (N - i + 1) asteriscos.', tag:'interno depende de i',
+  {t:'4. Triángulo decreciente (invertido)', d:'Escribe un algoritmo que dibuje un <b>triángulo invertido</b> de N filas, donde la fila i tiene <b>(N - i + 1) asteriscos</b>. <b>Entrada:</b> N. <b>Salida:</b> el triángulo decreciente. <br><b>Ejemplo:</b> N=4 → ****, ***, **, * (una por línea).', tag:'interno depende de i',
    sol:`Algoritmo TrianguloDecrece
     Definir i, j, n Como Entero
     Leer n
@@ -486,7 +486,7 @@ FinAlgoritmo`},
         Escribir ""
     FinPara
 FinAlgoritmo`},
-  {t:'5. Tabla de multiplicar completa', d:'Mostrar la cuadrícula de i*j para i y j de 1 a 10.', tag:'cuadrícula',
+  {t:'5. Tabla de multiplicar completa', d:'Escribe un algoritmo que muestre la <b>tabla de multiplicar completa</b>: la cuadrícula de i × j para i y j de 1 a 10, con dos ciclos anidados. <b>Salida:</b> 10 filas de 10 resultados. <br><b>Ejemplo (fila 2):</b> 2 4 6 8 10 12 14 16 18 20.', tag:'cuadrícula',
    sol:`Algoritmo TablaCompleta
     Definir i, j Como Entero
     Para i <- 1 Hasta 10 Con Paso 1 Hacer
@@ -496,7 +496,7 @@ FinAlgoritmo`},
         Escribir ""
     FinPara
 FinAlgoritmo`},
-  {t:'6. Patrón numérico', d:'La fila i muestra los números del 1 al i (1; 1 2; 1 2 3; ...).', tag:'interno depende de i',
+  {t:'6. Patrón numérico', d:'Escribe un algoritmo en el que la <b>fila i</b> muestre los números del <b>1 al i</b> (el interno depende de i). <b>Entrada:</b> N. <b>Salida:</b> el patrón. <br><b>Ejemplo:</b> N=4 → «1» / «1 2» / «1 2 3» / «1 2 3 4».', tag:'interno depende de i',
    sol:`Algoritmo PatronNumeros
     Definir i, j, n Como Entero
     Leer n
@@ -507,7 +507,7 @@ FinAlgoritmo`},
         Escribir ""
     FinPara
 FinAlgoritmo`},
-  {t:'7. Pares que suman S', d:'Con a y b de 1 a N, mostrar todas las parejas (a,b) cuya suma sea S.', tag:'anidado + condición',
+  {t:'7. Pares que suman S', d:'Escribe un algoritmo que, con a y b variando de <b>1 a N</b>, muestre todas las <b>parejas (a, b) cuya suma sea S</b> (dos ciclos anidados y una condición). <b>Entrada:</b> N y S. <b>Salida:</b> las parejas con a + b = S. <br><b>Ejemplo:</b> N=5, S=6 → (1,5) (2,4) (3,3) (4,2) (5,1).', tag:'anidado + condición',
    sol:`Algoritmo ParesQueSuman
     Definir a, b, n, s Como Entero
     Leer n
@@ -520,7 +520,7 @@ FinAlgoritmo`},
         FinPara
     FinPara
 FinAlgoritmo`},
-  {t:'8. Reloj digital', d:'Mostrar todas las horas del día en formato hh:mm (horas 0..23, minutos 0..59).', tag:'externo × interno',
+  {t:'8. Reloj digital', d:'Escribe un algoritmo que muestre <b>todas las horas del día</b> en formato hh:mm, con horas de 0 a 23 (externo) y minutos de 0 a 59 (interno). <b>Salida:</b> 0:0, 0:1, …, 23:59. <br><b>Pregunta:</b> ¿cuántas líneas imprime en total? (24 × 60 = 1440).', tag:'externo × interno',
    sol:`Algoritmo RelojDigital
     Definir h, m Como Entero
     Para h <- 0 Hasta 23 Con Paso 1 Hacer

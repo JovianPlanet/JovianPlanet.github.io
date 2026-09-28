@@ -397,14 +397,14 @@ trazaBuild();
 
 /* Taller */
 const ejercicios=[
-  {t:'1. Contar del 1 al 10', d:'Mostrar los números del 1 al 10.', tag:'FOR básico',
+  {t:'1. Contar del 1 al 10', d:'Escribe un algoritmo que muestre los <b>números del 1 al 10</b>, uno por línea, con un ciclo Para. <b>Entrada:</b> ninguna. <b>Salida:</b> 1, 2, 3, …, 10. <br><b>Ejemplo de salida:</b> 1 2 3 4 5 6 7 8 9 10.', tag:'FOR básico',
    sol:`Algoritmo ContarDiez
     Definir i Como Entero
     Para i <- 1 Hasta 10 Con Paso 1 Hacer
         Escribir i
     FinPara
 FinAlgoritmo`},
-  {t:'2. Suma de los primeros N naturales', d:'Pedir N y sumar 1 + 2 + … + N.', tag:'acumulador',
+  {t:'2. Suma de los primeros N naturales', d:'Escribe un algoritmo que pida <b>N</b> y calcule la <b>suma de 1 hasta N</b> con un acumulador. <b>Entrada:</b> un entero N ≥ 1. <b>Salida:</b> la suma total. <br><b>Pista:</b> inicializa suma en 0 antes del ciclo. <b>Ejemplo:</b> N = 5 → 15; N = 100 → 5050.', tag:'acumulador',
    sol:`Algoritmo SumaNaturales
     Definir i, n, suma Como Entero
     Leer n
@@ -414,7 +414,7 @@ FinAlgoritmo`},
     FinPara
     Escribir "La suma es: ", suma
 FinAlgoritmo`},
-  {t:'3. Contar los pares entre 1 y N', d:'Contar cuántos pares hay del 1 al N.', tag:'contador',
+  {t:'3. Contar los pares entre 1 y N', d:'Escribe un algoritmo que pida <b>N</b> y cuente cuántos <b>números pares</b> hay entre 1 y N con un contador. <b>Entrada:</b> un entero N. <b>Salida:</b> la cantidad de pares. <br><b>Pista:</b> recorre de 1 a N y usa MOD 2 = 0. <b>Ejemplo:</b> N = 10 → 5; N = 7 → 3.', tag:'contador',
    sol:`Algoritmo ContarPares
     Definir i, n, contador Como Entero
     Leer n
@@ -426,7 +426,7 @@ FinAlgoritmo`},
     FinPara
     Escribir "Cantidad de pares: ", contador
 FinAlgoritmo`},
-  {t:'4. Factorial de N', d:'Calcular N! = 1 × 2 × … × N.', tag:'acumulador (producto)',
+  {t:'4. Factorial de N', d:'Escribe un algoritmo que calcule el <b>factorial</b> de N (N! = 1 × 2 × … × N) con un acumulador de producto. <b>Entrada:</b> un entero N ≥ 0. <b>Salida:</b> N!. <br><b>Pista:</b> inicializa el producto en 1. <b>Ejemplo:</b> 5 → 120; 6 → 720; 0 → 1.', tag:'acumulador (producto)',
    sol:`Algoritmo Factorial
     Definir i, n, producto Como Entero
     Leer n
@@ -436,7 +436,7 @@ FinAlgoritmo`},
     FinPara
     Escribir n, "! = ", producto
 FinAlgoritmo`},
-  {t:'5. Promedio de N números', d:'Pedir N números y calcular su promedio.', tag:'acumulador + N',
+  {t:'5. Promedio de N números', d:'Escribe un algoritmo que pida <b>N</b> números y calcule su <b>promedio</b> (acumula la suma en el ciclo y al final divide entre N). <b>Entrada:</b> N y luego N números. <b>Salida:</b> el promedio. <br><b>Ejemplo:</b> con 10, 20, 30, 40 (N=4) → 25.', tag:'acumulador + N',
    sol:`Algoritmo Promedio
     Definir i, n Como Entero
     Definir numero, suma, promedio Como Real
@@ -450,7 +450,7 @@ FinAlgoritmo`},
     promedio <- suma / n
     Escribir "Promedio: ", promedio
 FinAlgoritmo`},
-  {t:'6. Tabla de multiplicar', d:'Pedir un número y mostrar su tabla del 1 al 10.', tag:'FOR + operación',
+  {t:'6. Tabla de multiplicar', d:'Escribe un algoritmo que pida un <b>número</b> y muestre su <b>tabla de multiplicar</b> del 1 al 10. <b>Entrada:</b> un entero. <b>Salida:</b> las 10 líneas n × 1 … n × 10. <br><b>Ejemplo:</b> 7 → 7×1=7, 7×2=14, …, 7×10=70.', tag:'FOR + operación',
    sol:`Algoritmo TablaMultiplicar
     Definir i, num Como Entero
     Leer num
@@ -458,7 +458,7 @@ FinAlgoritmo`},
         Escribir num, " x ", i, " = ", num * i
     FinPara
 FinAlgoritmo`},
-  {t:'7. Contar aprobados', d:'Pedir N notas y contar cuántas son ≥ 60.', tag:'contador con condición',
+  {t:'7. Contar aprobados', d:'Escribe un algoritmo que pida <b>N notas</b> y cuente cuántas son <b>aprobatorias</b> (≥ 60) con un contador. <b>Entrada:</b> N y luego N notas. <b>Salida:</b> la cantidad de aprobados. <br><b>Ejemplo:</b> notas 80, 55, 60, 40, 95 → 3.', tag:'contador con condición',
    sol:`Algoritmo ContarAprobados
     Definir i, n, aprobados Como Entero
     Definir nota Como Real
@@ -473,7 +473,7 @@ FinAlgoritmo`},
     FinPara
     Escribir "Aprobados: ", aprobados
 FinAlgoritmo`},
-  {t:'8. Sumar solo los pares del 1 al N', d:'Sumar únicamente los números pares.', tag:'acumulador con condición',
+  {t:'8. Sumar solo los pares del 1 al N', d:'Escribe un algoritmo que sume <b>solo los números pares</b> desde 1 hasta N (acumulador con condición). <b>Entrada:</b> un entero N. <b>Salida:</b> la suma de los pares. <br><b>Ejemplo:</b> N = 10 → 30 (2+4+6+8+10); N = 6 → 12.', tag:'acumulador con condición',
    sol:`Algoritmo SumarPares
     Definir i, n, suma Como Entero
     Leer n

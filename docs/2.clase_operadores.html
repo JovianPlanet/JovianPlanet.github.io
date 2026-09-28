@@ -91,6 +91,7 @@
   footer{text-align:center;color:var(--muted);font-size:.82rem;padding:24px 12px;border-top:1px solid var(--line)}
   .tt{width:100%;font-size:.9rem}
   .cell-v{color:var(--good);font-weight:700}.cell-f{color:var(--bad);font-weight:700}
+  .goal{color:var(--muted);font-size:.85rem;font-style:italic;margin:4px 0 8px}
 </style>
 </head>
 <body>
@@ -250,7 +251,7 @@ operando  operador  operando       resultado</pre>
 <!-- ================= RETOS ================= -->
 <section class="tab" id="retos">
   <h2>🏆 Torneo de predicciones</h2>
-  <p>Para cada línea, <b>predice el resultado</b> y toca la opción que crees correcta. El código está verificado en Python real.</p>
+  <p><b>Enunciado:</b> en cada reto se te da un fragmento de código Python (la <b>entrada</b>). Predice <b>qué imprime cada línea</b> (la <b>salida</b>) y toca la opción correcta; luego verifica. El código está verificado en Python real.</p>
   <div class="scorebar">
     <span>Puntaje: <b id="score">0</b> / <b id="total">15</b></span>
     <button class="btn ghost" id="resetQuiz">Reiniciar torneo</button>
@@ -262,7 +263,7 @@ operando  operador  operando       resultado</pre>
 <!-- ================= PRECEDENCIA PRO ================= -->
 <section class="tab" id="pro">
   <h2>🔥 Precedencia Pro — 10 retos de dificultad creciente</h2>
-  <p>Solo <b>precedencia y asociatividad</b> en Python. Predice el resultado de cada expresión y toca tu respuesta. Del Nivel 1 (aritmética simple) al Nivel 4 (jefe final).</p>
+  <p><b>Enunciado:</b> se te da una expresión de Python (la <b>entrada</b>); calcula el <b>valor que produce</b> (la <b>salida</b>) aplicando la precedencia y la asociatividad, y toca tu respuesta. Del Nivel 1 (aritmética simple) al Nivel 4 (jefe final). <b>Ejemplo:</b> 2 + 2 * 5 → 12.</p>
   <div class="note">Prioridad: <code>()</code> → <code>**</code> → signo <code>-x</code> → <code>* / // %</code> → <code>+ -</code> → relacionales → <code>not</code> → <code>and</code> → <code>or</code>. Empates izq→der, <b>menos <code>**</code> que es der→izq</b>.</div>
   <div class="scorebar">
     <span>Puntaje: <b id="score2">0</b> / <b id="total2">10</b></span>
@@ -325,34 +326,34 @@ document.getElementById('resetStep').addEventListener('click',()=>{
 
 /* ---------- Quiz ---------- */
 const quizData=[
-  {tag:'Aritméticos', title:'Ej. 1 — La división "traicionera"',
+  {tag:'Aritméticos', title:'Ej. 1 — La división "traicionera"', goal:'Predice qué imprime cada línea. <b>Tema:</b> división y módulo: distingue / (real), // (entera) y % (residuo). <b>Ejemplo:</b> print(9 / 2) → 4.5; print(9 // 2) → 4.',
    setup:'', lines:[
     {code:'print(7 / 2)',  opts:['3.5','3','3,5'], ans:'3.5', why:'/ es división real (con decimales).'},
     {code:'print(7 // 2)', opts:['3','3.5','1'], ans:'3', why:'// toma solo la parte entera.'},
     {code:'print(7 % 2)',  opts:['1','3','0'], ans:'1', why:'% es el residuo de 7÷2.'},
     {code:'print(2 ** 3)', opts:['8','6','9'], ans:'8', why:'** es potencia: 2·2·2 = 8.'}
   ]},
-  {tag:'Relacionales', title:'Ej. 2 — Comparar edades', setup:'edad = 18',
+  {tag:'Relacionales', title:'Ej. 2 — Comparar edades', goal:'Predice si cada comparación da True o False (operadores relacionales), con edad = 18. <b>Ejemplo:</b> print(edad > 10) → True.', setup:'edad = 18',
    lines:[
     {code:'print(edad >= 18)', opts:['True','False'], ans:'True', why:'18 es mayor o igual a 18.'},
     {code:'print(edad == 18)', opts:['True','False'], ans:'True', why:'18 es igual a 18.'},
     {code:'print(edad != 20)', opts:['True','False'], ans:'True', why:'18 es distinto de 20.'},
     {code:'print(edad < 15)',  opts:['True','False'], ans:'False', why:'18 NO es menor que 15.'}
   ]},
-  {tag:'Lógicos', title:'Ej. 3 — ¿Salgo con paraguas?', setup:'llueve = True\ntengo_paraguas = False',
+  {tag:'Lógicos', title:'Ej. 3 — ¿Salgo con paraguas?', goal:'Predice el valor lógico de cada expresión (and, or, not). <b>Ejemplo:</b> print(True and False) → False.', setup:'llueve = True\ntengo_paraguas = False',
    lines:[
     {code:'print(llueve and tengo_paraguas)', opts:['True','False'], ans:'False', why:'AND necesita ambas; falta el paraguas.'},
     {code:'print(llueve or tengo_paraguas)',  opts:['True','False'], ans:'True', why:'OR basta con una; sí llueve.'},
     {code:'print(not llueve)', opts:['True','False'], ans:'False', why:'not invierte True a False.'}
   ]},
-  {tag:'Precedencia', title:'Ej. 4 — ¿Quién va primero?', setup:'',
+  {tag:'Precedencia', title:'Ej. 4 — ¿Quién va primero?', goal:'Predice el resultado aplicando la <b>precedencia</b> de operadores. <b>Ejemplo:</b> print(2 + 2 * 5) → 12 (primero la multiplicación).', setup:'',
    lines:[
     {code:'print(2 + 3 * 4)',   opts:['14','20','24'], ans:'14', why:'Primero 3*4=12, luego 2+12.'},
     {code:'print((2 + 3) * 4)', opts:['20','14','9'], ans:'20', why:'Los paréntesis mandan: 5*4.'},
     {code:'print(2 ** 3 ** 2)', opts:['512','64','36'], ans:'512', why:'Potencia der→izq: 2**(3**2)=2**9.'},
     {code:'print(10 - 4 - 3)',  opts:['3','9','11'], ans:'3', why:'Resta izq→der: (10-4)-3.'}
   ]},
-  {tag:'Combinado', title:'Ej. 5 — ¿El estudiante aprueba?', setup:'nota = 75\nasistencia = 90',
+  {tag:'Combinado', title:'Ej. 5 — ¿El estudiante aprueba?', goal:'Predice True o False combinando relacionales y lógicos, con nota = 75 y asistencia = 90. <b>Ejemplo:</b> print(nota >= 70 and asistencia >= 90) → True.', setup:'nota = 75\nasistencia = 90',
    lines:[
     {code:'print(nota >= 60 and asistencia >= 80)', opts:['True','False'], ans:'True', why:'True and True = True.'},
     {code:'print(nota >= 60 and asistencia >= 95)', opts:['True','False'], ans:'False', why:'True and False = False.'},
@@ -371,7 +372,7 @@ function buildQuiz(){
   document.getElementById('finalMsg').style.display='none';
   quizData.forEach((q,qi)=>{
     const card=document.createElement('div'); card.className='q';
-    let html='<span class="tag">'+q.tag+'</span><h4 style="margin-top:8px">'+q.title+'</h4>';
+    let html='<span class="tag">'+q.tag+'</span><h4 style="margin-top:8px">'+q.title+'</h4>'+(q.goal?'<p class="goal">'+q.goal+'</p>':'');
     if(q.setup) html+='<pre style="margin:8px 0">'+q.setup.replace(/</g,'&lt;')+'</pre>';
     card.innerHTML=html;
     q.lines.forEach((ln,li)=>{
@@ -450,7 +451,8 @@ function buildQuiz2(){
   document.getElementById('finalMsg2').style.display='none';
   proData.forEach((q,i)=>{
     const card=document.createElement('div'); card.className='q';
-    card.innerHTML='<span class="tag">'+q.lvl+'</span><h4 style="margin-top:8px">Reto '+(i+1)+'</h4>';
+    const focos={'Nivel 1':'Aplica la prioridad básica: * / // % van antes que + -.','Nivel 2':'Cuidado con los paréntesis, el signo y la asociatividad de la potencia (der→izq).','Nivel 3':'Primero lo aritmético, luego lo relacional y al final lo lógico (not → and → or).','Nivel 4':'Combina todo: potencia, módulo, resta, comparación y lógica.'};
+    card.innerHTML='<span class="tag">'+q.lvl+'</span><h4 style="margin-top:8px">Reto '+(i+1)+'</h4>'+'<p class="goal">Predice el valor de la expresión aplicando la precedencia. '+(focos[q.lvl]||'')+'</p>';
     const row=document.createElement('div'); row.className='line';
     const c=document.createElement('code'); c.textContent='>>> '+q.code; row.appendChild(c);
     const opts=document.createElement('div'); opts.className='opts';

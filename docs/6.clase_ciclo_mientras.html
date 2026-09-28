@@ -558,7 +558,7 @@ makeQuiz({boxId:'pQuiz',scoreId:'pScore',totalId:'pTotal',resetId:'pReset',xp:10
 
 /* ---------- Taller ---------- */
 const ejercicios=[
-  {t:'1. Cuenta regresiva 🚀', d:'Pedir N y mostrar la cuenta de N a 1, luego "¡Despegue!".', tag:'contador',
+  {t:'1. Cuenta regresiva 🚀', d:'Escribe un algoritmo que pida <b>N</b> y muestre la <b>cuenta regresiva</b> de N hasta 1, y al terminar escriba «¡Despegue!» (usa Mientras). <b>Entrada:</b> un entero N ≥ 1. <b>Salida:</b> N, N-1, …, 1 y luego ¡Despegue!. <br><b>Ejemplo:</b> N = 5 → 5 4 3 2 1 ¡Despegue!.', tag:'contador',
    sol:`Algoritmo CuentaRegresiva
     Definir n Como Entero
     Leer n
@@ -568,7 +568,7 @@ const ejercicios=[
     FinMientras
     Escribir "¡Despegue!"
 FinAlgoritmo`},
-  {t:'2. Suma hasta el centinela', d:'Sumar números hasta que el usuario escriba 0.', tag:'centinela',
+  {t:'2. Suma hasta el centinela', d:'Escribe un algoritmo que <b>sume números</b> ingresados por el usuario y se detenga cuando escriba <b>0</b> (valor centinela). <b>Entrada:</b> varios números terminados en 0. <b>Salida:</b> la suma total (el 0 no se suma). <br><b>Ejemplo:</b> 4, 7, 9, 0 → 20.', tag:'centinela',
    sol:`Algoritmo SumaCentinela
     Definir numero, suma Como Entero
     suma <- 0
@@ -579,7 +579,7 @@ FinAlgoritmo`},
     FinMientras
     Escribir "Suma total: ", suma
 FinAlgoritmo`},
-  {t:'3. Contar positivos hasta un negativo', d:'Contar positivos ingresados hasta leer un negativo.', tag:'centinela + contador',
+  {t:'3. Contar positivos hasta un negativo', d:'Escribe un algoritmo que lea números hasta ingresar uno <b>negativo</b> y cuente cuántos <b>positivos</b> se ingresaron. <b>Entrada:</b> varios números terminados en un negativo. <b>Salida:</b> la cantidad de positivos. <br><b>Ejemplo:</b> 3, 0, 8, 5, -1 → 3.', tag:'centinela + contador',
    sol:`Algoritmo ContarPositivos
     Definir numero, cuenta Como Entero
     cuenta <- 0
@@ -592,7 +592,7 @@ FinAlgoritmo`},
     FinMientras
     Escribir "Positivos: ", cuenta
 FinAlgoritmo`},
-  {t:'4. Validar una edad', d:'Repetir la petición mientras la edad no esté entre 1 y 120.', tag:'validación',
+  {t:'4. Validar una edad', d:'Escribe un algoritmo que pida una <b>edad válida</b> (entre 1 y 120) y repita la petición <b>mientras</b> el dato sea inválido. <b>Entrada:</b> una o varias edades hasta que una sea válida. <b>Salida:</b> confirmación de la edad válida. <br><b>Ejemplo:</b> -3, 200, 25 → «Edad válida: 25».', tag:'validación',
    sol:`Algoritmo ValidarEdad
     Definir edad Como Entero
     Escribir "Edad (1 a 120):"
@@ -603,7 +603,7 @@ FinAlgoritmo`},
     FinMientras
     Escribir "Edad válida: ", edad
 FinAlgoritmo`},
-  {t:'5. Suma de los dígitos', d:'Sumar los dígitos de un número usando Mientras.', tag:'while matemático',
+  {t:'5. Suma de los dígitos', d:'Escribe un algoritmo que sume los <b>dígitos</b> de un número entero usando Mientras (no se sabe cuántos dígitos tiene). <b>Entrada:</b> un entero. <b>Salida:</b> la suma de sus dígitos. <br><b>Pista:</b> usa MOD 10 para el último dígito y trunc(n/10) para quitarlo. <b>Ejemplo:</b> 123 → 6; 4050 → 9.', tag:'while matemático',
    sol:`Algoritmo SumaDigitos
     Definir numero, suma Como Entero
     Leer numero
@@ -615,7 +615,7 @@ FinAlgoritmo`},
     FinMientras
     Escribir "Suma de dígitos: ", suma
 FinAlgoritmo`},
-  {t:'6. Potencia con Mientras', d:'Calcular base^exponente multiplicando repetidamente.', tag:'contador + acumulador',
+  {t:'6. Potencia con Mientras', d:'Escribe un algoritmo que calcule <b>base elevada a un exponente</b> multiplicando la base por sí misma «exponente» veces (Mientras con contador). <b>Entrada:</b> base y exponente (≥ 0). <b>Salida:</b> el resultado. <br><b>Ejemplo:</b> 2 y 5 → 32; 3 y 3 → 27; 5 y 0 → 1.', tag:'contador + acumulador',
    sol:`Algoritmo Potencia
     Definir base, exp, i, resultado Como Entero
     Leer base
@@ -628,7 +628,7 @@ FinAlgoritmo`},
     FinMientras
     Escribir base, "^", exp, " = ", resultado
 FinAlgoritmo`},
-  {t:'7. Adivina el número 🎯', d:'Número secreto 1..100, varios intentos, pistas mayor/menor.', tag:'bandera + intentos',
+  {t:'7. Adivina el número 🎯', d:'Escribe el juego <b>Adivina el número</b>: el programa elige un secreto del 1 al 100 (azar(100)+1) y el usuario tiene varios intentos; en cada fallo indica «más alto» o «más bajo». Termina al acertar o agotar los intentos. <b>Salida:</b> acierto con el nº de intentos, o el número secreto si pierde. <br><b>Pista:</b> combina un contador de intentos con una bandera de acierto.', tag:'bandera + intentos',
    sol:`Algoritmo AdivinaNumero
     Definir secreto, intento, intentos Como Entero
     Definir acerto Como Logico
@@ -654,7 +654,7 @@ FinAlgoritmo`},
         Escribir "El número era ", secreto
     FinSi
 FinAlgoritmo`},
-  {t:'8. Sistema de acceso 🔐', d:'Clave con 3 intentos; bienvenida o cuenta bloqueada.', tag:'bandera + contador',
+  {t:'8. Sistema de acceso 🔐', d:'Escribe un <b>sistema de acceso</b>: pide una clave con <b>3 intentos</b>. Si acierta, muestra «Bienvenido»; si agota los intentos, «Cuenta bloqueada». <b>Entrada:</b> hasta 3 claves. <b>Salida:</b> bienvenida o bloqueo. <br><b>Pista:</b> usa un contador de intentos y una bandera de acierto.', tag:'bandera + contador',
    sol:`Algoritmo Acceso
     Definir clave, intento Como Caracter
     Definir intentos Como Entero
