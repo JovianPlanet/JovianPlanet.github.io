@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Condicionales en Python · Clase Interactiva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%80%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#0f1720; --panel:#18222e; --panel2:#1f2c3a; --ink:#e8eef5; --muted:#9fb0c3;
+    --line:#2b3a4d; --accent:#4fd1c5; --accent2:#7c9cff; --good:#48d597; --bad:#ff7a7a;
+    --warn:#ffcf6b; --chip:#243447; --py:#ffd43b; --pyb:#4b8bbe;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(160deg,#0f1720,#111c27);color:var(--ink);line-height:1.55}
+  header{padding:22px 22px 12px;text-align:center;border-bottom:1px solid var(--line);background:radial-gradient(1200px 300px at 50% -60px,rgba(75,139,190,.22),transparent)}
+  header h1{margin:0 0 4px;font-size:clamp(1.3rem,3.4vw,2rem)}
+  header p{margin:0;color:var(--muted);font-size:.92rem}
+  .xpwrap{max-width:680px;margin:12px auto 4px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+  .xprow{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);margin-bottom:6px;gap:8px;flex-wrap:wrap}
+  .xprow b{color:var(--warn)}
+  .xpbar{height:12px;background:#0c141d;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .xpfill{height:100%;width:0;background:linear-gradient(90deg,var(--pyb),var(--py));transition:width .5s}
+  .badges2{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+  .bdg{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:.74rem;color:#5f7085;opacity:.6;transition:.3s}
+  .bdg.on{opacity:1;color:var(--ink);border-color:var(--warn);box-shadow:0 0 0 2px rgba(255,207,107,.15)}
+  .linkbtn{background:none;border:none;color:var(--muted);font-size:.74rem;cursor:pointer;text-decoration:underline;padding:0}
+  .wrap{max-width:1000px;margin:0 auto;padding:16px 16px 60px}
+  nav.tabs{position:sticky;top:0;z-index:10;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:11px 6px;background:rgba(15,23,32,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.tabs button{background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:8px 12px;border-radius:10px;cursor:pointer;font-size:.82rem;font-weight:600;transition:.15s}
+  nav.tabs button:hover{border-color:var(--accent)}
+  nav.tabs button.active{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border-color:transparent}
+  nav.tabs button.lab{border-color:var(--py)}
+  html{background:#0f1720}
+  @media(max-width:640px){
+    nav.tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:thin}
+    nav.tabs button{flex:0 0 auto}
+    .typebtns{grid-template-columns:repeat(2,1fr)}
+  }
+  section.tab{display:none;animation:fade .25s ease}
+  section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2{font-size:1.3rem;margin:20px 0 10px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:1.05rem;margin:18px 0 8px;color:var(--accent)}
+  p{color:#d5deea}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .note{background:rgba(255,207,107,.08);border:1px solid rgba(255,207,107,.35);border-radius:12px;padding:12px 14px;margin:14px 0;font-size:.92rem}
+  .note b{color:var(--warn)}
+  .tip{background:rgba(75,139,190,.12);border:1px solid rgba(75,139,190,.45);border-left:4px solid var(--pyb);border-radius:10px;padding:12px 14px;margin:14px 0;font-size:.9rem}
+  .tip b{color:#9cc4e8}
+  code{font-family:"SF Mono",Consolas,Menlo,monospace}
+  pre{background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.85rem;color:#d7e3f0;margin:10px 0}
+  .fname{display:inline-block;background:var(--chip);border:1px solid var(--line);border-bottom:none;border-radius:8px 8px 0 0;padding:3px 10px;font-family:monospace;font-size:.75rem;color:var(--muted);margin-top:8px}
+  .fname + pre{margin-top:0;border-top-left-radius:0}
+  .kw{color:#ff9d6c;font-weight:600}.st{color:#9fe6b0}.cm{color:#6f8194;font-style:italic}.fn{color:#7cc4ff}.nu{color:#c9a3ff}
+  .tout{color:#e8eef5}.tprompt{color:#9fb0c3}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.87rem;overflow:hidden;border-radius:12px}
+  th,td{padding:8px 10px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:var(--accent);font-weight:700}
+  tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+  td.mono,code.mono{font-family:"SF Mono",Consolas,monospace;color:var(--accent)}
+  .tablewrap{overflow-x:auto}
+  details{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:10px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--accent)}
+  details[open]{border-color:var(--accent)}
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+  .tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .tile b{display:block;margin-bottom:3px}
+  .tile small{color:var(--muted)}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin:14px 0;text-align:center}
+  .flow .st2{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;min-width:120px}
+  .flow .st2 small{display:block;color:var(--muted);font-size:.74rem}
+  .flow .ar{color:var(--accent);font-weight:800;font-size:1.3rem}
+  .types{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+  .type{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--panel)}
+  .type .tn{font-family:monospace;font-size:1.3rem;font-weight:800}
+  .t-int .tn{color:#7cc4ff}.t-float .tn{color:#c9a3ff}.t-str .tn{color:#9fe6b0}.t-bool .tn{color:#ffcf6b}
+  .btn{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.88rem}
+  .btn.ghost{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+  .btn.py{background:linear-gradient(180deg,#ffe066,#f2c200);color:#2a2000}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .scorebar{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:12px 0;gap:10px;flex-wrap:wrap}
+  .scorebar b{color:var(--accent);font-size:1.1rem}
+  .q{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .q .tag{font-size:.72rem;color:#0a1330;background:var(--accent2);padding:2px 9px;border-radius:999px;font-weight:700}
+  .q .scn{color:#cfe0ff;margin:8px 0 2px}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .opt{background:#0c141d;border:1px solid var(--line);color:var(--ink);padding:9px 12px;border-radius:9px;cursor:pointer;font-family:monospace;font-size:.85rem;text-align:left;transition:.12s}
+  .opt:hover{border-color:var(--accent)}
+  .opt.correct{background:var(--good);color:#052b1c;border-color:transparent;font-weight:700}
+  .opt.wrong{background:var(--bad);color:#2b0505;border-color:transparent}
+  .opt.locked{pointer-events:none}
+  .feedback{margin-top:8px;font-size:.86rem;min-height:1.1em}
+  .feedback.ok{color:var(--good)}.feedback.no{color:var(--bad)}
+  .center{text-align:center}
+  .xppop{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--warn);color:#2a1e00;font-weight:800;padding:10px 18px;border-radius:999px;opacity:0;transition:.35s;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.35);pointer-events:none}
+  .xppop.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  /* tipo-matic */
+  .game{background:linear-gradient(160deg,#16212e,#1b2a3a);border:1px solid var(--line);border-radius:16px;padding:18px;margin:12px 0}
+  .bigval{font-family:monospace;font-size:clamp(1.4rem,4vw,2.1rem);text-align:center;background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:16px;margin:10px 0;color:#fff}
+  .typebtns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .typebtns button{font-family:monospace;font-size:1rem;font-weight:800;padding:12px 6px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer}
+  .typebtns button:hover{border-color:var(--accent)}
+  .typebtns button.right{background:var(--good);color:#052b1c}
+  .typebtns button.wrongb{background:var(--bad);color:#2b0505}
+  .gstat{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:6px 0}
+  .gchip{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:6px 12px;font-family:monospace;font-size:.88rem}
+  .gchip b{color:var(--warn)}
+  .flame{font-size:1.2rem}
+  /* nombres */
+  .names{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .nm{font-family:monospace;padding:9px 13px;border-radius:10px;border:1px solid var(--line);background:#0c141d;color:var(--ink);cursor:pointer;font-size:.92rem}
+  .nm.v{border-color:var(--good);background:rgba(72,213,151,.15)}
+  .nm.x{border-color:var(--bad);background:rgba(255,122,122,.15)}
+  .nm.ok::after{content:" ✔";color:var(--good)} .nm.ko::after{content:" ✘";color:var(--bad)}
+  /* ordena */
+  .slots{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .slot{min-height:42px;border:2px dashed var(--line);border-radius:10px;display:flex;align-items:center;gap:10px;padding:7px 10px;color:var(--muted);font-size:.85rem;background:#0c141d;cursor:pointer;font-family:monospace}
+  .slot .ph{font-family:system-ui;font-size:.7rem;font-weight:700;border-radius:999px;padding:2px 8px;white-space:nowrap}
+  .ph.e{background:#1d3b5c;color:#9cc4e8}.ph.p{background:#3b2f5c;color:#c9a3ff}.ph.s{background:#1f4a3a;color:#9fe6b0}
+  .slot.filled{border-style:solid;color:var(--ink);background:var(--panel2)}
+  .slot.okk{border-color:var(--good)} .slot.noo{border-color:var(--bad)}
+  .pool{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .piece{text-align:left;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 12px;cursor:pointer;font-size:.85rem;font-family:monospace}
+  .piece:hover{border-color:var(--accent)} .piece.used{opacity:.3;pointer-events:none}
+  /* lab */
+  .lab{background:linear-gradient(160deg,#141f2b,#182636);border:1px solid #3a5168;border-radius:16px;padding:14px;margin:12px 0}
+  .labbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+  .labbar select{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:9px 10px;font-size:.88rem;max-width:100%}
+  .pystat{font-size:.8rem;color:var(--muted);background:#0c141d;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+  .retoinfo{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0;font-size:.9rem}
+  .labgrid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:820px){.labgrid{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}}
+  .lab label{display:block;font-size:.78rem;color:var(--muted);margin:6px 0 4px;font-weight:600}
+  textarea.code{width:100%;min-height:230px;background:#0b1118;color:#e8eef5;border:1px solid var(--line);border-radius:10px;padding:12px;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.88rem;line-height:1.5;resize:vertical;tab-size:4;white-space:pre}
+  textarea.stdin{width:100%;min-height:70px;background:#0b1118;color:#ffe9a8;border:1px solid var(--line);border-radius:10px;padding:10px;font-family:monospace;font-size:.85rem;resize:vertical}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .term{min-height:230px;max-height:420px;overflow:auto;background:#050a0f;border:1px solid #2b3a4d;border-radius:10px;padding:12px;font-size:.86rem;white-space:pre-wrap;word-break:break-word;margin:0}
+  .term .err{color:#ff8f8f}.term .hint{color:#ffe08a}.term .sys{color:#6f8194}
+  .chk{margin-top:10px;font-size:.88rem}
+  .chk .row{padding:6px 10px;border-radius:8px;margin:5px 0;background:var(--panel);border:1px solid var(--line)}
+  .chk .row.ok{border-color:rgba(72,213,151,.6)} .chk .row.no{border-color:rgba(255,122,122,.6)}
+  .win{background:rgba(72,213,151,.12);border:1px solid var(--good);border-radius:12px;padding:10px 12px;margin-top:8px;font-weight:700;color:var(--good)}
+  .ex{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0}
+  .ex .tag{font-size:.72rem;color:#2a2000;background:var(--py);padding:2px 9px;border-radius:999px;font-weight:700}
+  .ex h3{margin:8px 0 4px}
+  .ex .done{color:var(--good);font-weight:700;font-size:.82rem;margin-left:6px}
+  footer{text-align:center;color:var(--muted);font-size:.82rem;padding:24px 12px;border-top:1px solid var(--line)}
+  /* --- lección 9 --- */
+  .anat{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:10px 0}
+  .anat .tile code{color:var(--py)}
+  .sim{background:linear-gradient(160deg,#141f2b,#182636);border:1px solid #3a5168;border-radius:16px;padding:14px;margin:12px 0}
+  .simbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .simbar select,.simin input,.simin select{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:8px 10px;font-size:.9rem}
+  .simin{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0;font-family:monospace}
+  .simin input[type=number]{width:96px}
+  .simin input[type=text]{width:130px}
+  .simgrid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:820px){.simgrid{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)}}
+  .scode{background:#0b1118;border:1px solid var(--line);border-radius:12px;padding:8px 0;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.84rem;overflow-x:auto}
+  .sl{display:flex;align-items:center;gap:10px;padding:3px 12px;white-space:pre;transition:background .2s,opacity .2s;min-height:26px}
+  .sl .ln{color:#4f6175;width:20px;text-align:right;flex:0 0 auto}
+  .sl .tx{flex:1 1 auto}
+  .sl .st{flex:0 0 auto;font-family:system-ui;font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap}
+  .sl.dim{opacity:.38}
+  .sl.run{background:rgba(79,209,197,.13)} .sl.run .st{background:#1c4d47;color:#9ff3e8}
+  .sl.true{background:rgba(72,213,151,.13)} .sl.true .st{background:#1f4a3a;color:#9fe6b0}
+  .sl.false{background:rgba(255,122,122,.10)} .sl.false .st{background:#4a2323;color:#ffb3b3}
+  .sl.skip .st{background:#2a3442;color:#9fb0c3}
+  .sl.cur{box-shadow:inset 3px 0 0 var(--warn)}
+  .cov{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0}
+  .cov span{font-size:.78rem;border:1px dashed var(--line);border-radius:999px;padding:3px 10px;color:var(--muted)}
+  .cov span.hit{border-style:solid;border-color:var(--good);color:var(--good);background:rgba(72,213,151,.08)}
+  .slots2{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .slot2{display:flex;align-items:center;gap:10px;min-height:42px;border:2px dashed var(--line);border-radius:10px;padding:7px 12px;background:#0c141d;font-family:monospace;font-size:.88rem;cursor:pointer}
+  .slot2 .kwd{color:#ff9d6c;font-weight:700;min-width:44px}
+  .slot2.filled{border-style:solid;background:var(--panel2)}
+  .slot2.fixed{cursor:default;border-style:solid;opacity:.85}
+  .slot2.okk{border-color:var(--good)}.slot2.noo{border-color:var(--bad)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+  .chipb{font-family:monospace;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 12px;cursor:pointer;font-size:.86rem}
+  .chipb:hover{border-color:var(--accent)} .chipb.used{opacity:.3;pointer-events:none}
+  .mini{width:auto;font-size:.84rem} .mini td,.mini th{padding:5px 9px}
+  .ok{color:var(--good);font-weight:700}.ko{color:var(--bad);font-weight:700}
+  .bug{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:14px 0}
+  .bug .spec{background:rgba(75,139,190,.12);border:1px solid rgba(75,139,190,.45);border-radius:10px;padding:8px 12px;font-size:.88rem;margin:6px 0}
+  .bug .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+  .bug input{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:9px 10px;width:130px;font-family:monospace}
+  .bug.broken{border-color:var(--good)}
+  .bug .fix{display:none;margin-top:8px}
+  .bug.broken .fix{display:block}
+</style>
+</head>
+<body>
+<header>
+  <h1>🔀 Condicionales en Python</h1>
+  <p>if · if-else · if-elif-else · anidados · match-case · <b>modo juego</b></p>
+  <div class="xpwrap">
+    <div class="xprow"><span>Nivel <b id="lvl">1</b> · <span id="lvlname">Novato del if</span></span><span><b id="xp">0</b> XP · <button class="linkbtn" id="resetProg" title="Borra tu XP e insignias en este navegador">reiniciar progreso</button></span></div>
+    <div class="xpbar"><div class="xpfill" id="xpfill"></div></div>
+    <div class="badges2" id="badges"></div>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="active" data-tab="intro">💡 Decidir</button>
+  <button data-tab="ifelse">🔀 if / if-else</button>
+  <button data-tab="elif">🪜 if-elif-else</button>
+  <button data-tab="anidados">🪆 Anidados</button>
+  <button data-tab="match">🎛️ match-case</button>
+  <button data-tab="camino">🧭 Sigue el camino</button>
+  <button data-tab="retos">🧨 Retos</button>
+  <button data-tab="lab" class="lab">🐍 Laboratorio</button>
+  <button data-tab="taller">🏆 Taller</button>
+</nav>
+
+<div class="wrap">
+
+<!-- ===================== DECIDIR ===================== -->
+<section class="tab active" id="intro">
+  <h2>Un programa también decide</h2>
+  <p>Todos los días tomamos decisiones con una condición: si sí, hago una cosa; si no, otra. Un programa hace lo mismo: <b>evalúa una condición</b> (que da <code>True</code> o <code>False</code>) y <b>elige qué instrucciones ejecutar</b>.</p>
+  <div class="grid3">
+    <div class="tile"><b>🛵 App de domicilios</b><small>Si el restaurante está abierto → deja pedir. Si no → muestra "Cerrado".</small></div>
+    <div class="tile"><b>🔐 Inicio de sesión</b><small>Si la clave es correcta → entra. Si no → "Clave incorrecta".</small></div>
+    <div class="tile"><b>🔋 Celular</b><small>Si la batería baja de 20 % → activa el ahorro de energía.</small></div>
+  </div>
+
+  <h3>Las 4 estructuras de hoy</h3>
+  <div class="grid3">
+    <div class="tile"><b><code>if</code></b><small>Algo se hace <b>solo si</b> se cumple la condición.</small><pre>if lluvia &gt;= 60:
+    print("☂")</pre></div>
+    <div class="tile"><b><code>if-else</code></b><small>Hay <b>dos</b> caminos posibles.</small><pre>if cupos &gt; 0:
+    print("Entra")
+else:
+    print("Lleno")</pre></div>
+    <div class="tile"><b><code>if-elif-else</code></b><small>Hay <b>tres o más</b> caminos.</small><pre>if ica &lt;= 50:
+    ...
+elif ica &lt;= 100:
+    ...
+else:
+    ...</pre></div>
+    <div class="tile"><b><code>match-case</code></b><small>Comparas un valor con <b>opciones exactas</b>.</small><pre>match tecla:
+    case "w":
+        ...
+    case _:
+        ...</pre></div>
+  </div>
+
+  <h3>De PSeInt a Python</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>PSeInt</th><th>Python</th><th>Ojo</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">Si cond Entonces</td><td class="mono">if cond:</td><td>los <b>dos puntos</b> son obligatorios</td></tr>
+      <tr><td class="mono">SiNo</td><td class="mono">else:</td><td>también lleva <code>:</code> y no lleva condición</td></tr>
+      <tr><td class="mono">SiNo Si cond Entonces</td><td class="mono">elif cond:</td><td>contracción de <i>else if</i></td></tr>
+      <tr><td class="mono">FinSi</td><td>(desaparece)</td><td>la <b>sangría</b> marca dónde termina el bloque</td></tr>
+      <tr><td class="mono">Segun v Hacer</td><td class="mono">match v:</td><td><code>De Otro Modo</code> → <code>case _:</code></td></tr>
+      <tr><td class="mono">=  &lt;&gt;</td><td class="mono">==  !=</td><td><code>=</code> asigna; <code>==</code> compara</td></tr>
+      <tr><td class="mono">Y  O  NO</td><td class="mono">and  or  not</td><td>en minúsculas</td></tr>
+    </tbody>
+  </table></div>
+  <div class="grid3">
+    <div><span class="fname">PSeInt</span><pre>Si cupos &gt; 0 Entonces
+    Escribir "Puedes entrar"
+SiNo
+    Escribir "Parqueadero lleno"
+FinSi</pre></div>
+    <div><span class="fname">parqueadero.py</span><pre><span class="kw">if</span> cupos &gt; <span class="nu">0</span>:
+    <span class="fn">print</span>(<span class="st">"Puedes entrar"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"Parqueadero lleno"</span>)</pre></div>
+  </div>
+
+  <h3>🎲 ¿Qué estructura uso?</h3>
+  <p><b>Enunciado:</b> lee cada situación y elige la estructura más adecuada.</p>
+  <div class="scorebar"><span>Aciertos: <b id="euScore">0</b> / <b id="euTotal">7</b></span><button class="btn ghost" id="euReset">Reiniciar</button></div>
+  <div id="euQuiz"></div>
+</section>
+
+<!-- ===================== IF / IF-ELSE ===================== -->
+<section class="tab" id="ifelse">
+  <h2>🔀 Condicional simple: <code>if</code></h2>
+  <p><code>if</code> ejecuta un bloque <b>solo si</b> la condición es <code>True</code>. Si es <code>False</code>, el bloque se omite y el programa continúa. Úsalo para decisiones de "sí o no".</p>
+  <div class="anat">
+    <div class="tile"><b><code>if</code></b><small>Palabra reservada, en minúsculas.</small></div>
+    <div class="tile"><b>condición</b><small>Expresión que da <code>True</code> o <code>False</code>.</small></div>
+    <div class="tile"><b><code>:</code></b><small>Los dos puntos son obligatorios.</small></div>
+    <div class="tile"><b>sangría</b><small>Las líneas con 4 espacios forman el bloque.</small></div>
+    <div class="tile"><b>sin sangría</b><small>Ya no pertenece al <code>if</code>: se ejecuta siempre.</small></div>
+  </div>
+  <span class="fname">lluvia.py</span>
+  <pre>prob = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Probabilidad de lluvia (%): "</span>))
+<span class="kw">if</span> prob &gt;= <span class="nu">60</span>:
+    <span class="fn">print</span>(<span class="st">"☂ Lleva paraguas"</span>)       <span class="cm"># dentro del if</span>
+    <span class="fn">print</span>(<span class="st">"🧥 Y una chaqueta"</span>)      <span class="cm"># dentro del if</span>
+<span class="fn">print</span>(<span class="st">"Que tengas un buen día"</span>)    <span class="cm"># fuera: se ejecuta siempre</span></pre>
+  <div class="tablewrap"><table class="mini">
+    <thead><tr><th>prob</th><th>prob &gt;= 60</th><th>Salida</th></tr></thead>
+    <tbody>
+      <tr><td>80</td><td class="ok">True</td><td>☂ Lleva paraguas · 🧥 Y una chaqueta · Que tengas un buen día</td></tr>
+      <tr><td>60</td><td class="ok">True</td><td>las tres líneas (60 es el caso límite)</td></tr>
+      <tr><td>30</td><td class="ko">False</td><td>Que tengas un buen día</td></tr>
+    </tbody>
+  </table></div>
+  <div class="center"><button class="btn py" data-try="lluvia">🐍 Probarlo en el laboratorio</button></div>
+  <div class="note"><b>Sangría:</b> usa siempre <b>4 espacios</b> (convención PEP 8) y la misma en todo el bloque. Mezclar tabulaciones y espacios produce <code>TabError</code>.</div>
+
+  <h2>Condicional doble: <code>if-else</code></h2>
+  <p><code>if-else</code> elige <b>uno de dos caminos</b>: <code>True</code> → bloque del <code>if</code>; <code>False</code> → bloque del <code>else</code>. Siempre se ejecuta <b>exactamente uno</b>, nunca ambos. El <code>else</code> <b>no lleva condición</b>, va al <b>mismo nivel</b> que su <code>if</code> y lleva <code>:</code>.</p>
+  <span class="fname">parqueadero.py</span>
+  <pre>cupos = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Cupos disponibles: "</span>))
+<span class="kw">if</span> cupos &gt; <span class="nu">0</span>:
+    <span class="fn">print</span>(<span class="st">"🚗 Puedes entrar"</span>)
+    <span class="fn">print</span>(<span class="st">f"Quedarán </span>{cupos - 1}<span class="st"> cupos"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"⛔ Parqueadero lleno"</span>)</pre>
+  <div class="center"><button class="btn py" data-try="parqueadero">🐍 Probarlo en el laboratorio</button></div>
+  <div class="tip">🎯 <b>Prueba siempre el caso límite.</b> Aquí es <code>cupos = 0</code>: ahí se nota si escribiste <code>&gt;=</code> cuando debías usar <code>&gt;</code>.</div>
+  <h3>Bonus: if-else en una línea</h3>
+  <p>Cuando cada camino solo <b>asigna un valor</b>, puedes escribirlo en una línea (expresión condicional):</p>
+  <pre>estado = <span class="st">"Hay cupo"</span> <span class="kw">if</span> cupos &gt; <span class="nu">0</span> <span class="kw">else</span> <span class="st">"Lleno"</span></pre>
+  <p style="color:var(--muted)">Se lee: <i>estado vale "Hay cupo" si cupos &gt; 0; si no, vale "Lleno"</i>.</p>
+
+  <h3>🎯 ¿Qué imprime?</h3>
+  <p><b>Enunciado:</b> lee cada programa y predice exactamente lo que muestra. ¡Fíjate en la sangría!</p>
+  <div class="scorebar"><span>Aciertos: <b id="qiScore">0</b> / <b id="qiTotal">5</b></span><button class="btn ghost" id="qiReset">Reiniciar</button></div>
+  <div id="qiQuiz"></div>
+</section>
+
+<!-- ===================== IF-ELIF-ELSE ===================== -->
+<section class="tab" id="elif">
+  <h2>🪜 Condicional múltiple: <code>if-elif-else</code></h2>
+  <p>Evalúa varias condiciones <b>en orden, de arriba hacia abajo</b>. <code>elif</code> prueba una nueva condición solo si las anteriores fueron <code>False</code>. Se ejecuta <b>solo el primer bloque cuya condición sea True</b>: las demás ya no se revisan. El <code>else</code> es opcional y es el caso por defecto.</p>
+  <span class="fname">calidad_aire.py</span>
+  <pre>ica = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Índice de calidad del aire: "</span>))
+<span class="kw">if</span> ica &lt;= <span class="nu">50</span>:
+    <span class="fn">print</span>(<span class="st">"🟢 Buena"</span>)
+<span class="kw">elif</span> ica &lt;= <span class="nu">100</span>:
+    <span class="fn">print</span>(<span class="st">"🟡 Aceptable"</span>)
+<span class="kw">elif</span> ica &lt;= <span class="nu">150</span>:
+    <span class="fn">print</span>(<span class="st">"🟠 Dañina para grupos sensibles"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"🔴 Dañina para la salud"</span>)</pre>
+  <div class="tablewrap"><table class="mini">
+    <thead><tr><th>ica</th><th>Primera condición True</th><th>Salida</th></tr></thead>
+    <tbody>
+      <tr><td>35</td><td class="mono">ica &lt;= 50</td><td>🟢 Buena</td></tr>
+      <tr><td>100</td><td class="mono">ica &lt;= 100</td><td>🟡 Aceptable</td></tr>
+      <tr><td>101</td><td class="mono">ica &lt;= 150</td><td>🟠 Dañina para grupos sensibles</td></tr>
+      <tr><td>220</td><td>ninguna → else</td><td>🔴 Dañina para la salud</td></tr>
+    </tbody>
+  </table></div>
+  <div class="btns" style="justify-content:center"><button class="btn py" data-try="ica">🐍 Probarlo en el laboratorio</button><button class="btn ghost" data-sim="ica">🧭 Verlo paso a paso</button></div>
+  <div class="note"><b>¿Por qué <code>elif ica &lt;= 100</code> y no <code>elif 50 &lt; ica &lt;= 100</code>?</b> Porque si llegamos a ese <code>elif</code> es que <code>ica &lt;= 50</code> ya fue False: ¡ya sabemos que es mayor que 50!</div>
+
+  <h3>🧩 Ordena las condiciones</h3>
+  <p><b>Enunciado:</b> una tienda da descuento según el valor de la compra: <b>500000 o más → 20 %</b>, <b>200000 o más → 10 %</b>, <b>100000 o más → 5 %</b>, si no, 0 %. Toca las condiciones para ponerlas en el orden correcto y pulsa <b>Comprobar</b>: el juego probará tu programa con varias compras.</p>
+  <div class="slots2" id="odSlots"></div>
+  <div class="chips" id="odPool"></div>
+  <div class="btns"><button class="btn" id="odCheck">Comprobar</button><button class="btn ghost" id="odReset">Reiniciar</button></div>
+  <div id="odRes"></div>
+  <div class="tip">📐 <b>Regla:</b> con rangos "de … o más", ordena de la condición <b>más exigente</b> a la <b>menos exigente</b>. Si pones primero la más fácil de cumplir, atrapa a todos y las demás nunca se revisan.</div>
+</section>
+
+<!-- ===================== ANIDADOS ===================== -->
+<section class="tab" id="anidados">
+  <h2>🪆 Condicionales anidados</h2>
+  <p>Un condicional <b>anidado</b> está dentro del bloque de otro. Se usa cuando una condición <b>solo tiene sentido si otra ya se cumplió</b>. La sangría muestra qué está dentro de qué.</p>
+  <span class="fname">biblioteca.py</span>
+  <pre>es_estudiante = <span class="fn">input</span>(<span class="st">"¿Estudiante? (s/n): "</span>) == <span class="st">"s"</span>
+multas = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Multas pendientes: "</span>))
+<span class="kw">if</span> es_estudiante:
+    <span class="kw">if</span> multas == <span class="nu">0</span>:                         <span class="cm"># solo se pregunta si es estudiante</span>
+        <span class="fn">print</span>(<span class="st">"📚 Puedes llevar hasta 3 libros"</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="st">f"💸 Primero paga tus </span>{multas}<span class="st"> multas"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"🪑 Solo puedes consultar en sala"</span>)</pre>
+  <div class="btns" style="justify-content:center"><button class="btn py" data-try="biblioteca">🐍 Probarlo en el laboratorio</button><button class="btn ghost" data-sim="bib">🧭 Verlo paso a paso</button></div>
+  <p style="color:var(--muted)">Fíjate que <code>es_estudiante</code> ya es un <code>bool</code>: la comparación <code>== "s"</code> da <code>True</code> o <code>False</code>, por eso basta con <code>if es_estudiante:</code>.</p>
+
+  <h3>¿Anidar o usar <code>and</code>?</h3>
+  <div class="grid3">
+    <div><span class="fname">anidado.py</span><pre><span class="kw">if</span> hora &gt;= <span class="nu">6</span>:
+    <span class="kw">if</span> hora &lt; <span class="nu">22</span>:
+        <span class="fn">print</span>(<span class="st">"Gimnasio abierto"</span>)</pre></div>
+    <div><span class="fname">con_and.py</span><pre><span class="kw">if</span> hora &gt;= <span class="nu">6</span> <span class="kw">and</span> hora &lt; <span class="nu">22</span>:
+    <span class="fn">print</span>(<span class="st">"Gimnasio abierto"</span>)</pre></div>
+    <div><span class="fname">encadenado.py</span><pre><span class="kw">if</span> <span class="nu">6</span> &lt;= hora &lt; <span class="nu">22</span>:
+    <span class="fn">print</span>(<span class="st">"Gimnasio abierto"</span>)</pre></div>
+  </div>
+  <div class="tip">🧠 Los tres hacen lo mismo. Python permite <b>encadenar comparaciones</b> como en matemáticas: <code>6 &lt;= hora &lt; 22</code>. Si el anidamiento pasa de 2 o 3 niveles, piensa en <code>and</code> / <code>or</code> o en <code>elif</code>: tu código será más fácil de leer. Anida cuando cada nivel tiene su propio <code>else</code> con un mensaje distinto (como en la biblioteca).</div>
+</section>
+
+<!-- ===================== MATCH-CASE ===================== -->
+<section class="tab" id="match">
+  <h2>🎛️ Estructura <code>match-case</code></h2>
+  <p><code>match-case</code> compara un valor con varios <b>patrones</b> y ejecuta el <b>primero que coincida</b>. Es parecido a <code>Segun</code> de PSeInt. Disponible desde <b>Python 3.10</b>.</p>
+  <div class="anat">
+    <div class="tile"><b><code>case _:</code></b><small>Caso por defecto (como <code>else</code> o <code>De Otro Modo</code>).</small></div>
+    <div class="tile"><b><code>case "w" | "arriba":</code></b><small>Agrupa varios valores con <code>|</code> ("o").</small></div>
+    <div class="tile"><b><code>case n if n &gt; 100:</code></b><small>Guarda: el caso solo aplica si se cumple la condición.</small></div>
+    <div class="tile"><b>Sin <code>break</code></b><small>A diferencia del <code>switch</code> de C o Java: solo se ejecuta un caso.</small></div>
+  </div>
+  <span class="fname">dron.py</span>
+  <pre>comando = <span class="fn">input</span>(<span class="st">"Comando: "</span>)
+<span class="kw">match</span> comando:
+    <span class="kw">case</span> <span class="st">"w"</span> | <span class="st">"arriba"</span>:
+        <span class="fn">print</span>(<span class="st">"⬆️ El dron sube"</span>)
+    <span class="kw">case</span> <span class="st">"s"</span> | <span class="st">"abajo"</span>:
+        <span class="fn">print</span>(<span class="st">"⬇️ El dron baja"</span>)
+    <span class="kw">case</span> <span class="st">"x"</span>:
+        <span class="fn">print</span>(<span class="st">"🛬 Aterrizando"</span>)
+    <span class="kw">case</span> _:
+        <span class="fn">print</span>(<span class="st">"❓ Comando desconocido"</span>)</pre>
+  <div class="btns" style="justify-content:center"><button class="btn py" data-try="dron">🐍 Probarlo en el laboratorio</button><button class="btn ghost" data-sim="dron">🧭 Verlo paso a paso</button></div>
+  <h3>¿Cuál uso?</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Situación</th><th>Mejor opción</th></tr></thead>
+    <tbody>
+      <tr><td>Valores exactos (1, 2, 3… o "w", "s", "x")</td><td class="mono">match-case</td></tr>
+      <tr><td>Rangos (ica &lt;= 50, nota &gt;= 4.0)</td><td class="mono">if-elif-else</td></tr>
+      <tr><td>Condiciones combinadas (and, or)</td><td class="mono">if-elif-else</td></tr>
+    </tbody>
+  </table></div>
+  <h3>🎯 ¿Qué imprime? (match y lógicos)</h3>
+  <div class="scorebar"><span>Aciertos: <b id="mqScore">0</b> / <b id="mqTotal">4</b></span><button class="btn ghost" id="mqReset">Reiniciar</button></div>
+  <div id="mqQuiz"></div>
+</section>
+
+<!-- ===================== SIGUE EL CAMINO ===================== -->
+<section class="tab" id="camino">
+  <h2>🧭 Sigue el camino</h2>
+  <p>Elige un programa, cambia el dato de entrada y pulsa <b>▶ Ejecutar paso a paso</b>. Verás qué condiciones dan <span class="ok">True</span>, cuáles dan <span class="ko">False</span>, cuáles <b>ni siquiera se revisan</b> y qué líneas se ejecutan.</p>
+  <div class="note">🎯 <b>Misión — cobertura de ramas:</b> en cada programa, consigue que <b>todas las ramas</b> se ejecuten al menos una vez (eso hacen los programadores para probar su código). Completa los 3 programas para la insignia <b>Explorador de ramas</b>.</div>
+  <div class="sim">
+    <div class="simbar"><select id="simSel" aria-label="Programa"></select></div>
+    <div class="simin" id="simIn"></div>
+    <div class="btns" style="margin-top:0"><button class="btn" id="simRun">▶ Ejecutar paso a paso</button></div>
+    <div class="cov" id="simCov"></div>
+    <div class="simgrid" style="margin-top:8px">
+      <div class="scode" id="simCode"></div>
+      <div><label style="display:block;font-size:.78rem;color:var(--muted);margin:0 0 4px;font-weight:600">🖥️ Salida</label><pre class="term" id="simOut" style="min-height:150px"></pre></div>
+    </div>
+  </div>
+  <div class="tip">🔭 Fuera de clase puedes ver cualquier programa así en <b>pythontutor.com</b>: elige Python 3, pega tu código y pulsa <i>Visualize Execution</i>; con <i>Next</i> avanzas línea por línea.</div>
+</section>
+
+<!-- ===================== RETOS ===================== -->
+<section class="tab" id="retos">
+  <h2>🧨 Rompe el programa</h2>
+  <p><b>Enunciado:</b> cada programa tiene un error escondido: funciona con casi todos los datos, pero no con todos. Lee la especificación y <b>encuentra un dato de entrada que lo haga fallar</b>. Pista: los errores viven en los <b>bordes</b> y en el <b>orden</b> de las condiciones.</p>
+  <div id="bugs"></div>
+
+  <h2>🕵️ Caza el error</h2>
+  <p><b>Enunciado:</b> ¿qué pasa al ejecutar cada fragmento? Algunos producen un error con mensaje; otros corren pero hacen algo distinto a lo que se quería (<b>error lógico</b>).</p>
+  <div class="scorebar"><span>Cazados: <b id="ceScore">0</b> / <b id="ceTotal">8</b></span><button class="btn ghost" id="ceReset">Reiniciar</button></div>
+  <div id="ceQuiz"></div>
+</section>
+
+<!-- ===================== LABORATORIO ===================== -->
+<section class="tab" id="lab">
+  <h2>🐍 Laboratorio: Python de verdad en tu navegador</h2>
+  <p>Escribe tu programa, pon los datos de entrada (uno por línea) y pulsa <b>▶ Ejecutar</b>. Elige un <b>reto</b> y pulsa <b>✅ Comprobar reto</b>: el laboratorio lo prueba con varios datos, <b>incluidos los casos límite</b>. <small style="color:var(--muted)">La primera vez se descarga Python (≈ 12 MB); necesitas conexión a internet.</small></p>
+  <div class="lab">
+    <div class="labbar">
+      <select id="retoSel" aria-label="Reto"></select>
+      <span class="pystat" id="pyStatus">⚪ Python sin cargar</span>
+    </div>
+    <div class="retoinfo" id="retoInfo"></div>
+    <div class="labgrid">
+      <div>
+        <label for="code">📝 Tu programa (.py) · <span style="font-weight:400">Tab = 4 espacios · Ctrl+Enter = ejecutar</span></label>
+        <textarea id="code" class="code" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+        <label for="stdin">⌨️ Entradas: una por línea (cada <code>input()</code> toma la siguiente)</label>
+        <textarea id="stdin" class="stdin" spellcheck="false"></textarea>
+        <div class="btns">
+          <button class="btn py" id="runBtn">▶ Ejecutar</button>
+          <button class="btn" id="checkBtn">✅ Comprobar reto</button>
+          <button class="btn ghost" id="resetCode">↺ Plantilla</button>
+          <button class="btn ghost" id="solBtn">👀 Solución</button>
+        </div>
+      </div>
+      <div>
+        <label>🖥️ Terminal</label>
+        <pre class="term" id="term"><span class="sys">La salida de tu programa aparecerá aquí.</span></pre>
+        <div class="chk" id="checkRes"></div>
+      </div>
+    </div>
+  </div>
+  <div class="tip">🏅 Cada reto superado da <b>30 XP</b> (el reto ★ da 50). Si abres la solución antes de superarlo, da la <b>mitad</b>. Supera 5 retos para la insignia <b>Decisor</b> y los 9 para <b>Leyenda</b>.</div>
+</section>
+
+<!-- ===================== TALLER ===================== -->
+<section class="tab" id="taller">
+  <h2>🏆 Taller — 9 ejercicios de decisión en Python</h2>
+  <p>Para cada ejercicio decide primero <b>qué estructura</b> usar (if, if-else, if-elif-else, anidado o match-case) y <b>qué casos límite</b> debes probar. Resuélvelo en el <b>🐍 Laboratorio</b> (o en IDLE/Thonny). Intenta antes de abrir la solución.</p>
+  <div id="ejercicios"></div>
+</section>
+
+</div>
+<div class="xppop" id="xppop"></div>
+<footer>Material interactivo · Lógica de Programación 1 · Condicionales en Python (Python 3.14)</footer>
+
+<script>
+const RETOS = [{"id": "bateria", "t": "1. Alerta de batería", "tag": "if", "d": "Escribe un programa que pida el <b>porcentaje de batería<\/b> (entero) y muestre siempre <code>Nivel: X%<\/code>. <b>Solo si<\/b> es menor que 20, muestre además <code>⚠ Batería baja: conecta el cargador<\/code>.<br><b>Entrada:<\/b> un entero (porcentaje de batería) · <b>Salida:<\/b> una o dos líneas<br><b>Ejemplo:<\/b> 15 → <code>Nivel: 15%<\/code> y la alerta; 20 → solo <code>Nivel: 20%<\/code> (20 ya no es menor que 20).<br>💡 <b>Pista:<\/b> el <code>print<\/code> del nivel va <b>fuera<\/b> del if (sin sangría) para que se muestre siempre; la alerta va <b>dentro<\/b>.", "starter": "bateria = int(input(\"Batería (%): \"))\n", "sol": "bateria = int(input(\"Batería (%): \"))\nprint(f\"Nivel: {bateria}%\")\nif bateria < 20:\n    print(\"⚠ Batería baja: conecta el cargador\")", "tests": [{"in": ["15"], "must": ["15", "baja"], "not": [], "show": "Nivel: 15% + alerta de batería baja"}, {"in": ["80"], "must": ["80"], "not": ["baja"], "show": "Nivel: 80% (sin alerta)"}, {"in": ["20"], "must": ["20"], "not": ["baja"], "show": "Nivel: 20% (sin alerta: caso límite)"}]}, {"id": "envio", "t": "2. Envío gratis", "tag": "if-else", "d": "Una tienda en línea cobra <b>$12000<\/b> de envío, pero el envío es <b>gratis<\/b> si la compra es de <b>150000 o más<\/b>. Pide el valor de la compra (entero) y muestra <code>Envío gratis<\/code> o <code>Costo de envío: 12000<\/code>, y luego <code>Total a pagar: X<\/code>.<br><b>Entrada:<\/b> un entero (valor de la compra) · <b>Salida:<\/b> dos líneas: el envío y el total<br><b>Ejemplo:<\/b> 90000 → <code>Costo de envío: 12000<\/code> · <code>Total a pagar: 102000<\/code>; 150000 → <code>Envío gratis<\/code> · <code>Total a pagar: 150000<\/code>.<br>💡 <b>Pista:<\/b> calcula primero el <code>envio<\/code> (0 o 12000) dentro del if-else y después, fuera, <code>total = compra + envio<\/code>.", "starter": "compra = int(input(\"Valor de la compra: \"))\n", "sol": "compra = int(input(\"Valor de la compra: \"))\nif compra >= 150000:\n    print(\"Envío gratis\")\n    total = compra\nelse:\n    print(\"Costo de envío: 12000\")\n    total = compra + 12000\nprint(f\"Total a pagar: {total}\")", "tests": [{"in": ["90000"], "must": ["12000", "\\b102000(\\.0+)?\\b"], "not": ["gratis"], "show": "Costo de envío: 12000 · Total a pagar: 102000"}, {"in": ["150000"], "must": ["gratis", "\\b150000(\\.0+)?\\b"], "not": ["162000"], "show": "Envío gratis · Total a pagar: 150000 (caso límite)"}, {"in": ["149999"], "must": ["\\b161999(\\.0+)?\\b"], "not": ["gratis"], "show": "Costo de envío: 12000 · Total a pagar: 161999"}]}, {"id": "velocidad", "t": "3. Fotomulta en zona de 60", "tag": "if-elif-else", "d": "En una vía con límite de <b>60 km/h<\/b>, pide la velocidad (entero) y muestra: hasta 60 → <code>Sin multa<\/code>; de 61 a 80 → <code>Multa leve<\/code>; de 81 a 100 → <code>Multa grave<\/code>; más de 100 → <code>Multa gravísima e inmovilización<\/code>.<br><b>Entrada:<\/b> un entero (velocidad en km/h) · <b>Salida:<\/b> un mensaje<br><b>Ejemplo:<\/b> 60 → Sin multa; 81 → Multa grave; 101 → Multa gravísima e inmovilización.<br>💡 <b>Pista:<\/b> ordena de menor a mayor: <code>if v &lt;= 60<\/code>, <code>elif v &lt;= 80<\/code>, <code>elif v &lt;= 100<\/code>, <code>else<\/code>. Prueba los bordes 60, 61, 80, 81, 100 y 101.", "starter": "velocidad = int(input(\"Velocidad (km/h): \"))\n", "sol": "velocidad = int(input(\"Velocidad (km/h): \"))\nif velocidad <= 60:\n    print(\"Sin multa\")\nelif velocidad <= 80:\n    print(\"Multa leve\")\nelif velocidad <= 100:\n    print(\"Multa grave\")\nelse:\n    print(\"Multa gravísima e inmovilización\")", "tests": [{"in": ["60"], "must": ["sin multa"], "not": ["leve", "grave", "grav[ií]sima"], "show": "Sin multa"}, {"in": ["61"], "must": ["multa leve"], "not": [], "show": "Multa leve"}, {"in": ["80"], "must": ["multa leve"], "not": [], "show": "Multa leve"}, {"in": ["81"], "must": ["multa grave\\b"], "not": ["leve"], "show": "Multa grave"}, {"in": ["100"], "must": ["multa grave\\b"], "not": ["grav[ií]sima"], "show": "Multa grave"}, {"in": ["101"], "must": ["grav[ií]sima"], "not": [], "show": "Multa gravísima e inmovilización"}]}, {"id": "login", "t": "4. Inicio de sesión", "tag": "anidado", "d": "Pide un <b>usuario<\/b> y una <b>clave<\/b>. Si el usuario es <code>estudiante<\/code>, revisa la clave: si es <code>python314<\/code> muestra <code>Bienvenido<\/code>; si no, <code>Clave incorrecta<\/code>. Si el usuario es otro, muestra <code>El usuario no existe<\/code> (sin revisar la clave). Usa un <b>condicional anidado<\/b>.<br><b>Entrada:<\/b> dos textos (usuario y clave) · <b>Salida:<\/b> un mensaje<br><b>Ejemplo:<\/b> estudiante / python314 → Bienvenido; estudiante / 1234 → Clave incorrecta; ana / python314 → El usuario no existe.<br>💡 <b>Pista:<\/b> el if de afuera pregunta por el usuario; el if de adentro (con 4 espacios más) pregunta por la clave.", "starter": "usuario = input(\"Usuario: \")\nclave = input(\"Clave: \")\n", "sol": "usuario = input(\"Usuario: \")\nclave = input(\"Clave: \")\nif usuario == \"estudiante\":\n    if clave == \"python314\":\n        print(\"Bienvenido\")\n    else:\n        print(\"Clave incorrecta\")\nelse:\n    print(\"El usuario no existe\")", "tests": [{"in": ["estudiante", "python314"], "must": ["bienvenid"], "not": ["incorrecta", "no existe"], "show": "Bienvenido"}, {"in": ["estudiante", "1234"], "must": ["clave incorrecta"], "not": ["bienvenid"], "show": "Clave incorrecta"}, {"in": ["ana", "python314"], "must": ["no existe"], "not": ["bienvenid", "incorrecta"], "show": "El usuario no existe"}]}, {"id": "semaforo", "t": "5. Semáforo con match-case", "tag": "match-case", "d": "Pide el <b>color<\/b> del semáforo (en minúsculas) y usa <b>match-case<\/b> para mostrar la acción: <code>rojo<\/code> → <code>Detente<\/code>; <code>amarillo<\/code> → <code>Precaución<\/code>; <code>verde<\/code> → <code>Avanza<\/code>; cualquier otro → <code>Color no válido<\/code> (usa <code>case _<\/code>).<br><b>Entrada:<\/b> un texto (color) · <b>Salida:<\/b> un mensaje<br><b>Ejemplo:<\/b> verde → Avanza; azul → Color no válido.<br>💡 <b>Pista:<\/b> <code>match color:<\/code> y un <code>case \"rojo\":<\/code> por cada color; el <code>case _:<\/code> va de último.", "starter": "color = input(\"Color: \")\nmatch color:\n", "sol": "color = input(\"Color: \")\nmatch color:\n    case \"rojo\":\n        print(\"Detente\")\n    case \"amarillo\":\n        print(\"Precaución\")\n    case \"verde\":\n        print(\"Avanza\")\n    case _:\n        print(\"Color no válido\")", "tests": [{"in": ["rojo"], "must": ["detente"], "not": ["no v[aá]lido"], "show": "Detente"}, {"in": ["amarillo"], "must": ["precauci[oó]n"], "not": [], "show": "Precaución"}, {"in": ["verde"], "must": ["avanza"], "not": [], "show": "Avanza"}, {"in": ["azul"], "must": ["no v[aá]lido"], "not": ["avanza", "detente"], "show": "Color no válido"}]}, {"id": "propina", "t": "6. Propina según estrellas", "tag": "match-case con |", "d": "Pide el <b>total de la cuenta<\/b> y la <b>calificación del servicio<\/b> (1 a 5 estrellas). Con <b>match-case<\/b> calcula la propina: 5 → 15 %; 4 → 10 %; 3 → 5 %; 1 o 2 → 0 % (agrúpalos con <code>|<\/code>). Muestra <code>Propina: X<\/code> con 2 decimales. Si las estrellas no están entre 1 y 5, muestra <code>Calificación inválida<\/code>.<br><b>Entrada:<\/b> un real (total) y un entero (estrellas) · <b>Salida:<\/b> <code>Propina: X<\/code> o <code>Calificación inválida<\/code><br><b>Ejemplo:<\/b> 100000 y 5 → <code>Propina: 15000.00<\/code>; 100000 y 2 → <code>Propina: 0.00<\/code>.<br>💡 <b>Pista:<\/b> guarda el porcentaje en una variable dentro de cada case (<code>case 1 | 2: porc = 0<\/code>) y calcula la propina al final; para el caso inválido usa <code>case _<\/code>.", "starter": "total = float(input(\"Total de la cuenta: \"))\nestrellas = int(input(\"Estrellas (1-5): \"))\n", "sol": "total = float(input(\"Total de la cuenta: \"))\nestrellas = int(input(\"Estrellas (1-5): \"))\nmatch estrellas:\n    case 5:\n        print(f\"Propina: {total * 0.15:.2f}\")\n    case 4:\n        print(f\"Propina: {total * 0.10:.2f}\")\n    case 3:\n        print(f\"Propina: {total * 0.05:.2f}\")\n    case 1 | 2:\n        print(f\"Propina: {0:.2f}\")\n    case _:\n        print(\"Calificación inválida\")", "tests": [{"in": ["100000", "5"], "must": ["15000\\.00"], "not": [], "show": "Propina: 15000.00"}, {"in": ["80000", "4"], "must": ["8000\\.00"], "not": [], "show": "Propina: 8000.00"}, {"in": ["50000", "3"], "must": ["2500\\.00"], "not": [], "show": "Propina: 2500.00"}, {"in": ["100000", "2"], "must": ["\\b0\\.00"], "not": ["inv[aá]lida"], "show": "Propina: 0.00"}, {"in": ["100000", "7"], "must": ["inv[aá]lida"], "not": ["propina:"], "show": "Calificación inválida"}]}, {"id": "donar", "t": "7. ¿Puede donar sangre?", "tag": "and / or", "d": "Una persona puede donar sangre si tiene <b>entre 18 y 65 años<\/b> (inclusive) <b>y<\/b> pesa <b>50 kg o más<\/b>. Pide la edad (entero) y el peso (real) y muestra <code>Puede donar<\/code> o <code>No puede donar<\/code>. Usa una <b>sola condición<\/b> con <code>and<\/code>.<br><b>Entrada:<\/b> un entero (edad) y un real (peso) · <b>Salida:<\/b> un mensaje<br><b>Ejemplo:<\/b> 25 y 60 → Puede donar; 17 y 70 → No puede donar; 30 y 49.5 → No puede donar.<br>💡 <b>Pista:<\/b> <code>18 &lt;= edad &lt;= 65 and peso &gt;= 50<\/code> es una sola condición válida en Python.", "starter": "edad = int(input(\"Edad: \"))\npeso = float(input(\"Peso (kg): \"))\n", "sol": "edad = int(input(\"Edad: \"))\npeso = float(input(\"Peso (kg): \"))\nif 18 <= edad <= 65 and peso >= 50:\n    print(\"Puede donar\")\nelse:\n    print(\"No puede donar\")", "tests": [{"in": ["25", "60"], "must": ["puede donar"], "not": ["no puede"], "show": "Puede donar"}, {"in": ["17", "70"], "must": ["no puede donar"], "not": [], "show": "No puede donar"}, {"in": ["66", "70"], "must": ["no puede donar"], "not": [], "show": "No puede donar"}, {"in": ["30", "49.5"], "must": ["no puede donar"], "not": [], "show": "No puede donar"}, {"in": ["18", "50"], "must": ["puede donar"], "not": ["no puede"], "show": "Puede donar (bordes 18 y 50)"}, {"in": ["65", "50"], "must": ["puede donar"], "not": ["no puede"], "show": "Puede donar (borde 65)"}]}, {"id": "plano", "t": "8. ¿Dónde está el punto?", "tag": "if-elif / anidado", "d": "Pide las coordenadas <b>x<\/b> e <b>y<\/b> (reales) de un punto y muestra dónde está: <code>Origen<\/code> (ambas 0), <code>Sobre el eje X<\/code> (y = 0), <code>Sobre el eje Y<\/code> (x = 0) o <code>Cuadrante I<\/code>, <code>II<\/code>, <code>III<\/code> o <code>IV<\/code>.<br><b>Entrada:<\/b> dos reales (x, y) · <b>Salida:<\/b> un mensaje<br><b>Ejemplo:<\/b> (2, 3) → Cuadrante I; (-2, 3) → Cuadrante II; (5, 0) → Sobre el eje X; (0, 0) → Origen.<br>💡 <b>Pista:<\/b> revisa primero los casos con ceros (origen y ejes) y después los cuadrantes con <code>and<\/code>: Cuadrante I es <code>x &gt; 0 and y &gt; 0<\/code>.", "starter": "x = float(input(\"x: \"))\ny = float(input(\"y: \"))\n", "sol": "x = float(input(\"x: \"))\ny = float(input(\"y: \"))\nif x == 0 and y == 0:\n    print(\"Origen\")\nelif y == 0:\n    print(\"Sobre el eje X\")\nelif x == 0:\n    print(\"Sobre el eje Y\")\nelif x > 0:\n    if y > 0:\n        print(\"Cuadrante I\")\n    else:\n        print(\"Cuadrante IV\")\nelse:\n    if y > 0:\n        print(\"Cuadrante II\")\n    else:\n        print(\"Cuadrante III\")", "tests": [{"in": ["0", "0"], "must": ["origen"], "not": ["eje", "cuadrante"], "show": "Origen"}, {"in": ["5", "0"], "must": ["eje x"], "not": ["origen", "cuadrante"], "show": "Sobre el eje X"}, {"in": ["0", "-3"], "must": ["eje y"], "not": ["origen", "cuadrante"], "show": "Sobre el eje Y"}, {"in": ["2", "3"], "must": ["cuadrante i\\b"], "not": [], "show": "Cuadrante I"}, {"in": ["-2", "3"], "must": ["cuadrante ii\\b"], "not": [], "show": "Cuadrante II"}, {"in": ["-2", "-3"], "must": ["cuadrante iii\\b"], "not": [], "show": "Cuadrante III"}, {"in": ["2", "-3"], "must": ["cuadrante iv\\b"], "not": [], "show": "Cuadrante IV"}]}, {"id": "cine", "t": "★ Reto: boleta de cine", "tag": "reto", "d": "Calcula el valor de una boleta de cine. Pide la <b>edad<\/b>, el <b>día<\/b> (en minúsculas, p. ej. <code>martes<\/code>) y si quiere <b>combo<\/b> (<code>s<\/code> o <code>n<\/code>). Reglas: los <b>martes<\/b> la boleta cuesta <b>8000<\/b> para todos; los otros días cuesta <b>9000<\/b> para menores de 12 o personas de 60 años o más, y <b>14000<\/b> para los demás. Si pide combo, se suman <b>12000<\/b>. Muestra <code>Total: X<\/code>.<br><b>Entrada:<\/b> un entero (edad), un texto (día) y un texto (s/n) · <b>Salida:<\/b> <code>Total: X<\/code><br><b>Ejemplo:<\/b> 25, martes, n → Total: 8000; 8, sabado, s → Total: 21000; 30, viernes, s → Total: 26000.<br>💡 <b>Pista:<\/b> primero calcula el precio de la boleta (if-elif-else con <code>or<\/code> para la edad) y luego, en un if aparte, suma el combo.", "starter": "edad = int(input(\"Edad: \"))\ndia = input(\"Día: \")\ncombo = input(\"¿Combo? (s/n): \")\n", "sol": "edad = int(input(\"Edad: \"))\ndia = input(\"Día: \")\ncombo = input(\"¿Combo? (s/n): \")\nif dia == \"martes\":\n    precio = 8000\nelif edad < 12 or edad >= 60:\n    precio = 9000\nelse:\n    precio = 14000\nif combo == \"s\":\n    precio = precio + 12000\nprint(f\"Total: {precio}\")", "tests": [{"in": ["25", "martes", "n"], "must": ["total\\D*\\b8000\\b"], "not": [], "show": "Total: 8000"}, {"in": ["8", "sabado", "s"], "must": ["total\\D*\\b21000\\b"], "not": [], "show": "Total: 21000"}, {"in": ["60", "lunes", "n"], "must": ["total\\D*\\b9000\\b"], "not": [], "show": "Total: 9000 (borde: 60 años)"}, {"in": ["30", "viernes", "s"], "must": ["total\\D*\\b26000\\b"], "not": [], "show": "Total: 26000"}, {"in": ["11", "martes", "s"], "must": ["total\\D*\\b20000\\b"], "not": [], "show": "Total: 20000"}]}];
+const HARNESS_PY = "import builtins, io, contextlib, traceback, sys\ndef __run_user(src, inputs, echo):\n    q = list(inputs)\n    def _inp(prompt=''):\n        if not q:\n            raise EOFError(\"input() pidió un dato, pero no hay más entradas\")\n        v = q.pop(0)\n        if echo:\n            print(str(prompt) + v)\n        return v\n    builtins.input = _inp\n    buf = io.StringIO()\n    etype, err, line = \"\", \"\", None\n    try:\n        code = compile(src, \"tu_programa.py\", \"exec\")\n        with contextlib.redirect_stdout(buf):\n            exec(code, {\"__name__\": \"__main__\"})\n    except SyntaxError as e:\n        etype, err, line = type(e).__name__, str(e.msg), e.lineno\n    except BaseException as e:\n        etype, err = type(e).__name__, str(e)\n        for fr in traceback.extract_tb(e.__traceback__):\n            if fr.filename == \"tu_programa.py\":\n                line = fr.lineno\n    return [buf.getvalue(), etype, err, line]\n";
+const EXTRA_CODE = {
+  lluvia:{code:'prob = int(input("Probabilidad de lluvia (%): "))\nif prob >= 60:\n    print("☂ Lleva paraguas")\n    print("🧥 Y una chaqueta")\nprint("Que tengas un buen día")\n', stdin:'80'},
+  parqueadero:{code:'cupos = int(input("Cupos disponibles: "))\nif cupos > 0:\n    print("🚗 Puedes entrar")\n    print(f"Quedarán {cupos - 1} cupos")\nelse:\n    print("⛔ Parqueadero lleno")\n', stdin:'0'},
+  ica:{code:'ica = int(input("Índice de calidad del aire: "))\nif ica <= 50:\n    print("🟢 Buena")\nelif ica <= 100:\n    print("🟡 Aceptable")\nelif ica <= 150:\n    print("🟠 Dañina para grupos sensibles")\nelse:\n    print("🔴 Dañina para la salud")\n', stdin:'101'},
+  biblioteca:{code:'es_estudiante = input("¿Estudiante? (s/n): ") == "s"\nmultas = int(input("Multas pendientes: "))\nif es_estudiante:\n    if multas == 0:\n        print("📚 Puedes llevar hasta 3 libros")\n    else:\n        print(f"💸 Primero paga tus {multas} multas")\nelse:\n    print("🪑 Solo puedes consultar en sala")\n', stdin:'s\n2'},
+  dron:{code:'comando = input("Comando: ")\nmatch comando:\n    case "w" | "arriba":\n        print("⬆️ El dron sube")\n    case "s" | "abajo":\n        print("⬇️ El dron baja")\n    case "x":\n        print("🛬 Aterrizando")\n    case _:\n        print("❓ Comando desconocido")\n', stdin:'arriba'},
+  libre:{code:'# Zona libre: experimenta con condicionales\nnota = float(input("Nota (0-5): "))\nestado = "Aprobado" if nota >= 3.0 else "Reprobado"\nprint(f"{nota:.1f} → {estado}")\n', stdin:'3.0'}
+};
+
+/* ===================== Progreso / XP ===================== */
+const KEY='lp1-clase9-cond-v1';
+let S={xp:0, awarded:[], flags:{}, retos:{}, sol:{}, cov:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null'); if(s&&typeof s==='object') S=Object.assign(S,s);}catch(e){}
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} }
+const LEVELS=['Novato del if','Aprendiz del else','Domador del elif','Maestro del match','Gran decisor'];
+const PER=140;
+const BADGES=[
+  {icon:'🥉',label:'Primer paso',test:()=>S.xp>=30},
+  {icon:'🐍',label:'¡Hola, if!',test:()=>!!S.flags.firstRun},
+  {icon:'🌳',label:'Explorador de ramas',test:()=>!!S.flags.explorer},
+  {icon:'🧨',label:'Rompe-programas',test:()=>!!S.flags.breaker},
+  {icon:'🕵️',label:'Cazaerrores',test:()=>!!S.flags.hunter},
+  {icon:'🏅',label:'Decisor',test:()=>Object.keys(S.retos).length>=5},
+  {icon:'🧠',label:'Leyenda',test:()=>Object.keys(S.retos).length>=RETOS.length}
+];
+function renderXP(){
+  const lvl=Math.min(LEVELS.length,Math.floor(S.xp/PER)+1);
+  document.getElementById('lvl').textContent=lvl;
+  document.getElementById('lvlname').textContent=LEVELS[lvl-1];
+  document.getElementById('xp').textContent=S.xp;
+  document.getElementById('xpfill').style.width=(lvl===LEVELS.length?100:Math.round((S.xp%PER)/PER*100))+'%';
+  const box=document.getElementById('badges'); box.innerHTML='';
+  BADGES.forEach(b=>{const e=document.createElement('span');e.className='bdg'+(b.test()?' on':'');e.textContent=b.icon+' '+b.label;box.appendChild(e);});
+}
+let popT=null;
+function pop(t){const p=document.getElementById('xppop');p.textContent=t;p.classList.add('show');clearTimeout(popT);popT=setTimeout(()=>p.classList.remove('show'),1500);}
+function addXP(key,amt,label){
+  if(S.awarded.includes(key))return false;
+  S.awarded.push(key); S.xp+=amt; save(); renderXP(); pop('+'+amt+' XP'+(label?' · '+label:'')); return true;
+}
+function flag(name,label){ if(S.flags[name])return; S.flags[name]=true; save(); renderXP(); if(label)setTimeout(()=>pop('🏅 Insignia: '+label),1600); }
+document.getElementById('resetProg').addEventListener('click',()=>{
+  if(!confirm('¿Borrar tu XP, insignias y retos superados en este navegador?'))return;
+  S={xp:0,awarded:[],flags:{},retos:{},sol:{},cov:{}}; save(); renderXP(); renderRetoSel(); renderTaller(); loadReto(currentReto); renderCov(); renderBugs();
+});
+renderXP();
+
+/* ===================== Pestañas ===================== */
+const tabs=document.querySelectorAll('#tabs button');
+function showTab(name){
+  tabs.forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('active',s.id===name));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+tabs.forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+
+/* ===================== Quiz genérico ===================== */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function makeQuiz(cfg){
+  document.getElementById(cfg.totalId).textContent=cfg.data.length;
+  function build(){
+    const box=document.getElementById(cfg.boxId); box.innerHTML='';
+    let answered=0, correct=0;
+    document.getElementById(cfg.scoreId).textContent='0';
+    cfg.data.forEach((q,i)=>{
+      const c=document.createElement('div'); c.className='q';
+      c.innerHTML='<span class="tag">'+(q.tag||('#'+(i+1)))+'</span>'+(q.scn?'<p class="scn">'+q.scn+'</p>':'')+(q.code?'<pre>'+esc(q.code)+'</pre>':'');
+      const opts=document.createElement('div'); opts.className='opts';
+      const fb=document.createElement('div'); fb.className='feedback';
+      let done=false;
+      q.opts.forEach(o=>{
+        const b=document.createElement('button'); b.className='opt'; b.textContent=o;
+        b.addEventListener('click',()=>{
+          if(done)return; done=true; answered++;
+          opts.querySelectorAll('.opt').forEach(x=>x.classList.add('locked'));
+          if(o===q.ans){ b.classList.add('correct'); correct++; document.getElementById(cfg.scoreId).textContent=correct;
+            fb.textContent='✔ ¡Correcto! '+q.why; fb.className='feedback ok'; addXP(cfg.boxId+':'+i,cfg.xp||10); }
+          else{ b.classList.add('wrong'); opts.querySelectorAll('.opt').forEach(x=>{if(x.textContent===q.ans)x.classList.add('correct');});
+            fb.textContent='✘ Respuesta: '+q.ans+'. '+q.why; fb.className='feedback no'; }
+          if(answered===cfg.data.length && cfg.onDone) cfg.onDone(correct);
+        });
+        opts.appendChild(b);
+      });
+      c.appendChild(opts); c.appendChild(fb); box.appendChild(c);
+    });
+  }
+  document.getElementById(cfg.resetId).addEventListener('click',build); build();
+}
+const EST=['if','if-else','if-elif-else','match-case','anidado'];
+makeQuiz({boxId:'euQuiz',scoreId:'euScore',totalId:'euTotal',resetId:'euReset',xp:8,data:[
+  {tag:'Situación 1',scn:'Mostrar "Batería baja" <b>solo si</b> la batería es menor que 20 %.',opts:EST,ans:'if',why:'Solo hay algo que hacer cuando se cumple; si no, nada.'},
+  {tag:'Situación 2',scn:'Decir si un número es par o impar.',opts:EST,ans:'if-else',why:'Exactamente dos caminos excluyentes.'},
+  {tag:'Situación 3',scn:'Clasificar la temperatura en frío, templado o caliente según rangos.',opts:EST,ans:'if-elif-else',why:'Tres o más caminos definidos por rangos.'},
+  {tag:'Situación 4',scn:'Según la tecla presionada (w, a, s, d), mover un personaje.',opts:EST,ans:'match-case',why:'Se compara un valor con opciones exactas.'},
+  {tag:'Situación 5',scn:'Si el usuario existe, revisar <b>después</b> si su contraseña es correcta.',opts:EST,ans:'anidado',why:'La segunda pregunta solo tiene sentido si la primera fue True.'},
+  {tag:'Situación 6',scn:'Elegir el plan 1, 2 o 3 de un menú.',opts:EST,ans:'match-case',why:'Valores exactos de un menú.'},
+  {tag:'Situación 7',scn:'Calcular el descuento según el valor de la compra (≥ 500 mil, ≥ 200 mil, ≥ 100 mil).',opts:EST,ans:'if-elif-else',why:'Son rangos: match-case no sirve para comparar con ≥.'}
+]});
+makeQuiz({boxId:'qiQuiz',scoreId:'qiScore',totalId:'qiTotal',resetId:'qiReset',xp:10,data:[
+  {tag:'Sangría 1',code:'x = 4\nif x > 5:\n    print("A")\nprint("B")',opts:['B','A','A y B','(nada)'],ans:'B',why:'x > 5 es False: se omite A; B no tiene sangría y se ejecuta siempre.'},
+  {tag:'Sangría 2',code:'x = 4\nif x > 5:\n    print("A")\n    print("B")\nprint("C")',opts:['C','B y C','A, B y C','(nada)'],ans:'C',why:'A y B tienen sangría: pertenecen al if, que es False.'},
+  {tag:'En una línea',code:'estado = "par" if 7 % 2 == 0 else "impar"\nprint(estado)',opts:['impar','par','True','7'],ans:'impar',why:'7 % 2 es 1, así que la condición es False y se toma el valor del else.'},
+  {tag:'Orden',code:'t = 35\nif t > 20:\n    print("Cálido")\nelif t > 30:\n    print("Caluroso")\nelse:\n    print("Frío")',opts:['Cálido','Caluroso','Cálido y Caluroso','Frío'],ans:'Cálido',why:'t > 20 ya es True: se ejecuta su bloque y el elif ni se revisa.'},
+  {tag:'Sin else',code:'n = 0\nif n > 0:\n    print("+")\nelif n < 0:\n    print("-")\nprint("fin")',opts:['fin','+ y fin','- y fin','(nada)'],ans:'fin',why:'Ninguna condición es True y no hay else: solo se imprime fin.'}
+]});
+makeQuiz({boxId:'mqQuiz',scoreId:'mqScore',totalId:'mqTotal',resetId:'mqReset',xp:10,data:[
+  {tag:'Varios valores',code:'c = "s"\nmatch c:\n    case "w" | "arriba":\n        print("sube")\n    case "s" | "abajo":\n        print("baja")\n    case _:\n        print("?")',opts:['baja','sube','?','baja y ?'],ans:'baja',why:'"s" coincide con el segundo case; solo se ejecuta uno.'},
+  {tag:'Guarda',code:'n = 150\nmatch n:\n    case 0:\n        print("cero")\n    case n if n > 100:\n        print("grande")\n    case _:\n        print("normal")',opts:['grande','normal','cero','grande y normal'],ans:'grande',why:'La guarda n > 100 se cumple con 150.'},
+  {tag:'or',code:'edad = 16\nacompanado = True\nif edad >= 18 or acompanado:\n    print("Entra")\nelse:\n    print("No entra")',opts:['Entra','No entra'],ans:'Entra',why:'Con or basta una condición True: acompanado lo es.'},
+  {tag:'Anidado',code:'a = 5\nb = -2\nif a > 0:\n    if b > 0:\n        print("ambos")\n    else:\n        print("solo a")\nelse:\n    print("a no")',opts:['solo a','ambos','a no','(nada)'],ans:'solo a',why:'a > 0 es True; dentro, b > 0 es False → else interno.'}
+]});
+const CE=['SyntaxError','IndentationError','Error lógico (sin mensaje)','Funciona bien'];
+makeQuiz({boxId:'ceQuiz',scoreId:'ceScore',totalId:'ceTotal',resetId:'ceReset',xp:10,
+  onDone:()=>flag('hunter','Cazaerrores'),
+  data:[
+  {tag:'Fragmento 1',code:'if nota >= 3.0\n    print("Aprobó")',opts:CE,ans:'SyntaxError',why:'Faltan los dos puntos: "expected \':\'".'},
+  {tag:'Fragmento 2',code:'if nota = 3.0:\n    print("Aprobó")',opts:CE,ans:'SyntaxError',why:'= asigna; para comparar se usa ==. Python incluso sugiere: "Maybe you meant \'==\'".'},
+  {tag:'Fragmento 3',code:'if x > 0:\nprint("positivo")',opts:CE,ans:'IndentationError',why:'El bloque del if necesita sangría: "expected an indented block".'},
+  {tag:'Fragmento 4',code:'if x > 0:\n    print("a")\n  else:\n    print("b")',opts:CE,ans:'IndentationError',why:'El else debe ir al mismo nivel que su if.'},
+  {tag:'Fragmento 5',code:'elif x > 0:\n    print("a")',opts:CE,ans:'SyntaxError',why:'Un elif no puede existir sin un if antes.'},
+  {tag:'Fragmento 6',code:'if x > 0:\n    print("a")\nElse:\n    print("b")',opts:CE,ans:'SyntaxError',why:'Else con mayúscula no es palabra reservada.'},
+  {tag:'Fragmento 7 · se quería: mayor de edad desde los 18',code:'edad = 18\nif edad > 18:\n    print("Mayor de edad")\nelse:\n    print("Menor de edad")',opts:CE,ans:'Error lógico (sin mensaje)',why:'Corre sin errores, pero con 18 dice "Menor de edad": debía ser >=.'},
+  {tag:'Fragmento 8',code:'op = "+"\na, b = 2, 3\nmatch op:\n    case "+":\n        print(a + b)\n    case _:\n        print("?")',opts:CE,ans:'Funciona bien',why:'Imprime 5.'}
+]});
+
+/* ===================== Ordena las condiciones ===================== */
+(function(){
+  const PIECES=[{id:'500',cond:'total >= 500000',desc:0.20,label:'descuento = 0.20'},{id:'200',cond:'total >= 200000',desc:0.10,label:'descuento = 0.10'},{id:'100',cond:'total >= 100000',desc:0.05,label:'descuento = 0.05'}];
+  const KW=['if','elif','elif'];
+  const slotsEl=document.getElementById('odSlots'), poolEl=document.getElementById('odPool'), res=document.getElementById('odRes');
+  let placed=[];
+  const pct=d=>Math.round(d*100)+' %';
+  function build(){
+    placed=[null,null,null]; res.innerHTML=''; slotsEl.innerHTML=''; poolEl.innerHTML='';
+    KW.forEach((k,i)=>{ const s=document.createElement('div'); s.className='slot2';
+      s.innerHTML='<span class="kwd">'+k+'</span><span class="tx" style="color:var(--muted)">— toca una condición —</span>';
+      s.addEventListener('click',()=>{ if(placed[i]==null)return; const id=placed[i]; placed[i]=null; render(); poolEl.querySelector('[data-id="'+id+'"]').classList.remove('used'); });
+      slotsEl.appendChild(s); });
+    const e=document.createElement('div'); e.className='slot2 fixed'; e.innerHTML='<span class="kwd">else</span><span>:  descuento = 0</span>'; slotsEl.appendChild(e);
+    PIECES.slice().sort(()=>Math.random()-.5).forEach(p=>{ const b=document.createElement('button'); b.className='chipb'; b.dataset.id=p.id; b.textContent=p.cond+':  '+p.label;
+      b.addEventListener('click',()=>{ const i=placed.indexOf(null); if(i<0)return; placed[i]=p.id; b.classList.add('used'); render(); });
+      poolEl.appendChild(b); });
+  }
+  function render(){ [...slotsEl.children].slice(0,3).forEach((s,i)=>{ s.classList.remove('okk','noo'); const p=PIECES.find(x=>x.id===placed[i]);
+    s.classList.toggle('filled',!!p); s.querySelector('.tx').textContent=p?(p.cond+':  '+p.label):'— toca una condición —'; s.querySelector('.tx').style.color=p?'var(--ink)':'var(--muted)'; }); }
+  function run(order,total){ for(const id of order){ const p=PIECES.find(x=>x.id===id); if(total>=+p.id*1000) return p.desc; } return 0; }
+  function spec(total){ return total>=500000?0.20:total>=200000?0.10:total>=100000?0.05:0; }
+  document.getElementById('odCheck').addEventListener('click',()=>{
+    if(placed.includes(null)){ res.innerHTML='<p class="feedback no">Coloca las tres condiciones primero.</p>'; return; }
+    const tests=[600000,250000,150000,50000]; let allok=true;
+    let rows=tests.map(t=>{ const got=run(placed,t), exp=spec(t), ok=got===exp; allok=allok&&ok;
+      return '<tr><td class="mono">'+t.toLocaleString('es-CO')+'</td><td>'+pct(got)+'</td><td>'+pct(exp)+'</td><td class="'+(ok?'ok':'ko')+'">'+(ok?'✔':'✘')+'</td></tr>'; }).join('');
+    [...slotsEl.children].slice(0,3).forEach((s,i)=>s.classList.add(placed[i]===['500','200','100'][i]?'okk':'noo'));
+    res.innerHTML='<div class="tablewrap"><table class="mini"><thead><tr><th>Compra</th><th>Tu programa da</th><th>Debería dar</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+      (allok?'<p class="feedback ok">🎉 ¡Perfecto! De la más exigente a la menos exigente: cada compra cae en su rango.</p>':'<p class="feedback no">Algunas compras reciben el descuento equivocado. Recuerda: la primera condición True "atrapa" el caso y las demás ya no se revisan.</p>');
+    if(allok) addXP('ordena',20,'orden de condiciones');
+  });
+  document.getElementById('odReset').addEventListener('click',build);
+  build();
+})();
+
+/* ===================== Sigue el camino (simulador) ===================== */
+const SIMS={
+  ica:{title:'🪜 Calidad del aire (if-elif-else)',
+    inputs:[{id:'ica',label:'ica =',type:'number',value:35}],
+    code:['ica = int(input("Índice de calidad del aire: "))','if ica <= 50:','    print("🟢 Buena")','elif ica <= 100:','    print("🟡 Aceptable")','elif ica <= 150:','    print("🟠 Dañina para grupos sensibles")','else:','    print("🔴 Dañina para la salud")','print("Fin del reporte")'],
+    branches:{2:'🟢 Buena',4:'🟡 Aceptable',6:'🟠 Grupos sensibles',8:'🔴 Dañina'},
+    trace(v){ const x=Math.trunc(+v.ica||0), st=[{l:0,s:'run'}];
+      const conds=[[1,x<=50,2,'🟢 Buena'],[3,x<=100,4,'🟡 Aceptable'],[5,x<=150,6,'🟠 Dañina para grupos sensibles']];
+      let done=false;
+      for(const [l,c,b,o] of conds){ if(done){st.push({l,s:'skip'});continue;} st.push({l,s:c?'true':'false'}); if(c){st.push({l:b,s:'run',out:o});done=true;} }
+      if(done) st.push({l:7,s:'skip',txt:'⏭ no se llega'}); else st.push({l:7,s:'true',txt:'✔ entra al else'},{l:8,s:'run',out:'🔴 Dañina para la salud'});
+      st.push({l:9,s:'run',out:'Fin del reporte'}); return st; }},
+  bib:{title:'🪆 Biblioteca (anidado)',
+    inputs:[{id:'est',label:'¿Estudiante?',type:'select',options:['s','n'],value:'s'},{id:'multas',label:'multas =',type:'number',value:0}],
+    code:['es_estudiante = input("¿Estudiante? (s/n): ") == "s"','multas = int(input("Multas pendientes: "))','if es_estudiante:','    if multas == 0:','        print("📚 Puedes llevar hasta 3 libros")','    else:','        print(f"💸 Primero paga tus {multas} multas")','else:','    print("🪑 Solo puedes consultar en sala")'],
+    branches:{4:'📚 3 libros',6:'💸 paga multas',8:'🪑 solo en sala'},
+    trace(v){ const est=v.est==='s', m=Math.trunc(+v.multas||0), st=[{l:0,s:'run'},{l:1,s:'run'},{l:2,s:est?'true':'false'}];
+      if(est){ const c=m===0; st.push({l:3,s:c?'true':'false'}); if(c) st.push({l:4,s:'run',out:'📚 Puedes llevar hasta 3 libros'}); else st.push({l:5,s:'true',txt:'✔ entra al else'},{l:6,s:'run',out:'💸 Primero paga tus '+m+' multas'}); }
+      else { st.push({l:3,s:'skip',txt:'⏭ no se revisa (está dentro del if)'},{l:7,s:'true',txt:'✔ entra al else'},{l:8,s:'run',out:'🪑 Solo puedes consultar en sala'}); }
+      return st; }},
+  dron:{title:'🎛️ Control del dron (match-case)',
+    inputs:[{id:'cmd',label:'comando =',type:'text',value:'arriba'}],
+    code:['comando = input("Comando: ")','match comando:','    case "w" | "arriba":','        print("⬆️ El dron sube")','    case "s" | "abajo":','        print("⬇️ El dron baja")','    case "x":','        print("🛬 Aterrizando")','    case _:','        print("❓ Comando desconocido")'],
+    branches:{3:'⬆️ sube',5:'⬇️ baja',7:'🛬 aterriza',9:'❓ desconocido'},
+    trace(v){ const c=String(v.cmd), st=[{l:0,s:'run'},{l:1,s:'run',txt:'▶ compara "'+c+'"'}];
+      const cases=[[2,['w','arriba'],3,'⬆️ El dron sube'],[4,['s','abajo'],5,'⬇️ El dron baja'],[6,['x'],7,'🛬 Aterrizando'],[8,null,9,'❓ Comando desconocido']];
+      let done=false;
+      for(const [l,vals,b,o] of cases){ if(done){st.push({l,s:'skip'});continue;}
+        const m= vals===null || vals.includes(c); st.push({l,s:m?'true':'false',txt:m?(vals===null?'✔ caso por defecto':'✔ coincide'):'✘ no coincide'});
+        if(m){st.push({l:b,s:'run',out:o});done=true;} }
+      return st; }}
+};
+let simId='ica', simBusy=false;
+const simSel=document.getElementById('simSel'), simIn=document.getElementById('simIn'), simCode=document.getElementById('simCode'), simOut=document.getElementById('simOut'), simCov=document.getElementById('simCov');
+Object.entries(SIMS).forEach(([k,s])=>{const o=document.createElement('option');o.value=k;o.textContent=s.title;simSel.appendChild(o);});
+function renderSimInputs(){
+  const s=SIMS[simId]; simIn.innerHTML='';
+  s.inputs.forEach(inp=>{ const w=document.createElement('label'); w.textContent=inp.label+' ';
+    let el; if(inp.type==='select'){ el=document.createElement('select'); inp.options.forEach(o=>{const op=document.createElement('option');op.value=o;op.textContent='"'+o+'"';el.appendChild(op);}); }
+    else { el=document.createElement('input'); el.type=inp.type; }
+    el.value=inp.value; el.dataset.id=inp.id; el.addEventListener('keydown',e=>{if(e.key==='Enter')simRun();}); w.appendChild(el); simIn.appendChild(w); });
+}
+function renderSimCode(states){
+  const s=SIMS[simId]; simCode.innerHTML='';
+  s.code.forEach((t,i)=>{ const d=document.createElement('div'); d.className='sl'+(states?(' '+(states[i]?states[i].s:'dim')):'');
+    const label=states&&states[i]?(states[i].txt||({run:'▶ se ejecuta',true:'✔ True',false:'✘ False',skip:'⏭ no se revisa'})[states[i].s]):'';
+    d.innerHTML='<span class="ln">'+(i+1)+'</span><span class="tx">'+esc(t)+'</span>'+(label?'<span class="st">'+label+'</span>':'');
+    simCode.appendChild(d); });
+}
+function renderCov(){
+  const s=SIMS[simId], hit=S.cov[simId]||[]; simCov.innerHTML='<span style="border:none;padding-left:0">Ramas:</span>';
+  Object.entries(s.branches).forEach(([l,lab])=>{ const e=document.createElement('span'); e.className=hit.includes(+l)?'hit':''; e.textContent=(hit.includes(+l)?'✔ ':'○ ')+lab; simCov.appendChild(e); });
+}
+function loadSim(id){ simId=id; simSel.value=id; renderSimInputs(); renderSimCode(null); simOut.innerHTML='<span class="sys">Pulsa ▶ Ejecutar paso a paso.</span>'; renderCov(); }
+async function simRun(){
+  if(simBusy)return; simBusy=true; document.getElementById('simRun').disabled=true;
+  const s=SIMS[simId], v={}; simIn.querySelectorAll('[data-id]').forEach(el=>v[el.dataset.id]=el.value);
+  const steps=s.trace(v), states={}; simOut.textContent=''; renderSimCode({});
+  for(const st of steps){
+    states[st.l]=st; renderSimCode(states);
+    const rows=simCode.children; [...rows].forEach(r=>r.classList.remove('cur')); rows[st.l].classList.add('cur');
+    if(st.out) simOut.textContent+=st.out+'\n';
+    await new Promise(r=>setTimeout(r,420));
+  }
+  [...simCode.children].forEach(r=>r.classList.remove('cur'));
+  const hit=new Set(S.cov[simId]||[]); steps.forEach(st=>{ if(st.s==='run' && s.branches[st.l]) hit.add(st.l); });
+  S.cov[simId]=[...hit]; save(); renderCov();
+  if(hit.size===Object.keys(s.branches).length){ addXP('sim:'+simId,20,'todas las ramas');
+    if(Object.keys(SIMS).every(k=>(S.cov[k]||[]).length===Object.keys(SIMS[k].branches).length)) flag('explorer','Explorador de ramas'); }
+  simBusy=false; document.getElementById('simRun').disabled=false;
+}
+simSel.addEventListener('change',()=>loadSim(simSel.value));
+document.getElementById('simRun').addEventListener('click',simRun);
+document.querySelectorAll('[data-sim]').forEach(b=>b.addEventListener('click',()=>{ showTab('camino'); loadSim(b.dataset.sim); }));
+loadSim('ica');
+
+/* ===================== Rompe el programa ===================== */
+const BUGS=[
+  {id:'envio',title:'1 · Envío gratis',spec:'Envío <b>gratis</b> si la compra es de <b>150000 o más</b>; si no, cuesta 12000.',
+   code:'compra = int(input("Compra: "))\nif compra > 150000:\n    print("Envío gratis")\nelse:\n    print("Envío: 12000")',
+   buggy:x=>x>150000?'Envío gratis':'Envío: 12000', good:x=>x>=150000?'Envío gratis':'Envío: 12000',
+   fix:'El borde 150000 cae en el else. Corrección: <code>if compra &gt;= 150000:</code>'},
+  {id:'edad',title:'2 · Etapa de la vida',spec:'Niño: 0 a 11 años · Adolescente: 12 a 17 · Adulto: 18 o más.',
+   code:'edad = int(input("Edad: "))\nif edad < 12:\n    print("Niño")\nelif edad < 17:\n    print("Adolescente")\nelse:\n    print("Adulto")',
+   buggy:x=>x<12?'Niño':x<17?'Adolescente':'Adulto', good:x=>x<12?'Niño':x<18?'Adolescente':'Adulto',
+   fix:'Con 17 dice "Adulto". Corrección: <code>elif edad &lt; 18:</code> (o <code>&lt;= 17</code>).'},
+  {id:'desc',title:'3 · Descuento por compra',spec:'200000 o más → 10 % · 100000 o más → 5 % · menos → 0 %.',
+   code:'total = int(input("Total: "))\nif total >= 100000:\n    print("Descuento: 5 %")\nelif total >= 200000:\n    print("Descuento: 10 %")\nelse:\n    print("Descuento: 0 %")',
+   buggy:x=>x>=100000?'Descuento: 5 %':x>=200000?'Descuento: 10 %':'Descuento: 0 %', good:x=>x>=200000?'Descuento: 10 %':x>=100000?'Descuento: 5 %':'Descuento: 0 %',
+   fix:'Orden equivocado: toda compra de 200000 o más entra al primer if. Corrección: revisa primero <code>total &gt;= 200000</code>.'},
+  {id:'temp',title:'4 · Temperatura corporal',spec:'Fiebre: <b>38.0 o más</b> · Normal: de 36.0 a menos de 38.0 · Hipotermia: menos de 36.0.',
+   code:'temp = float(input("Temperatura: "))\nif temp > 38:\n    print("Fiebre")\nelif temp >= 36:\n    print("Normal")\nelse:\n    print("Hipotermia")',
+   buggy:x=>x>38?'Fiebre':x>=36?'Normal':'Hipotermia', good:x=>x>=38?'Fiebre':x>=36?'Normal':'Hipotermia',
+   fix:'Con 38.0 dice "Normal". Corrección: <code>if temp &gt;= 38:</code>'}
+];
+function renderBugs(){
+  const box=document.getElementById('bugs'); box.innerHTML='';
+  BUGS.forEach(b=>{
+    const broken=!!(S.flags['bug_'+b.id]);
+    const c=document.createElement('div'); c.className='bug'+(broken?' broken':'');
+    c.innerHTML='<h3 style="margin:0 0 4px">'+b.title+(broken?' <span class="ok">✔ roto</span>':'')+'</h3><div class="spec">📋 <b>Debe hacer:</b> '+b.spec+'</div><pre>'+esc(b.code)+'</pre>'+
+      '<div class="row"><label>Dato de entrada: <input type="number" step="any" placeholder="prueba un valor"></label><button class="btn">🧪 Probar</button></div>'+
+      '<div class="feedback"></div><div class="fix tip">🔧 <b>El error:</b> '+b.fix+'</div>';
+    const inp=c.querySelector('input'), fb=c.querySelector('.feedback'), btn=c.querySelector('button');
+    const go=()=>{ if(inp.value===''){fb.textContent='Escribe un valor primero.';fb.className='feedback no';return;}
+      const x=parseFloat(inp.value), got=b.buggy(x), exp=b.good(x);
+      if(got!==exp){ fb.innerHTML='💥 ¡Lo rompiste! Con <b>'+esc(inp.value)+'</b> el programa dice <b>"'+got+'"</b>, pero debería decir <b>"'+exp+'"</b>.'; fb.className='feedback ok';
+        c.classList.add('broken'); if(!S.flags['bug_'+b.id]){ S.flags['bug_'+b.id]=true; save(); }
+        addXP('bug:'+b.id,15,'programa roto');
+        if(BUGS.every(x=>S.flags['bug_'+x.id])) flag('breaker','Rompe-programas'); }
+      else { fb.innerHTML='Con <b>'+esc(inp.value)+'</b> el programa dice "'+got+'", que es correcto. Prueba otro valor… ¿qué pasa justo en los bordes?'; fb.className='feedback no'; } };
+    btn.addEventListener('click',go); inp.addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+    box.appendChild(c);
+  });
+}
+renderBugs();
+
+/* ===================== Motor Python (Pyodide) ===================== */
+const qp=new URLSearchParams(location.search);
+const PYO_BASE=qp.get('pyo')||'https://cdn.jsdelivr.net/npm/pyodide@314.0.7/';
+const RUN_TIMEOUT=6000;
+const statusEl=document.getElementById('pyStatus');
+function setStatus(t){statusEl.textContent=t;}
+const WORKER_SRC = `
+let py=null;
+self.onmessage = async (e)=>{
+  const m=e.data;
+  if(m.type==='init'){
+    try{
+      const mod = await import(m.base+'pyodide.mjs');
+      py = await mod.loadPyodide({indexURL:m.base});
+      py.runPython(m.harness);
+      self.postMessage({type:'ready', version: py.runPython("import sys; sys.version.split()[0]")});
+    }catch(err){ self.postMessage({type:'fail', error:String(err)}); }
+  } else if(m.type==='run'){
+    let r;
+    try{
+      py.globals.set('S_', m.src); py.globals.set('I_', py.toPy(m.inputs)); py.globals.set('E_', m.echo);
+      const res = py.runPython('__run_user(S_, I_, E_)'); r=res.toJs(); res.destroy();
+      self.postMessage({type:'result', id:m.id, out:r[0], etype:r[1], err:r[2], line:(r[3]==null?null:r[3])});
+    }catch(err){ self.postMessage({type:'result', id:m.id, out:'', etype:'ErrorInterno', err:String(err), line:null}); }
+  }
+};`;
+const PY={mode:null, worker:null, ready:null, pend:{}, seq:0, main:null, version:''};
+function initWorker(){
+  return new Promise((resolve,reject)=>{
+    let w;
+    try{ w=new Worker(URL.createObjectURL(new Blob([WORKER_SRC],{type:'text/javascript'})),{type:'module'}); }catch(e){ reject(e); return; }
+    const to=setTimeout(()=>{ try{w.terminate();}catch(e){} reject(new Error('timeout de carga')); },120000);
+    w.onmessage=(e)=>{ const m=e.data;
+      if(m.type==='ready'){ clearTimeout(to); PY.version=m.version; resolve(w); }
+      else if(m.type==='fail'){ clearTimeout(to); try{w.terminate();}catch(_){} reject(new Error(m.error)); }
+      else if(m.type==='result'){ const p=PY.pend[m.id]; if(p){ delete PY.pend[m.id]; clearTimeout(p.to); p.resolve(m); } } };
+    w.onerror=(ev)=>{ clearTimeout(to); reject(new Error(ev.message||'error del worker')); };
+    w.postMessage({type:'init', base:PYO_BASE, harness:HARNESS_PY});
+  });
+}
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('No se pudo descargar '+src));document.head.appendChild(s);});}
+async function initMain(){
+  if(!window.loadPyodide) await loadScript(PYO_BASE+'pyodide.js');
+  const py=await window.loadPyodide({indexURL:PYO_BASE});
+  py.runPython(HARNESS_PY); PY.version=py.runPython("import sys; sys.version.split()[0]"); return py;
+}
+function ensurePy(){
+  if(PY.ready) return PY.ready;
+  setStatus('🟡 Cargando Python… (solo la primera vez)');
+  PY.ready=(async()=>{
+    try{ PY.worker=await initWorker(); PY.mode='worker'; }
+    catch(e1){ console.warn('Worker no disponible, uso hilo principal:',e1);
+      try{ PY.main=await initMain(); PY.mode='main'; }
+      catch(e2){ PY.ready=null; setStatus('🔴 No se pudo cargar Python'); throw e2; } }
+    setStatus('🟢 Python '+PY.version+' listo'); return true;
+  })();
+  return PY.ready;
+}
+function runPy(src,inputs,echo){
+  return ensurePy().then(()=>{
+    if(PY.mode==='main'){
+      const g=PY.main.globals; g.set('S_',src); g.set('I_',PY.main.toPy(inputs)); g.set('E_',echo);
+      const res=PY.main.runPython('__run_user(S_, I_, E_)'); const r=res.toJs(); res.destroy();
+      return {out:r[0],etype:r[1],err:r[2],line:r[3]==null?null:r[3]};
+    }
+    return new Promise(resolve=>{
+      const id=++PY.seq;
+      const to=setTimeout(()=>{ delete PY.pend[id]; try{PY.worker.terminate();}catch(e){} PY.worker=null; PY.ready=null; PY.mode=null;
+        setStatus('🟡 Python se reinició'); resolve({timeout:true,out:'',etype:'',err:'',line:null}); },RUN_TIMEOUT);
+      PY.pend[id]={resolve,to};
+      PY.worker.postMessage({type:'run',id,src,inputs,echo});
+    });
+  });
+}
+
+const HINTS={
+  SyntaxError:'Python no entiende cómo está escrito. En condicionales revisa: los dos puntos (:) al final de if/elif/else/case, usar == para comparar (no =), y que if, elif y else estén en minúscula.',
+  IndentationError:'Sangría incorrecta: el bloque de un if/else/case lleva 4 espacios, y el else va al mismo nivel que su if.',
+  TabError:'Mezclaste tabulaciones y espacios en la sangría. Usa solo espacios (4 por nivel).',
+  NameError:'Usas un nombre que no existe: ¿está bien escrito (mayúsculas/minúsculas)? ¿creaste la variable antes de usarla? ¿Olvidaste comillas en un texto como "rojo"?',
+  TypeError:'Operación entre tipos incompatibles. Si comparas un número leído con input(), conviértelo con int() o float(): "15" < 20 no funciona.',
+  ValueError:'No se pudo convertir el dato: revisa lo que escribiste en Entradas (por ejemplo, int("3.5") falla; usa float()).',
+  ZeroDivisionError:'Estás dividiendo entre cero. ¡Un buen lugar para usar un if que lo evite!',
+  EOFError:'Tu programa pidió más datos con input() de los que escribiste en Entradas (una entrada por línea).'
+};
+
+/* ===================== Laboratorio UI ===================== */
+const codeEl=document.getElementById('code'), stdinEl=document.getElementById('stdin'), termEl=document.getElementById('term'),
+      checkEl=document.getElementById('checkRes'), selEl=document.getElementById('retoSel'), infoEl=document.getElementById('retoInfo');
+let currentReto='libre';
+function draftKey(id){return 'lp1-c9-draft-'+id;}
+function getDraft(id){try{return localStorage.getItem(draftKey(id));}catch(e){return null;}}
+function setDraft(id,v){try{localStorage.setItem(draftKey(id),v);}catch(e){}}
+function retoById(id){return RETOS.find(r=>r.id===id);}
+function tagHTML(r){return '<span style="font-size:.72rem;color:#2a2000;background:var(--py);padding:2px 9px;border-radius:999px;font-weight:700">'+r.tag+'</span> ';}
+function renderRetoSel(){
+  const keep=currentReto; selEl.innerHTML='';
+  const o0=document.createElement('option'); o0.value='libre'; o0.textContent='🧪 Zona libre'; selEl.appendChild(o0);
+  RETOS.forEach(r=>{ const o=document.createElement('option'); o.value=r.id; o.textContent=(S.retos[r.id]?'✅ ':'🎯 ')+r.t; selEl.appendChild(o); });
+  selEl.value=keep;
+}
+function renderInfo(r){ infoEl.innerHTML=tagHTML(r)+'<b>'+r.t+'</b>'+(S.retos[r.id]?' <span style="color:var(--good);font-weight:700">✅ superado</span>':'')+'<br>'+r.d; }
+function loadReto(id, extra){
+  currentReto=id; selEl.value=id; checkEl.innerHTML='';
+  const r=retoById(id), btnC=document.getElementById('checkBtn'), btnS=document.getElementById('solBtn');
+  if(!r){
+    const ex=EXTRA_CODE[extra||'libre']||EXTRA_CODE.libre;
+    infoEl.innerHTML='<b>🧪 Zona libre.</b> Experimenta con lo que quieras: prueba los ejemplos de la clase, cambia las condiciones y mira qué pasa en los casos límite.';
+    codeEl.value = extra? ex.code : (getDraft('libre') ?? ex.code); stdinEl.value = extra? ex.stdin : EXTRA_CODE.libre.stdin;
+    btnC.disabled=true; btnS.disabled=true;
+  } else {
+    renderInfo(r); codeEl.value = getDraft(r.id) ?? r.starter; stdinEl.value = r.tests[0].in.join('\n');
+    btnC.disabled=false; btnS.disabled=false;
+  }
+  termEl.innerHTML='<span class="sys">La salida de tu programa aparecerá aquí.</span>';
+}
+selEl.addEventListener('change',()=>loadReto(selEl.value));
+codeEl.addEventListener('input',()=>setDraft(currentReto,codeEl.value));
+codeEl.addEventListener('keydown',e=>{
+  if(e.key==='Tab'){ e.preventDefault(); const s=codeEl.selectionStart, en=codeEl.selectionEnd;
+    codeEl.value=codeEl.value.slice(0,s)+'    '+codeEl.value.slice(en); codeEl.selectionStart=codeEl.selectionEnd=s+4; setDraft(currentReto,codeEl.value); }
+  if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){ e.preventDefault(); doRun(); }
+});
+function termWrite(r){
+  termEl.innerHTML='';
+  if(r.timeout){ termEl.innerHTML='<span class="err">⏱ Tu programa tardó demasiado y se detuvo (¿quedó esperando o en un ciclo infinito?).</span>'; return; }
+  const o=document.createElement('span'); o.textContent=r.out; termEl.appendChild(o);
+  if(r.etype){
+    const e=document.createElement('span'); e.className='err';
+    e.textContent=(r.out&&!r.out.endsWith('\n')?'\n':'')+'❌ '+r.etype+(r.line?' en la línea '+r.line:'')+': '+r.err+'\n'; termEl.appendChild(e);
+    const h=HINTS[r.etype]; if(h){ const hh=document.createElement('span'); hh.className='hint'; hh.textContent='💡 '+h; termEl.appendChild(hh); }
+  } else if(!r.out){ termEl.innerHTML='<span class="sys">(El programa terminó sin mostrar nada. ¿Ninguna condición fue True? ¿Te faltó un print()?)</span>'; }
+}
+async function doRun(){
+  const btn=document.getElementById('runBtn'); btn.disabled=true; checkEl.innerHTML='';
+  termEl.innerHTML='<span class="sys">Ejecutando…</span>';
+  try{
+    const inputs=stdinEl.value===''?[]:stdinEl.value.replace(/\r/g,'').split('\n');
+    const r=await runPy(codeEl.value, inputs, true);
+    termWrite(r);
+    if(!r.timeout && !r.etype && r.out){ if(!S.flags.firstRun){ S.flags.firstRun=true; save(); renderXP(); setTimeout(()=>pop('🏅 Insignia: ¡Hola, if!'),1600); } addXP('firstrun',10); }
+  }catch(e){
+    termEl.innerHTML='<span class="err">No se pudo cargar Python en este navegador ('+esc(e.message)+').\n</span><span class="hint">💡 Revisa tu conexión a internet y recarga la página. También puedes usar IDLE, Thonny o Google Colab.</span>';
+  }finally{ btn.disabled=false; }
+}
+document.getElementById('runBtn').addEventListener('click',doRun);
+document.getElementById('resetCode').addEventListener('click',()=>{ const r=retoById(currentReto); codeEl.value=r?r.starter:EXTRA_CODE.libre.code; setDraft(currentReto,codeEl.value); });
+document.getElementById('solBtn').addEventListener('click',()=>{
+  const r=retoById(currentReto); if(!r)return;
+  if(!S.retos[r.id] && !S.sol[r.id] && !confirm('Si ves la solución antes de superar el reto, ganarás la mitad de XP. ¿Ver la solución?'))return;
+  S.sol[r.id]=true; save(); codeEl.value=r.sol+'\n'; setDraft(r.id,codeEl.value);
+});
+document.getElementById('checkBtn').addEventListener('click',async()=>{
+  const r=retoById(currentReto); if(!r)return;
+  const btn=document.getElementById('checkBtn'); btn.disabled=true;
+  checkEl.innerHTML='<div class="row">🧪 Probando tu programa con '+r.tests.length+' casos…</div>';
+  let rows='', all=true;
+  try{
+    for(let i=0;i<r.tests.length;i++){
+      const tc=r.tests[i], res=await runPy(codeEl.value, tc.in, false);
+      let ok=false, why='';
+      if(res.timeout){why='tardó demasiado';}
+      else if(res.etype){why=res.etype+(res.line?' (línea '+res.line+')':'')+': '+res.err;}
+      else { const miss=tc.must.some(p=>!new RegExp(p,'i').test(res.out)), extra=(tc.not||[]).some(p=>new RegExp(p,'i').test(res.out));
+        ok=!miss&&!extra; if(miss) why='falta algo de lo esperado'; else if(extra) why='muestra algo que no debería (¿se ejecutó otra rama?)'; }
+      all=all&&ok;
+      rows+='<div class="row '+(ok?'ok':'no')+'">'+(ok?'✅':'❌')+' <b>Caso '+(i+1)+'</b> · entradas: <code>'+esc(tc.in.join(' | '))+'</code> → se espera: <code>'+esc(tc.show)+'</code>'+
+        (ok?'':'<br><small>Tu salida: <code>'+esc((res.out||'').trim().replace(/\n/g,' ⏎ ')||'(vacía)')+'</code> — '+esc(why)+'</small>')+'</div>';
+    }
+    checkEl.innerHTML=rows;
+    if(all){
+      const first=!S.retos[r.id]; S.retos[r.id]=true; save();
+      const base=r.id==='cine'?50:30, amt=S.sol[r.id]?Math.round(base/2):base;
+      addXP('reto:'+r.id,amt,r.t.replace(/^[\d★]+\.?\s*/,''));
+      checkEl.innerHTML+='<div class="win">🎉 ¡Reto superado!'+(first?' Nuevo ✅ en tu lista.':'')+' '+(S.sol[r.id]?'(XP reducida por ver la solución)':'')+'</div>';
+      renderRetoSel(); renderTaller(); renderXP(); renderInfo(r);
+    }
+  }catch(e){ checkEl.innerHTML='<div class="row no">No se pudo ejecutar Python ('+esc(e.message)+'). Revisa tu conexión.</div>'; }
+  finally{ btn.disabled=false; }
+});
+function openInLab(idOrExtra){ showTab('lab'); if(retoById(idOrExtra)) loadReto(idOrExtra); else loadReto('libre', idOrExtra); }
+document.querySelectorAll('[data-try]').forEach(b=>b.addEventListener('click',()=>openInLab(b.dataset.try)));
+
+/* ===================== Taller ===================== */
+function renderTaller(){
+  const box=document.getElementById('ejercicios'); box.innerHTML='';
+  RETOS.forEach(r=>{
+    const c=document.createElement('div'); c.className='ex';
+    c.innerHTML='<span class="tag">'+r.tag+'</span>'+(S.retos[r.id]?'<span class="done">✅ superado en el laboratorio</span>':'')+
+      '<h3>'+r.t+'</h3><p>'+r.d+'</p><div class="btns"><button class="btn py">🐍 Resolver en el laboratorio</button></div>'+
+      '<details><summary>Ver solución en Python</summary><pre>'+esc(r.sol)+'</pre></details>';
+    c.querySelector('button').addEventListener('click',()=>openInLab(r.id));
+    c.querySelector('details').addEventListener('toggle',function(){ if(this.open && !S.retos[r.id] && !S.sol[r.id]){ S.sol[r.id]=true; save(); } });
+    box.appendChild(c);
+  });
+}
+renderRetoSel(); renderTaller(); loadReto('libre');
+</script>
+</body>
+</html>
