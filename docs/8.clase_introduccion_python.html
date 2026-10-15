@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Introducción a Python · Clase Interactiva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%8D%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#0f1720; --panel:#18222e; --panel2:#1f2c3a; --ink:#e8eef5; --muted:#9fb0c3;
+    --line:#2b3a4d; --accent:#4fd1c5; --accent2:#7c9cff; --good:#48d597; --bad:#ff7a7a;
+    --warn:#ffcf6b; --chip:#243447; --py:#ffd43b; --pyb:#4b8bbe;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(160deg,#0f1720,#111c27);color:var(--ink);line-height:1.55}
+  header{padding:22px 22px 12px;text-align:center;border-bottom:1px solid var(--line);background:radial-gradient(1200px 300px at 50% -60px,rgba(75,139,190,.22),transparent)}
+  header h1{margin:0 0 4px;font-size:clamp(1.3rem,3.4vw,2rem)}
+  header p{margin:0;color:var(--muted);font-size:.92rem}
+  .xpwrap{max-width:680px;margin:12px auto 4px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+  .xprow{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);margin-bottom:6px;gap:8px;flex-wrap:wrap}
+  .xprow b{color:var(--warn)}
+  .xpbar{height:12px;background:#0c141d;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .xpfill{height:100%;width:0;background:linear-gradient(90deg,var(--pyb),var(--py));transition:width .5s}
+  .badges2{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+  .bdg{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:.74rem;color:#5f7085;opacity:.6;transition:.3s}
+  .bdg.on{opacity:1;color:var(--ink);border-color:var(--warn);box-shadow:0 0 0 2px rgba(255,207,107,.15)}
+  .linkbtn{background:none;border:none;color:var(--muted);font-size:.74rem;cursor:pointer;text-decoration:underline;padding:0}
+  .wrap{max-width:1000px;margin:0 auto;padding:16px 16px 60px}
+  nav.tabs{position:sticky;top:0;z-index:10;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:11px 6px;background:rgba(15,23,32,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.tabs button{background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:8px 12px;border-radius:10px;cursor:pointer;font-size:.82rem;font-weight:600;transition:.15s}
+  nav.tabs button:hover{border-color:var(--accent)}
+  nav.tabs button.active{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border-color:transparent}
+  nav.tabs button.lab{border-color:var(--py)}
+  html{background:#0f1720}
+  @media(max-width:640px){
+    nav.tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:thin}
+    nav.tabs button{flex:0 0 auto}
+    .typebtns{grid-template-columns:repeat(2,1fr)}
+  }
+  section.tab{display:none;animation:fade .25s ease}
+  section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2{font-size:1.3rem;margin:20px 0 10px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:1.05rem;margin:18px 0 8px;color:var(--accent)}
+  p{color:#d5deea}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .note{background:rgba(255,207,107,.08);border:1px solid rgba(255,207,107,.35);border-radius:12px;padding:12px 14px;margin:14px 0;font-size:.92rem}
+  .note b{color:var(--warn)}
+  .tip{background:rgba(75,139,190,.12);border:1px solid rgba(75,139,190,.45);border-left:4px solid var(--pyb);border-radius:10px;padding:12px 14px;margin:14px 0;font-size:.9rem}
+  .tip b{color:#9cc4e8}
+  code{font-family:"SF Mono",Consolas,Menlo,monospace}
+  pre{background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.85rem;color:#d7e3f0;margin:10px 0}
+  .fname{display:inline-block;background:var(--chip);border:1px solid var(--line);border-bottom:none;border-radius:8px 8px 0 0;padding:3px 10px;font-family:monospace;font-size:.75rem;color:var(--muted);margin-top:8px}
+  .fname + pre{margin-top:0;border-top-left-radius:0}
+  .kw{color:#ff9d6c;font-weight:600}.st{color:#9fe6b0}.cm{color:#6f8194;font-style:italic}.fn{color:#7cc4ff}.nu{color:#c9a3ff}
+  .tout{color:#e8eef5}.tprompt{color:#9fb0c3}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.87rem;overflow:hidden;border-radius:12px}
+  th,td{padding:8px 10px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:var(--accent);font-weight:700}
+  tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+  td.mono,code.mono{font-family:"SF Mono",Consolas,monospace;color:var(--accent)}
+  .tablewrap{overflow-x:auto}
+  details{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:10px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--accent)}
+  details[open]{border-color:var(--accent)}
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+  .tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .tile b{display:block;margin-bottom:3px}
+  .tile small{color:var(--muted)}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin:14px 0;text-align:center}
+  .flow .st2{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;min-width:120px}
+  .flow .st2 small{display:block;color:var(--muted);font-size:.74rem}
+  .flow .ar{color:var(--accent);font-weight:800;font-size:1.3rem}
+  .types{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+  .type{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--panel)}
+  .type .tn{font-family:monospace;font-size:1.3rem;font-weight:800}
+  .t-int .tn{color:#7cc4ff}.t-float .tn{color:#c9a3ff}.t-str .tn{color:#9fe6b0}.t-bool .tn{color:#ffcf6b}
+  .btn{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.88rem}
+  .btn.ghost{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+  .btn.py{background:linear-gradient(180deg,#ffe066,#f2c200);color:#2a2000}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .scorebar{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:12px 0;gap:10px;flex-wrap:wrap}
+  .scorebar b{color:var(--accent);font-size:1.1rem}
+  .q{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .q .tag{font-size:.72rem;color:#0a1330;background:var(--accent2);padding:2px 9px;border-radius:999px;font-weight:700}
+  .q .scn{color:#cfe0ff;margin:8px 0 2px}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .opt{background:#0c141d;border:1px solid var(--line);color:var(--ink);padding:9px 12px;border-radius:9px;cursor:pointer;font-family:monospace;font-size:.85rem;text-align:left;transition:.12s}
+  .opt:hover{border-color:var(--accent)}
+  .opt.correct{background:var(--good);color:#052b1c;border-color:transparent;font-weight:700}
+  .opt.wrong{background:var(--bad);color:#2b0505;border-color:transparent}
+  .opt.locked{pointer-events:none}
+  .feedback{margin-top:8px;font-size:.86rem;min-height:1.1em}
+  .feedback.ok{color:var(--good)}.feedback.no{color:var(--bad)}
+  .center{text-align:center}
+  .xppop{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--warn);color:#2a1e00;font-weight:800;padding:10px 18px;border-radius:999px;opacity:0;transition:.35s;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.35);pointer-events:none}
+  .xppop.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  /* tipo-matic */
+  .game{background:linear-gradient(160deg,#16212e,#1b2a3a);border:1px solid var(--line);border-radius:16px;padding:18px;margin:12px 0}
+  .bigval{font-family:monospace;font-size:clamp(1.4rem,4vw,2.1rem);text-align:center;background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:16px;margin:10px 0;color:#fff}
+  .typebtns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .typebtns button{font-family:monospace;font-size:1rem;font-weight:800;padding:12px 6px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer}
+  .typebtns button:hover{border-color:var(--accent)}
+  .typebtns button.right{background:var(--good);color:#052b1c}
+  .typebtns button.wrongb{background:var(--bad);color:#2b0505}
+  .gstat{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:6px 0}
+  .gchip{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:6px 12px;font-family:monospace;font-size:.88rem}
+  .gchip b{color:var(--warn)}
+  .flame{font-size:1.2rem}
+  /* nombres */
+  .names{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .nm{font-family:monospace;padding:9px 13px;border-radius:10px;border:1px solid var(--line);background:#0c141d;color:var(--ink);cursor:pointer;font-size:.92rem}
+  .nm.v{border-color:var(--good);background:rgba(72,213,151,.15)}
+  .nm.x{border-color:var(--bad);background:rgba(255,122,122,.15)}
+  .nm.ok::after{content:" ✔";color:var(--good)} .nm.ko::after{content:" ✘";color:var(--bad)}
+  /* ordena */
+  .slots{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .slot{min-height:42px;border:2px dashed var(--line);border-radius:10px;display:flex;align-items:center;gap:10px;padding:7px 10px;color:var(--muted);font-size:.85rem;background:#0c141d;cursor:pointer;font-family:monospace}
+  .slot .ph{font-family:system-ui;font-size:.7rem;font-weight:700;border-radius:999px;padding:2px 8px;white-space:nowrap}
+  .ph.e{background:#1d3b5c;color:#9cc4e8}.ph.p{background:#3b2f5c;color:#c9a3ff}.ph.s{background:#1f4a3a;color:#9fe6b0}
+  .slot.filled{border-style:solid;color:var(--ink);background:var(--panel2)}
+  .slot.okk{border-color:var(--good)} .slot.noo{border-color:var(--bad)}
+  .pool{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .piece{text-align:left;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 12px;cursor:pointer;font-size:.85rem;font-family:monospace}
+  .piece:hover{border-color:var(--accent)} .piece.used{opacity:.3;pointer-events:none}
+  /* lab */
+  .lab{background:linear-gradient(160deg,#141f2b,#182636);border:1px solid #3a5168;border-radius:16px;padding:14px;margin:12px 0}
+  .labbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+  .labbar select{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:9px 10px;font-size:.88rem;max-width:100%}
+  .pystat{font-size:.8rem;color:var(--muted);background:#0c141d;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+  .retoinfo{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0;font-size:.9rem}
+  .labgrid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:820px){.labgrid{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}}
+  .lab label{display:block;font-size:.78rem;color:var(--muted);margin:6px 0 4px;font-weight:600}
+  textarea.code{width:100%;min-height:230px;background:#0b1118;color:#e8eef5;border:1px solid var(--line);border-radius:10px;padding:12px;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.88rem;line-height:1.5;resize:vertical;tab-size:4;white-space:pre}
+  textarea.stdin{width:100%;min-height:70px;background:#0b1118;color:#ffe9a8;border:1px solid var(--line);border-radius:10px;padding:10px;font-family:monospace;font-size:.85rem;resize:vertical}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .term{min-height:230px;max-height:420px;overflow:auto;background:#050a0f;border:1px solid #2b3a4d;border-radius:10px;padding:12px;font-size:.86rem;white-space:pre-wrap;word-break:break-word;margin:0}
+  .term .err{color:#ff8f8f}.term .hint{color:#ffe08a}.term .sys{color:#6f8194}
+  .chk{margin-top:10px;font-size:.88rem}
+  .chk .row{padding:6px 10px;border-radius:8px;margin:5px 0;background:var(--panel);border:1px solid var(--line)}
+  .chk .row.ok{border-color:rgba(72,213,151,.6)} .chk .row.no{border-color:rgba(255,122,122,.6)}
+  .win{background:rgba(72,213,151,.12);border:1px solid var(--good);border-radius:12px;padding:10px 12px;margin-top:8px;font-weight:700;color:var(--good)}
+  .ex{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0}
+  .ex .tag{font-size:.72rem;color:#2a2000;background:var(--py);padding:2px 9px;border-radius:999px;font-weight:700}
+  .ex h3{margin:8px 0 4px}
+  .ex .done{color:var(--good);font-weight:700;font-size:.82rem;margin-left:6px}
+  footer{text-align:center;color:var(--muted);font-size:.82rem;padding:24px 12px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header>
+  <h1>🐍 Introducción a Python</h1>
+  <p>Del pseudocódigo a un lenguaje real · tipos, operadores y estructura secuencial · <b>modo juego</b></p>
+  <div class="xpwrap">
+    <div class="xprow"><span>Nivel <b id="lvl">1</b> · <span id="lvlname">Pythonista novato</span></span><span><b id="xp">0</b> XP · <button class="linkbtn" id="resetProg" title="Borra tu XP e insignias en este navegador">reiniciar progreso</button></span></div>
+    <div class="xpbar"><div class="xpfill" id="xpfill"></div></div>
+    <div class="badges2" id="badges"></div>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="active" data-tab="intro">💡 ¿Por qué Python?</button>
+  <button data-tab="sintaxis">📏 Sintaxis</button>
+  <button data-tab="tipos">🧬 Tipos y variables</button>
+  <button data-tab="operadores">➗ Operadores</button>
+  <button data-tab="es">⌨️ Entrada y salida</button>
+  <button data-tab="errores">🐞 Caza el error</button>
+  <button data-tab="lab" class="lab">🐍 Laboratorio</button>
+  <button data-tab="taller">🏆 Taller</button>
+</nav>
+
+<div class="wrap">
+
+<!-- ===================== INTRO ===================== -->
+<section class="tab active" id="intro">
+  <h2>Del pseudocódigo a un lenguaje real</h2>
+  <p>Hasta ahora diseñaste algoritmos en <b>pseudocódigo</b> (PSeInt). Un <b>lenguaje de programación</b> es un conjunto formal de reglas e instrucciones que permite decirle a una computadora cómo resolver un problema. Desde hoy, tus algoritmos se escriben en <b>Python</b> y la computadora los ejecuta de verdad.</p>
+  <div class="flow">
+    <div class="st2">🧩 Problema<small>tú lo analizas</small></div><span class="ar">→</span>
+    <div class="st2">📝 Algoritmo<small>pasos en pseudocódigo</small></div><span class="ar">→</span>
+    <div class="st2">🐍 Programa<small>escrito en Python</small></div><span class="ar">→</span>
+    <div class="st2">💻 Computadora<small>lo ejecuta</small></div>
+  </div>
+
+  <h3>¿Dónde está Python hoy?</h3>
+  <div class="grid3">
+    <div class="tile"><b>🤖 Inteligencia artificial</b><small>Modelos que reconocen imágenes, voz y texto.</small></div>
+    <div class="tile"><b>📊 Ciencia de datos</b><small>Analizar y visualizar grandes volúmenes de datos.</small></div>
+    <div class="tile"><b>🌐 Desarrollo web</b><small>Servidores y APIs con Django, Flask o FastAPI.</small></div>
+    <div class="tile"><b>⚙️ Automatización</b><small>Scripts que hacen en segundos tareas de horas.</small></div>
+    <div class="tile"><b>🔬 Ciencia e ingeniería</b><small>Simulaciones en física, biología y astronomía.</small></div>
+    <div class="tile"><b>🛡️ Ciberseguridad</b><small>Herramientas para analizar y proteger sistemas.</small></div>
+  </div>
+
+  <h3>Lenguajes de bajo y alto nivel</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Bajo nivel</th><th>Alto nivel</th></tr></thead>
+    <tbody>
+      <tr><td>Cercano al <b>hardware</b>: difícil de leer para las personas.</td><td>Cercano al <b>lenguaje humano</b>: fácil de leer y escribir.</td></tr>
+      <tr><td><pre style="margin:0">MOV  AX, 5
+ADD  AX, 3</pre><small style="color:var(--muted)">Ensamblador. En lenguaje de máquina: <code>10111000 00000101</code></small></td>
+          <td><pre style="margin:0">a = 5
+resultado = a + 3</pre><small style="color:var(--muted)">Ejemplos: Python, Java, C++, JavaScript</small></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>🎲 ¿Bajo o alto nivel?</h3>
+  <p>Clasifica cada fragmento. Cada acierto suma XP.</p>
+  <div class="scorebar"><span>Aciertos: <b id="nivScore">0</b> / <b id="nivTotal">6</b></span><button class="btn ghost" id="nivReset">Reiniciar</button></div>
+  <div id="nivQuiz"></div>
+
+  <h3>Un poco de historia</h3>
+  <div class="grid3">
+    <div class="tile"><b style="font-size:1.4rem;color:var(--py)">1991</b><small>Guido van Rossum publica la primera versión.</small></div>
+    <div class="tile"><b style="font-size:1.4rem;color:var(--py)">#1</b><small>En el índice TIOBE (septiembre 2026).</small></div>
+    <div class="tile"><b style="font-size:1.4rem;color:var(--py)">3.14</b><small>Versión estable actual de Python 3.</small></div>
+  </div>
+  <div class="tip">🎭 <b>¿Por qué "Python"?</b> Por el grupo de comedia británico <i>Monty Python</i>, no por la serpiente.</div>
+
+  <h3>Características principales</h3>
+  <div class="grid3">
+    <div class="tile"><b>⚡ Interpretado</b><small>Un intérprete ejecuta tu código directamente, sin crear un .exe.</small></div>
+    <div class="tile"><b>🔄 Tipado dinámico</b><small>No declaras el tipo: lo define el valor que asignas.</small></div>
+    <div class="tile"><b>🧩 Multiparadigma</b><small>Imperativo, orientado a objetos y funcional.</small></div>
+    <div class="tile"><b>📖 Sintaxis legible</b><small>Se parece mucho al pseudocódigo que ya conoces.</small></div>
+    <div class="tile"><b>💻 Multiplataforma</b><small>Funciona en Windows, macOS y Linux.</small></div>
+    <div class="tile"><b>🤝 Gran comunidad</b><small>Miles de librerías gratuitas y mucha documentación.</small></div>
+  </div>
+
+  <h3>La misma idea en tres lenguajes</h3>
+  <div class="grid3">
+    <div><span class="fname">hola.py · 1 línea</span><pre><span class="fn">print</span>(<span class="st">"Hola mundo"</span>)</pre></div>
+    <div><span class="fname">Main.java · 5 líneas</span><pre><span class="kw">public class</span> Main {
+  <span class="kw">public static void</span> main(String[] a) {
+    System.out.println(<span class="st">"Hola mundo"</span>);
+  }
+}</pre></div>
+    <div><span class="fname">hola.cpp · 6 líneas</span><pre><span class="kw">#include</span> &lt;iostream&gt;
+<span class="kw">using namespace</span> std;
+<span class="kw">int</span> main() {
+  cout &lt;&lt; <span class="st">"Hola mundo"</span> &lt;&lt; endl;
+  <span class="kw">return</span> <span class="nu">0</span>;
+}</pre></div>
+  </div>
+
+  <h3>Instalar Python y dónde escribir tu código</h3>
+  <div class="card">
+    <b>1. Descarga</b> Python 3.14 desde <code>python.org/downloads</code>. En Windows se recomienda el <i>Python install manager</i> (también en Microsoft Store). Con el instalador clásico, marca <b>Add python.exe to PATH</b>.<br>
+    <b>2. Verifica</b> en la terminal: <code>python --version</code> (en Windows también <code>py --version</code>).<br>
+    <b>3. Prueba</b> el intérprete escribiendo tu primera instrucción.
+  </div>
+  <span class="fname">Terminal</span>
+  <pre><span class="tprompt">&gt; python --version</span>
+Python 3.14.x
+<span class="tprompt">&gt; python</span>
+<span class="tprompt">&gt;&gt;&gt;</span> print("Hola, mundo")
+Hola, mundo
+<span class="tprompt">&gt;&gt;&gt;</span> 7 * 6
+42
+<span class="tprompt">&gt;&gt;&gt;</span> exit()</pre>
+  <div class="grid3">
+    <div class="tile"><b>IDLE</b><small>Principiante · viene con Python. Ideal para tus primeros programas.</small></div>
+    <div class="tile"><b>Thonny</b><small>Principiante · muestra las variables y ejecuta paso a paso.</small></div>
+    <div class="tile"><b>Google Colab</b><small>Sin instalar · cuadernos Jupyter en el navegador.</small></div>
+    <div class="tile"><b>VS Code</b><small>Intermedio · editor gratuito; instala la extensión de Python.</small></div>
+    <div class="tile"><b>PyCharm</b><small>Avanzado · especializado en Python, con depuración avanzada.</small></div>
+    <div class="tile"><b>🐍 Laboratorio de esta clase</b><small>Sin instalar · ejecuta Python aquí mismo, en la pestaña Laboratorio.</small></div>
+  </div>
+  <div class="tip">💡 <b>Consejo:</b> empieza con IDLE o Thonny; pasa a VS Code cuando tus programas crezcan. Hoy puedes practicar todo en el <b>🐍 Laboratorio</b> sin instalar nada.</div>
+</section>
+
+<!-- ===================== SINTAXIS ===================== -->
+<section class="tab" id="sintaxis">
+  <h2>📏 Sintaxis básica: cuatro reglas de oro</h2>
+  <div class="grid3">
+    <div class="tile"><b>1 · La sangría define los bloques</b><small>Sin llaves { } ni FinSi: la sangría (4 espacios) agrupa las instrucciones.</small>
+<pre><span class="kw">if</span> nota &gt;= <span class="nu">3.0</span>:
+    <span class="fn">print</span>(<span class="st">"Aprobó"</span>)</pre></div>
+    <div class="tile"><b>2 · Comentarios con #</b><small>Python ignora todo lo que va después de #. Úsalos para explicar.</small>
+<pre><span class="cm"># Convierte minutos a horas</span></pre></div>
+    <div class="tile"><b>3 · Sin punto y coma</b><small>Cada instrucción va en su propia línea; no se pone ; al final.</small>
+<pre>subtotal = precio * cantidad</pre></div>
+    <div class="tile"><b>4 · Distingue mayúsculas</b><small><code>ciudad</code>, <code>Ciudad</code> y <code>CIUDAD</code> son variables distintas.</small>
+<pre>ciudad = <span class="st">"Medellín"</span>
+<span class="fn">print</span>(Ciudad)  <span class="cm"># NameError</span></pre></div>
+  </div>
+
+  <h3>Tu primer programa</h3>
+  <span class="fname">bienvenida.py</span>
+  <pre><span class="cm"># Mi primer programa en Python</span>
+curso = <span class="st">"Lógica de Programación 1"</span>
+semestre = <span class="nu">2</span>
+<span class="fn">print</span>(<span class="st">"Bienvenido a"</span>, curso, <span class="st">"- semestre"</span>, semestre)</pre>
+  <span class="fname">Terminal</span>
+  <pre><span class="tprompt">&gt; python bienvenida.py</span>
+Bienvenido a Lógica de Programación 1 - semestre 2</pre>
+  <div class="center"><button class="btn py" data-try="bienvenida">🐍 Probarlo en el laboratorio</button></div>
+  <div class="note"><b>Reto rápido:</b> en el laboratorio, cambia <code>print</code> por <code>Print</code> y ejecútalo. ¿Qué error aparece y por qué?</div>
+
+  <h3>Del pseudocódigo a Python</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Acción</th><th>PSeInt</th><th>Python</th></tr></thead>
+    <tbody>
+      <tr><td>Declarar</td><td class="mono">Definir nombre Como Texto</td><td>(no se declara)</td></tr>
+      <tr><td>Asignar</td><td class="mono">nombre &lt;- "Ana"</td><td class="mono">nombre = "Ana"</td></tr>
+      <tr><td>Leer</td><td class="mono">Leer nombre</td><td class="mono">nombre = input("Nombre: ")</td></tr>
+      <tr><td>Escribir</td><td class="mono">Escribir "Hola ", nombre</td><td class="mono">print(f"Hola {nombre}")</td></tr>
+      <tr><td>Comentario</td><td class="mono">// comentario</td><td class="mono"># comentario</td></tr>
+      <tr><td>Inicio y fin</td><td class="mono">Algoritmo … FinAlgoritmo</td><td>(no se necesitan)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>🎲 Traductor PSeInt → Python</h3>
+  <p>Elige la traducción correcta de cada línea de PSeInt.</p>
+  <div class="scorebar"><span>Aciertos: <b id="trScore">0</b> / <b id="trTotal">7</b></span><button class="btn ghost" id="trReset">Reiniciar</button></div>
+  <div id="trQuiz"></div>
+</section>
+
+<!-- ===================== TIPOS ===================== -->
+<section class="tab" id="tipos">
+  <h2>🧬 Tipos de datos y variables</h2>
+  <div class="types">
+    <div class="type t-int"><div class="tn">int</div><b>Enteros</b> · PSeInt: Entero<pre>estudiantes = <span class="nu">32</span>
+anio = <span class="nu">2026</span></pre><small>Sin parte decimal.</small></div>
+    <div class="type t-float"><div class="tn">float</div><b>Decimales</b> · PSeInt: Real<pre>temperatura = <span class="nu">24.5</span>
+precio = <span class="nu">4500.0</span></pre><small>Usa <b>punto</b>, no coma: 3.5 ✔ · 3,5 ✘</small></div>
+    <div class="type t-str"><div class="tn">str</div><b>Texto</b> · PSeInt: Caracter/Texto<pre>ciudad = <span class="st">"Medellín"</span>
+saludo = <span class="st">'Hola'</span></pre><small>Comillas simples o dobles.</small></div>
+    <div class="type t-bool"><div class="tn">bool</div><b>Lógicos</b> · PSeInt: Logico<pre>aprobado = <span class="kw">True</span>
+pagado = <span class="kw">False</span></pre><small>True y False con mayúscula inicial.</small></div>
+  </div>
+  <div class="tip">🔎 <b>type(x)</b> te dice el tipo de cualquier valor: <code>print(type(24.5))</code> → <code>&lt;class 'float'&gt;</code></div>
+
+  <h3>🎮 Tipo-matic: ¡racha de tipos!</h3>
+  <p>Aparece un valor de Python: ¿qué tipo es? Encadena aciertos para hacer crecer tu <b>racha 🔥</b>. Con una racha de 8 ganas la insignia <b>Ojo de tipos</b>.</p>
+  <div class="game">
+    <div class="gstat">
+      <div class="gchip">Ronda <b id="tmRound">0</b>/12</div>
+      <div class="gchip"><span class="flame">🔥</span> Racha <b id="tmStreak">0</b></div>
+      <div class="gchip">Mejor racha <b id="tmBest">0</b></div>
+      <div class="gchip">Aciertos <b id="tmHits">0</b></div>
+    </div>
+    <div class="bigval" id="tmVal">Pulsa <b>Empezar</b></div>
+    <div class="typebtns" id="tmBtns">
+      <button data-t="int">int</button><button data-t="float">float</button><button data-t="str">str</button><button data-t="bool">bool</button>
+    </div>
+    <div class="feedback center" id="tmFb"></div>
+    <div class="center" style="margin-top:8px"><button class="btn" id="tmStart">▶ Empezar</button></div>
+  </div>
+
+  <h3>Variables y asignación</h3>
+  <p>El signo <code>=</code> <b>asigna</b>: guarda el valor de la derecha en la variable de la izquierda (como <code>&lt;-</code> en PSeInt). En Python no declaras el tipo: <b>lo decide el valor</b>.</p>
+  <pre>ciudad = <span class="st">"Medellín"</span>      <span class="cm"># str</span>
+estudiantes = <span class="nu">32</span>         <span class="cm"># int</span>
+temperatura = <span class="nu">24.5</span>       <span class="cm"># float</span>
+<span class="fn">print</span>(<span class="fn">type</span>(temperatura))  <span class="cm"># &lt;class 'float'&gt;</span></pre>
+  <div class="card"><b>Reglas para los nombres:</b> solo letras, números y guion bajo <code>_</code>; <b>no</b> pueden empezar con número, <b>no</b> llevan espacios ni símbolos (<code>-</code>, <code>$</code>…) y <b>no</b> pueden ser palabras reservadas (<code>for</code>, <code>if</code>, <code>class</code>, <code>True</code>…). <b>Convención:</b> <code>snake_case</code> → minúsculas y guion bajo: <code>precio_final</code>.</div>
+
+  <h3>🎲 ¿Nombre válido o inválido?</h3>
+  <p>Toca cada nombre para marcarlo: <b>1 toque = ✅ válido</b>, <b>2 toques = ❌ inválido</b>. Luego pulsa <b>Comprobar</b>.</p>
+  <div class="names" id="names"></div>
+  <div class="btns"><button class="btn" id="nmCheck">Comprobar</button><button class="btn ghost" id="nmReset">Reiniciar</button></div>
+  <div class="feedback" id="nmFb"></div>
+
+  <h3>Conversión de tipos</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Función</th><th>Ejemplo</th><th>Resultado</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">int(x)</td><td class="mono">int("42")</td><td class="mono">42</td></tr>
+      <tr><td class="mono">int(x)</td><td class="mono">int(9.99)</td><td class="mono">9  (trunca, no redondea)</td></tr>
+      <tr><td class="mono">float(x)</td><td class="mono">float("0.5")</td><td class="mono">0.5</td></tr>
+      <tr><td class="mono">str(x)</td><td class="mono">str(2026)</td><td class="mono">"2026"</td></tr>
+      <tr><td class="mono">bool(x)</td><td class="mono">bool(0)</td><td class="mono">False</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><b>¡Cuidado!</b> <code>int("3.5")</code> → <b>ValueError</b> (usa <code>float()</code>). <code>bool("0")</code> → <b>True</b>: todo texto no vacío es True; <code>bool("")</code> → False.</div>
+</section>
+
+<!-- ===================== OPERADORES ===================== -->
+<section class="tab" id="operadores">
+  <h2>➗ Operadores</h2>
+  <h3>Aritméticos</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Operación</th><th>Python</th><th>PSeInt</th><th>Ejemplo → resultado</th></tr></thead>
+    <tbody>
+      <tr><td>Suma</td><td class="mono">+</td><td class="mono">+</td><td class="mono">9 + 4 → 13</td></tr>
+      <tr><td>Resta</td><td class="mono">-</td><td class="mono">-</td><td class="mono">9 - 4 → 5</td></tr>
+      <tr><td>Multiplicación</td><td class="mono">*</td><td class="mono">*</td><td class="mono">9 * 4 → 36</td></tr>
+      <tr><td>División real</td><td class="mono">/</td><td class="mono">/</td><td class="mono">9 / 4 → 2.25</td></tr>
+      <tr><td>División entera</td><td class="mono">//</td><td class="mono">trunc(9/4)</td><td class="mono">9 // 4 → 2</td></tr>
+      <tr><td>Residuo (módulo)</td><td class="mono">%</td><td class="mono">MOD</td><td class="mono">9 % 4 → 1</td></tr>
+      <tr><td>Potencia</td><td class="mono">**</td><td class="mono">^</td><td class="mono">3 ** 2 → 9</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Comparación y lógicos</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Python</th><th>PSeInt</th><th>Significa</th><th>Ejemplo</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">==</td><td class="mono">=</td><td>igual a</td><td class="mono">4 == 4 → True</td></tr>
+      <tr><td class="mono">!=</td><td class="mono">&lt;&gt;</td><td>diferente de</td><td class="mono">4 != 9 → True</td></tr>
+      <tr><td class="mono">&gt; &lt; &gt;= &lt;=</td><td class="mono">&gt; &lt; &gt;= &lt;=</td><td>orden</td><td class="mono">8 &lt;= 3 → False</td></tr>
+      <tr><td class="mono">and</td><td class="mono">Y</td><td>ambas son True</td><td class="mono">(4 &gt; 1) and (2 &gt; 5) → False</td></tr>
+      <tr><td class="mono">or</td><td class="mono">O</td><td>al menos una es True</td><td class="mono">(4 &gt; 1) or (2 &gt; 5) → True</td></tr>
+      <tr><td class="mono">not</td><td class="mono">NO</td><td>invierte el valor</td><td class="mono">not (4 &gt; 1) → False</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><b>= asigna</b> un valor; <b>== compara</b> dos valores. ¡No los confundas! Y recuerda: <code>/</code> siempre produce un <b>float</b>; con texto, <code>+</code> <b>une</b> las cadenas.</div>
+
+  <h3>🎯 ¿Qué imprime?</h3>
+  <p><b>Enunciado:</b> para cada instrucción (la entrada), predice exactamente lo que muestra Python (la salida). Cada acierto suma XP.</p>
+  <div class="scorebar"><span>Aciertos: <b id="qiScore">0</b> / <b id="qiTotal">8</b></span><button class="btn ghost" id="qiReset">Reiniciar</button></div>
+  <div id="qiQuiz"></div>
+</section>
+
+<!-- ===================== ENTRADA Y SALIDA ===================== -->
+<section class="tab" id="es">
+  <h2>⌨️ Estructura secuencial: Entrada → Proceso → Salida</h2>
+  <p>Las instrucciones se ejecutan <b>en orden, una tras otra</b>, sin decisiones ni repeticiones. En Python no declaras variables: se crean cuando les asignas un valor.</p>
+  <div class="flow">
+    <div class="st2">⌨️ Entrada<small><code>input()</code> · el usuario escribe</small></div><span class="ar">→</span>
+    <div class="st2">⚙️ Proceso<small>cálculos con operadores</small></div><span class="ar">→</span>
+    <div class="st2">🖥️ Salida<small><code>print()</code> · se muestran resultados</small></div>
+  </div>
+
+  <h3>Entrada de datos: <code>input()</code></h3>
+  <pre>ciudad = <span class="fn">input</span>(<span class="st">"¿En qué ciudad vives? "</span>)
+hermanos = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"¿Cuántos hermanos tienes? "</span>))
+estatura = <span class="fn">float</span>(<span class="fn">input</span>(<span class="st">"Estatura (m): "</span>))</pre>
+  <div class="note"><b>input() siempre devuelve texto (str).</b> Para calcular, conviértelo con <code>int()</code> o <code>float()</code>. El mensaje entre paréntesis es lo que ve el usuario antes de escribir. <br>PSeInt <code>Leer edad</code> → Python <code>edad = int(input())</code></div>
+
+  <h3>Salida de datos: <code>print()</code></h3>
+  <pre><span class="fn">print</span>(<span class="st">"2026"</span>, <span class="st">"10"</span>, <span class="st">"14"</span>, sep=<span class="st">"/"</span>)   <span class="cm"># sep: separador</span>
+<span class="fn">print</span>(<span class="st">"Cargando"</span>, end=<span class="st">"..."</span>)        <span class="cm"># end: qué poner al final</span>
+<span class="fn">print</span>(<span class="st">"listo"</span>)
+pi = <span class="nu">3.14159</span>
+<span class="fn">print</span>(<span class="st">f"pi ≈ </span>{pi:.3f}<span class="st">"</span>)            <span class="cm"># f-string con 3 decimales</span></pre>
+  <span class="fname">Terminal</span>
+  <pre>2026/10/14
+Cargando...listo
+pi ≈ 3.142</pre>
+  <div class="tip">✨ <b>f-strings:</b> escribe <code>f</code> antes de las comillas y las variables entre <code>{ }</code>. Con <code>{valor:.2f}</code> muestras <b>2 decimales</b>.</div>
+
+  <h3>Ejemplo completo: recibo de la cafetería</h3>
+  <span class="fname">recibo.py</span>
+  <pre><span class="cm"># Entrada</span>
+producto = <span class="fn">input</span>(<span class="st">"Producto: "</span>)
+precio = <span class="fn">float</span>(<span class="fn">input</span>(<span class="st">"Precio unitario: "</span>))
+cantidad = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Cantidad: "</span>))
+<span class="cm"># Proceso</span>
+subtotal = precio * cantidad
+descuento = subtotal * <span class="nu">0.10</span>
+total = subtotal - descuento
+<span class="cm"># Salida</span>
+<span class="fn">print</span>(<span class="st">f"</span>{cantidad}<span class="st"> x </span>{producto}<span class="st">"</span>)
+<span class="fn">print</span>(<span class="st">f"Subtotal: </span>{subtotal:.2f}<span class="st">"</span>)
+<span class="fn">print</span>(<span class="st">f"Descuento: </span>{descuento:.2f}<span class="st">"</span>)
+<span class="fn">print</span>(<span class="st">f"Total a pagar: </span>{total:.2f}<span class="st">"</span>)</pre>
+  <div class="tablewrap"><table style="width:auto">
+    <thead><tr><th colspan="6">Prueba de escritorio (Café · 4500 · 3)</th></tr>
+    <tr><th>producto</th><th>precio</th><th>cantidad</th><th>subtotal</th><th>descuento</th><th>total</th></tr></thead>
+    <tbody><tr><td class="mono">"Café"</td><td class="mono">4500.0</td><td class="mono">3</td><td class="mono">13500.0</td><td class="mono">1350.0</td><td class="mono">12150.0</td></tr></tbody>
+  </table></div>
+  <div class="center"><button class="btn py" data-try="recibo">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>🧩 Ordena el programa</h3>
+  <p><b>Enunciado:</b> una pizza de <b>$48.000</b> se divide entre amigos con <b>10 % de propina</b>. Toca las líneas en el orden correcto siguiendo <b>Entrada → Proceso → Salida</b> y pulsa <b>Comprobar</b>.</p>
+  <div class="slots" id="orSlots"></div>
+  <div class="pool" id="orPool"></div>
+  <div class="btns"><button class="btn" id="orCheck">Comprobar</button><button class="btn ghost" id="orReset">Reiniciar</button><button class="btn py" id="orTry" style="display:none">🐍 Ejecutarlo en el laboratorio</button></div>
+  <div class="feedback" id="orFb"></div>
+</section>
+
+<!-- ===================== ERRORES ===================== -->
+<section class="tab" id="errores">
+  <h2>🐞 Caza el error</h2>
+  <p>Equivocarse es parte de programar. Lo importante es <b>leer el mensaje</b>: Python te dice el <b>tipo de error</b> y la <b>línea</b>.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Error</th><th>Ejemplo</th><th>Qué significa</th></tr></thead>
+    <tbody>
+      <tr><td><b>SyntaxError</b></td><td class="mono">print("Hola)</td><td>Está mal escrito: faltan comillas, paréntesis o los dos puntos <code>:</code>.</td></tr>
+      <tr><td><b>NameError</b></td><td class="mono">Print("Hola")</td><td>Un nombre que no existe: mal escrito (¡mayúsculas!) o variable sin crear.</td></tr>
+      <tr><td><b>TypeError</b></td><td class="mono">"5" + 3</td><td>Operación entre tipos incompatibles. ¿Olvidaste <code>int()</code> al leer?</td></tr>
+      <tr><td><b>ValueError</b></td><td class="mono">int("3.5")</td><td>El tipo es correcto pero el valor no se puede convertir.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="card">
+    <b>Clásico de la clase:</b> este programa falla. ¿Por qué?
+    <pre>edad = <span class="fn">input</span>(<span class="st">"¿Cuántos años tienes? "</span>)
+<span class="fn">print</span>(<span class="st">"El próximo año tendrás"</span>, edad + <span class="nu">1</span>)</pre>
+    <details><summary>Ver explicación</summary><p><code>input()</code> devuelve texto: <code>"17" + 1</code> mezcla str con int → <b>TypeError</b>. Solución: convierte al leer → <code>edad = int(input("¿Cuántos años tienes? "))</code>.</p></details>
+  </div>
+
+  <h3>🕵️ Cazador de errores</h3>
+  <p><b>Enunciado:</b> para cada fragmento, decide qué error produce al ejecutarlo (o si funciona). Completa todos para ganar la insignia <b>Cazaerrores</b>.</p>
+  <div class="scorebar"><span>Cazados: <b id="ceScore">0</b> / <b id="ceTotal">8</b></span><button class="btn ghost" id="ceReset">Reiniciar</button></div>
+  <div id="ceQuiz"></div>
+</section>
+
+<!-- ===================== LABORATORIO ===================== -->
+<section class="tab" id="lab">
+  <h2>🐍 Laboratorio: Python de verdad en tu navegador</h2>
+  <p>Escribe tu programa, pon los datos de entrada (uno por línea) y pulsa <b>▶ Ejecutar</b>. Elige un <b>reto</b> y pulsa <b>✅ Comprobar reto</b> para que el laboratorio lo pruebe con varios datos y te dé XP. <small style="color:var(--muted)">La primera vez se descarga Python (≈ 12 MB); necesitas conexión a internet.</small></p>
+  <div class="lab">
+    <div class="labbar">
+      <select id="retoSel" aria-label="Reto"></select>
+      <span class="pystat" id="pyStatus">⚪ Python sin cargar</span>
+    </div>
+    <div class="retoinfo" id="retoInfo"></div>
+    <div class="labgrid">
+      <div>
+        <label for="code">📝 Tu programa (.py) · <span style="font-weight:400">Tab = 4 espacios · Ctrl+Enter = ejecutar</span></label>
+        <textarea id="code" class="code" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+        <label for="stdin">⌨️ Entradas: una por línea (cada <code>input()</code> toma la siguiente)</label>
+        <textarea id="stdin" class="stdin" spellcheck="false"></textarea>
+        <div class="btns">
+          <button class="btn py" id="runBtn">▶ Ejecutar</button>
+          <button class="btn" id="checkBtn">✅ Comprobar reto</button>
+          <button class="btn ghost" id="resetCode">↺ Plantilla</button>
+          <button class="btn ghost" id="solBtn">👀 Solución</button>
+        </div>
+      </div>
+      <div>
+        <label>🖥️ Terminal</label>
+        <pre class="term" id="term"><span class="sys">La salida de tu programa aparecerá aquí.</span></pre>
+        <div class="chk" id="checkRes"></div>
+      </div>
+    </div>
+  </div>
+  <div class="tip">🏅 Cada reto superado da <b>30 XP</b> (el reto ★ da 50). Si abres la solución antes de superarlo, el reto da la <b>mitad</b>. Supera 5 retos para la insignia <b>Pythonista</b> y los 9 para <b>Leyenda</b>.</div>
+</section>
+
+<!-- ===================== TALLER ===================== -->
+<section class="tab" id="taller">
+  <h2>🏆 Taller — 9 ejercicios en Python</h2>
+  <p>Lee el enunciado, identifica la <b>entrada</b>, el <b>proceso</b> y la <b>salida</b>, y resuélvelo en el <b>🐍 Laboratorio</b> (o en IDLE/Thonny). Intenta antes de abrir la solución.</p>
+  <div id="ejercicios"></div>
+</section>
+
+</div>
+<div class="xppop" id="xppop"></div>
+<footer>Material interactivo · Lógica de Programación 1 · Introducción a Python (Python 3.14)</footer>
+
+<script>
+const RETOS = [{"id": "ficha", "t": "1. Ficha de presentación", "tag": "input · f-string", "d": "Escribe un programa que pida el <b>nombre<\/b>, la <b>carrera<\/b> y el <b>semestre<\/b> del estudiante y muestre una presentación con una f-string. <b>Entrada:<\/b> tres textos. <b>Salida:<\/b> una línea de presentación. <br><b>Ejemplo:<\/b> Ana, Ingeniería, 2 → <code>Soy Ana, estudio Ingeniería y estoy en el semestre 2<\/code>.", "starter": "# Entrada\nnombre = input(\"Nombre: \")\n\n# Salida\n", "sol": "nombre = input(\"Nombre: \")\ncarrera = input(\"Carrera: \")\nsemestre = input(\"Semestre: \")\nprint(f\"Soy {nombre}, estudio {carrera} y estoy en el semestre {semestre}\")", "tests": [{"in": ["Ana", "Ingeniería", "2"], "must": ["Ana", "Ingenier[ií]a", "\\b2\\b"], "show": "Soy Ana, estudio Ingeniería y estoy en el semestre 2"}, {"in": ["Luis", "Derecho", "5"], "must": ["Luis", "Derecho", "\\b5\\b"], "show": "Soy Luis, estudio Derecho y estoy en el semestre 5"}]}, {"id": "iva", "t": "2. Precio con IVA", "tag": "float · aritmética", "d": "Escribe un programa que pida el <b>precio base<\/b> de un producto, calcule el <b>IVA (19 %)<\/b> y el <b>total a pagar<\/b>. <b>Entrada:<\/b> el precio (número real). <b>Salida:<\/b> el IVA y el total, con <b>2 decimales<\/b>. <br><b>Ejemplo:<\/b> 10000 → <code>IVA: 1900.00<\/code> y <code>Total: 11900.00<\/code>.", "starter": "precio = float(input(\"Precio base: \"))\n", "sol": "precio = float(input(\"Precio base: \"))\niva = precio * 0.19\ntotal = precio + iva\nprint(f\"IVA: {iva:.2f}\")\nprint(f\"Total: {total:.2f}\")", "tests": [{"in": ["10000"], "must": ["1900\\.00", "11900\\.00"], "show": "IVA: 1900.00 · Total: 11900.00"}, {"in": ["2500"], "must": ["475\\.00", "2975\\.00"], "show": "IVA: 475.00 · Total: 2975.00"}]}, {"id": "minutos", "t": "3. Minutos a horas", "tag": "// y %", "d": "Escribe un programa que pida una cantidad de <b>minutos<\/b> (entero) y la exprese en <b>horas y minutos<\/b> usando <code>//<\/code> y <code>%<\/code>. <b>Entrada:<\/b> minutos. <b>Salida:<\/b> horas y minutos restantes. <br><b>Ejemplo:<\/b> 135 → <code>2 h 15 min<\/code>; 600 → <code>10 h 0 min<\/code>.", "starter": "minutos = int(input(\"Minutos: \"))\n", "sol": "minutos = int(input(\"Minutos: \"))\nhoras = minutos // 60\nresto = minutos % 60\nprint(f\"{horas} h {resto} min\")", "tests": [{"in": ["135"], "must": ["\\b2\\b\\D+\\b15\\b"], "show": "2 h 15 min"}, {"in": ["59"], "must": ["\\b0\\b\\D+\\b59\\b"], "show": "0 h 59 min"}, {"in": ["600"], "must": ["\\b10\\b\\D+\\b0\\b"], "show": "10 h 0 min"}]}, {"id": "promedio", "t": "4. Promedio de tres notas", "tag": "float · formato", "d": "Escribe un programa que pida <b>tres notas<\/b> (números reales) y muestre su <b>promedio con 2 decimales<\/b>. <b>Entrada:<\/b> tres notas. <b>Salida:<\/b> el promedio. <br><b>Ejemplo:<\/b> 3.5, 4.0, 4.5 → <code>Promedio: 4.00<\/code>; 3, 4, 4 → <code>Promedio: 3.67<\/code>.", "starter": "n1 = float(input(\"Nota 1: \"))\n", "sol": "n1 = float(input(\"Nota 1: \"))\nn2 = float(input(\"Nota 2: \"))\nn3 = float(input(\"Nota 3: \"))\npromedio = (n1 + n2 + n3) / 3\nprint(f\"Promedio: {promedio:.2f}\")", "tests": [{"in": ["3.5", "4.0", "4.5"], "must": ["4\\.00"], "show": "Promedio: 4.00"}, {"in": ["3", "4", "4"], "must": ["3\\.67"], "show": "Promedio: 3.67"}]}, {"id": "cuenta", "t": "5. Dividir la cuenta", "tag": "secuencial completo", "d": "Escribe un programa que pida el <b>total de la cuenta<\/b> de un restaurante, el <b>porcentaje de propina<\/b> y el <b>número de personas<\/b>, y muestre <b>cuánto paga cada una<\/b> (con 2 decimales). <b>Proceso:<\/b> total con propina = cuenta × (1 + propina/100). <br><b>Ejemplo:<\/b> 120000, 10, 4 → <code>Cada persona paga: 33000.00<\/code>.", "starter": "cuenta = float(input(\"Total de la cuenta: \"))\n", "sol": "cuenta = float(input(\"Total de la cuenta: \"))\npropina = float(input(\"Propina (%): \"))\npersonas = int(input(\"Personas: \"))\ntotal = cuenta * (1 + propina / 100)\nprint(f\"Cada persona paga: {total / personas:.2f}\")", "tests": [{"in": ["120000", "10", "4"], "must": ["33000\\.00"], "show": "Cada persona paga: 33000.00"}, {"in": ["50000", "0", "2"], "must": ["25000\\.00"], "show": "Cada persona paga: 25000.00"}]}, {"id": "velocidad", "t": "6. km/h a m/s", "tag": "conversión de unidades", "d": "Escribe un programa que convierta una velocidad de <b>km/h a m/s<\/b>. <b>Entrada:<\/b> la velocidad en km/h. <b>Proceso:<\/b> m/s = km/h × 1000 / 3600. <b>Salida:<\/b> la velocidad en m/s con 2 decimales. <br><b>Ejemplo:<\/b> 72 → <code>20.00 m/s<\/code>; 100 → <code>27.78 m/s<\/code>.", "starter": "kmh = float(input(\"Velocidad (km/h): \"))\n", "sol": "kmh = float(input(\"Velocidad (km/h): \"))\nms = kmh * 1000 / 3600\nprint(f\"{ms:.2f} m/s\")", "tests": [{"in": ["72"], "must": ["20\\.00"], "show": "20.00 m/s"}, {"in": ["36"], "must": ["10\\.00"], "show": "10.00 m/s"}, {"in": ["100"], "must": ["27\\.78"], "show": "27.78 m/s"}]}, {"id": "digitos", "t": "7. Desarmar un número de 3 cifras", "tag": "// y % con dígitos", "d": "Escribe un programa que pida un <b>entero de 3 cifras<\/b> y muestre por separado sus <b>centenas, decenas y unidades<\/b>, usando solo <code>//<\/code> y <code>%<\/code>. <b>Salida:<\/b> los tres dígitos en ese orden. <br><b>Ejemplo:<\/b> 472 → <code>Centenas: 4, Decenas: 7, Unidades: 2<\/code>.", "starter": "n = int(input(\"Número de 3 cifras: \"))\n", "sol": "n = int(input(\"Número de 3 cifras: \"))\ncentenas = n // 100\ndecenas = (n // 10) % 10\nunidades = n % 10\nprint(f\"Centenas: {centenas}, Decenas: {decenas}, Unidades: {unidades}\")", "tests": [{"in": ["472"], "must": ["\\b4\\b\\D+\\b7\\b\\D+\\b2\\b"], "show": "Centenas: 4, Decenas: 7, Unidades: 2"}, {"in": ["905"], "must": ["\\b9\\b\\D+\\b0\\b\\D+\\b5\\b"], "show": "Centenas: 9, Decenas: 0, Unidades: 5"}]}, {"id": "imc", "t": "8. Índice de masa corporal", "tag": "potencia · formato", "d": "Escribe un programa que pida el <b>peso<\/b> (kg) y la <b>estatura<\/b> (m) y calcule el <b>IMC<\/b>. <b>Proceso:<\/b> IMC = peso / estatura². <b>Salida:<\/b> el IMC con 2 decimales. <br><b>Ejemplo:<\/b> 70 y 1.75 → <code>IMC: 22.86<\/code>.", "starter": "peso = float(input(\"Peso (kg): \"))\n", "sol": "peso = float(input(\"Peso (kg): \"))\nestatura = float(input(\"Estatura (m): \"))\nimc = peso / estatura ** 2\nprint(f\"IMC: {imc:.2f}\")", "tests": [{"in": ["70", "1.75"], "must": ["22\\.86"], "show": "IMC: 22.86"}, {"in": ["50", "1.60"], "must": ["19\\.53"], "show": "IMC: 19.53"}]}, {"id": "segundos", "t": "★ Reto: segundos a h, min y s", "tag": "reto", "d": "Escribe un programa que pida una cantidad de <b>segundos<\/b> y la exprese en <b>horas, minutos y segundos<\/b> usando <code>//<\/code> y <code>%<\/code>. <b>Salida:<\/b> las tres cantidades en ese orden. <br><b>Ejemplo:<\/b> 3725 → <code>1 h 2 min 5 s<\/code>; 59 → <code>0 h 0 min 59 s<\/code>.", "starter": "total = int(input(\"Segundos: \"))\n", "sol": "total = int(input(\"Segundos: \"))\nh = total // 3600\nm = (total % 3600) // 60\ns = total % 60\nprint(f\"{h} h {m} min {s} s\")", "tests": [{"in": ["3725"], "must": ["\\b1\\b\\D+\\b2\\b\\D+\\b5\\b"], "show": "1 h 2 min 5 s"}, {"in": ["59"], "must": ["\\b0\\b\\D+\\b0\\b\\D+\\b59\\b"], "show": "0 h 0 min 59 s"}, {"in": ["7384"], "must": ["\\b2\\b\\D+\\b3\\b\\D+\\b4\\b"], "show": "2 h 3 min 4 s"}]}];
+const HARNESS_PY = "import builtins, io, contextlib, traceback, sys\ndef __run_user(src, inputs, echo):\n    q = list(inputs)\n    def _inp(prompt=''):\n        if not q:\n            raise EOFError(\"input() pidió un dato, pero no hay más entradas\")\n        v = q.pop(0)\n        if echo:\n            print(str(prompt) + v)\n        return v\n    builtins.input = _inp\n    buf = io.StringIO()\n    etype, err, line = \"\", \"\", None\n    try:\n        code = compile(src, \"tu_programa.py\", \"exec\")\n        with contextlib.redirect_stdout(buf):\n            exec(code, {\"__name__\": \"__main__\"})\n    except SyntaxError as e:\n        etype, err, line = type(e).__name__, str(e.msg), e.lineno\n    except BaseException as e:\n        etype, err = type(e).__name__, str(e)\n        for fr in traceback.extract_tb(e.__traceback__):\n            if fr.filename == \"tu_programa.py\":\n                line = fr.lineno\n    return [buf.getvalue(), etype, err, line]\n";
+const EXTRA_CODE = {
+  bienvenida: {code:'# Mi primer programa en Python\ncurso = "Lógica de Programación 1"\nsemestre = 2\nprint("Bienvenido a", curso, "- semestre", semestre)\n', stdin:''},
+  recibo: {code:'# Entrada\nproducto = input("Producto: ")\nprecio = float(input("Precio unitario: "))\ncantidad = int(input("Cantidad: "))\n# Proceso\nsubtotal = precio * cantidad\ndescuento = subtotal * 0.10\ntotal = subtotal - descuento\n# Salida\nprint(f"{cantidad} x {producto}")\nprint(f"Subtotal: {subtotal:.2f}")\nprint(f"Descuento: {descuento:.2f}")\nprint(f"Total a pagar: {total:.2f}")\n', stdin:'Café\n4500\n3'},
+  pizza: {code:'precio = float(input("Precio de la pizza: "))\namigos = int(input("¿Cuántos amigos? "))\ntotal = precio * 1.10\npor_persona = total / amigos\nprint(f"Cada uno paga {por_persona:.2f}")\n', stdin:'48000\n4'},
+  libre: {code:'# Zona libre: escribe lo que quieras\nnombre = input("¿Cómo te llamas? ")\nprint(f"¡Hola, {nombre}! Bienvenido a Python 🐍")\n', stdin:'Ana'}
+};
+
+/* ===================== Progreso / XP ===================== */
+const KEY='lp1-clase8-python-v1';
+let S={xp:0, awarded:[], flags:{}, retos:{}, sol:{}, best:0};
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null'); if(s&&typeof s==='object') S=Object.assign(S,s);}catch(e){}
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} }
+const LEVELS=['Pythonista novato','Aprendiz de la serpiente','Domador de tipos','Programador secuencial','Maestro Pythonista'];
+const PER=120;
+const BADGES=[
+  {icon:'🥉',label:'Primer paso',test:()=>S.xp>=30},
+  {icon:'🐍',label:'¡Hola, mundo!',test:()=>!!S.flags.firstRun},
+  {icon:'🧬',label:'Ojo de tipos',test:()=>S.best>=8},
+  {icon:'🕵️',label:'Cazaerrores',test:()=>!!S.flags.hunter},
+  {icon:'🏅',label:'Pythonista',test:()=>Object.keys(S.retos).length>=5},
+  {icon:'🧠',label:'Leyenda',test:()=>Object.keys(S.retos).length>=RETOS.length}
+];
+function renderXP(){
+  const lvl=Math.min(LEVELS.length,Math.floor(S.xp/PER)+1);
+  document.getElementById('lvl').textContent=lvl;
+  document.getElementById('lvlname').textContent=LEVELS[lvl-1];
+  document.getElementById('xp').textContent=S.xp;
+  document.getElementById('xpfill').style.width=(lvl===LEVELS.length?100:Math.round((S.xp%PER)/PER*100))+'%';
+  const box=document.getElementById('badges'); box.innerHTML='';
+  BADGES.forEach(b=>{const e=document.createElement('span');e.className='bdg'+(b.test()?' on':'');e.textContent=b.icon+' '+b.label;box.appendChild(e);});
+}
+let popT=null;
+function pop(t){const p=document.getElementById('xppop');p.textContent=t;p.classList.add('show');clearTimeout(popT);popT=setTimeout(()=>p.classList.remove('show'),1500);}
+function addXP(key,amt,label){
+  if(S.awarded.includes(key))return false;
+  S.awarded.push(key); S.xp+=amt; save(); renderXP(); pop('+'+amt+' XP'+(label?' · '+label:'')); return true;
+}
+function flag(name,label){ if(S.flags[name])return; S.flags[name]=true; save(); renderXP(); if(label)pop('🏅 Insignia: '+label); }
+document.getElementById('resetProg').addEventListener('click',()=>{
+  if(!confirm('¿Borrar tu XP, insignias y retos superados en este navegador?'))return;
+  S={xp:0,awarded:[],flags:{},retos:{},sol:{},best:0}; save(); renderXP(); renderRetoSel(); renderTaller(); loadReto(currentReto);
+});
+renderXP();
+
+/* ===================== Pestañas ===================== */
+const tabs=document.querySelectorAll('#tabs button');
+function showTab(name){
+  tabs.forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('active',s.id===name));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+tabs.forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+
+/* ===================== Quiz genérico ===================== */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function makeQuiz(cfg){
+  document.getElementById(cfg.totalId).textContent=cfg.data.length;
+  function build(){
+    const box=document.getElementById(cfg.boxId); box.innerHTML='';
+    let answered=0, correct=0;
+    document.getElementById(cfg.scoreId).textContent='0';
+    cfg.data.forEach((q,i)=>{
+      const c=document.createElement('div'); c.className='q';
+      c.innerHTML='<span class="tag">'+(q.tag||('#'+(i+1)))+'</span>'+(q.scn?'<p class="scn">'+q.scn+'</p>':'')+(q.code?'<pre>'+esc(q.code)+'</pre>':'');
+      const opts=document.createElement('div'); opts.className='opts';
+      const fb=document.createElement('div'); fb.className='feedback';
+      let done=false;
+      q.opts.forEach(o=>{
+        const b=document.createElement('button'); b.className='opt'; b.textContent=o;
+        b.addEventListener('click',()=>{
+          if(done)return; done=true; answered++;
+          opts.querySelectorAll('.opt').forEach(x=>x.classList.add('locked'));
+          if(o===q.ans){ b.classList.add('correct'); correct++; document.getElementById(cfg.scoreId).textContent=correct;
+            fb.textContent='✔ ¡Correcto! '+q.why; fb.className='feedback ok'; addXP(cfg.boxId+':'+i,cfg.xp||10); }
+          else{ b.classList.add('wrong'); opts.querySelectorAll('.opt').forEach(x=>{if(x.textContent===q.ans)x.classList.add('correct');});
+            fb.textContent='✘ Respuesta: '+q.ans+'. '+q.why; fb.className='feedback no'; }
+          if(answered===cfg.data.length && cfg.onDone) cfg.onDone(correct);
+        });
+        opts.appendChild(b);
+      });
+      c.appendChild(opts); c.appendChild(fb); box.appendChild(c);
+    });
+  }
+  document.getElementById(cfg.resetId).addEventListener('click',build); build();
+}
+
+makeQuiz({boxId:'nivQuiz',scoreId:'nivScore',totalId:'nivTotal',resetId:'nivReset',xp:5,data:[
+  {tag:'Fragmento 1',code:'MOV  AX, 5',opts:['Bajo nivel','Alto nivel'],ans:'Bajo nivel',why:'Es ensamblador: instrucciones casi directas para el procesador.'},
+  {tag:'Fragmento 2',code:'print("Hola")',opts:['Bajo nivel','Alto nivel'],ans:'Alto nivel',why:'Python se lee casi como lenguaje humano.'},
+  {tag:'Fragmento 3',code:'10111000 00000101',opts:['Bajo nivel','Alto nivel'],ans:'Bajo nivel',why:'Es lenguaje de máquina: ceros y unos.'},
+  {tag:'Fragmento 4',code:'System.out.println("Hola");',opts:['Bajo nivel','Alto nivel'],ans:'Alto nivel',why:'Java es de alto nivel (aunque más largo que Python).'},
+  {tag:'Fragmento 5',code:'resultado = a + 3',opts:['Bajo nivel','Alto nivel'],ans:'Alto nivel',why:'Asignación legible, típica de alto nivel.'},
+  {tag:'Fragmento 6',code:'ADD  AX, 3',opts:['Bajo nivel','Alto nivel'],ans:'Bajo nivel',why:'Ensamblador: suma 3 al registro AX.'}
+]});
+
+makeQuiz({boxId:'trQuiz',scoreId:'trScore',totalId:'trTotal',resetId:'trReset',xp:8,data:[
+  {tag:'Leer',scn:'PSeInt: <code>Leer edad</code> (edad es Entero)',opts:['edad = int(input())','edad = input()','input(edad)'],ans:'edad = int(input())',why:'input() devuelve texto; para un entero se convierte con int().'},
+  {tag:'Asignar',scn:'PSeInt: <code>total &lt;- precio * 2</code>',opts:['total = precio * 2','total == precio * 2','total <- precio * 2'],ans:'total = precio * 2',why:'En Python se asigna con un solo =.'},
+  {tag:'Escribir',scn:'PSeInt: <code>Escribir "Hola ", nombre</code>',opts:['print("Hola", nombre)','Escribir("Hola", nombre)','print("Hola" nombre)'],ans:'print("Hola", nombre)',why:'print() separa los valores con comas.'},
+  {tag:'Comentario',scn:'PSeInt: <code>// calcula el área</code>',opts:['# calcula el área','// calcula el área','-- calcula el área'],ans:'# calcula el área',why:'En Python los comentarios empiezan con #.'},
+  {tag:'Comparar',scn:'PSeInt: <code>a &lt;&gt; b</code>',opts:['a != b','a <> b','a =! b'],ans:'a != b',why:'"Diferente de" en Python es !=.'},
+  {tag:'Módulo',scn:'PSeInt: <code>x MOD 2</code>',opts:['x % 2','x mod 2','x // 2'],ans:'x % 2',why:'El residuo en Python es %.'},
+  {tag:'Leer real',scn:'PSeInt: <code>Definir n Como Real</code> + <code>Leer n</code>',opts:['n = float(input())','n = int(input())','float n = input()'],ans:'n = float(input())',why:'Real → float, y no se declara el tipo.'}
+]});
+
+makeQuiz({boxId:'qiQuiz',scoreId:'qiScore',totalId:'qiTotal',resetId:'qiReset',xp:10,data:[
+  {tag:'División entera',code:'print(15 // 4)',opts:['3','3.75','4'],ans:'3',why:'// descarta la parte decimal: 15 ÷ 4 = 3.75 → 3.'},
+  {tag:'Residuo',code:'print(15 % 4)',opts:['3','1','0.75'],ans:'3',why:'15 = 4·3 + 3: el residuo es 3.'},
+  {tag:'División real',code:'print(9 / 3)',opts:['3','3.0','33'],ans:'3.0',why:'/ siempre produce un float, aunque la división sea exacta.'},
+  {tag:'Conversión',code:'print(int(7.9))',opts:['7','8','7.9'],ans:'7',why:'int() trunca: corta los decimales, no redondea.'},
+  {tag:'Texto',code:'print("5" + "5")',opts:['55','10','TypeError'],ans:'55',why:'Entre textos, + une (concatena) las cadenas.'},
+  {tag:'Lógico',code:'print(not (3 > 1))',opts:['False','True','not True'],ans:'False',why:'3 > 1 es True; not lo invierte a False.'},
+  {tag:'f-string',code:'print(f"{2 + 3} manzanas")',opts:['5 manzanas','2 + 3 manzanas','{2 + 3} manzanas'],ans:'5 manzanas',why:'Lo que va entre { } se calcula antes de mostrarse.'},
+  {tag:'Mezcla',code:'print(float("2") + 1)',opts:['3.0','3','21'],ans:'3.0',why:'float("2") es 2.0; 2.0 + 1 = 3.0 (float).'}
+]});
+
+makeQuiz({boxId:'ceQuiz',scoreId:'ceScore',totalId:'ceTotal',resetId:'ceReset',xp:10,
+  onDone:()=>flag('hunter','Cazaerrores'),
+  data:[
+  {tag:'Fragmento 1',code:'print("Hola)',opts:['SyntaxError','NameError','TypeError','ValueError','Sin error'],ans:'SyntaxError',why:'Falta cerrar las comillas: "unterminated string literal".'},
+  {tag:'Fragmento 2',code:'Print("Hola")',opts:['SyntaxError','NameError','TypeError','ValueError','Sin error'],ans:'NameError',why:'Print con mayúscula no existe: "name \'Print\' is not defined".'},
+  {tag:'Fragmento 3',code:'"5" + 3',opts:['SyntaxError','NameError','TypeError','ValueError','Sin error'],ans:'TypeError',why:'No se puede unir texto con un entero.'},
+  {tag:'Fragmento 4',code:'int("3.5")',opts:['SyntaxError','NameError','TypeError','ValueError','Sin error'],ans:'ValueError',why:'"3.5" no es un entero válido; usa float().'},
+  {tag:'Fragmento 5',code:'if 5 > 3\n    print("ok")',opts:['SyntaxError','NameError','TypeError','ValueError','Sin error'],ans:'SyntaxError',why:'Faltan los dos puntos: "expected \':\'".'},
+  {tag:'Fragmento 6',code:'nombre = "Ana"\nprint(Nombre)',opts:['SyntaxError','NameError','TypeError','ValueError','Sin error'],ans:'NameError',why:'nombre y Nombre son variables distintas.'},
+  {tag:'Fragmento 7 (el usuario escribe 20)',code:'edad = input()\nprint(edad * 2.5)',opts:['SyntaxError','NameError','TypeError','ValueError','Sin error'],ans:'TypeError',why:'edad es texto: no se puede multiplicar un str por un float.'},
+  {tag:'Fragmento 8',code:'x = 10\nprint(x / 4)',opts:['SyntaxError','NameError','TypeError','ValueError','Sin error'],ans:'Sin error',why:'Funciona: imprime 2.5.'}
+]});
+
+/* ===================== Tipo-matic ===================== */
+(function(){
+  const POOL=[['7','int','Número sin decimales.'],['7.0','float','Tiene punto decimal.'],['"7"','str','Está entre comillas: es texto.'],['True','bool','Valor lógico (con T mayúscula).'],
+    ['"True"','str','Entre comillas es texto, aunque diga True.'],['10 / 2','float','/ siempre da float: 5.0.'],['7 // 2','int','// da entero: 3.'],['2 ** 3','int','Potencia de enteros: 8.'],
+    ['9 / 3','float','/ da 3.0, un float.'],['int("8")','int','int() convierte el texto a 8.'],['str(9)','str','str() convierte a "9".'],['-4','int','Los negativos también son int.'],
+    ['0.0','float','Tiene punto: es float.'],['False','bool','El otro valor lógico.'],['"3.5"','str','Entre comillas: texto.'],['3 * 2.0','float','int por float da float: 6.0.'],
+    ['len("hola")','int','len() cuenta caracteres: 4.'],['float(5)','float','float() convierte a 5.0.']];
+  let deck=[],round=0,streak=0,hits=0,cur=null,lock=true;
+  const V=document.getElementById('tmVal'),fb=document.getElementById('tmFb');
+  const set=(id,v)=>document.getElementById(id).textContent=v;
+  set('tmBest',S.best||0);
+  function next(){
+    if(round>=12){ lock=true; V.innerHTML='🏁 Fin: <b>'+hits+'/12</b> · mejor racha <b>'+S.best+'</b>'; fb.textContent=hits===12?'¡Perfecto! Dominas los tipos.':'Juega otra vez para superar tu racha.'; fb.className='feedback center ok'; document.getElementById('tmStart').textContent='↻ Jugar otra vez'; return; }
+    cur=deck[round]; round++; set('tmRound',round);
+    V.textContent=cur[0]; fb.textContent=''; lock=false;
+    document.querySelectorAll('#tmBtns button').forEach(b=>b.className='');
+  }
+  document.getElementById('tmStart').addEventListener('click',()=>{
+    deck=POOL.slice().sort(()=>Math.random()-.5).slice(0,12); round=0;streak=0;hits=0;
+    set('tmStreak',0);set('tmHits',0); document.getElementById('tmStart').textContent='↻ Reiniciar'; next();
+  });
+  document.querySelectorAll('#tmBtns button').forEach(b=>b.addEventListener('click',()=>{
+    if(lock||!cur)return; lock=true;
+    const ok=b.dataset.t===cur[1];
+    if(ok){ b.className='right'; streak++; hits++; set('tmHits',hits); fb.textContent='✔ '+cur[2]; fb.className='feedback center ok';
+      addXP('tm:'+cur[0],4);
+      if(streak>(S.best||0)){S.best=streak;save();set('tmBest',streak);renderXP(); if(streak===8)pop('🏅 Insignia: Ojo de tipos');}
+    } else { b.className='wrongb'; streak=0; fb.textContent='✘ Era '+cur[1]+'. '+cur[2]; fb.className='feedback center no';
+      document.querySelectorAll('#tmBtns button').forEach(x=>{if(x.dataset.t===cur[1])x.className='right';}); }
+    set('tmStreak',streak);
+    setTimeout(next, ok?750:1700);
+  }));
+})();
+
+/* ===================== Nombres válidos ===================== */
+(function(){
+  const NAMES=[['edad',1,''],['_contador',1,''],['nota2',1,''],['precio_final',1,''],['Nombre',1,'válido (aunque por convención se prefiere minúscula)'],
+    ['2do_lugar',0,'empieza con número'],['mi nombre',0,'tiene un espacio'],['for',0,'es palabra reservada'],['total-neto',0,'el guion - no se permite (se lee como resta)'],
+    ['class',0,'es palabra reservada'],['True',0,'es palabra reservada'],['valor$',0,'el símbolo $ no se permite']];
+  const box=document.getElementById('names'), fb=document.getElementById('nmFb');
+  function build(){
+    box.innerHTML=''; fb.textContent='';
+    NAMES.slice().sort(()=>Math.random()-.5).forEach(([n,valid,why])=>{
+      const b=document.createElement('button'); b.className='nm'; b.textContent=n; b.dataset.st='0'; b.dataset.valid=valid; b.dataset.why=why;
+      b.addEventListener('click',()=>{ const s=(+b.dataset.st+1)%3; b.dataset.st=s; b.className='nm'+(s===1?' v':s===2?' x':''); });
+      box.appendChild(b);
+    });
+  }
+  document.getElementById('nmCheck').addEventListener('click',()=>{
+    const all=[...box.children]; let ok=0, pending=0; const bad=[];
+    all.forEach(b=>{ const st=+b.dataset.st; if(st===0){pending++;return;}
+      const said=st===1?1:0; const good=said===+b.dataset.valid;
+      b.classList.remove('ok','ko'); b.classList.add(good?'ok':'ko');
+      if(good)ok++; else bad.push('<b>'+esc(b.textContent)+'</b>: '+(+b.dataset.valid?'es válido':'es inválido — '+b.dataset.why)); });
+    if(pending){ fb.innerHTML='Te faltan '+pending+' nombre(s) por marcar.'; fb.className='feedback no'; return; }
+    if(ok===all.length){ fb.innerHTML='🎉 ¡Todos correctos! Conoces las reglas de los nombres.'; fb.className='feedback ok'; addXP('names-all',25,'nombres'); }
+    else { fb.innerHTML='Aciertos '+ok+'/'+all.length+'. Revisa: '+bad.join(' · '); fb.className='feedback no'; }
+  });
+  document.getElementById('nmReset').addEventListener('click',build);
+  build();
+})();
+
+/* ===================== Ordena el programa ===================== */
+(function(){
+  const LINES=[
+    {id:'a',txt:'precio = float(input("Precio de la pizza: "))'},
+    {id:'b',txt:'amigos = int(input("¿Cuántos amigos? "))'},
+    {id:'c',txt:'total = precio * 1.10'},
+    {id:'d',txt:'por_persona = total / amigos'},
+    {id:'e',txt:'print(f"Cada uno paga {por_persona:.2f}")'}];
+  const PH=['e','e','p','p','s'], PHN={e:'Entrada',p:'Proceso',s:'Salida'};
+  const slotsEl=document.getElementById('orSlots'), poolEl=document.getElementById('orPool'), fb=document.getElementById('orFb'), tryB=document.getElementById('orTry');
+  let placed=[];
+  function build(){
+    placed=[null,null,null,null,null]; fb.textContent=''; tryB.style.display='none';
+    slotsEl.innerHTML=''; poolEl.innerHTML='';
+    PH.forEach((ph,i)=>{ const s=document.createElement('div'); s.className='slot'; s.dataset.i=i;
+      s.innerHTML='<span class="ph '+ph+'">'+(i+1)+' · '+PHN[ph]+'</span><span class="tx">— vacío —</span>';
+      s.addEventListener('click',()=>{ if(placed[i]==null)return; const id=placed[i]; placed[i]=null; render(); poolEl.querySelector('[data-id="'+id+'"]').classList.remove('used'); });
+      slotsEl.appendChild(s); });
+    LINES.slice().sort(()=>Math.random()-.5).forEach(l=>{ const p=document.createElement('button'); p.className='piece'; p.textContent=l.txt; p.dataset.id=l.id;
+      p.addEventListener('click',()=>{ const i=placed.indexOf(null); if(i<0)return; placed[i]=l.id; p.classList.add('used'); render(); });
+      poolEl.appendChild(p); });
+  }
+  function render(){
+    [...slotsEl.children].forEach((s,i)=>{ s.classList.remove('okk','noo'); const id=placed[i];
+      s.classList.toggle('filled',id!=null); s.querySelector('.tx').textContent=id?LINES.find(l=>l.id===id).txt:'— vacío —'; });
+  }
+  document.getElementById('orCheck').addEventListener('click',()=>{
+    if(placed.includes(null)){fb.textContent='Coloca todas las líneas primero.';fb.className='feedback no';return;}
+    const ok=[ ['a','b'].includes(placed[0]), ['a','b'].includes(placed[1]) && placed[1]!==placed[0], placed[2]==='c', placed[3]==='d', placed[4]==='e'];
+    [...slotsEl.children].forEach((s,i)=>s.classList.add(ok[i]?'okk':'noo'));
+    if(ok.every(Boolean)){ fb.innerHTML='🎉 ¡Correcto! Primero se <b>leen</b> los datos, luego se <b>calcula</b> (el total antes que lo que paga cada uno) y al final se <b>muestra</b>.'; fb.className='feedback ok'; addXP('ordena',20,'orden E-P-S'); tryB.style.display=''; }
+    else { fb.innerHTML='Hay líneas fuera de lugar (en rojo). Pista: no puedes usar una variable antes de crearla, y la salida va al final.'; fb.className='feedback no'; }
+  });
+  document.getElementById('orReset').addEventListener('click',build);
+  tryB.addEventListener('click',()=>openInLab('pizza'));
+  build();
+})();
+
+/* ===================== Motor Python (Pyodide) ===================== */
+const qp=new URLSearchParams(location.search);
+const PYO_BASE=qp.get('pyo')||'https://cdn.jsdelivr.net/npm/pyodide@314.0.7/';
+const RUN_TIMEOUT=6000;
+const statusEl=document.getElementById('pyStatus');
+function setStatus(t){statusEl.textContent=t;}
+const WORKER_SRC = `
+let py=null;
+self.onmessage = async (e)=>{
+  const m=e.data;
+  if(m.type==='init'){
+    try{
+      const mod = await import(m.base+'pyodide.mjs');
+      py = await mod.loadPyodide({indexURL:m.base});
+      py.runPython(m.harness);
+      self.postMessage({type:'ready', version: py.runPython("import sys; sys.version.split()[0]")});
+    }catch(err){ self.postMessage({type:'fail', error:String(err)}); }
+  } else if(m.type==='run'){
+    let r;
+    try{
+      py.globals.set('S_', m.src); py.globals.set('I_', py.toPy(m.inputs)); py.globals.set('E_', m.echo);
+      const res = py.runPython('__run_user(S_, I_, E_)'); r=res.toJs(); res.destroy();
+      self.postMessage({type:'result', id:m.id, out:r[0], etype:r[1], err:r[2], line:(r[3]==null?null:r[3])});
+    }catch(err){ self.postMessage({type:'result', id:m.id, out:'', etype:'ErrorInterno', err:String(err), line:null}); }
+  }
+};`;
+const PY={mode:null, worker:null, ready:null, pend:{}, seq:0, main:null, version:''};
+function initWorker(){
+  return new Promise((resolve,reject)=>{
+    let w;
+    try{ w=new Worker(URL.createObjectURL(new Blob([WORKER_SRC],{type:'text/javascript'})),{type:'module'}); }catch(e){ reject(e); return; }
+    const to=setTimeout(()=>{ try{w.terminate();}catch(e){} reject(new Error('timeout de carga')); },120000);
+    w.onmessage=(e)=>{ const m=e.data;
+      if(m.type==='ready'){ clearTimeout(to); PY.version=m.version; resolve(w); }
+      else if(m.type==='fail'){ clearTimeout(to); try{w.terminate();}catch(_){} reject(new Error(m.error)); }
+      else if(m.type==='result'){ const p=PY.pend[m.id]; if(p){ delete PY.pend[m.id]; clearTimeout(p.to); p.resolve(m); } } };
+    w.onerror=(ev)=>{ clearTimeout(to); reject(new Error(ev.message||'error del worker')); };
+    w.postMessage({type:'init', base:PYO_BASE, harness:HARNESS_PY});
+  });
+}
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('No se pudo descargar '+src));document.head.appendChild(s);});}
+async function initMain(){
+  if(!window.loadPyodide) await loadScript(PYO_BASE+'pyodide.js');
+  const py=await window.loadPyodide({indexURL:PYO_BASE});
+  py.runPython(HARNESS_PY); PY.version=py.runPython("import sys; sys.version.split()[0]"); return py;
+}
+function ensurePy(){
+  if(PY.ready) return PY.ready;
+  setStatus('🟡 Cargando Python… (solo la primera vez)');
+  PY.ready=(async()=>{
+    try{ PY.worker=await initWorker(); PY.mode='worker'; }
+    catch(e1){ console.warn('Worker no disponible, uso hilo principal:',e1);
+      try{ PY.main=await initMain(); PY.mode='main'; }
+      catch(e2){ PY.ready=null; setStatus('🔴 No se pudo cargar Python'); throw e2; } }
+    setStatus('🟢 Python '+PY.version+' listo'); return true;
+  })();
+  return PY.ready;
+}
+function runPy(src,inputs,echo){
+  return ensurePy().then(()=>{
+    if(PY.mode==='main'){
+      const g=PY.main.globals; g.set('S_',src); g.set('I_',PY.main.toPy(inputs)); g.set('E_',echo);
+      const res=PY.main.runPython('__run_user(S_, I_, E_)'); const r=res.toJs(); res.destroy();
+      return {out:r[0],etype:r[1],err:r[2],line:r[3]==null?null:r[3]};
+    }
+    return new Promise(resolve=>{
+      const id=++PY.seq;
+      const to=setTimeout(()=>{ delete PY.pend[id]; try{PY.worker.terminate();}catch(e){} PY.worker=null; PY.ready=null; PY.mode=null;
+        setStatus('🟡 Python se reinició'); resolve({timeout:true,out:'',etype:'',err:'',line:null}); },RUN_TIMEOUT);
+      PY.pend[id]={resolve,to};
+      PY.worker.postMessage({type:'run',id,src,inputs,echo});
+    });
+  });
+}
+const HINTS={
+  SyntaxError:'Python no entiende cómo está escrito: revisa comillas, paréntesis y los dos puntos (:).',
+  IndentationError:'La sangría no es correcta: dentro de un bloque usa 4 espacios; fuera de él, ninguno.',
+  NameError:'Usas un nombre que no existe: ¿está bien escrito (mayúsculas/minúsculas)? ¿creaste la variable antes de usarla?',
+  TypeError:'Operación entre tipos incompatibles (p. ej. texto + número). ¿Olvidaste int() o float() al leer con input()?',
+  ValueError:'No se pudo convertir el dato: int("3.5") falla; usa float(), o revisa lo que escribiste en Entradas.',
+  ZeroDivisionError:'Estás dividiendo entre cero.',
+  EOFError:'Tu programa pidió más datos con input() de los que escribiste en Entradas (una entrada por línea).'
+};
+
+/* ===================== Laboratorio UI ===================== */
+const codeEl=document.getElementById('code'), stdinEl=document.getElementById('stdin'), termEl=document.getElementById('term'),
+      checkEl=document.getElementById('checkRes'), selEl=document.getElementById('retoSel'), infoEl=document.getElementById('retoInfo');
+let currentReto='libre';
+function draftKey(id){return 'lp1-c8-draft-'+id;}
+function getDraft(id){try{return localStorage.getItem(draftKey(id));}catch(e){return null;}}
+function setDraft(id,v){try{localStorage.setItem(draftKey(id),v);}catch(e){}}
+function retoById(id){return RETOS.find(r=>r.id===id);}
+function renderRetoSel(){
+  const keep=currentReto; selEl.innerHTML='';
+  const o0=document.createElement('option'); o0.value='libre'; o0.textContent='🧪 Zona libre'; selEl.appendChild(o0);
+  RETOS.forEach(r=>{ const o=document.createElement('option'); o.value=r.id; o.textContent=(S.retos[r.id]?'✅ ':'🎯 ')+r.t; selEl.appendChild(o); });
+  selEl.value=keep;
+}
+function loadReto(id, extra){
+  currentReto=id; selEl.value=id; checkEl.innerHTML='';
+  const r=retoById(id);
+  const btnC=document.getElementById('checkBtn'), btnS=document.getElementById('solBtn');
+  if(!r){
+    const ex=EXTRA_CODE[extra||'libre']||EXTRA_CODE.libre;
+    infoEl.innerHTML='<b>🧪 Zona libre.</b> Experimenta con lo que quieras. Prueba los ejemplos de la clase o inventa tu propio programa.';
+    codeEl.value = extra? ex.code : (getDraft('libre') ?? ex.code); stdinEl.value = extra? ex.stdin : EXTRA_CODE.libre.stdin;
+    btnC.disabled=true; btnS.disabled=true;
+  } else {
+    infoEl.innerHTML='<span class="tag" style="font-size:.72rem;color:#2a2000;background:var(--py);padding:2px 9px;border-radius:999px;font-weight:700">'+r.tag+'</span> <b>'+r.t+'</b>'+(S.retos[r.id]?' <span style="color:var(--good);font-weight:700">✅ superado</span>':'')+'<br>'+r.d;
+    codeEl.value = getDraft(r.id) ?? r.starter;
+    stdinEl.value = r.tests[0].in.join('\n');
+    btnC.disabled=false; btnS.disabled=false;
+  }
+  termEl.innerHTML='<span class="sys">La salida de tu programa aparecerá aquí.</span>';
+}
+selEl.addEventListener('change',()=>loadReto(selEl.value));
+codeEl.addEventListener('input',()=>setDraft(currentReto,codeEl.value));
+codeEl.addEventListener('keydown',e=>{
+  if(e.key==='Tab'){ e.preventDefault(); const s=codeEl.selectionStart, en=codeEl.selectionEnd;
+    codeEl.value=codeEl.value.slice(0,s)+'    '+codeEl.value.slice(en); codeEl.selectionStart=codeEl.selectionEnd=s+4; setDraft(currentReto,codeEl.value); }
+  if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){ e.preventDefault(); doRun(); }
+});
+function termWrite(r){
+  termEl.innerHTML='';
+  if(r.timeout){ termEl.innerHTML='<span class="err">⏱ Tu programa tardó demasiado y se detuvo (¿quedó esperando o en un ciclo infinito?).</span>'; return; }
+  const o=document.createElement('span'); o.textContent=r.out; termEl.appendChild(o);
+  if(r.etype){
+    const e=document.createElement('span'); e.className='err';
+    e.textContent=(r.out&&!r.out.endsWith('\n')?'\n':'')+'❌ '+r.etype+(r.line?' en la línea '+r.line:'')+': '+r.err+'\n'; termEl.appendChild(e);
+    const h=HINTS[r.etype]; if(h){ const hh=document.createElement('span'); hh.className='hint'; hh.textContent='💡 '+h; termEl.appendChild(hh); }
+  } else if(!r.out){ termEl.innerHTML='<span class="sys">(El programa terminó sin mostrar nada. ¿Te faltó un print()?)</span>'; }
+}
+async function doRun(){
+  const btn=document.getElementById('runBtn'); btn.disabled=true; checkEl.innerHTML='';
+  termEl.innerHTML='<span class="sys">Ejecutando…</span>';
+  try{
+    const inputs=stdinEl.value===''?[]:stdinEl.value.replace(/\r/g,'').split('\n');
+    const r=await runPy(codeEl.value, inputs, true);
+    termWrite(r);
+    if(!r.timeout && !r.etype && r.out){ if(!S.flags.firstRun){ S.flags.firstRun=true; save(); renderXP(); pop('🏅 Insignia: ¡Hola, mundo!'); } addXP('firstrun',10); }
+  }catch(e){
+    termEl.innerHTML='<span class="err">No se pudo cargar Python en este navegador ('+esc(e.message)+').\n</span><span class="hint">💡 Revisa tu conexión a internet y recarga la página. También puedes usar IDLE, Thonny o Google Colab.</span>';
+  }finally{ btn.disabled=false; }
+}
+document.getElementById('runBtn').addEventListener('click',doRun);
+document.getElementById('resetCode').addEventListener('click',()=>{
+  const r=retoById(currentReto); codeEl.value=r?r.starter:EXTRA_CODE.libre.code; setDraft(currentReto,codeEl.value);
+});
+document.getElementById('solBtn').addEventListener('click',()=>{
+  const r=retoById(currentReto); if(!r)return;
+  if(!S.retos[r.id] && !S.sol[r.id] && !confirm('Si ves la solución antes de superar el reto, ganarás la mitad de XP. ¿Ver la solución?'))return;
+  S.sol[r.id]=true; save(); codeEl.value=r.sol+'\n'; setDraft(r.id,codeEl.value);
+});
+document.getElementById('checkBtn').addEventListener('click',async()=>{
+  const r=retoById(currentReto); if(!r)return;
+  const btn=document.getElementById('checkBtn'); btn.disabled=true;
+  checkEl.innerHTML='<div class="row">🧪 Probando tu programa con '+r.tests.length+' casos…</div>';
+  let rows='', all=true;
+  try{
+    for(let i=0;i<r.tests.length;i++){
+      const tc=r.tests[i];
+      const res=await runPy(codeEl.value, tc.in, false);
+      let ok=false, why='';
+      if(res.timeout){why='tardó demasiado';}
+      else if(res.etype){why=res.etype+(res.line?' (línea '+res.line+')':'')+': '+res.err;}
+      else { ok=tc.must.every(p=>new RegExp(p).test(res.out)); if(!ok) why='la salida no coincide con lo esperado'; }
+      all=all&&ok;
+      rows+='<div class="row '+(ok?'ok':'no')+'">'+(ok?'✅':'❌')+' <b>Caso '+(i+1)+'</b> · entradas: <code>'+esc(tc.in.join(' | '))+'</code> → se espera: <code>'+esc(tc.show)+'</code>'+
+        (ok?'':'<br><small>Tu salida: <code>'+esc((res.out||'').trim().replace(/\n/g,' ⏎ ')||'(vacía)')+'</code> — '+esc(why)+'</small>')+'</div>';
+    }
+    checkEl.innerHTML=rows;
+    if(all){
+      const first=!S.retos[r.id]; S.retos[r.id]=true; save();
+      const base=r.id==='segundos'?50:30, amt=S.sol[r.id]?Math.round(base/2):base;
+      addXP('reto:'+r.id,amt,r.t.replace(/^[\d★]+\.?\s*/,''));
+      checkEl.innerHTML+='<div class="win">🎉 ¡Reto superado!'+(first?' Nuevo ✅ en tu lista.':'')+' '+(S.sol[r.id]?'(XP reducida por ver la solución)':'')+'</div>';
+      renderRetoSel(); renderTaller(); renderXP();
+      infoEl.querySelector('b') && loadInfoOnly(r);
+    }
+  }catch(e){ checkEl.innerHTML='<div class="row no">No se pudo ejecutar Python ('+esc(e.message)+'). Revisa tu conexión.</div>'; }
+  finally{ btn.disabled=false; }
+});
+function loadInfoOnly(r){ infoEl.innerHTML='<span class="tag" style="font-size:.72rem;color:#2a2000;background:var(--py);padding:2px 9px;border-radius:999px;font-weight:700">'+r.tag+'</span> <b>'+r.t+'</b> <span style="color:var(--good);font-weight:700">✅ superado</span><br>'+r.d; }
+function openInLab(idOrExtra){
+  showTab('lab');
+  if(retoById(idOrExtra)) loadReto(idOrExtra); else loadReto('libre', idOrExtra);
+}
+document.querySelectorAll('[data-try]').forEach(b=>b.addEventListener('click',()=>openInLab(b.dataset.try)));
+
+/* ===================== Taller ===================== */
+function renderTaller(){
+  const box=document.getElementById('ejercicios'); box.innerHTML='';
+  RETOS.forEach(r=>{
+    const c=document.createElement('div'); c.className='ex';
+    c.innerHTML='<span class="tag">'+r.tag+'</span>'+(S.retos[r.id]?'<span class="done">✅ superado en el laboratorio</span>':'')+
+      '<h3>'+r.t+'</h3><p>'+r.d+'</p>'+
+      '<div class="btns"><button class="btn py">🐍 Resolver en el laboratorio</button></div>'+
+      '<details><summary>Ver solución en Python</summary><pre>'+esc(r.sol)+'</pre></details>';
+    c.querySelector('button').addEventListener('click',()=>openInLab(r.id));
+    c.querySelector('details').addEventListener('toggle',function(){ if(this.open && !S.retos[r.id] && !S.sol[r.id]){ S.sol[r.id]=true; save(); } });
+    box.appendChild(c);
+  });
+}
+renderRetoSel(); renderTaller(); loadReto('libre');
+</script>
+</body>
+</html>
