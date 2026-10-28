@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ciclo for en Python · Clase Interactiva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%81%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#0f1720; --panel:#18222e; --panel2:#1f2c3a; --ink:#e8eef5; --muted:#9fb0c3;
+    --line:#2b3a4d; --accent:#4fd1c5; --accent2:#7c9cff; --good:#48d597; --bad:#ff7a7a;
+    --warn:#ffcf6b; --chip:#243447; --py:#ffd43b; --pyb:#4b8bbe;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(160deg,#0f1720,#111c27);color:var(--ink);line-height:1.55}
+  header{padding:22px 22px 12px;text-align:center;border-bottom:1px solid var(--line);background:radial-gradient(1200px 300px at 50% -60px,rgba(75,139,190,.22),transparent)}
+  header h1{margin:0 0 4px;font-size:clamp(1.3rem,3.4vw,2rem)}
+  header p{margin:0;color:var(--muted);font-size:.92rem}
+  .xpwrap{max-width:680px;margin:12px auto 4px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+  .xprow{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);margin-bottom:6px;gap:8px;flex-wrap:wrap}
+  .xprow b{color:var(--warn)}
+  .xpbar{height:12px;background:#0c141d;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .xpfill{height:100%;width:0;background:linear-gradient(90deg,var(--pyb),var(--py));transition:width .5s}
+  .badges2{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+  .bdg{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:.74rem;color:#5f7085;opacity:.6;transition:.3s}
+  .bdg.on{opacity:1;color:var(--ink);border-color:var(--warn);box-shadow:0 0 0 2px rgba(255,207,107,.15)}
+  .linkbtn{background:none;border:none;color:var(--muted);font-size:.74rem;cursor:pointer;text-decoration:underline;padding:0}
+  .wrap{max-width:1000px;margin:0 auto;padding:16px 16px 60px}
+  nav.tabs{position:sticky;top:0;z-index:10;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:11px 6px;background:rgba(15,23,32,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.tabs button{background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:8px 12px;border-radius:10px;cursor:pointer;font-size:.82rem;font-weight:600;transition:.15s}
+  nav.tabs button:hover{border-color:var(--accent)}
+  nav.tabs button.active{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border-color:transparent}
+  nav.tabs button.lab{border-color:var(--py)}
+  html{background:#0f1720}
+  @media(max-width:640px){
+    nav.tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:thin}
+    nav.tabs button{flex:0 0 auto}
+    .typebtns{grid-template-columns:repeat(2,1fr)}
+  }
+  section.tab{display:none;animation:fade .25s ease}
+  section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2{font-size:1.3rem;margin:20px 0 10px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:1.05rem;margin:18px 0 8px;color:var(--accent)}
+  p{color:#d5deea}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .note{background:rgba(255,207,107,.08);border:1px solid rgba(255,207,107,.35);border-radius:12px;padding:12px 14px;margin:14px 0;font-size:.92rem}
+  .note b{color:var(--warn)}
+  .tip{background:rgba(75,139,190,.12);border:1px solid rgba(75,139,190,.45);border-left:4px solid var(--pyb);border-radius:10px;padding:12px 14px;margin:14px 0;font-size:.9rem}
+  .tip b{color:#9cc4e8}
+  code{font-family:"SF Mono",Consolas,Menlo,monospace}
+  pre{background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.85rem;color:#d7e3f0;margin:10px 0}
+  .fname{display:inline-block;background:var(--chip);border:1px solid var(--line);border-bottom:none;border-radius:8px 8px 0 0;padding:3px 10px;font-family:monospace;font-size:.75rem;color:var(--muted);margin-top:8px}
+  .fname + pre{margin-top:0;border-top-left-radius:0}
+  .kw{color:#ff9d6c;font-weight:600}.st{color:#9fe6b0}.cm{color:#6f8194;font-style:italic}.fn{color:#7cc4ff}.nu{color:#c9a3ff}
+  .tout{color:#e8eef5}.tprompt{color:#9fb0c3}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.87rem;overflow:hidden;border-radius:12px}
+  th,td{padding:8px 10px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:var(--accent);font-weight:700}
+  tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+  td.mono,code.mono{font-family:"SF Mono",Consolas,monospace;color:var(--accent)}
+  .tablewrap{overflow-x:auto}
+  details{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:10px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--accent)}
+  details[open]{border-color:var(--accent)}
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+  .tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .tile b{display:block;margin-bottom:3px}
+  .tile small{color:var(--muted)}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin:14px 0;text-align:center}
+  .flow .st2{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;min-width:120px}
+  .flow .st2 small{display:block;color:var(--muted);font-size:.74rem}
+  .flow .ar{color:var(--accent);font-weight:800;font-size:1.3rem}
+  .types{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+  .type{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--panel)}
+  .type .tn{font-family:monospace;font-size:1.3rem;font-weight:800}
+  .t-int .tn{color:#7cc4ff}.t-float .tn{color:#c9a3ff}.t-str .tn{color:#9fe6b0}.t-bool .tn{color:#ffcf6b}
+  .btn{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.88rem}
+  .btn.ghost{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+  .btn.py{background:linear-gradient(180deg,#ffe066,#f2c200);color:#2a2000}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .scorebar{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:12px 0;gap:10px;flex-wrap:wrap}
+  .scorebar b{color:var(--accent);font-size:1.1rem}
+  .q{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .q .tag{font-size:.72rem;color:#0a1330;background:var(--accent2);padding:2px 9px;border-radius:999px;font-weight:700}
+  .q .scn{color:#cfe0ff;margin:8px 0 2px}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .opt{background:#0c141d;border:1px solid var(--line);color:var(--ink);padding:9px 12px;border-radius:9px;cursor:pointer;font-family:monospace;font-size:.85rem;text-align:left;transition:.12s}
+  .opt:hover{border-color:var(--accent)}
+  .opt.correct{background:var(--good);color:#052b1c;border-color:transparent;font-weight:700}
+  .opt.wrong{background:var(--bad);color:#2b0505;border-color:transparent}
+  .opt.locked{pointer-events:none}
+  .feedback{margin-top:8px;font-size:.86rem;min-height:1.1em}
+  .feedback.ok{color:var(--good)}.feedback.no{color:var(--bad)}
+  .center{text-align:center}
+  .xppop{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--warn);color:#2a1e00;font-weight:800;padding:10px 18px;border-radius:999px;opacity:0;transition:.35s;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.35);pointer-events:none}
+  .xppop.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  /* tipo-matic */
+  .game{background:linear-gradient(160deg,#16212e,#1b2a3a);border:1px solid var(--line);border-radius:16px;padding:18px;margin:12px 0}
+  .bigval{font-family:monospace;font-size:clamp(1.4rem,4vw,2.1rem);text-align:center;background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:16px;margin:10px 0;color:#fff}
+  .typebtns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .typebtns button{font-family:monospace;font-size:1rem;font-weight:800;padding:12px 6px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer}
+  .typebtns button:hover{border-color:var(--accent)}
+  .typebtns button.right{background:var(--good);color:#052b1c}
+  .typebtns button.wrongb{background:var(--bad);color:#2b0505}
+  .gstat{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:6px 0}
+  .gchip{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:6px 12px;font-family:monospace;font-size:.88rem}
+  .gchip b{color:var(--warn)}
+  .flame{font-size:1.2rem}
+  /* nombres */
+  .names{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .nm{font-family:monospace;padding:9px 13px;border-radius:10px;border:1px solid var(--line);background:#0c141d;color:var(--ink);cursor:pointer;font-size:.92rem}
+  .nm.v{border-color:var(--good);background:rgba(72,213,151,.15)}
+  .nm.x{border-color:var(--bad);background:rgba(255,122,122,.15)}
+  .nm.ok::after{content:" ✔";color:var(--good)} .nm.ko::after{content:" ✘";color:var(--bad)}
+  /* ordena */
+  .slots{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .slot{min-height:42px;border:2px dashed var(--line);border-radius:10px;display:flex;align-items:center;gap:10px;padding:7px 10px;color:var(--muted);font-size:.85rem;background:#0c141d;cursor:pointer;font-family:monospace}
+  .slot .ph{font-family:system-ui;font-size:.7rem;font-weight:700;border-radius:999px;padding:2px 8px;white-space:nowrap}
+  .ph.e{background:#1d3b5c;color:#9cc4e8}.ph.p{background:#3b2f5c;color:#c9a3ff}.ph.s{background:#1f4a3a;color:#9fe6b0}
+  .slot.filled{border-style:solid;color:var(--ink);background:var(--panel2)}
+  .slot.okk{border-color:var(--good)} .slot.noo{border-color:var(--bad)}
+  .pool{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .piece{text-align:left;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 12px;cursor:pointer;font-size:.85rem;font-family:monospace}
+  .piece:hover{border-color:var(--accent)} .piece.used{opacity:.3;pointer-events:none}
+  /* lab */
+  .lab{background:linear-gradient(160deg,#141f2b,#182636);border:1px solid #3a5168;border-radius:16px;padding:14px;margin:12px 0}
+  .labbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+  .labbar select{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:9px 10px;font-size:.88rem;max-width:100%}
+  .pystat{font-size:.8rem;color:var(--muted);background:#0c141d;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+  .retoinfo{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0;font-size:.9rem}
+  .labgrid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:820px){.labgrid{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}}
+  .lab label{display:block;font-size:.78rem;color:var(--muted);margin:6px 0 4px;font-weight:600}
+  textarea.code{width:100%;min-height:230px;background:#0b1118;color:#e8eef5;border:1px solid var(--line);border-radius:10px;padding:12px;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.88rem;line-height:1.5;resize:vertical;tab-size:4;white-space:pre}
+  textarea.stdin{width:100%;min-height:70px;background:#0b1118;color:#ffe9a8;border:1px solid var(--line);border-radius:10px;padding:10px;font-family:monospace;font-size:.85rem;resize:vertical}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .term{min-height:230px;max-height:420px;overflow:auto;background:#050a0f;border:1px solid #2b3a4d;border-radius:10px;padding:12px;font-size:.86rem;white-space:pre-wrap;word-break:break-word;margin:0}
+  .term .err{color:#ff8f8f}.term .hint{color:#ffe08a}.term .sys{color:#6f8194}
+  .chk{margin-top:10px;font-size:.88rem}
+  .chk .row{padding:6px 10px;border-radius:8px;margin:5px 0;background:var(--panel);border:1px solid var(--line)}
+  .chk .row.ok{border-color:rgba(72,213,151,.6)} .chk .row.no{border-color:rgba(255,122,122,.6)}
+  .win{background:rgba(72,213,151,.12);border:1px solid var(--good);border-radius:12px;padding:10px 12px;margin-top:8px;font-weight:700;color:var(--good)}
+  .ex{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0}
+  .ex .tag{font-size:.72rem;color:#2a2000;background:var(--py);padding:2px 9px;border-radius:999px;font-weight:700}
+  .ex h3{margin:8px 0 4px}
+  .ex .done{color:var(--good);font-weight:700;font-size:.82rem;margin-left:6px}
+  footer{text-align:center;color:var(--muted);font-size:.82rem;padding:24px 12px;border-top:1px solid var(--line)}
+  /* --- lección 9 --- */
+  .anat{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:10px 0}
+  .anat .tile code{color:var(--py)}
+  .sim{background:linear-gradient(160deg,#141f2b,#182636);border:1px solid #3a5168;border-radius:16px;padding:14px;margin:12px 0}
+  .simbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .simbar select,.simin input,.simin select{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:8px 10px;font-size:.9rem}
+  .simin{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0;font-family:monospace}
+  .simin input[type=number]{width:96px}
+  .simin input[type=text]{width:130px}
+  .simgrid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:820px){.simgrid{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)}}
+  .scode{background:#0b1118;border:1px solid var(--line);border-radius:12px;padding:8px 0;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.84rem;overflow-x:auto}
+  .sl{display:flex;align-items:center;gap:10px;padding:3px 12px;white-space:pre;transition:background .2s,opacity .2s;min-height:26px}
+  .sl .ln{color:#4f6175;width:20px;text-align:right;flex:0 0 auto}
+  .sl .tx{flex:1 1 auto}
+  .sl .st{flex:0 0 auto;font-family:system-ui;font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap}
+  .sl.dim{opacity:.38}
+  .sl.run{background:rgba(79,209,197,.13)} .sl.run .st{background:#1c4d47;color:#9ff3e8}
+  .sl.true{background:rgba(72,213,151,.13)} .sl.true .st{background:#1f4a3a;color:#9fe6b0}
+  .sl.false{background:rgba(255,122,122,.10)} .sl.false .st{background:#4a2323;color:#ffb3b3}
+  .sl.skip .st{background:#2a3442;color:#9fb0c3}
+  .sl.cur{box-shadow:inset 3px 0 0 var(--warn)}
+  .cov{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0}
+  .cov span{font-size:.78rem;border:1px dashed var(--line);border-radius:999px;padding:3px 10px;color:var(--muted)}
+  .cov span.hit{border-style:solid;border-color:var(--good);color:var(--good);background:rgba(72,213,151,.08)}
+  .slots2{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .slot2{display:flex;align-items:center;gap:10px;min-height:42px;border:2px dashed var(--line);border-radius:10px;padding:7px 12px;background:#0c141d;font-family:monospace;font-size:.88rem;cursor:pointer}
+  .slot2 .kwd{color:#ff9d6c;font-weight:700;min-width:44px}
+  .slot2.filled{border-style:solid;background:var(--panel2)}
+  .slot2.fixed{cursor:default;border-style:solid;opacity:.85}
+  .slot2.okk{border-color:var(--good)}.slot2.noo{border-color:var(--bad)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+  .chipb{font-family:monospace;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 12px;cursor:pointer;font-size:.86rem}
+  .chipb:hover{border-color:var(--accent)} .chipb.used{opacity:.3;pointer-events:none}
+  .mini{width:auto;font-size:.84rem} .mini td,.mini th{padding:5px 9px}
+  .ok{color:var(--good);font-weight:700}.ko{color:var(--bad);font-weight:700}
+  .bug{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:14px 0}
+  .bug .spec{background:rgba(75,139,190,.12);border:1px solid rgba(75,139,190,.45);border-radius:10px;padding:8px 12px;font-size:.88rem;margin:6px 0}
+  .bug .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+  .bug input{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:9px 10px;width:130px;font-family:monospace}
+  .bug.broken{border-color:var(--good)}
+  .bug .fix{display:none;margin-top:8px}
+  .bug.broken .fix{display:block}
+.lvh{margin:22px 0 8px;font-size:1.08rem}.lvh span{color:var(--muted);font-weight:500;font-size:.85rem}.lvh small{display:block;color:var(--muted);font-weight:400;font-size:.85rem;margin-top:2px}
+  /* --- componentes ciclos --- */
+  .itc{margin-left:auto;font-size:.85rem;color:var(--muted)} .itc b{color:var(--warn);font-size:1rem}
+  .vars{background:#0b1118;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .vars table{margin:0;width:100%;font-size:.84rem} .vars th,.vars td{padding:5px 10px}
+  .vars td.chg{color:var(--warn);font-weight:700;background:rgba(255,206,92,.08)}
+  .snote{font-size:.86rem;margin-top:8px;color:var(--ink);min-height:1.2em}
+  .scode{max-height:380px;overflow:auto}
+  .pz{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:14px 0}
+  .pzgrid{display:grid;grid-template-columns:1fr;gap:12px} @media(min-width:820px){.pzgrid{grid-template-columns:1fr 1fr}}
+  .pzlab{font-size:.78rem;color:var(--muted);font-weight:600;margin-bottom:5px}
+  .pzpool,.pzprog{display:flex;flex-direction:column;gap:6px;min-height:60px;background:#0b1118;border:1px dashed var(--line);border-radius:12px;padding:8px}
+  .pzline{font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.84rem;white-space:pre;text-align:left;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:7px 10px;cursor:pointer;overflow-x:auto}
+  .pzline:hover{border-color:var(--accent)} .pzline.used{opacity:.25;pointer-events:none}
+  .pzline.in{background:var(--panel2)} .pzline.good{border-color:var(--good)} .pzline.bad{border-color:var(--bad);background:rgba(255,122,122,.08)}
+  .pzempty{color:var(--muted);font-size:.82rem;text-align:center;padding:10px}
+  .tile small b{display:inline;margin:0}
+  .center{text-align:center}
+  .sl.cur{background:rgba(255,207,107,.10)}
+
+  /* --- lección 10 --- */
+  .rin{display:flex;gap:12px;flex-wrap:wrap}
+  .rin label,.snrow{font-family:monospace;font-size:.9rem;color:var(--muted)}
+  .rin input,.snrow input{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:8px 10px;width:84px;font-family:monospace;font-size:.95rem;margin-left:6px}
+  .snrow input{width:70px;margin:0 2px}
+  .rcall{margin:12px 0 8px;font-size:1rem;color:var(--ink)} .rcall b{color:var(--py)}
+  .rchips{display:flex;flex-wrap:wrap;gap:6px;min-height:34px}
+  .rchips span{background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-family:monospace;font-size:.88rem;animation:fade .25s ease}
+  .rchips span.more{background:none;border-style:dashed;color:var(--muted)}
+  .rmeta{margin-top:10px;font-size:.88rem;color:var(--muted)} .rmeta b{color:var(--warn)}
+  .sn .tgt{font-size:1rem;color:var(--py);margin-left:8px}
+  .snrow{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-top:10px}
+  .snrow .btn{margin-left:8px}
+  .sn.hit{border-color:var(--good)}
+  table.desk input{width:62px;background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:7px;padding:5px 7px;font-family:monospace;text-align:center}
+  table.desk input.good{border-color:var(--good);background:rgba(72,213,151,.1)} table.desk input.bad{border-color:var(--bad);background:rgba(255,122,122,.1)}
+  @media(min-width:860px){ #sniper{display:grid;grid-template-columns:1fr 1fr;gap:0 14px} #sniper .q{margin:7px 0} }
+
+</style>
+</head>
+<body>
+<header>
+  <h1>🔁 Ciclo for en Python</h1>
+  <p>contadores · acumuladores · range() · recorrer textos · ciclos anidados · <b>modo juego</b></p>
+  <div class="xpwrap">
+    <div class="xprow"><span>Nivel <b id="lvl">1</b> · <span id="lvlname">Novato del bucle</span></span><span><b id="xp">0</b> XP · <button class="linkbtn" id="resetProg" title="Borra tu XP e insignias en este navegador">reiniciar progreso</button></span></div>
+    <div class="xpbar"><div class="xpfill" id="xpfill"></div></div>
+    <div class="badges2" id="badges"></div>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="active" data-tab="intro">💡 Repetir</button>
+  <button data-tab="range">🎯 range()</button>
+  <button data-tab="acum">➕ Acumuladores</button>
+  <button data-tab="recorrer">🔤 Recorrer</button>
+  <button data-tab="anidados">🧱 Anidados</button>
+  <button data-tab="paso">🧭 Paso a paso</button>
+  <button data-tab="retos">🧨 Retos</button>
+  <button data-tab="lab" class="lab">🐍 Laboratorio</button>
+  <button data-tab="taller">🏆 Taller</button>
+</nav>
+
+<div class="wrap">
+
+<!-- ===================== REPETIR ===================== -->
+<section class="tab active" id="intro">
+  <h2>¿Por qué repetir?</h2>
+  <p>Muchos problemas hacen <b>lo mismo muchas veces</b>: liquidar el pago de cada empleado, revisar cada letra de una contraseña, calcular la cuota de cada mes de un crédito. Copiar la misma instrucción cien veces no es programar: para eso existen los <b>ciclos</b> (también llamados bucles o loops).</p>
+  <div class="grid3">
+    <div class="tile"><b>🧾 Nómina</b><small>Para cada uno de los 40 empleados: calcula su salario y súmalo al total de la empresa.</small></div>
+    <div class="tile"><b>🔐 Contraseña</b><small>Para cada carácter: ¿es mayúscula? ¿es número? Al final decide si la clave es segura.</small></div>
+    <div class="tile"><b>💳 Crédito</b><small>Para cada mes del 1 al 12: calcula el interés, la cuota y el saldo pendiente.</small></div>
+  </div>
+  <div class="grid3">
+    <div><span class="fname">sin_ciclo.py</span><pre><span class="fn">print</span>(<span class="st">"Empleado 1: pago registrado"</span>)
+<span class="fn">print</span>(<span class="st">"Empleado 2: pago registrado"</span>)
+<span class="fn">print</span>(<span class="st">"Empleado 3: pago registrado"</span>)
+<span class="cm"># ... 36 líneas más ...</span>
+<span class="fn">print</span>(<span class="st">"Empleado 40: pago registrado"</span>)</pre></div>
+    <div><span class="fname">con_ciclo.py</span><pre><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">1</span>, <span class="nu">41</span>):
+    <span class="fn">print</span>(<span class="st">f"Empleado {i}: pago registrado"</span>)</pre>
+    <p style="color:var(--muted);font-size:.88rem;margin-top:4px">2 líneas en lugar de 40. Y si mañana son 400 empleados, solo cambias un número.</p></div>
+  </div>
+
+  <h3>Anatomía del <code>for</code></h3>
+  <div class="anat">
+    <div class="tile"><b><code>for</code></b><small>Palabra reservada: "para cada…".</small></div>
+    <div class="tile"><b>variable</b><small>Toma un valor distinto en cada vuelta (aquí <code>i</code>).</small></div>
+    <div class="tile"><b><code>in</code></b><small>"…en…". Obligatoria.</small></div>
+    <div class="tile"><b>secuencia</b><small>De dónde salen los valores: <code>range()</code>, un texto o una lista.</small></div>
+    <div class="tile"><b><code>:</code> y sangría</b><small>Las líneas con 4 espacios son el <b>cuerpo</b>: se repiten en cada vuelta.</small></div>
+  </div>
+  <pre><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">1</span>, <span class="nu">6</span>):          <span class="cm"># i toma 1, 2, 3, 4, 5</span>
+    <span class="fn">print</span>(<span class="st">f"Vuelta {i}"</span>)       <span class="cm"># cuerpo: se repite 5 veces</span>
+<span class="fn">print</span>(<span class="st">"Terminó el ciclo"</span>)      <span class="cm"># sin sangría: se ejecuta una sola vez, al final</span></pre>
+  <div class="center"><button class="btn py" data-try="nomina">🐍 Probar un for en el laboratorio</button></div>
+
+  <h3>De PSeInt a Python</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>PSeInt</th><th>Python</th><th>Ojo</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">Para i &lt;- 1 Hasta 5 Hacer</td><td class="mono">for i in range(1, 6):</td><td>la parada de <code>range</code> <b>no se incluye</b>: para llegar a 5 se escribe 6</td></tr>
+      <tr><td class="mono">Para i &lt;- 0 Hasta 10 Con Paso 2 Hacer</td><td class="mono">for i in range(0, 11, 2):</td><td>el paso va de tercero</td></tr>
+      <tr><td class="mono">Para i &lt;- 5 Hasta 1 Con Paso -1 Hacer</td><td class="mono">for i in range(5, 0, -1):</td><td>hacia atrás: paso negativo y parada un número <b>antes</b> del final</td></tr>
+      <tr><td class="mono">FinPara</td><td>(desaparece)</td><td>la <b>sangría</b> marca dónde termina el cuerpo</td></tr>
+      <tr><td class="mono">c &lt;- c + 1</td><td class="mono">c += 1</td><td>forma corta: también <code>-=</code>, <code>*=</code>, <code>/=</code></td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><b>¿for o while?</b> Usa <code>for</code> cuando <b>sabes cuántas vueltas</b> habrá o cuando recorres una colección (un texto, una lista). Cuando la cantidad de vueltas depende de algo que ocurre durante la ejecución, usarás <code>while</code> (próxima lección).</div>
+</section>
+
+<!-- ===================== RANGE ===================== -->
+<section class="tab" id="range">
+  <h2>🎯 La función <code>range()</code></h2>
+  <p><code>range(inicio, parada, paso)</code> genera una secuencia de enteros. El ciclo da <b>una vuelta por cada número</b> generado.</p>
+  <div class="grid3">
+    <div class="tile"><b>inicio</b><small>Primer valor. Si lo omites, vale <code>0</code>.</small></div>
+    <div class="tile"><b>parada</b><small>Obligatoria. <b>Nunca se incluye</b>: el último valor queda antes de ella.</small></div>
+    <div class="tile"><b>paso</b><small>Cuánto cambia en cada vuelta. Si lo omites, vale <code>1</code>. Puede ser negativo, nunca 0.</small></div>
+  </div>
+  <div class="tablewrap"><table class="mini">
+    <thead><tr><th>Escribes</th><th>Genera</th><th>Vueltas</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">range(4)</td><td class="mono">0 1 2 3</td><td>4</td></tr>
+      <tr><td class="mono">range(3, 8)</td><td class="mono">3 4 5 6 7</td><td>5</td></tr>
+      <tr><td class="mono">range(5, 26, 5)</td><td class="mono">5 10 15 20 25</td><td>5</td></tr>
+      <tr><td class="mono">range(9, 0, -3)</td><td class="mono">9 6 3</td><td>3</td></tr>
+      <tr><td class="mono">range(6, 2)</td><td class="mono">(nada)</td><td>0 — el paso es +1 y ya empieza después de la parada</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>🔬 Explorador de range</h3>
+  <p>Cambia los tres valores y observa qué secuencia sale, cuántas vueltas daría el ciclo y cómo se escribiría en PSeInt.</p>
+  <div class="card rexp">
+    <div class="rin">
+      <label>inicio <input type="number" id="rxA" value="1"></label>
+      <label>parada <input type="number" id="rxB" value="11"></label>
+      <label>paso <input type="number" id="rxC" value="2"></label>
+    </div>
+    <div class="mono rcall" id="rxCall"></div>
+    <div class="rchips" id="rxOut"></div>
+    <div class="rmeta" id="rxMeta"></div>
+  </div>
+
+  <h3>🎯 Francotirador del range</h3>
+  <p><b>Enunciado:</b> para cada objetivo, escribe los valores de <code>range(inicio, parada, paso)</code> que generan <b>exactamente</b> esa secuencia y pulsa <b>Disparar</b>. Cada acierto da 10 XP; acierta los 8 para la insignia <b>Francotirador</b>.</p>
+  <div class="scorebar"><span>Blancos: <b id="snScore">0</b> / <b id="snTotal">8</b></span><button class="btn ghost" id="snReset">Reiniciar</button></div>
+  <div id="sniper"></div>
+
+  <h3>🔢 ¿Cuántas vueltas da?</h3>
+  <p><b>Enunciado:</b> sin ejecutarlo, decide cuántas veces se repite el cuerpo de cada ciclo.</p>
+  <div class="scorebar"><span>Aciertos: <b id="vqScore">0</b> / <b id="vqTotal">8</b></span><button class="btn ghost" id="vqReset">Reiniciar</button></div>
+  <div id="vqQuiz"></div>
+</section>
+
+<!-- ===================== CONTADORES Y ACUMULADORES ===================== -->
+<section class="tab" id="acum">
+  <h2>➕ Contadores y acumuladores</h2>
+  <p>Dentro de un ciclo casi siempre necesitas <b>recordar algo</b> de las vueltas anteriores. Para eso hay dos patrones:</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th></th><th>Contador</th><th>Acumulador</th></tr></thead>
+    <tbody>
+      <tr><td><b>¿Qué guarda?</b></td><td>Cuántas veces ocurrió algo</td><td>La suma (o el producto) de valores que cambian</td></tr>
+      <tr><td><b>¿Cómo cambia?</b></td><td>Una cantidad <b>fija</b>: <code>c += 1</code></td><td>Un valor que <b>cambia</b>: <code>total += precio</code></td></tr>
+      <tr><td><b>¿Con qué empieza?</b></td><td><code>0</code></td><td><code>0</code> si suma (0 + x = x) · <code>1</code> si multiplica (1 × x = x)</td></tr>
+      <tr><td><b>¿Dónde se crea?</b></td><td colspan="2"><b>Antes</b> del ciclo. Si lo creas dentro, se reinicia en cada vuelta.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Contador: días activos de la semana</h3>
+  <p>Un reloj inteligente considera "activo" un día con <b>8000 pasos o más</b>. ¿Cuántos días activos tuviste?</p>
+  <span class="fname">pasos.py</span>
+  <pre>dias_activos = <span class="nu">0</span>                       <span class="cm"># contador: empieza en 0</span>
+<span class="kw">for</span> dia <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">1</span>, <span class="nu">8</span>):                <span class="cm"># 7 vueltas: días 1 a 7</span>
+    pasos = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">f"Pasos del día {dia}: "</span>))
+    <span class="kw">if</span> pasos &gt;= <span class="nu">8000</span>:
+        dias_activos += <span class="nu">1</span>              <span class="cm"># solo cuenta cuando ocurre el evento</span>
+<span class="fn">print</span>(<span class="st">f"Días activos: {dias_activos} de 7"</span>)</pre>
+  <div class="center"><button class="btn py" data-try="pasos">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>Acumulador de suma: la cuenta del mercado</h3>
+  <span class="fname">mercado.py</span>
+  <pre>total = <span class="nu">0</span>                              <span class="cm"># acumulador de suma: empieza en 0</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">1</span>, <span class="nu">4</span>):
+    precio = <span class="fn">float</span>(<span class="fn">input</span>(<span class="st">f"Precio del producto {i}: "</span>))
+    total += precio                    <span class="cm"># suma un valor que cambia en cada vuelta</span>
+<span class="fn">print</span>(<span class="st">f"Total sin IVA: {total:.2f}"</span>)
+<span class="fn">print</span>(<span class="st">f"Total con IVA: {total * 1.19:.2f}"</span>)</pre>
+  <div class="tablewrap"><table class="mini">
+    <thead><tr><th>Vuelta</th><th>precio</th><th>total</th></tr></thead>
+    <tbody><tr><td>antes</td><td>–</td><td>0</td></tr><tr><td>1</td><td>4500</td><td>4500</td></tr><tr><td>2</td><td>12900</td><td>17400</td></tr><tr><td>3</td><td>3200</td><td>20600</td></tr></tbody>
+  </table></div>
+  <div class="center"><button class="btn py" data-try="mercado">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>Acumulador de producto: potencia sin usar **</h3>
+  <span class="fname">potencia.py</span>
+  <pre>base = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Base: "</span>))
+exponente = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Exponente: "</span>))
+resultado = <span class="nu">1</span>                          <span class="cm"># acumulador de producto: empieza en 1</span>
+<span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(exponente):             <span class="cm"># _ : no necesito el valor de la vuelta</span>
+    resultado *= base
+<span class="fn">print</span>(<span class="st">f"{base}^{exponente} = {resultado}"</span>)</pre>
+  <div class="center"><button class="btn py" data-try="potencia">🐍 Probarlo en el laboratorio</button></div>
+  <div class="note"><b>Reto mental:</b> ¿qué pasaría si <code>resultado</code> empezara en 0? (Pista: 0 multiplicado por cualquier cosa…)</div>
+
+  <h3>📋 Prueba de escritorio</h3>
+  <p><b>Enunciado:</b> ejecuta cada programa "a mano": escribe el valor de cada variable <b>al final de cada vuelta</b> y pulsa <b>Comprobar</b>. Las tres correctas te dan la insignia <b>Escritorio impecable</b>.</p>
+  <div id="desk"></div>
+</section>
+
+<!-- ===================== RECORRER ===================== -->
+<section class="tab" id="recorrer">
+  <h2>🔤 Recorrer textos y listas</h2>
+  <p>El <code>for</code> no solo cuenta números: puede recorrer <b>cualquier secuencia</b>. Con un texto, la variable toma <b>un carácter por vuelta</b>; con una lista, <b>un elemento por vuelta</b>. No necesitas índices.</p>
+  <div class="grid3">
+    <div><span class="fname">letras.py</span><pre><span class="kw">for</span> letra <span class="kw">in</span> <span class="st">"Lógica"</span>:
+    <span class="fn">print</span>(letra, end=<span class="st">" "</span>)</pre><pre class="tout">L ó g i c a</pre></div>
+    <div><span class="fname">materias.py</span><pre>materias = [<span class="st">"Lógica"</span>, <span class="st">"Cálculo"</span>, <span class="st">"Física"</span>]
+<span class="kw">for</span> m <span class="kw">in</span> materias:
+    <span class="fn">print</span>(<span class="st">"Estudio"</span>, m)</pre><pre class="tout">Estudio Lógica
+Estudio Cálculo
+Estudio Física</pre></div>
+  </div>
+  <div class="tip"><b>end=" "</b> cambia lo que <code>print</code> pone al final: en vez de saltar de línea, deja un espacio. Así varias vueltas escriben en la <b>misma línea</b>. Un <code>print()</code> vacío hace el salto cuando lo necesites.</div>
+
+  <h3>Ejemplo: ¿mi contraseña es segura?</h3>
+  <span class="fname">clave.py</span>
+  <pre>clave = <span class="fn">input</span>(<span class="st">"Crea una contraseña: "</span>)
+mayusculas = <span class="nu">0</span>
+digitos = <span class="nu">0</span>
+<span class="kw">for</span> c <span class="kw">in</span> clave:                        <span class="cm"># un carácter por vuelta</span>
+    <span class="kw">if</span> c.isupper():                    <span class="cm"># ¿es letra mayúscula?</span>
+        mayusculas += <span class="nu">1</span>
+    <span class="kw">elif</span> c.isdigit():                  <span class="cm"># ¿es un dígito?</span>
+        digitos += <span class="nu">1</span>
+<span class="kw">if</span> <span class="fn">len</span>(clave) &gt;= <span class="nu">8</span> <span class="kw">and</span> mayusculas &gt;= <span class="nu">1</span> <span class="kw">and</span> digitos &gt;= <span class="nu">1</span>:
+    <span class="fn">print</span>(<span class="st">"🔒 Contraseña segura"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"⚠️ Débil: usa 8 o más caracteres, una mayúscula y un número"</span>)</pre>
+  <div class="center"><button class="btn py" data-try="clave">🐍 Probarlo en el laboratorio</button></div>
+  <div class="tablewrap"><table class="mini">
+    <thead><tr><th>Herramienta</th><th>Qué hace</th><th>Ejemplo</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">len(x)</td><td>cantidad de caracteres o elementos</td><td class="mono">len("hola") → 4</td></tr>
+      <tr><td class="mono">c.isupper()</td><td>¿es mayúscula?</td><td class="mono">"A".isupper() → True</td></tr>
+      <tr><td class="mono">c.isdigit()</td><td>¿es un dígito?</td><td class="mono">"7".isdigit() → True</td></tr>
+      <tr><td class="mono">c.isalpha()</td><td>¿es una letra?</td><td class="mono">"ñ".isalpha() → True</td></tr>
+      <tr><td class="mono">texto.lower()</td><td>copia en minúsculas</td><td class="mono">"HoLa".lower() → "hola"</td></tr>
+      <tr><td class="mono">c in "aeiou"</td><td>¿el carácter está en ese texto?</td><td class="mono">"e" in "aeiou" → True</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Ejemplo: una lista de precios</h3>
+  <span class="fname">carrito.py</span>
+  <pre>precios = [<span class="nu">3500</span>, <span class="nu">12000</span>, <span class="nu">4800</span>, <span class="nu">2200</span>]   <span class="cm"># una lista: valores entre [ ] separados por comas</span>
+total = <span class="nu">0</span>
+<span class="kw">for</span> p <span class="kw">in</span> precios:
+    total += p
+<span class="fn">print</span>(<span class="st">f"{len(precios)} productos · total {total}"</span>)
+<span class="fn">print</span>(<span class="st">f"Con IVA: {total * 1.19:.2f}"</span>)</pre>
+  <div class="center"><button class="btn py" data-try="carrito">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>🎯 ¿Qué imprime?</h3>
+  <p><b>Enunciado:</b> predice exactamente la salida de cada programa.</p>
+  <div class="scorebar"><span>Aciertos: <b id="qiScore">0</b> / <b id="qiTotal">5</b></span><button class="btn ghost" id="qiReset">Reiniciar</button></div>
+  <div id="qiQuiz"></div>
+</section>
+
+<!-- ===================== ANIDADOS ===================== -->
+<section class="tab" id="anidados">
+  <h2>🧱 Ciclos anidados</h2>
+  <p>Un ciclo <b>dentro</b> de otro. Por cada vuelta del ciclo <b>externo</b>, el ciclo <b>interno</b> se ejecuta <b>completo</b>, desde el principio. Es como un reloj: por cada hora pasan los 60 minutos.</p>
+  <span class="fname">sala.py — los puestos de una sala de cine</span>
+  <pre><span class="kw">for</span> fila <span class="kw">in</span> <span class="st">"ABC"</span>:                     <span class="cm"># externo: 3 vueltas (A, B, C)</span>
+    <span class="kw">for</span> asiento <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">1</span>, <span class="nu">6</span>):        <span class="cm"># interno: 5 vueltas por cada fila</span>
+        <span class="fn">print</span>(<span class="st">f"{fila}{asiento}"</span>, end=<span class="st">" "</span>)
+    <span class="fn">print</span>()                            <span class="cm"># dentro del externo, fuera del interno: salto de línea</span></pre>
+  <pre class="tout">A1 A2 A3 A4 A5
+B1 B2 B3 B4 B5
+C1 C2 C3 C4 C5</pre>
+  <div class="center"><button class="btn py" data-try="sala">🐍 Probarlo en el laboratorio</button></div>
+  <div class="note"><b>¿Cuántas veces se ejecuta el print interno?</b> vueltas del externo × vueltas del interno = 3 × 5 = <b>15</b>. Fíjate en la sangría del <code>print()</code> vacío: si lo corres 4 espacios a la derecha, el salto de línea ocurre después de cada asiento.</div>
+
+  <h3>El interno puede depender del externo</h3>
+  <span class="fname">triangulo.py</span>
+  <pre>n = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Altura: "</span>))
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">1</span>, n + <span class="nu">1</span>):
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(i):                 <span class="cm"># en la fila i hay i asteriscos</span>
+        <span class="fn">print</span>(<span class="st">"*"</span>, end=<span class="st">""</span>)
+    <span class="fn">print</span>()</pre>
+  <div class="grid3">
+    <pre class="tout">*
+**
+***
+****</pre>
+    <div class="tip" style="margin:0">Con <code>n = 4</code> el interno da 1, 2, 3 y 4 vueltas: <b>10</b> asteriscos en total. Mira este programa vuelta por vuelta en <b>🧭 Paso a paso</b>.</div>
+  </div>
+  <div class="center"><button class="btn py" data-try="triangulo">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>🔢 ¿Cuántas veces se ejecuta?</h3>
+  <p><b>Enunciado:</b> cuenta cuántas veces se ejecuta la línea marcada con <code># ←</code>.</p>
+  <div class="scorebar"><span>Aciertos: <b id="naScore">0</b> / <b id="naTotal">5</b></span><button class="btn ghost" id="naReset">Reiniciar</button></div>
+  <div id="naQuiz"></div>
+</section>
+
+<!-- ===================== PASO A PASO ===================== -->
+<section class="tab" id="paso">
+  <h2>🧭 Paso a paso</h2>
+  <p>Elige un programa, cambia el dato de entrada y avanza con <b>▶ Paso</b> (o <b>⏩ Automático</b>). Verás la línea que se ejecuta, el valor de cada variable (en amarillo la que acaba de cambiar), el número de vuelta y la salida.</p>
+  <div class="note">🎯 <b>Misión:</b> recorre los tres programas hasta el final. Cada uno da 15 XP y los tres, la insignia <b>Rastreador</b>. Antes de cada paso, intenta adivinar qué va a pasar.</div>
+  <div class="sim" id="sim10"></div>
+  <div class="tip">🔭 Fuera de clase puedes ver cualquier programa así en <b>pythontutor.com</b>: elige Python 3, pega tu código y pulsa <i>Visualize Execution</i>.</div>
+</section>
+
+<!-- ===================== RETOS ===================== -->
+<section class="tab" id="retos">
+  <h2>🧩 Arma el programa</h2>
+  <p><b>Enunciado:</b> las líneas de cada programa están desordenadas (con su sangría). Tócalas en el orden correcto para armarlo. Cada programa armado da 15 XP; los tres, la insignia <b>Ensamblador</b>.</p>
+  <div id="parsons"></div>
+
+  <h2>🕵️ Caza el error</h2>
+  <p><b>Enunciado:</b> ¿qué pasa al ejecutar cada fragmento? Algunos producen un error con mensaje; otros corren pero no hacen lo que se quería (<b>error lógico</b>).</p>
+  <div class="scorebar"><span>Cazados: <b id="ceScore">0</b> / <b id="ceTotal">8</b></span><button class="btn ghost" id="ceReset">Reiniciar</button></div>
+  <div id="ceQuiz"></div>
+</section>
+
+<!-- ===================== LABORATORIO ===================== -->
+<section class="tab" id="lab">
+  <h2>🐍 Laboratorio: Python de verdad en tu navegador</h2>
+  <p>Escribe tu programa, pon los datos de entrada (uno por línea) y pulsa <b>▶ Ejecutar</b>. Elige un <b>reto</b> y pulsa <b>✅ Comprobar reto</b>: el laboratorio lo prueba con varios datos, incluidos los casos límite. Si tu programa queda en un ciclo infinito, el laboratorio lo detiene y te avisa. <small style="color:var(--muted)">La primera vez se descarga Python (≈ 12 MB); necesitas conexión a internet.</small></p>
+  <div class="lab">
+    <div class="labbar">
+      <select id="retoSel" aria-label="Reto"></select>
+      <span class="pystat" id="pyStatus">⚪ Python sin cargar</span>
+    </div>
+    <div class="retoinfo" id="retoInfo"></div>
+    <div class="labgrid">
+      <div>
+        <label for="code">📝 Tu programa (.py) · <span style="font-weight:400">Tab = 4 espacios · Ctrl+Enter = ejecutar</span></label>
+        <textarea id="code" class="code" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+        <label for="stdin">⌨️ Entradas: una por línea (cada <code>input()</code> toma la siguiente)</label>
+        <textarea id="stdin" class="stdin" spellcheck="false"></textarea>
+        <div class="btns">
+          <button class="btn py" id="runBtn">▶ Ejecutar</button>
+          <button class="btn" id="checkBtn">✅ Comprobar reto</button>
+          <button class="btn ghost" id="resetCode">↺ Plantilla</button>
+          <button class="btn ghost" id="solBtn">👀 Solución</button>
+        </div>
+      </div>
+      <div>
+        <label>🖥️ Terminal</label>
+        <pre class="term" id="term"><span class="sys">La salida de tu programa aparecerá aquí.</span></pre>
+        <div class="chk" id="checkRes"></div>
+      </div>
+    </div>
+  </div>
+  <div class="tip">🏅 Los retos suben de dificultad y de premio: <b>🟢 Nivel 1 = 20 XP</b> · <b>🟡 Nivel 2 = 30 XP</b> · <b>🟠 Nivel 3 = 40 XP</b> · <b>🔴 Nivel 4 ★ = 60 XP</b>. Si abres la solución antes de superarlo, da la <b>mitad</b>. Supera 6 retos para la insignia <b>Iterador</b>, los 3 del nivel 4 para <b>Arquitecto</b> y los 12 para <b>Leyenda</b>.</div>
+</section>
+
+<!-- ===================== TALLER ===================== -->
+<section class="tab" id="taller">
+  <h2>🏆 Taller — 12 ejercicios de ciclos y cálculo</h2>
+  <p>Los ejercicios van de menor a mayor dificultad, en <b>4 niveles</b>. Todos combinan <b>ciclos</b> con <b>cálculos</b>: porcentajes, IVA, intereses, comisiones, divisores y formatos de salida. Antes de programar, responde: ¿cuántas vueltas da el ciclo?, ¿qué cambia en cada vuelta?, ¿qué contadores o acumuladores necesito y dónde se crean? Resuélvelos en el <b>🐍 Laboratorio</b> (o en IDLE/Thonny) e intenta antes de abrir la solución.</p>
+  <div class="card">
+    <h3 style="margin-top:0">🧮 Caja de herramientas</h3>
+    <div class="tablewrap"><table class="mini"><thead><tr><th>Quiero…</th><th>En Python</th><th>Ejemplo</th></tr></thead><tbody>
+      <tr><td>repetir N veces</td><td class="mono">for _ in range(n):</td><td class="mono">range(3) → 0 1 2</td></tr>
+      <tr><td>contar de a hasta b (incluido)</td><td class="mono">range(a, b + 1)</td><td class="mono">range(1, 5 + 1) → 1 2 3 4 5</td></tr>
+      <tr><td>contar hacia atrás</td><td class="mono">range(b, a - 1, -1)</td><td class="mono">range(3, 0, -1) → 3 2 1</td></tr>
+      <tr><td>contar un evento</td><td class="mono">c = 0 … c += 1</td><td>dentro de un <code>if</code></td></tr>
+      <tr><td>sumar valores</td><td class="mono">t = 0 … t += x</td><td>el acumulador se crea antes del ciclo</td></tr>
+      <tr><td>multiplicar valores</td><td class="mono">p = 1 … p *= x</td><td>empieza en 1, no en 0</td></tr>
+      <tr><td>aumentar un saldo un %</td><td class="mono">s += s * tasa / 100</td><td class="mono">1000000 al 2 % → 1020000.0</td></tr>
+      <tr><td>qué % es una parte</td><td class="mono">parte / total * 100</td><td class="mono">3 / 5 * 100 → 60.0</td></tr>
+      <tr><td>escribir en la misma línea</td><td class="mono">print(x, end=" ")</td><td>y luego <code>print()</code> para saltar</td></tr>
+      <tr><td>reservar ancho</td><td class="mono">f"{x:4d}"  f"{x:2d}"</td><td class="mono">f"{7:4d}" → "   7"</td></tr>
+      <tr><td>repetir un texto</td><td class="mono">" " * 3</td><td class="mono">"ab" * 2 → "abab"</td></tr>
+    </tbody></table></div>
+  </div>
+  <div id="ejercicios"></div>
+</section>
+
+</div>
+<div class="xppop" id="xppop"></div>
+<footer>Material interactivo · Lógica de Programación 1 · Ciclo for en Python (Python 3.14)</footer>
+
+<script>
+const CFG = {"key": "lp1-clase10-for-v1", "draft": "lp1-c10-draft-", "firstRunLabel": "¡Hola, for!"};
+const RETOS = [{"id": "precios", "lvl": 1, "xp": 20, "t": "1. Lista de precios con IVA", "tag": "Nivel 1 · for + range", "d": "Una papelería quiere pegar en la vitrina una lista con el precio de comprar <b>1, 2, 3… hasta N unidades<\/b> de un mismo producto, <b>ya con el IVA del 19 %<\/b>. Pide el precio unitario sin IVA (real) y la cantidad máxima N (entero), y muestra una línea por cada cantidad con el formato <code>k unidades: X<\/code> (2 decimales).<br><b>Entrada:<\/b> un real y un entero · <b>Salida:<\/b> N líneas<br><b>Ejemplo:<\/b> 10000 y 3 → <code>1 unidades: 11900.00<\/code> · <code>2 unidades: 23800.00<\/code> · <code>3 unidades: 35700.00<\/code>.<br>💡 <b>Pista:<\/b> piensa qué valores debe tomar la variable del ciclo (¿desde cuál y hasta cuál?) y recuerda que <code>range<\/code> nunca incluye su valor de parada.", "starter": "precio = float(input(\"Precio sin IVA: \"))\nn = int(input(\"Cantidad máxima: \"))\n", "sol": "precio = float(input(\"Precio sin IVA: \"))\nn = int(input(\"Cantidad máxima: \"))\nfor k in range(1, n + 1):\n    total = precio * k * 1.19\n    print(f\"{k} unidades: {total:.2f}\")", "tests": [{"in": ["10000", "3"], "must": ["(?:^|\\n)1 unidad(?:es)?[^\\n\\d]*(?<![\\d.])(?:11899\\.99|11900(?:\\.0{1,2})?|11900\\.01)(?!\\d)", "(?:^|\\n)2 unidad(?:es)?[^\\n\\d]*(?<![\\d.])(?:23799\\.99|23800(?:\\.0{1,2})?|23800\\.01)(?!\\d)", "(?:^|\\n)3 unidad(?:es)?[^\\n\\d]*(?<![\\d.])(?:35699\\.99|35700(?:\\.0{1,2})?|35700\\.01)(?!\\d)"], "not": ["(?:^|\\n)4 unidad", "(?:^|\\n)0 unidad"], "show": "3 líneas; la última: 3 unidades: 35700.00"}, {"in": ["4500", "5"], "must": ["(?:^|\\n)1 unidad(?:es)?[^\\n\\d]*(?<![\\d.])(?:5354\\.99|5355(?:\\.0{1,2})?|5355\\.01)(?!\\d)", "(?:^|\\n)2 unidad(?:es)?[^\\n\\d]*(?<![\\d.])(?:10709\\.99|10710(?:\\.0{1,2})?|10710\\.01)(?!\\d)", "(?:^|\\n)3 unidad(?:es)?[^\\n\\d]*(?<![\\d.])(?:16064\\.99|16065(?:\\.0{1,2})?|16065\\.01)(?!\\d)", "(?:^|\\n)4 unidad(?:es)?[^\\n\\d]*(?<![\\d.])(?:21419\\.99|21420(?:\\.0{1,2})?|21420\\.01)(?!\\d)", "(?:^|\\n)5 unidad(?:es)?[^\\n\\d]*(?<![\\d.])(?:26774\\.99|26775(?:\\.0{1,2})?|26775\\.01)(?!\\d)"], "not": ["(?:^|\\n)6 unidad", "(?:^|\\n)0 unidad"], "show": "5 líneas; la última: 5 unidades: 26775.00"}, {"in": ["2990", "1"], "must": ["(?:^|\\n)1 unidad(?:es)?[^\\n\\d]*(?<![\\d.])(?:3558\\.09|3558\\.10?|3558\\.11)(?!\\d)"], "not": ["(?:^|\\n)2 unidad", "(?:^|\\n)0 unidad"], "show": "1 líneas; la última: 1 unidades: 3558.10"}, {"in": ["1250.5", "7"], "must": ["(?:^|\\n)1 unidad(?:es)?[^\\n\\d]*(?<![\\d.])(?:1488\\.09|1488\\.10?|1488\\.11)(?!\\d)", "(?:^|\\n)2 unidad(?:es)?[^\\n\\d]*(?<![\\d.])(?:2976\\.18|2976\\.19|2976\\.20?)(?!\\d)", "(?:^|\\n)3 unidad(?:es)?[^\\n\\d]*(?<![\\d.])(?:4464\\.27|4464\\.28|4464\\.29)(?!\\d)", "(?:^|\\n)4 unidad(?:es)?[^\\n\\d]*(?<![\\d.])(?:5952\\.37|5952\\.38|5952\\.39)(?!\\d)", "(?:^|\\n)5 unidad(?:es)?[^\\n\\d]*(?<![\\d.])(?:7440\\.46|7440\\.47|7440\\.48)(?!\\d)", "(?:^|\\n)6 unidad(?:es)?[^\\n\\d]*(?<![\\d.])(?:8928\\.56|8928\\.57|8928\\.58)(?!\\d)", "(?:^|\\n)7 unidad(?:es)?[^\\n\\d]*(?<![\\d.])(?:10416\\.65|10416\\.66|10416\\.67)(?!\\d)"], "not": ["(?:^|\\n)8 unidad", "(?:^|\\n)0 unidad"], "show": "7 líneas; la última: 7 unidades: 10416.66"}]}, {"id": "alcancia", "lvl": 1, "xp": 20, "t": "2. Alcancía semanal", "tag": "Nivel 1 · for + acumulador", "d": "Durante varias semanas guardas dinero en una alcancía. Pide cuántas semanas N vas a registrar y luego, <b>semana por semana<\/b>, cuánto ahorraste (real). Al final muestra <code>Total ahorrado: X<\/code> y <code>Promedio semanal: X<\/code> con 2 decimales. Si N es 0 o negativo, muestra <code>No hay semanas para calcular<\/code>.<br><b>Entrada:<\/b> un entero N y luego N reales · <b>Salida:<\/b> total y promedio<br><b>Ejemplo:<\/b> 4 semanas: 20000, 15000, 0, 25000 → <code>Total ahorrado: 60000.00<\/code> · <code>Promedio semanal: 15000.00<\/code>.<br>💡 <b>Pista:<\/b> necesitas una variable que vaya juntando los valores; créala <b>antes<\/b> del ciclo con el valor que no altera una suma. ¿Qué pasaría con el promedio si N fuera 0?", "starter": "n = int(input(\"¿Cuántas semanas? \"))\n", "sol": "n = int(input(\"¿Cuántas semanas? \"))\nif n <= 0:\n    print(\"No hay semanas para calcular\")\nelse:\n    total = 0\n    for semana in range(1, n + 1):\n        ahorro = float(input(f\"Semana {semana}: \"))\n        total += ahorro\n    print(f\"Total ahorrado: {total:.2f}\")\n    print(f\"Promedio semanal: {total / n:.2f}\")", "tests": [{"in": ["4", "20000", "15000", "0", "25000"], "must": ["total[^\\n\\d]*(?<![\\d.])(?:59999\\.99|60000(?:\\.0{1,2})?|60000\\.01)(?!\\d)", "promedio[^\\n\\d]*(?<![\\d.])(?:14999\\.99|15000(?:\\.0{1,2})?|15000\\.01)(?!\\d)"], "not": [], "show": "Total ahorrado: 60000.00 · Promedio semanal: 15000.00"}, {"in": ["3", "12500.5", "8000", "10000"], "must": ["total[^\\n\\d]*(?<![\\d.])(?:30500\\.49|30500\\.50?|30500\\.51)(?!\\d)", "promedio[^\\n\\d]*(?<![\\d.])(?:10166\\.82|10166\\.83|10166\\.84)(?!\\d)"], "not": [], "show": "Total ahorrado: 30500.50 · Promedio semanal: 10166.83"}, {"in": ["0"], "must": ["no hay semanas"], "not": ["total"], "show": "No hay semanas para calcular"}, {"in": ["1", "7000"], "must": ["total[^\\n\\d]*(?<![\\d.])(?:6999\\.99|7000(?:\\.0{1,2})?|7000\\.01)(?!\\d)", "promedio[^\\n\\d]*(?<![\\d.])(?:6999\\.99|7000(?:\\.0{1,2})?|7000\\.01)(?!\\d)"], "not": [], "show": "Total ahorrado: 7000.00 · Promedio semanal: 7000.00"}]}, {"id": "aprobados", "lvl": 1, "xp": 20, "t": "3. ¿Cuántos aprobaron?", "tag": "Nivel 1 · for + contadores", "d": "El docente quiere un resumen rápido de un parcial. Pide la cantidad de estudiantes N (entero mayor que 0) y luego la nota de cada uno (real de 0 a 5). Una nota aprueba si es de <b>3.0 o más<\/b>. Muestra <code>Aprobados: A<\/code>, <code>Reprobados: R<\/code> y <code>Porcentaje de aprobación: P%<\/code> con 2 decimales.<br><b>Entrada:<\/b> un entero N y N reales · <b>Salida:<\/b> tres líneas<br><b>Ejemplo:<\/b> 5 notas: 3.0, 2.9, 4.5, 1.0, 3.5 → <code>Aprobados: 3<\/code> · <code>Reprobados: 2<\/code> · <code>Porcentaje de aprobación: 60.00%<\/code>.<br>💡 <b>Pista:<\/b> un contador cuenta <b>eventos<\/b>: decide dentro del ciclo qué evento ocurrió con cada nota. El porcentaje compara la parte con el total de estudiantes.", "starter": "n = int(input(\"Cantidad de estudiantes: \"))\n", "sol": "n = int(input(\"Cantidad de estudiantes: \"))\naprobados = 0\nfor i in range(n):\n    nota = float(input(f\"Nota {i + 1}: \"))\n    if nota >= 3.0:\n        aprobados += 1\nreprobados = n - aprobados\nprint(f\"Aprobados: {aprobados}\")\nprint(f\"Reprobados: {reprobados}\")\nprint(f\"Porcentaje de aprobación: {aprobados / n * 100:.2f}%\")", "tests": [{"in": ["5", "3.0", "2.9", "4.5", "1.0", "3.5"], "must": ["aprobados[^\\n\\d]*(?<![\\d.])3(?:\\.0{1,2})?(?!\\d)", "reprobados[^\\n\\d]*(?<![\\d.])2(?:\\.0{1,2})?(?!\\d)", "porcentaje[^\\n\\d]*(?<![\\d.])(?:59\\.99|60(?:\\.0{1,2})?|60\\.01)(?!\\d)"], "not": [], "show": "Aprobados: 3 · Reprobados: 2 · Porcentaje de aprobación: 60.00%"}, {"in": ["4", "5", "5", "5", "5"], "must": ["aprobados[^\\n\\d]*(?<![\\d.])4(?:\\.0{1,2})?(?!\\d)", "reprobados[^\\n\\d]*(?<![\\d.])0(?:\\.0{1,2})?(?!\\d)", "porcentaje[^\\n\\d]*(?<![\\d.])(?:99\\.99|100(?:\\.0{1,2})?|100\\.01)(?!\\d)"], "not": [], "show": "Aprobados: 4 · Reprobados: 0 · Porcentaje de aprobación: 100.00%"}, {"in": ["3", "2", "2.5", "2.99"], "must": ["aprobados[^\\n\\d]*(?<![\\d.])0(?:\\.0{1,2})?(?!\\d)", "reprobados[^\\n\\d]*(?<![\\d.])3(?:\\.0{1,2})?(?!\\d)", "porcentaje[^\\n\\d]*(?<![\\d.])(?:0(?:\\.0{1,2})?|0\\.01)(?!\\d)"], "not": [], "show": "Aprobados: 0 · Reprobados: 3 · Porcentaje de aprobación: 0.00%"}, {"in": ["6", "3.2", "2.8", "4.0", "3.0", "2.0", "4.9"], "must": ["aprobados[^\\n\\d]*(?<![\\d.])4(?:\\.0{1,2})?(?!\\d)", "reprobados[^\\n\\d]*(?<![\\d.])2(?:\\.0{1,2})?(?!\\d)", "porcentaje[^\\n\\d]*(?<![\\d.])(?:66\\.66|66\\.67|66\\.68)(?!\\d)"], "not": [], "show": "Aprobados: 4 · Reprobados: 2 · Porcentaje de aprobación: 66.67%"}]}, {"id": "interes", "lvl": 2, "xp": 30, "t": "4. Interés compuesto mes a mes", "tag": "Nivel 2 · for + acumulador con %", "d": "Un CDT paga interés <b>compuesto<\/b> mensual: cada mes el saldo crece un porcentaje <b>sobre el saldo que había<\/b>. Pide el capital inicial (real), la tasa mensual en % (real) y el número de meses (entero). Muestra una línea por mes con <code>Mes k: saldo<\/code> y al final <code>Intereses ganados: X<\/code>, todo con 2 decimales.<br><b>Entrada:<\/b> un real, un real y un entero · <b>Salida:<\/b> una línea por mes y los intereses<br><b>Ejemplo:<\/b> 1000000, 2 y 3 meses → <code>Mes 1: 1020000.00<\/code> · <code>Mes 2: 1040400.00<\/code> · <code>Mes 3: 1061208.00<\/code> · <code>Intereses ganados: 61208.00<\/code>.<br>💡 <b>Pista:<\/b> el saldo es un acumulador que en cada vuelta se actualiza a partir de su propio valor anterior. Los intereses ganados se pueden obtener al final, sin un segundo acumulador.", "starter": "capital = float(input(\"Capital inicial: \"))\ntasa = float(input(\"Tasa mensual (%): \"))\nmeses = int(input(\"Meses: \"))\n", "sol": "capital = float(input(\"Capital inicial: \"))\ntasa = float(input(\"Tasa mensual (%): \"))\nmeses = int(input(\"Meses: \"))\nsaldo = capital\nfor mes in range(1, meses + 1):\n    saldo += saldo * tasa / 100\n    print(f\"Mes {mes}: {saldo:.2f}\")\nprint(f\"Intereses ganados: {saldo - capital:.2f}\")", "tests": [{"in": ["1000000", "2", "3"], "must": ["mes 1\\b[^\\n\\d]*(?<![\\d.])(?:1019999\\.99|1020000(?:\\.0{1,2})?|1020000\\.01)(?!\\d)", "mes 2\\b[^\\n\\d]*(?<![\\d.])(?:1040399\\.99|1040400(?:\\.0{1,2})?|1040400\\.01)(?!\\d)", "mes 3\\b[^\\n\\d]*(?<![\\d.])(?:1061207\\.99|1061208(?:\\.0{1,2})?|1061208\\.01)(?!\\d)", "intereses[^\\n\\d]*(?<![\\d.])(?:61207\\.99|61208(?:\\.0{1,2})?|61208\\.01)(?!\\d)"], "not": ["mes 4\\b"], "show": "3 líneas «Mes k: saldo»; Mes 3: 1061208.00 · Intereses ganados: 61208.00"}, {"in": ["500000", "1.5", "6"], "must": ["mes 1\\b[^\\n\\d]*(?<![\\d.])(?:507499\\.99|507500(?:\\.0{1,2})?|507500\\.01)(?!\\d)", "mes 2\\b[^\\n\\d]*(?<![\\d.])(?:515112\\.49|515112\\.50?|515112\\.51)(?!\\d)", "mes 3\\b[^\\n\\d]*(?<![\\d.])(?:522839\\.18|522839\\.19|522839\\.20?)(?!\\d)", "mes 4\\b[^\\n\\d]*(?<![\\d.])(?:530681\\.77|530681\\.78|530681\\.79)(?!\\d)", "mes 5\\b[^\\n\\d]*(?<![\\d.])(?:538641\\.99|538642(?:\\.0{1,2})?|538642\\.01)(?!\\d)", "mes 6\\b[^\\n\\d]*(?<![\\d.])(?:546721\\.62|546721\\.63|546721\\.64)(?!\\d)", "intereses[^\\n\\d]*(?<![\\d.])(?:46721\\.62|46721\\.63|46721\\.64)(?!\\d)"], "not": ["mes 7\\b"], "show": "6 líneas «Mes k: saldo»; Mes 6: 546721.63 · Intereses ganados: 46721.63"}, {"in": ["2000000", "0.8", "12"], "must": ["mes 1\\b[^\\n\\d]*(?<![\\d.])(?:2015999\\.99|2016000(?:\\.0{1,2})?|2016000\\.01)(?!\\d)", "mes 2\\b[^\\n\\d]*(?<![\\d.])(?:2032127\\.99|2032128(?:\\.0{1,2})?|2032128\\.01)(?!\\d)", "mes 3\\b[^\\n\\d]*(?<![\\d.])(?:2048385\\.01|2048385\\.02|2048385\\.03)(?!\\d)", "mes 4\\b[^\\n\\d]*(?<![\\d.])(?:2064772\\.09|2064772\\.10?|2064772\\.11)(?!\\d)", "mes 5\\b[^\\n\\d]*(?<![\\d.])(?:2081290\\.27|2081290\\.28|2081290\\.29)(?!\\d)", "mes 6\\b[^\\n\\d]*(?<![\\d.])(?:2097940\\.59|2097940\\.60?|2097940\\.61)(?!\\d)", "mes 7\\b[^\\n\\d]*(?<![\\d.])(?:2114724\\.12|2114724\\.13|2114724\\.14)(?!\\d)", "mes 8\\b[^\\n\\d]*(?<![\\d.])(?:2131641\\.91|2131641\\.92|2131641\\.93)(?!\\d)", "mes 9\\b[^\\n\\d]*(?<![\\d.])(?:2148695\\.05|2148695\\.06|2148695\\.07)(?!\\d)", "mes 10\\b[^\\n\\d]*(?<![\\d.])(?:2165884\\.61|2165884\\.62|2165884\\.63)(?!\\d)", "mes 11\\b[^\\n\\d]*(?<![\\d.])(?:2183211\\.68|2183211\\.69|2183211\\.70?)(?!\\d)", "mes 12\\b[^\\n\\d]*(?<![\\d.])(?:2200677\\.38|2200677\\.39|2200677\\.40?)(?!\\d)", "intereses[^\\n\\d]*(?<![\\d.])(?:200677\\.38|200677\\.39|200677\\.40?)(?!\\d)"], "not": ["mes 13\\b"], "show": "12 líneas «Mes k: saldo»; Mes 12: 2200677.39 · Intereses ganados: 200677.39"}, {"in": ["750000", "3", "1"], "must": ["mes 1\\b[^\\n\\d]*(?<![\\d.])(?:772499\\.99|772500(?:\\.0{1,2})?|772500\\.01)(?!\\d)", "intereses[^\\n\\d]*(?<![\\d.])(?:22499\\.99|22500(?:\\.0{1,2})?|22500\\.01)(?!\\d)"], "not": ["mes 2\\b"], "show": "1 líneas «Mes k: saldo»; Mes 1: 772500.00 · Intereses ganados: 22500.00"}]}, {"id": "frases", "lvl": 2, "xp": 30, "t": "5. Analizador de frases", "tag": "Nivel 2 · for sobre un texto", "d": "Pide una frase y recórrela <b>letra por letra<\/b> para contar cuántas <b>vocales<\/b> (a, e, i, o, u, también con tilde o diéresis y en mayúscula) y cuántas <b>consonantes<\/b> (cualquier otra letra, incluida la ñ) tiene. Los espacios, números y signos no cuentan. Muestra <code>Vocales: V<\/code>, <code>Consonantes: C<\/code> y <code>Porcentaje de vocales: P%<\/code> (sobre el total de letras, 2 decimales). Si no hay letras, muestra <code>La frase no tiene letras<\/code>.<br><b>Entrada:<\/b> un texto · <b>Salida:<\/b> tres líneas o el aviso<br><b>Ejemplo:<\/b> <code>Hola Mundo<\/code> → <code>Vocales: 4<\/code> · <code>Consonantes: 5<\/code> · <code>Porcentaje de vocales: 44.44%<\/code>.<br>💡 <b>Pista:<\/b> un <code>for<\/code> sobre un texto te entrega un carácter por vuelta. Para no preocuparte por mayúsculas, puedes convertir la frase a minúsculas antes; para saber si un carácter es letra existe un método de los textos que responde True o False.", "starter": "frase = input(\"Frase: \")\n", "sol": "frase = input(\"Frase: \")\nvocales = 0\nconsonantes = 0\nfor letra in frase.lower():\n    if letra in \"aeiouáéíóúü\":\n        vocales += 1\n    elif letra.isalpha():\n        consonantes += 1\nletras = vocales + consonantes\nif letras == 0:\n    print(\"La frase no tiene letras\")\nelse:\n    print(f\"Vocales: {vocales}\")\n    print(f\"Consonantes: {consonantes}\")\n    print(f\"Porcentaje de vocales: {vocales / letras * 100:.2f}%\")", "tests": [{"in": ["Hola Mundo"], "must": ["vocales[^\\n\\d]*(?<![\\d.])4(?:\\.0{1,2})?(?!\\d)", "consonantes[^\\n\\d]*(?<![\\d.])5(?:\\.0{1,2})?(?!\\d)", "porcentaje[^\\n\\d]*(?<![\\d.])(?:44\\.43|44\\.44|44\\.45)(?!\\d)"], "not": [], "show": "Vocales: 4 · Consonantes: 5 · Porcentaje de vocales: 44.44%"}, {"in": ["Programación en Python 3.14"], "must": ["vocales[^\\n\\d]*(?<![\\d.])7(?:\\.0{1,2})?(?!\\d)", "consonantes[^\\n\\d]*(?<![\\d.])13(?:\\.0{1,2})?(?!\\d)", "porcentaje[^\\n\\d]*(?<![\\d.])(?:34\\.99|35(?:\\.0{1,2})?|35\\.01)(?!\\d)"], "not": [], "show": "Vocales: 7 · Consonantes: 13 · Porcentaje de vocales: 35.00%"}, {"in": ["¡Ñandú!"], "must": ["vocales[^\\n\\d]*(?<![\\d.])2(?:\\.0{1,2})?(?!\\d)", "consonantes[^\\n\\d]*(?<![\\d.])3(?:\\.0{1,2})?(?!\\d)", "porcentaje[^\\n\\d]*(?<![\\d.])(?:39\\.99|40(?:\\.0{1,2})?|40\\.01)(?!\\d)"], "not": [], "show": "Vocales: 2 · Consonantes: 3 · Porcentaje de vocales: 40.00%"}, {"in": ["123 ?!"], "must": ["no tiene letras"], "not": ["vocales:"], "show": "La frase no tiene letras"}, {"in": ["MURCIÉLAGO"], "must": ["vocales[^\\n\\d]*(?<![\\d.])5(?:\\.0{1,2})?(?!\\d)", "consonantes[^\\n\\d]*(?<![\\d.])5(?:\\.0{1,2})?(?!\\d)", "porcentaje[^\\n\\d]*(?<![\\d.])(?:49\\.99|50(?:\\.0{1,2})?|50\\.01)(?!\\d)"], "not": [], "show": "Vocales: 5 · Consonantes: 5 · Porcentaje de vocales: 50.00%"}]}, {"id": "factura", "lvl": 2, "xp": 30, "t": "6. Factura del supermercado", "tag": "Nivel 2 · for + varios acumuladores", "d": "Pide cuántos productos distintos lleva el cliente (N) y, para cada uno, su <b>precio unitario<\/b> (real) y la <b>cantidad<\/b> (entero). Si el subtotal de la compra <b>supera 200000<\/b>, se aplica un <b>descuento del 10 %<\/b>. El <b>IVA del 19 %<\/b> se calcula sobre el valor ya descontado. Muestra <code>Unidades: U<\/code> (total de unidades), <code>Subtotal: X<\/code>, <code>Descuento: X<\/code>, <code>IVA: X<\/code> y <code>Total: X<\/code>, con 2 decimales los valores en dinero.<br><b>Entrada:<\/b> un entero N y N parejas (real, entero) · <b>Salida:<\/b> cinco líneas<br><b>Ejemplo:<\/b> 2 productos: 50000 × 3 y 12000 × 5 → <code>Unidades: 8<\/code> · <code>Subtotal: 210000.00<\/code> · <code>Descuento: 21000.00<\/code> · <code>IVA: 35910.00<\/code> · <code>Total: 224910.00<\/code>.<br>💡 <b>Pista:<\/b> dentro del ciclo solo se acumula (dinero y unidades); el descuento y el IVA dependen del subtotal <b>completo<\/b>, así que van después del ciclo.", "starter": "n = int(input(\"¿Cuántos productos? \"))\n", "sol": "n = int(input(\"¿Cuántos productos? \"))\nsubtotal = 0\nunidades = 0\nfor i in range(1, n + 1):\n    precio = float(input(f\"Precio del producto {i}: \"))\n    cantidad = int(input(f\"Cantidad del producto {i}: \"))\n    subtotal += precio * cantidad\n    unidades += cantidad\nif subtotal > 200000:\n    descuento = subtotal * 0.10\nelse:\n    descuento = 0\niva = (subtotal - descuento) * 0.19\ntotal = subtotal - descuento + iva\nprint(f\"Unidades: {unidades}\")\nprint(f\"Subtotal: {subtotal:.2f}\")\nprint(f\"Descuento: {descuento:.2f}\")\nprint(f\"IVA: {iva:.2f}\")\nprint(f\"Total: {total:.2f}\")", "tests": [{"in": ["2", "50000", "3", "12000", "5"], "must": ["unidades[^\\n\\d]*(?<![\\d.])8(?:\\.0{1,2})?(?!\\d)", "subtotal[^\\n\\d]*(?<![\\d.])(?:209999\\.99|210000(?:\\.0{1,2})?|210000\\.01)(?!\\d)", "descuento[^\\n\\d]*(?<![\\d.])(?:20999\\.99|21000(?:\\.0{1,2})?|21000\\.01)(?!\\d)", "iva[^\\n\\d]*(?<![\\d.])(?:35909\\.99|35910(?:\\.0{1,2})?|35910\\.01)(?!\\d)", "\\btotal[^\\n\\d]*(?<![\\d.])(?:224909\\.99|224910(?:\\.0{1,2})?|224910\\.01)(?!\\d)"], "not": [], "show": "Unidades: 8 · Subtotal: 210000.00 · Descuento: 21000.00 · IVA: 35910.00 · Total: 224910.00"}, {"in": ["3", "4500", "2", "3200", "10", "18900", "1"], "must": ["unidades[^\\n\\d]*(?<![\\d.])13(?:\\.0{1,2})?(?!\\d)", "subtotal[^\\n\\d]*(?<![\\d.])(?:59899\\.99|59900(?:\\.0{1,2})?|59900\\.01)(?!\\d)", "descuento[^\\n\\d]*(?<![\\d.])(?:0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "iva[^\\n\\d]*(?<![\\d.])(?:11380\\.99|11381(?:\\.0{1,2})?|11381\\.01)(?!\\d)", "\\btotal[^\\n\\d]*(?<![\\d.])(?:71280\\.99|71281(?:\\.0{1,2})?|71281\\.01)(?!\\d)"], "not": [], "show": "Unidades: 13 · Subtotal: 59900.00 · Descuento: 0.00 · IVA: 11381.00 · Total: 71281.00"}, {"in": ["1", "200000", "1"], "must": ["unidades[^\\n\\d]*(?<![\\d.])1(?:\\.0{1,2})?(?!\\d)", "subtotal[^\\n\\d]*(?<![\\d.])(?:199999\\.99|200000(?:\\.0{1,2})?|200000\\.01)(?!\\d)", "descuento[^\\n\\d]*(?<![\\d.])(?:0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "iva[^\\n\\d]*(?<![\\d.])(?:37999\\.99|38000(?:\\.0{1,2})?|38000\\.01)(?!\\d)", "\\btotal[^\\n\\d]*(?<![\\d.])(?:237999\\.99|238000(?:\\.0{1,2})?|238000\\.01)(?!\\d)"], "not": [], "show": "Unidades: 1 · Subtotal: 200000.00 · Descuento: 0.00 · IVA: 38000.00 · Total: 238000.00"}, {"in": ["2", "99999.5", "2", "1", "1"], "must": ["unidades[^\\n\\d]*(?<![\\d.])3(?:\\.0{1,2})?(?!\\d)", "subtotal[^\\n\\d]*(?<![\\d.])(?:199999\\.99|200000(?:\\.0{1,2})?|200000\\.01)(?!\\d)", "descuento[^\\n\\d]*(?<![\\d.])(?:0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "iva[^\\n\\d]*(?<![\\d.])(?:37999\\.99|38000(?:\\.0{1,2})?|38000\\.01)(?!\\d)", "\\btotal[^\\n\\d]*(?<![\\d.])(?:237999\\.99|238000(?:\\.0{1,2})?|238000\\.01)(?!\\d)"], "not": [], "show": "Unidades: 3 · Subtotal: 200000.00 · Descuento: 0.00 · IVA: 38000.00 · Total: 238000.00"}]}, {"id": "credito", "lvl": 3, "xp": 40, "t": "7. Plan de pagos de un crédito", "tag": "Nivel 3 · for + acumuladores + %", "d": "Un crédito se paga con <b>abono fijo a capital<\/b>: cada mes se abona la misma parte del monto (monto ÷ meses) y, además, se paga el <b>interés del saldo pendiente<\/b> de ese mes. Pide el monto (real), la tasa mensual en % (real) y los meses (entero). Para cada mes muestra <code>Mes k | Interés: X | Cuota: X | Saldo: X<\/code> (cuota = abono + interés; saldo = lo que queda después del abono) y al final <code>Total intereses: X<\/code>, todo con 2 decimales.<br><b>Entrada:<\/b> un real, un real y un entero · <b>Salida:<\/b> una fila por mes y el total<br><b>Ejemplo:<\/b> 1000000, 1.5 y 4 meses → <code>Mes 1 | Interés: 15000.00 | Cuota: 265000.00 | Saldo: 750000.00<\/code> … <code>Mes 4 | Interés: 3750.00 | Cuota: 253750.00 | Saldo: 0.00<\/code> · <code>Total intereses: 37500.00<\/code>.<br>💡 <b>Pista:<\/b> en cada vuelta el interés se calcula con el saldo <b>antes<\/b> de abonar; el orden de las instrucciones dentro del ciclo cambia el resultado.", "starter": "monto = float(input(\"Monto: \"))\ntasa = float(input(\"Tasa mensual (%): \"))\nmeses = int(input(\"Meses: \"))\n", "sol": "monto = float(input(\"Monto: \"))\ntasa = float(input(\"Tasa mensual (%): \"))\nmeses = int(input(\"Meses: \"))\nabono = monto / meses\nsaldo = monto\ntotal_intereses = 0\nfor mes in range(1, meses + 1):\n    interes = saldo * tasa / 100\n    cuota = abono + interes\n    saldo -= abono\n    total_intereses += interes\n    print(f\"Mes {mes} | Interés: {interes:.2f} | Cuota: {cuota:.2f} | Saldo: {abs(saldo):.2f}\")\nprint(f\"Total intereses: {total_intereses:.2f}\")", "tests": [{"in": ["1000000", "1.5", "4"], "must": ["mes 1\\b[^\\n]*?inter[eé]s[^\\n\\d]*(?<![\\d.])(?:14999\\.99|15000(?:\\.0{1,2})?|15000\\.01)(?!\\d)[^\\n]*?cuota[^\\n\\d]*(?<![\\d.])(?:264999\\.99|265000(?:\\.0{1,2})?|265000\\.01)(?!\\d)[^\\n]*?saldo[^\\n\\d]*(?<![\\d.])(?:749999\\.99|750000(?:\\.0{1,2})?|750000\\.01)(?!\\d)", "mes 2\\b[^\\n]*?inter[eé]s[^\\n\\d]*(?<![\\d.])(?:11249\\.99|11250(?:\\.0{1,2})?|11250\\.01)(?!\\d)[^\\n]*?cuota[^\\n\\d]*(?<![\\d.])(?:261249\\.99|261250(?:\\.0{1,2})?|261250\\.01)(?!\\d)[^\\n]*?saldo[^\\n\\d]*(?<![\\d.])(?:499999\\.99|500000(?:\\.0{1,2})?|500000\\.01)(?!\\d)", "mes 3\\b[^\\n]*?inter[eé]s[^\\n\\d]*(?<![\\d.])(?:7499\\.99|7500(?:\\.0{1,2})?|7500\\.01)(?!\\d)[^\\n]*?cuota[^\\n\\d]*(?<![\\d.])(?:257499\\.99|257500(?:\\.0{1,2})?|257500\\.01)(?!\\d)[^\\n]*?saldo[^\\n\\d]*(?<![\\d.])(?:249999\\.99|250000(?:\\.0{1,2})?|250000\\.01)(?!\\d)", "mes 4\\b[^\\n]*?inter[eé]s[^\\n\\d]*(?<![\\d.])(?:3749\\.99|3750(?:\\.0{1,2})?|3750\\.01)(?!\\d)[^\\n]*?cuota[^\\n\\d]*(?<![\\d.])(?:253749\\.99|253750(?:\\.0{1,2})?|253750\\.01)(?!\\d)[^\\n]*?saldo[^\\n\\d]*(?<![\\d.])(?:0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "total intereses[^\\n\\d]*(?<![\\d.])(?:37499\\.99|37500(?:\\.0{1,2})?|37500\\.01)(?!\\d)"], "not": ["mes 5\\b"], "show": "4 filas; Mes 1 → Interés: 15000.00 | Cuota: 265000.00 | Saldo: 750000.00 · Total intereses: 37500.00"}, {"in": ["3000000", "2", "6"], "must": ["mes 1\\b[^\\n]*?inter[eé]s[^\\n\\d]*(?<![\\d.])(?:59999\\.99|60000(?:\\.0{1,2})?|60000\\.01)(?!\\d)[^\\n]*?cuota[^\\n\\d]*(?<![\\d.])(?:559999\\.99|560000(?:\\.0{1,2})?|560000\\.01)(?!\\d)[^\\n]*?saldo[^\\n\\d]*(?<![\\d.])(?:2499999\\.99|2500000(?:\\.0{1,2})?|2500000\\.01)(?!\\d)", "mes 2\\b[^\\n]*?inter[eé]s[^\\n\\d]*(?<![\\d.])(?:49999\\.99|50000(?:\\.0{1,2})?|50000\\.01)(?!\\d)[^\\n]*?cuota[^\\n\\d]*(?<![\\d.])(?:549999\\.99|550000(?:\\.0{1,2})?|550000\\.01)(?!\\d)[^\\n]*?saldo[^\\n\\d]*(?<![\\d.])(?:1999999\\.99|2000000(?:\\.0{1,2})?|2000000\\.01)(?!\\d)", "mes 3\\b[^\\n]*?inter[eé]s[^\\n\\d]*(?<![\\d.])(?:39999\\.99|40000(?:\\.0{1,2})?|40000\\.01)(?!\\d)[^\\n]*?cuota[^\\n\\d]*(?<![\\d.])(?:539999\\.99|540000(?:\\.0{1,2})?|540000\\.01)(?!\\d)[^\\n]*?saldo[^\\n\\d]*(?<![\\d.])(?:1499999\\.99|1500000(?:\\.0{1,2})?|1500000\\.01)(?!\\d)", "mes 4\\b[^\\n]*?inter[eé]s[^\\n\\d]*(?<![\\d.])(?:29999\\.99|30000(?:\\.0{1,2})?|30000\\.01)(?!\\d)[^\\n]*?cuota[^\\n\\d]*(?<![\\d.])(?:529999\\.99|530000(?:\\.0{1,2})?|530000\\.01)(?!\\d)[^\\n]*?saldo[^\\n\\d]*(?<![\\d.])(?:999999\\.99|1000000(?:\\.0{1,2})?|1000000\\.01)(?!\\d)", "mes 5\\b[^\\n]*?inter[eé]s[^\\n\\d]*(?<![\\d.])(?:19999\\.99|20000(?:\\.0{1,2})?|20000\\.01)(?!\\d)[^\\n]*?cuota[^\\n\\d]*(?<![\\d.])(?:519999\\.99|520000(?:\\.0{1,2})?|520000\\.01)(?!\\d)[^\\n]*?saldo[^\\n\\d]*(?<![\\d.])(?:499999\\.99|500000(?:\\.0{1,2})?|500000\\.01)(?!\\d)", "mes 6\\b[^\\n]*?inter[eé]s[^\\n\\d]*(?<![\\d.])(?:9999\\.99|10000(?:\\.0{1,2})?|10000\\.01)(?!\\d)[^\\n]*?cuota[^\\n\\d]*(?<![\\d.])(?:509999\\.99|510000(?:\\.0{1,2})?|510000\\.01)(?!\\d)[^\\n]*?saldo[^\\n\\d]*(?<![\\d.])(?:0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "total intereses[^\\n\\d]*(?<![\\d.])(?:209999\\.99|210000(?:\\.0{1,2})?|210000\\.01)(?!\\d)"], "not": ["mes 7\\b"], "show": "6 filas; Mes 1 → Interés: 60000.00 | Cuota: 560000.00 | Saldo: 2500000.00 · Total intereses: 210000.00"}, {"in": ["1200000", "1.2", "12"], "must": ["mes 1\\b[^\\n]*?inter[eé]s[^\\n\\d]*(?<![\\d.])(?:14399\\.99|14400(?:\\.0{1,2})?|14400\\.01)(?!\\d)[^\\n]*?cuota[^\\n\\d]*(?<![\\d.])(?:114399\\.99|114400(?:\\.0{1,2})?|114400\\.01)(?!\\d)[^\\n]*?saldo[^\\n\\d]*(?<![\\d.])(?:1099999\\.99|1100000(?:\\.0{1,2})?|1100000\\.01)(?!\\d)", "mes 6\\b[^\\n]*?inter[eé]s[^\\n\\d]*(?<![\\d.])(?:8399\\.99|8400(?:\\.0{1,2})?|8400\\.01)(?!\\d)[^\\n]*?cuota[^\\n\\d]*(?<![\\d.])(?:108399\\.99|108400(?:\\.0{1,2})?|108400\\.01)(?!\\d)[^\\n]*?saldo[^\\n\\d]*(?<![\\d.])(?:599999\\.99|600000(?:\\.0{1,2})?|600000\\.01)(?!\\d)", "mes 12\\b[^\\n]*?inter[eé]s[^\\n\\d]*(?<![\\d.])(?:1199\\.99|1200(?:\\.0{1,2})?|1200\\.01)(?!\\d)[^\\n]*?cuota[^\\n\\d]*(?<![\\d.])(?:101199\\.99|101200(?:\\.0{1,2})?|101200\\.01)(?!\\d)[^\\n]*?saldo[^\\n\\d]*(?<![\\d.])(?:0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "total intereses[^\\n\\d]*(?<![\\d.])(?:93599\\.99|93600(?:\\.0{1,2})?|93600\\.01)(?!\\d)"], "not": ["mes 13\\b"], "show": "12 filas; Mes 1 → Interés: 14400.00 | Cuota: 114400.00 | Saldo: 1100000.00 · Total intereses: 93600.00"}, {"in": ["500000", "0", "2"], "must": ["mes 1\\b[^\\n]*?inter[eé]s[^\\n\\d]*(?<![\\d.])(?:0(?:\\.0{1,2})?|0\\.01)(?!\\d)[^\\n]*?cuota[^\\n\\d]*(?<![\\d.])(?:249999\\.99|250000(?:\\.0{1,2})?|250000\\.01)(?!\\d)[^\\n]*?saldo[^\\n\\d]*(?<![\\d.])(?:249999\\.99|250000(?:\\.0{1,2})?|250000\\.01)(?!\\d)", "mes 2\\b[^\\n]*?inter[eé]s[^\\n\\d]*(?<![\\d.])(?:0(?:\\.0{1,2})?|0\\.01)(?!\\d)[^\\n]*?cuota[^\\n\\d]*(?<![\\d.])(?:249999\\.99|250000(?:\\.0{1,2})?|250000\\.01)(?!\\d)[^\\n]*?saldo[^\\n\\d]*(?<![\\d.])(?:0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "total intereses[^\\n\\d]*(?<![\\d.])(?:0(?:\\.0{1,2})?|0\\.01)(?!\\d)"], "not": ["mes 3\\b"], "show": "2 filas; Mes 1 → Interés: 0.00 | Cuota: 250000.00 | Saldo: 250000.00 · Total intereses: 0.00"}]}, {"id": "divisores", "lvl": 3, "xp": 40, "t": "8. Divisores y números perfectos", "tag": "Nivel 3 · for + condición + acumulador", "d": "Los griegos clasificaban los números según la suma de sus <b>divisores propios<\/b> (los que lo dividen exactamente y son menores que él): si la suma es igual al número es <b>perfecto<\/b>, si es mayor es <b>abundante<\/b> y si es menor es <b>deficiente<\/b>. Pide un entero n mayor que 1 y muestra <code>Divisores: …<\/code> (en una sola línea, separados por espacios), <code>Suma: S<\/code> y la clasificación (<code>Perfecto<\/code>, <code>Abundante<\/code> o <code>Deficiente<\/code>).<br><b>Entrada:<\/b> un entero n &gt; 1 · <b>Salida:<\/b> tres líneas<br><b>Ejemplo:<\/b> 12 → <code>Divisores: 1 2 3 4 6<\/code> · <code>Suma: 16<\/code> · <code>Abundante<\/code>.<br>💡 <b>Pista:<\/b> prueba como posible divisor cada número desde 1 hasta n − 1; el operador que da el residuo de una división te dice si la división es exacta. Para imprimir varios valores en la misma línea revisa el parámetro <code>end<\/code> de <code>print<\/code>.", "starter": "n = int(input(\"Número: \"))\n", "sol": "n = int(input(\"Número: \"))\nsuma = 0\nprint(\"Divisores:\", end=\" \")\nfor d in range(1, n):\n    if n % d == 0:\n        print(d, end=\" \")\n        suma += d\nprint()\nprint(f\"Suma: {suma}\")\nif suma == n:\n    print(\"Perfecto\")\nelif suma > n:\n    print(\"Abundante\")\nelse:\n    print(\"Deficiente\")", "tests": [{"in": ["6"], "must": ["divisores\\D*1[ ,]+2[ ,]+3(?![ ,]*\\d)", "suma[^\\n\\d]*(?<![\\d.])6(?:\\.0{1,2})?(?!\\d)", "perfecto"], "not": ["abundante", "deficiente"], "show": "Divisores: 1 2 3 · Suma: 6 · Perfecto"}, {"in": ["12"], "must": ["divisores\\D*1[ ,]+2[ ,]+3[ ,]+4[ ,]+6(?![ ,]*\\d)", "suma[^\\n\\d]*(?<![\\d.])16(?:\\.0{1,2})?(?!\\d)", "abundante"], "not": ["perfecto", "deficiente"], "show": "Divisores: 1 2 3 4 6 · Suma: 16 · Abundante"}, {"in": ["28"], "must": ["divisores\\D*1[ ,]+2[ ,]+4[ ,]+7[ ,]+14(?![ ,]*\\d)", "suma[^\\n\\d]*(?<![\\d.])28(?:\\.0{1,2})?(?!\\d)", "perfecto"], "not": ["abundante", "deficiente"], "show": "Divisores: 1 2 4 7 14 · Suma: 28 · Perfecto"}, {"in": ["15"], "must": ["divisores\\D*1[ ,]+3[ ,]+5(?![ ,]*\\d)", "suma[^\\n\\d]*(?<![\\d.])9(?:\\.0{1,2})?(?!\\d)", "deficiente"], "not": ["perfecto", "abundante"], "show": "Divisores: 1 3 5 · Suma: 9 · Deficiente"}, {"in": ["13"], "must": ["divisores\\D*1(?![ ,]*\\d)", "suma[^\\n\\d]*(?<![\\d.])1(?:\\.0{1,2})?(?!\\d)", "deficiente"], "not": ["perfecto", "abundante"], "show": "Divisores: 1 · Suma: 1 · Deficiente"}]}, {"id": "tabla", "lvl": 3, "xp": 40, "t": "9. Tabla de multiplicar N × N", "tag": "Nivel 3 · ciclos anidados", "d": "Pide un entero n (de 1 a 12) y dibuja la tabla de multiplicar de n × n: la fila i contiene los productos de i por 1, 2, …, n, <b>en la misma línea<\/b>, cada uno alineado a la derecha en 4 espacios. Debajo, muestra <code>Suma de la diagonal: S<\/code>, donde la diagonal son los productos de cada número por sí mismo (1×1, 2×2, …).<br><b>Entrada:<\/b> un entero n · <b>Salida:<\/b> n filas y la suma<br><b>Ejemplo:<\/b> 3 → <code>   1   2   3<\/code> · <code>   2   4   6<\/code> · <code>   3   6   9<\/code> · <code>Suma de la diagonal: 14<\/code>.<br>💡 <b>Pista:<\/b> un ciclo recorre las filas y otro, <b>dentro<\/b>, las columnas. Piensa dónde debe ir el salto de línea y en qué momento un producto pertenece a la diagonal. El formato <code>{x:4d}<\/code> reserva 4 espacios.", "starter": "n = int(input(\"Tamaño de la tabla: \"))\n", "sol": "n = int(input(\"Tamaño de la tabla: \"))\ndiagonal = 0\nfor i in range(1, n + 1):\n    for j in range(1, n + 1):\n        print(f\"{i * j:4d}\", end=\"\")\n        if i == j:\n            diagonal += i * j\n    print()\nprint(f\"Suma de la diagonal: {diagonal}\")", "tests": [{"in": ["3"], "must": ["(?:^|\\n)[ \\t]*1[ \\t]+2[ \\t]+3[ \\t]*(?=\\n|$)", "(?:^|\\n)[ \\t]*2[ \\t]+4[ \\t]+6[ \\t]*(?=\\n|$)", "(?:^|\\n)[ \\t]*3[ \\t]+6[ \\t]+9[ \\t]*(?=\\n|$)", "diagonal[^\\n\\d]*(?<![\\d.])14(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "3 filas de 3 productos · Suma de la diagonal: 14"}, {"in": ["5"], "must": ["(?:^|\\n)[ \\t]*1[ \\t]+2[ \\t]+3[ \\t]+4[ \\t]+5[ \\t]*(?=\\n|$)", "(?:^|\\n)[ \\t]*2[ \\t]+4[ \\t]+6[ \\t]+8[ \\t]+10[ \\t]*(?=\\n|$)", "(?:^|\\n)[ \\t]*3[ \\t]+6[ \\t]+9[ \\t]+12[ \\t]+15[ \\t]*(?=\\n|$)", "(?:^|\\n)[ \\t]*4[ \\t]+8[ \\t]+12[ \\t]+16[ \\t]+20[ \\t]*(?=\\n|$)", "(?:^|\\n)[ \\t]*5[ \\t]+10[ \\t]+15[ \\t]+20[ \\t]+25[ \\t]*(?=\\n|$)", "diagonal[^\\n\\d]*(?<![\\d.])55(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "5 filas de 5 productos · Suma de la diagonal: 55"}, {"in": ["1"], "must": ["(?:^|\\n)[ \\t]*1[ \\t]*(?=\\n|$)", "diagonal[^\\n\\d]*(?<![\\d.])1(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "1 filas de 1 productos · Suma de la diagonal: 1"}, {"in": ["12"], "must": ["(?:^|\\n)[ \\t]*1[ \\t]+2[ \\t]+3[ \\t]+4[ \\t]+5[ \\t]+6[ \\t]+7[ \\t]+8[ \\t]+9[ \\t]+10[ \\t]+11[ \\t]+12[ \\t]*(?=\\n|$)", "(?:^|\\n)[ \\t]*2[ \\t]+4[ \\t]+6[ \\t]+8[ \\t]+10[ \\t]+12[ \\t]+14[ \\t]+16[ \\t]+18[ \\t]+20[ \\t]+22[ \\t]+24[ \\t]*(?=\\n|$)", "(?:^|\\n)[ \\t]*3[ \\t]+6[ \\t]+9[ \\t]+12[ \\t]+15[ \\t]+18[ \\t]+21[ \\t]+24[ \\t]+27[ \\t]+30[ \\t]+33[ \\t]+36[ \\t]*(?=\\n|$)", "(?:^|\\n)[ \\t]*4[ \\t]+8[ \\t]+12[ \\t]+16[ \\t]+20[ \\t]+24[ \\t]+28[ \\t]+32[ \\t]+36[ \\t]+40[ \\t]+44[ \\t]+48[ \\t]*(?=\\n|$)", "(?:^|\\n)[ \\t]*5[ \\t]+10[ \\t]+15[ \\t]+20[ \\t]+25[ \\t]+30[ \\t]+35[ \\t]+40[ \\t]+45[ \\t]+50[ \\t]+55[ \\t]+60[ \\t]*(?=\\n|$)", "(?:^|\\n)[ \\t]*6[ \\t]+12[ \\t]+18[ \\t]+24[ \\t]+30[ \\t]+36[ \\t]+42[ \\t]+48[ \\t]+54[ \\t]+60[ \\t]+66[ \\t]+72[ \\t]*(?=\\n|$)", "(?:^|\\n)[ \\t]*7[ \\t]+14[ \\t]+21[ \\t]+28[ \\t]+35[ \\t]+42[ \\t]+49[ \\t]+56[ \\t]+63[ \\t]+70[ \\t]+77[ \\t]+84[ \\t]*(?=\\n|$)", "(?:^|\\n)[ \\t]*8[ \\t]+16[ \\t]+24[ \\t]+32[ \\t]+40[ \\t]+48[ \\t]+56[ \\t]+64[ \\t]+72[ \\t]+80[ \\t]+88[ \\t]+96[ \\t]*(?=\\n|$)", "(?:^|\\n)[ \\t]*9[ \\t]+18[ \\t]+27[ \\t]+36[ \\t]+45[ \\t]+54[ \\t]+63[ \\t]+72[ \\t]+81[ \\t]+90[ \\t]+99[ \\t]+108[ \\t]*(?=\\n|$)", "(?:^|\\n)[ \\t]*10[ \\t]+20[ \\t]+30[ \\t]+40[ \\t]+50[ \\t]+60[ \\t]+70[ \\t]+80[ \\t]+90[ \\t]+100[ \\t]+110[ \\t]+120[ \\t]*(?=\\n|$)", "(?:^|\\n)[ \\t]*11[ \\t]+22[ \\t]+33[ \\t]+44[ \\t]+55[ \\t]+66[ \\t]+77[ \\t]+88[ \\t]+99[ \\t]+110[ \\t]+121[ \\t]+132[ \\t]*(?=\\n|$)", "(?:^|\\n)[ \\t]*12[ \\t]+24[ \\t]+36[ \\t]+48[ \\t]+60[ \\t]+72[ \\t]+84[ \\t]+96[ \\t]+108[ \\t]+120[ \\t]+132[ \\t]+144[ \\t]*(?=\\n|$)", "diagonal[^\\n\\d]*(?<![\\d.])650(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "12 filas de 12 productos · Suma de la diagonal: 650"}]}, {"id": "piramide", "lvl": 4, "xp": 60, "t": "★ 10. Pirámide numérica", "tag": "Nivel 4 · ciclos anidados", "d": "Pide la altura n (entero de 1 a 9) y dibuja una pirámide de números: la fila i (de 1 a n) empieza con <b>n − i espacios<\/b>, luego cuenta <b>de 1 hasta i<\/b> y después <b>regresa de i − 1 hasta 1<\/b>, todo pegado, sin espacios entre los dígitos.<br><b>Entrada:<\/b> un entero n · <b>Salida:<\/b> n líneas<br><b>Ejemplo:<\/b> 4 → <code>&nbsp;&nbsp;&nbsp;1<\/code> · <code>&nbsp;&nbsp;121<\/code> · <code>&nbsp;12321<\/code> · <code>1234321<\/code>.<br>💡 <b>Pista:<\/b> cada fila tiene tres partes y cada parte es un ciclo distinto dentro del ciclo de las filas. El ciclo que regresa necesita un <code>range<\/code> con paso negativo.", "starter": "n = int(input(\"Altura: \"))\n", "sol": "n = int(input(\"Altura: \"))\nfor i in range(1, n + 1):\n    print(\" \" * (n - i), end=\"\")\n    for k in range(1, i + 1):\n        print(k, end=\"\")\n    for k in range(i - 1, 0, -1):\n        print(k, end=\"\")\n    print()", "tests": [{"in": ["4"], "must": ["(?:^|\\n)   1[ \\t]*(?=\\n|$)", "(?:^|\\n)  121[ \\t]*(?=\\n|$)", "(?:^|\\n) 12321[ \\t]*(?=\\n|$)", "(?:^|\\n)1234321[ \\t]*(?=\\n|$)"], "not": [], "show": "···1⏎ ··121⏎ ·12321⏎ 1234321  (· = espacio)"}, {"in": ["1"], "must": ["(?:^|\\n)1[ \\t]*(?=\\n|$)"], "not": [], "show": "1  (· = espacio)"}, {"in": ["6"], "must": ["(?:^|\\n)     1[ \\t]*(?=\\n|$)", "(?:^|\\n)    121[ \\t]*(?=\\n|$)", "(?:^|\\n)   12321[ \\t]*(?=\\n|$)", "(?:^|\\n)  1234321[ \\t]*(?=\\n|$)", "(?:^|\\n) 123454321[ \\t]*(?=\\n|$)", "(?:^|\\n)12345654321[ \\t]*(?=\\n|$)"], "not": [], "show": "·····1⏎ ····121⏎ ···12321⏎ ··1234321⏎ ·123454321⏎ 12345654321  (· = espacio)"}, {"in": ["9"], "must": ["(?:^|\\n)        1[ \\t]*(?=\\n|$)", "(?:^|\\n)       121[ \\t]*(?=\\n|$)", "(?:^|\\n)      12321[ \\t]*(?=\\n|$)", "(?:^|\\n)     1234321[ \\t]*(?=\\n|$)", "(?:^|\\n)    123454321[ \\t]*(?=\\n|$)", "(?:^|\\n)   12345654321[ \\t]*(?=\\n|$)", "(?:^|\\n)  1234567654321[ \\t]*(?=\\n|$)", "(?:^|\\n) 123456787654321[ \\t]*(?=\\n|$)", "(?:^|\\n)12345678987654321[ \\t]*(?=\\n|$)"], "not": [], "show": "········1⏎ ·······121⏎ ······12321⏎ ·····1234321⏎ ····123454321⏎ ···12345654321⏎ ··1234567654321⏎ ·123456787654321⏎ 12345678987654321  (· = espacio)"}]}, {"id": "comisiones", "lvl": 4, "xp": 60, "t": "★ 11. Comisiones del equipo de ventas", "tag": "Nivel 4 · anidados + acumuladores + %", "d": "Pide cuántos vendedores hay (V) y cuántos días se van a registrar (D). Para cada vendedor pide su <b>nombre<\/b> y luego la <b>venta de cada día<\/b> (real). La comisión de cada vendedor es del <b>5 %<\/b> de su total, o del <b>8 %<\/b> si su total llega a <b>1000000 o más<\/b>. Por cada vendedor muestra <code>Nombre: total T, comisión C<\/code>; al final muestra <code>Total del equipo: X<\/code>, <code>Total comisiones: X<\/code> y <code>Mejor vendedor: Nombre<\/code> (si hay empate, el primero). Valores con 2 decimales.<br><b>Entrada:<\/b> dos enteros y, por vendedor, un texto y D reales · <b>Salida:<\/b> una línea por vendedor y tres de resumen<br><b>Ejemplo:<\/b> 2 vendedores, 2 días: Ana 300000 y 750000; Luis 200000 y 100000 → <code>Ana: total 1050000.00, comisión 84000.00<\/code> · <code>Luis: total 300000.00, comisión 15000.00<\/code> · <code>Total del equipo: 1350000.00<\/code> · <code>Total comisiones: 99000.00<\/code> · <code>Mejor vendedor: Ana<\/code>.<br>💡 <b>Pista:<\/b> hay acumuladores que se reinician para <b>cada vendedor<\/b> y otros que acumulan para <b>todo el equipo<\/b>: piensa en qué lugar (antes de cuál ciclo) se inicializa cada uno. Para el mejor vendedor guarda el mayor total visto hasta el momento y de quién era.", "starter": "v = int(input(\"Vendedores: \"))\nd = int(input(\"Días: \"))\n", "sol": "v = int(input(\"Vendedores: \"))\nd = int(input(\"Días: \"))\ntotal_equipo = 0\ntotal_comisiones = 0\nmejor = \"\"\nmejor_total = -1\nfor _ in range(v):\n    nombre = input(\"Nombre: \")\n    total = 0\n    for dia in range(1, d + 1):\n        total += float(input(f\"Venta día {dia}: \"))\n    if total >= 1000000:\n        comision = total * 0.08\n    else:\n        comision = total * 0.05\n    print(f\"{nombre}: total {total:.2f}, comisión {comision:.2f}\")\n    total_equipo += total\n    total_comisiones += comision\n    if total > mejor_total:\n        mejor_total = total\n        mejor = nombre\nprint(f\"Total del equipo: {total_equipo:.2f}\")\nprint(f\"Total comisiones: {total_comisiones:.2f}\")\nprint(f\"Mejor vendedor: {mejor}\")", "tests": [{"in": ["2", "2", "Ana", "300000", "750000", "Luis", "200000", "100000"], "must": ["Ana[^\\n]*?total[^\\n\\d]*(?<![\\d.])(?:1049999\\.99|1050000(?:\\.0{1,2})?|1050000\\.01)(?!\\d)[^\\n]*?comisi[oó]n[^\\n\\d]*(?<![\\d.])(?:83999\\.99|84000(?:\\.0{1,2})?|84000\\.01)(?!\\d)", "Luis[^\\n]*?total[^\\n\\d]*(?<![\\d.])(?:299999\\.99|300000(?:\\.0{1,2})?|300000\\.01)(?!\\d)[^\\n]*?comisi[oó]n[^\\n\\d]*(?<![\\d.])(?:14999\\.99|15000(?:\\.0{1,2})?|15000\\.01)(?!\\d)", "total del equipo[^\\n\\d]*(?<![\\d.])(?:1349999\\.99|1350000(?:\\.0{1,2})?|1350000\\.01)(?!\\d)", "total comisiones[^\\n\\d]*(?<![\\d.])(?:98999\\.99|99000(?:\\.0{1,2})?|99000\\.01)(?!\\d)", "mejor vendedor\\W*Ana"], "not": [], "show": "2 líneas de vendedor · Total del equipo: 1350000.00 · Total comisiones: 99000.00 · Mejor vendedor: Ana"}, {"in": ["3", "3", "Sara", "120000", "98000.5", "301000", "Pedro", "500000", "250000", "260000", "Lina", "0", "0", "10000"], "must": ["Sara[^\\n]*?total[^\\n\\d]*(?<![\\d.])(?:519000\\.49|519000\\.50?|519000\\.51)(?!\\d)[^\\n]*?comisi[oó]n[^\\n\\d]*(?<![\\d.])(?:25950\\.02|25950\\.03|25950\\.04)(?!\\d)", "Pedro[^\\n]*?total[^\\n\\d]*(?<![\\d.])(?:1009999\\.99|1010000(?:\\.0{1,2})?|1010000\\.01)(?!\\d)[^\\n]*?comisi[oó]n[^\\n\\d]*(?<![\\d.])(?:80799\\.99|80800(?:\\.0{1,2})?|80800\\.01)(?!\\d)", "Lina[^\\n]*?total[^\\n\\d]*(?<![\\d.])(?:9999\\.99|10000(?:\\.0{1,2})?|10000\\.01)(?!\\d)[^\\n]*?comisi[oó]n[^\\n\\d]*(?<![\\d.])(?:499\\.99|500(?:\\.0{1,2})?|500\\.01)(?!\\d)", "total del equipo[^\\n\\d]*(?<![\\d.])(?:1539000\\.49|1539000\\.50?|1539000\\.51)(?!\\d)", "total comisiones[^\\n\\d]*(?<![\\d.])(?:107250\\.01|107250\\.02|107250\\.03)(?!\\d)", "mejor vendedor\\W*Pedro"], "not": [], "show": "3 líneas de vendedor · Total del equipo: 1539000.50 · Total comisiones: 107250.02 · Mejor vendedor: Pedro"}, {"in": ["1", "1", "Mario", "999999.99"], "must": ["Mario[^\\n]*?total[^\\n\\d]*(?<![\\d.])(?:999999\\.98|999999\\.99|1000000(?:\\.0{1,2})?)(?!\\d)[^\\n]*?comisi[oó]n[^\\n\\d]*(?<![\\d.])(?:49999\\.99|50000(?:\\.0{1,2})?|50000\\.01)(?!\\d)", "total del equipo[^\\n\\d]*(?<![\\d.])(?:999999\\.98|999999\\.99|1000000(?:\\.0{1,2})?)(?!\\d)", "total comisiones[^\\n\\d]*(?<![\\d.])(?:49999\\.99|50000(?:\\.0{1,2})?|50000\\.01)(?!\\d)", "mejor vendedor\\W*Mario"], "not": [], "show": "1 líneas de vendedor · Total del equipo: 999999.99 · Total comisiones: 50000.00 · Mejor vendedor: Mario"}, {"in": ["2", "2", "Eva", "400000", "100000", "Juan", "250000", "250000"], "must": ["Eva[^\\n]*?total[^\\n\\d]*(?<![\\d.])(?:499999\\.99|500000(?:\\.0{1,2})?|500000\\.01)(?!\\d)[^\\n]*?comisi[oó]n[^\\n\\d]*(?<![\\d.])(?:24999\\.99|25000(?:\\.0{1,2})?|25000\\.01)(?!\\d)", "Juan[^\\n]*?total[^\\n\\d]*(?<![\\d.])(?:499999\\.99|500000(?:\\.0{1,2})?|500000\\.01)(?!\\d)[^\\n]*?comisi[oó]n[^\\n\\d]*(?<![\\d.])(?:24999\\.99|25000(?:\\.0{1,2})?|25000\\.01)(?!\\d)", "total del equipo[^\\n\\d]*(?<![\\d.])(?:999999\\.99|1000000(?:\\.0{1,2})?|1000000\\.01)(?!\\d)", "total comisiones[^\\n\\d]*(?<![\\d.])(?:49999\\.99|50000(?:\\.0{1,2})?|50000\\.01)(?!\\d)", "mejor vendedor\\W*Eva"], "not": [], "show": "2 líneas de vendedor · Total del equipo: 1000000.00 · Total comisiones: 50000.00 · Mejor vendedor: Eva"}]}, {"id": "calendario", "lvl": 4, "xp": 60, "t": "★ 12. Calendario del mes", "tag": "Nivel 4 · anidados + formato", "d": "Pide cuántos días tiene el mes (28 a 31) y en qué día de la semana cae el 1 (1 = lunes … 7 = domingo). Muestra el encabezado <code>Lu Ma Mi Ju Vi Sa Do<\/code> y debajo el calendario: cada día ocupa <b>2 caracteres<\/b> alineado a la derecha, las columnas se separan con <b>un espacio<\/b>, los huecos antes del día 1 son 2 espacios en blanco y cada semana termina en domingo (o en el último día del mes). Al final muestra <code>Fines de semana: X días<\/code> (sábados y domingos del mes).<br><b>Entrada:<\/b> dos enteros · <b>Salida:<\/b> encabezado, semanas y conteo<br><b>Ejemplo:<\/b> 31 días empezando en miércoles (3) → primera semana <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;2&nbsp;&nbsp;3&nbsp;&nbsp;4&nbsp;&nbsp;5<\/code>, segunda <code>&nbsp;6&nbsp;&nbsp;7&nbsp;&nbsp;8&nbsp;&nbsp;9 10 11 12<\/code> … · <code>Fines de semana: 8 días<\/code>.<br>💡 <b>Pista:<\/b> lleva la cuenta de en qué columna (0 a 6) vas: así sabes cuándo saltar de línea y si el día es sábado o domingo. Los huecos iniciales son un ciclo aparte. Cuidado con el espacio separador: va <b>entre<\/b> columnas.", "starter": "dias = int(input(\"Días del mes: \"))\ninicio = int(input(\"Día de la semana del 1 (1=lunes): \"))\n", "sol": "dias = int(input(\"Días del mes: \"))\ninicio = int(input(\"Día de la semana del 1 (1=lunes): \"))\nprint(\"Lu Ma Mi Ju Vi Sa Do\")\ncol = 0\nfines = 0\nfor _ in range(inicio - 1):\n    if col > 0:\n        print(\" \", end=\"\")\n    print(\"  \", end=\"\")\n    col += 1\nfor d in range(1, dias + 1):\n    if col > 0:\n        print(\" \", end=\"\")\n    print(f\"{d:2d}\", end=\"\")\n    if col >= 5:\n        fines += 1\n    col += 1\n    if col == 7:\n        print()\n        col = 0\nif col != 0:\n    print()\nprint(f\"Fines de semana: {fines} días\")", "tests": [{"in": ["31", "3"], "must": ["(?:^|\\n)Lu Ma Mi Ju Vi Sa Do[ \\t]*(?=\\n|$)", "(?:^|\\n)       1  2  3  4  5[ \\t]*(?=\\n|$)", "(?:^|\\n) 6  7  8  9 10 11 12[ \\t]*(?=\\n|$)", "(?:^|\\n)13 14 15 16 17 18 19[ \\t]*(?=\\n|$)", "(?:^|\\n)20 21 22 23 24 25 26[ \\t]*(?=\\n|$)", "(?:^|\\n)27 28 29 30 31[ \\t]*(?=\\n|$)", "fines de semana[^\\n\\d]*(?<![\\d.])8(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "encabezado + 5 semanas; primera: «·······1··2··3··4··5» · Fines de semana: 8 días"}, {"in": ["28", "1"], "must": ["(?:^|\\n)Lu Ma Mi Ju Vi Sa Do[ \\t]*(?=\\n|$)", "(?:^|\\n) 1  2  3  4  5  6  7[ \\t]*(?=\\n|$)", "(?:^|\\n) 8  9 10 11 12 13 14[ \\t]*(?=\\n|$)", "(?:^|\\n)15 16 17 18 19 20 21[ \\t]*(?=\\n|$)", "(?:^|\\n)22 23 24 25 26 27 28[ \\t]*(?=\\n|$)", "fines de semana[^\\n\\d]*(?<![\\d.])8(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "encabezado + 4 semanas; primera: «·1··2··3··4··5··6··7» · Fines de semana: 8 días"}, {"in": ["30", "7"], "must": ["(?:^|\\n)Lu Ma Mi Ju Vi Sa Do[ \\t]*(?=\\n|$)", "(?:^|\\n)                   1[ \\t]*(?=\\n|$)", "(?:^|\\n) 2  3  4  5  6  7  8[ \\t]*(?=\\n|$)", "(?:^|\\n) 9 10 11 12 13 14 15[ \\t]*(?=\\n|$)", "(?:^|\\n)16 17 18 19 20 21 22[ \\t]*(?=\\n|$)", "(?:^|\\n)23 24 25 26 27 28 29[ \\t]*(?=\\n|$)", "(?:^|\\n)30[ \\t]*(?=\\n|$)", "fines de semana[^\\n\\d]*(?<![\\d.])9(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "encabezado + 6 semanas; primera: «···················1» · Fines de semana: 9 días"}, {"in": ["29", "6"], "must": ["(?:^|\\n)Lu Ma Mi Ju Vi Sa Do[ \\t]*(?=\\n|$)", "(?:^|\\n)                1  2[ \\t]*(?=\\n|$)", "(?:^|\\n) 3  4  5  6  7  8  9[ \\t]*(?=\\n|$)", "(?:^|\\n)10 11 12 13 14 15 16[ \\t]*(?=\\n|$)", "(?:^|\\n)17 18 19 20 21 22 23[ \\t]*(?=\\n|$)", "(?:^|\\n)24 25 26 27 28 29[ \\t]*(?=\\n|$)", "fines de semana[^\\n\\d]*(?<![\\d.])9(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "encabezado + 5 semanas; primera: «················1··2» · Fines de semana: 9 días"}]}];
+const HARNESS_PY = "import builtins, io, contextlib, traceback, sys\nclass CicloInfinito(Exception):\n    pass\nclass DemasiadaSalida(Exception):\n    pass\nLP_MAX_PASOS = 3000000\nLP_MAX_SALIDA = 30000\nclass LP_Salida(io.StringIO):\n    def write(self, s):\n        if self.tell() + len(s) > LP_MAX_SALIDA:\n            super().write(s[:max(0, LP_MAX_SALIDA - self.tell())])\n            raise DemasiadaSalida(\"tu programa imprimió demasiado texto (más de 30 000 caracteres): ¿quedó en un ciclo infinito?\")\n        return super().write(s)\ndef __run_user(src, inputs, echo):\n    q = list(inputs)\n    def _inp(prompt=''):\n        if not q:\n            raise EOFError(\"input() pidió un dato, pero no hay más entradas\")\n        v = q.pop(0)\n        if echo:\n            print(str(prompt) + v)\n        return v\n    builtins.input = _inp\n    buf = LP_Salida()\n    pasos = [0]\n    def _local(frame, event, arg):\n        if event == 'line':\n            pasos[0] += 1\n            if pasos[0] > LP_MAX_PASOS:\n                raise CicloInfinito(\"tu programa ejecutó más de 3 millones de pasos sin terminar: revisa que la condición del ciclo pueda volverse False\")\n        return _local\n    def _global(frame, event, arg):\n        if frame.f_code.co_filename == \"tu_programa.py\":\n            return _local\n        return None\n    etype, err, line = \"\", \"\", None\n    try:\n        code = compile(src, \"tu_programa.py\", \"exec\")\n        sys.settrace(_global)\n        try:\n            with contextlib.redirect_stdout(buf):\n                exec(code, {\"__name__\": \"__main__\"})\n        finally:\n            sys.settrace(None)\n    except SyntaxError as e:\n        etype, err, line = type(e).__name__, str(e.msg), e.lineno\n    except BaseException as e:\n        etype, err = type(e).__name__, str(e)\n        for fr in traceback.extract_tb(e.__traceback__):\n            if fr.filename == \"tu_programa.py\":\n                line = fr.lineno\n    return [buf.getvalue(), etype, err, line]\n";
+const EXTRA_CODE = {
+  nomina:{code:'for i in range(1, 6):\n    print(f"Empleado {i}: pago registrado")\nprint("Nómina lista")\n', stdin:''},
+  pasos:{code:'dias_activos = 0\nfor dia in range(1, 8):\n    pasos = int(input(f"Pasos del día {dia}: "))\n    if pasos >= 8000:\n        dias_activos += 1\nprint(f"Días activos: {dias_activos} de 7")\n', stdin:'9500\n4300\n8000\n12000\n7999\n3000\n10100'},
+  mercado:{code:'total = 0\nfor i in range(1, 4):\n    precio = float(input(f"Precio del producto {i}: "))\n    total += precio\nprint(f"Total sin IVA: {total:.2f}")\nprint(f"Total con IVA: {total * 1.19:.2f}")\n', stdin:'4500\n12900\n3200'},
+  potencia:{code:'base = int(input("Base: "))\nexponente = int(input("Exponente: "))\nresultado = 1\nfor _ in range(exponente):\n    resultado *= base\nprint(f"{base}^{exponente} = {resultado}")\n', stdin:'3\n4'},
+  clave:{code:'clave = input("Crea una contraseña: ")\nmayusculas = 0\ndigitos = 0\nfor c in clave:\n    if c.isupper():\n        mayusculas += 1\n    elif c.isdigit():\n        digitos += 1\nif len(clave) >= 8 and mayusculas >= 1 and digitos >= 1:\n    print("🔒 Contraseña segura")\nelse:\n    print("⚠️ Débil: usa 8 o más caracteres, una mayúscula y un número")\n', stdin:'Medellin2026'},
+  carrito:{code:'precios = [3500, 12000, 4800, 2200]\ntotal = 0\nfor p in precios:\n    total += p\nprint(f"{len(precios)} productos · total {total}")\nprint(f"Con IVA: {total * 1.19:.2f}")\n', stdin:''},
+  sala:{code:'for fila in "ABC":\n    for asiento in range(1, 6):\n        print(f"{fila}{asiento}", end=" ")\n    print()\n', stdin:''},
+  triangulo:{code:'n = int(input("Altura: "))\nfor i in range(1, n + 1):\n    for j in range(i):\n        print("*", end="")\n    print()\n', stdin:'4'},
+  libre:{code:'# Zona libre: experimenta con el ciclo for\nfor i in range(1, 4):\n    print("Vuelta", i)\nprint("¡Terminé!")\n', stdin:''}
+};
+const LEVELS=['Novato del bucle','Contador aprendiz','Acumulador experto','Maestro del range','Arquitecto de ciclos'];
+const PER=150;
+const BADGES=[
+  {icon:'🥉',label:'Primer paso',test:()=>S.xp>=30},
+  {icon:'🐍',label:'¡Hola, for!',test:()=>!!S.flags.firstRun},
+  {icon:'🎯',label:'Francotirador',test:()=>!!S.flags.sniper},
+  {icon:'📋',label:'Escritorio impecable',test:()=>!!S.flags.desk},
+  {icon:'🧭',label:'Rastreador',test:()=>!!S.flags.tracer},
+  {icon:'🧩',label:'Ensamblador',test:()=>!!S.flags.builder},
+  {icon:'🕵️',label:'Cazaerrores',test:()=>!!S.flags.hunter},
+  {icon:'🏅',label:'Iterador',test:()=>RETOS.filter(r=>S.retos[r.id]).length>=6},
+  {icon:'🧱',label:'Arquitecto',test:()=>RETOS.filter(r=>r.lvl===4).every(r=>S.retos[r.id])},
+  {icon:'🧠',label:'Leyenda',test:()=>RETOS.every(r=>S.retos[r.id])}
+];
+const LVNAME={1:'🟢 Nivel 1 · Calentamiento',2:'🟡 Nivel 2 · Intermedio',3:'🟠 Nivel 3 · Avanzado',4:'🔴 Nivel 4 · Reto ★'};
+const LVDESC={1:'Un ciclo con un contador o un acumulador y un cálculo con porcentaje.',2:'Acumuladores que se actualizan con su propio valor, recorrer textos y varios acumuladores a la vez.',3:'Tablas de pagos, divisores y los primeros ciclos anidados.',4:'Ciclos anidados con formato exacto y acumuladores por grupo. ¡Para valientes!'};
+
+/* ===================== Progreso / XP ===================== */
+const KEY=CFG.key;
+function freshS(){ return {xp:0, awarded:[], flags:{}, retos:{}, sol:{}, cov:{}, desk:{}, rng:{}, pz:{}, trace:{}, interp:{}}; }
+let S=freshS();
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null'); if(s&&typeof s==='object') S=Object.assign(freshS(),s);}catch(e){}
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} }
+const RESET_HOOKS=[];
+function renderXP(){
+  const lvl=Math.min(LEVELS.length,Math.floor(S.xp/PER)+1);
+  document.getElementById('lvl').textContent=lvl;
+  document.getElementById('lvlname').textContent=LEVELS[lvl-1];
+  document.getElementById('xp').textContent=S.xp;
+  document.getElementById('xpfill').style.width=(lvl===LEVELS.length?100:Math.round((S.xp%PER)/PER*100))+'%';
+  const box=document.getElementById('badges'); box.innerHTML='';
+  BADGES.forEach(b=>{const e=document.createElement('span');e.className='bdg'+(b.test()?' on':'');e.textContent=b.icon+' '+b.label;e.title=b.hint||'';box.appendChild(e);});
+}
+let popT=null;
+function pop(t){const p=document.getElementById('xppop');p.textContent=t;p.classList.add('show');clearTimeout(popT);popT=setTimeout(()=>p.classList.remove('show'),1600);}
+function addXP(key,amt,label){
+  if(S.awarded.includes(key))return false;
+  S.awarded.push(key); S.xp+=amt; save(); renderXP(); pop('+'+amt+' XP'+(label?' · '+label:'')); return true;
+}
+function flag(name,label){ if(S.flags[name])return; S.flags[name]=true; save(); renderXP(); if(label)setTimeout(()=>pop('🏅 Insignia: '+label),1700); }
+document.getElementById('resetProg').addEventListener('click',()=>{
+  if(!confirm('¿Borrar tu XP, insignias y retos superados en este navegador?'))return;
+  S=freshS(); save(); renderXP(); RESET_HOOKS.forEach(f=>{try{f();}catch(e){console.warn(e);}});
+});
+renderXP();
+
+/* ===================== Pestañas ===================== */
+const tabs=document.querySelectorAll('#tabs button');
+function showTab(name){
+  tabs.forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('active',s.id===name));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+tabs.forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+
+/* ===================== Quiz genérico ===================== */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function makeQuiz(cfg){
+  document.getElementById(cfg.totalId).textContent=cfg.data.length;
+  function build(){
+    const box=document.getElementById(cfg.boxId); box.innerHTML='';
+    let answered=0, correct=0;
+    document.getElementById(cfg.scoreId).textContent='0';
+    cfg.data.forEach((q,i)=>{
+      const c=document.createElement('div'); c.className='q';
+      c.innerHTML='<span class="tag">'+(q.tag||('#'+(i+1)))+'</span>'+(q.scn?'<p class="scn">'+q.scn+'</p>':'')+(q.code?'<pre>'+esc(q.code)+'</pre>':'');
+      const opts=document.createElement('div'); opts.className='opts';
+      const fb=document.createElement('div'); fb.className='feedback';
+      let done=false;
+      q.opts.forEach(o=>{
+        const b=document.createElement('button'); b.className='opt'; b.textContent=o;
+        b.addEventListener('click',()=>{
+          if(done)return; done=true; answered++;
+          opts.querySelectorAll('.opt').forEach(x=>x.classList.add('locked'));
+          if(o===q.ans){ b.classList.add('correct'); correct++; document.getElementById(cfg.scoreId).textContent=correct;
+            fb.textContent='✔ ¡Correcto! '+q.why; fb.className='feedback ok'; addXP(cfg.boxId+':'+i,cfg.xp||10); }
+          else{ b.classList.add('wrong'); opts.querySelectorAll('.opt').forEach(x=>{if(x.textContent===q.ans)x.classList.add('correct');});
+            fb.textContent='✘ Respuesta: '+q.ans+'. '+q.why; fb.className='feedback no'; }
+          if(answered===cfg.data.length && cfg.onDone) cfg.onDone(correct);
+        });
+        opts.appendChild(b);
+      });
+      c.appendChild(opts); c.appendChild(fb); box.appendChild(c);
+    });
+  }
+  document.getElementById(cfg.resetId).addEventListener('click',build); build();
+}
+/* ===================== Componentes: simulador paso a paso ===================== */
+function makeSim(cfg){
+  // cfg: {root, progs:{id:{title,code:[...],inputs:[...],trace(v)}} , xp, onAll}
+  const root=document.getElementById(cfg.root);
+  root.innerHTML='<div class="simbar"><select aria-label="Programa"></select><span class="itc">Vuelta: <b>–</b></span></div>'+
+    '<div class="simin"></div>'+
+    '<div class="btns" style="margin-top:0"><button class="btn sstep">▶ Paso</button><button class="btn ghost sauto">⏩ Automático</button><button class="btn ghost sreset">↺ Reiniciar</button></div>'+
+    '<div class="simgrid" style="margin-top:8px"><div class="scode"></div><div><div class="vars"><table><thead><tr><th>Variable</th><th>Valor</th></tr></thead><tbody></tbody></table></div>'+
+    '<label style="display:block;font-size:.78rem;color:var(--muted);margin:8px 0 4px;font-weight:600">🖥️ Salida</label><pre class="term sout" style="min-height:90px"></pre><div class="snote"></div></div></div>';
+  const sel=root.querySelector('select'), inBox=root.querySelector('.simin'), codeBox=root.querySelector('.scode'), tb=root.querySelector('tbody'),
+        out=root.querySelector('.sout'), note=root.querySelector('.snote'), itc=root.querySelector('.itc b'),
+        bStep=root.querySelector('.sstep'), bAuto=root.querySelector('.sauto'), bReset=root.querySelector('.sreset');
+  let id=Object.keys(cfg.progs)[0], steps=[], k=-1, timer=null, prevVars={};
+  Object.entries(cfg.progs).forEach(([key,p])=>{const o=document.createElement('option');o.value=key;o.textContent=(S.trace[cfg.root+':'+key]?'✅ ':'')+p.title;sel.appendChild(o);});
+  function renderInputs(){ const p=cfg.progs[id]; inBox.innerHTML='';
+    (p.inputs||[]).forEach(inp=>{ const w=document.createElement('label'); w.textContent=inp.label+' ';
+      const el=document.createElement('input'); el.type=inp.type||'text'; el.value=inp.value; el.dataset.id=inp.id; if(inp.w) el.style.width=inp.w;
+      el.addEventListener('change',reset); w.appendChild(el); inBox.appendChild(w); }); }
+  function renderCode(){ const p=cfg.progs[id]; codeBox.innerHTML='';
+    p.code.forEach((t,i)=>{ const d=document.createElement('div'); d.className='sl'; d.innerHTML='<span class="ln">'+(i+1)+'</span><span class="tx">'+esc(t)+'</span>'; codeBox.appendChild(d); }); }
+  function stop(){ if(timer){clearInterval(timer);timer=null;bAuto.textContent='⏩ Automático';} }
+  function reset(){ stop(); const p=cfg.progs[id], v={}; inBox.querySelectorAll('[data-id]').forEach(el=>v[el.dataset.id]=el.value);
+    try{ steps=p.trace(v); }catch(e){ steps=[]; }
+    k=-1; prevVars={}; renderCode(); tb.innerHTML='<tr><td colspan="2" style="color:var(--muted)">Pulsa ▶ Paso para empezar</td></tr>'; out.textContent=''; note.textContent=''; itc.textContent='–'; bStep.disabled=false; }
+  function show(){
+    const st=steps[k], rows=codeBox.children;
+    [...rows].forEach((r,i)=>{ r.classList.remove('cur','run','true','false'); const s=r.querySelector('.st'); if(s) s.remove(); });
+    const r=rows[st.l]; r.classList.add('cur', st.s||'run');
+    if(st.tag){ const s=document.createElement('span'); s.className='st'; s.textContent=st.tag; r.appendChild(s); }
+    r.scrollIntoView({block:'nearest'});
+    tb.innerHTML=''; Object.entries(st.vars||{}).forEach(([n,val])=>{ const tr=document.createElement('tr'); const ch=prevVars[n]!==undefined&&prevVars[n]!==val || prevVars[n]===undefined;
+      tr.innerHTML='<td class="mono">'+esc(n)+'</td><td class="mono'+(ch?' chg':'')+'">'+esc(val)+'</td>'; tb.appendChild(tr); });
+    prevVars=Object.assign({},st.vars||{});
+    if(st.out!==undefined) out.textContent+=st.out;
+    note.innerHTML=st.note?('💬 '+st.note):'';
+    itc.textContent=st.it===undefined?(itc.textContent):String(st.it);
+    if(k===steps.length-1){ bStep.disabled=true; stop(); note.innerHTML+=(note.innerHTML?'<br>':'')+'🏁 <b>Fin del programa.</b>';
+      const key=cfg.root+':'+id; if(!S.trace[key]){ S.trace[key]=true; save(); [...sel.options].forEach(o=>{ if(o.value===id && !o.textContent.startsWith('✅')) o.textContent='✅ '+o.textContent; }); }
+      addXP('trace:'+key,cfg.xp||15,'programa recorrido');
+      if(Object.keys(cfg.progs).every(x=>S.trace[cfg.root+':'+x]) && cfg.onAll) cfg.onAll(); }
+  }
+  function step(){ if(k<steps.length-1){ k++; show(); } }
+  bStep.addEventListener('click',step);
+  bAuto.addEventListener('click',()=>{ if(timer){stop();return;} if(k>=steps.length-1) reset(); bAuto.textContent='⏸ Pausa'; timer=setInterval(()=>{ if(k>=steps.length-1){stop();return;} step(); },650); });
+  bReset.addEventListener('click',reset);
+  sel.addEventListener('change',()=>{ id=sel.value; renderInputs(); reset(); });
+  renderInputs(); reset();
+  return {load(x){ id=x; sel.value=x; renderInputs(); reset(); root.scrollIntoView({behavior:'smooth'}); }};
+}
+
+/* ===================== Componentes: arma el programa (Parsons) ===================== */
+function makeParsons(cfg){
+  // cfg: {root, puzzles:[{id,title,goal,lines:[...],valid:[[...]]}], xp, onAll}
+  const root=document.getElementById(cfg.root);
+  cfg.puzzles.forEach(pz=>{
+    const box=document.createElement('div'); box.className='pz';
+    box.innerHTML='<h3 style="margin:0 0 4px">'+pz.title+(S.pz[pz.id]?' <span class="ok">✔</span>':'')+'</h3><p style="margin:2px 0 8px">'+pz.goal+'</p>'+
+      '<div class="pzgrid"><div><div class="pzlab">🧩 Piezas (toca para usar)</div><div class="pzpool"></div></div><div><div class="pzlab">📝 Tu programa (toca una línea para devolverla)</div><div class="pzprog"></div></div></div>'+
+      '<div class="btns"><button class="btn pzchk">✅ Comprobar</button><button class="btn ghost pzrst">↺ Reiniciar</button></div><div class="feedback pzfb"></div>';
+    root.appendChild(box);
+    const pool=box.querySelector('.pzpool'), prog=box.querySelector('.pzprog'), fb=box.querySelector('.pzfb');
+    let order=[];
+    const valid=pz.valid||[pz.lines.map((_,i)=>i)];
+    function build(){ order=[]; fb.textContent=''; fb.className='feedback pzfb'; pool.innerHTML=''; prog.innerHTML='';
+      const idx=pz.lines.map((_,i)=>i); for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
+      idx.forEach(i=>{ const b=document.createElement('button'); b.className='pzline'; b.dataset.i=i; b.textContent=pz.lines[i];
+        b.addEventListener('click',()=>{ if(b.classList.contains('used'))return; b.classList.add('used'); order.push(i); render(); }); pool.appendChild(b); });
+      render(); }
+    function render(){ prog.innerHTML=''; if(!order.length){ prog.innerHTML='<div class="pzempty">— vacío —</div>'; }
+      order.forEach((i,pos)=>{ const d=document.createElement('div'); d.className='pzline in'; d.textContent=pz.lines[i];
+        d.addEventListener('click',()=>{ order.splice(pos,1); pool.querySelector('[data-i="'+i+'"]').classList.remove('used'); render(); }); prog.appendChild(d); }); }
+    box.querySelector('.pzchk').addEventListener('click',()=>{
+      if(order.length<pz.lines.length){ fb.textContent='Usa todas las piezas antes de comprobar.'; fb.className='feedback no pzfb'; return; }
+      const ok=valid.some(v=>v.every((x,j)=>x===order[j]));
+      const ref=valid[0]; [...prog.children].forEach((d,j)=>d.classList.add(ref[j]===order[j]||ok?'good':'bad'));
+      if(ok){ fb.textContent='🎉 ¡Programa armado correctamente! Fíjate en la sangría: decide qué está dentro de cada ciclo.'; fb.className='feedback ok pzfb';
+        if(!S.pz[pz.id]){ S.pz[pz.id]=true; save(); box.querySelector('h3').innerHTML=pz.title+' <span class="ok">✔</span>'; }
+        addXP('pz:'+pz.id,cfg.xp||15,'programa armado');
+        if(cfg.puzzles.every(p=>S.pz[p.id]) && cfg.onAll) cfg.onAll(); }
+      else { fb.textContent='Aún no. Las líneas en rojo no están donde deberían (compáralas con el orden en que Python las necesita: primero se prepara, luego se repite, al final se muestra).'; fb.className='feedback no pzfb'; }
+    });
+    box.querySelector('.pzrst').addEventListener('click',build);
+    build();
+  });
+}
+
+/* ===================== Quizzes ===================== */
+makeQuiz({boxId:'vqQuiz',scoreId:'vqScore',totalId:'vqTotal',resetId:'vqReset',xp:8,data:[
+  {code:'for i in range(8):\n    print(i)',opts:['7','8','9'],ans:'8',why:'range(8) genera 0, 1, …, 7: ocho valores.'},
+  {code:'for i in range(2, 9):\n    print(i)',opts:['6','7','8'],ans:'7',why:'De 2 a 8 (el 9 no se incluye): 9 − 2 = 7 vueltas.'},
+  {code:'for i in range(1, 20, 4):\n    print(i)',opts:['4','5','19'],ans:'5',why:'Genera 1, 5, 9, 13, 17. El siguiente sería 21, que ya pasa la parada.'},
+  {code:'for i in range(10, 0, -3):\n    print(i)',opts:['3','4','10'],ans:'4',why:'Genera 10, 7, 4, 1. El siguiente sería −2 y la parada es 0.'},
+  {code:'for i in range(7, 7):\n    print(i)',opts:['0','1','7'],ans:'0',why:'Empieza justo en la parada: no se genera nada y el cuerpo nunca se ejecuta.'},
+  {code:'for i in range(0, -5):\n    print(i)',opts:['0','5','Error'],ans:'0',why:'Con paso +1 no se puede ir de 0 hacia −5: secuencia vacía, sin error.'},
+  {code:'for i in range(-3, 3):\n    print(i)',opts:['3','6','7'],ans:'6',why:'−3, −2, −1, 0, 1, 2: seis valores.'},
+  {code:'for letra in "Python":\n    print(letra)',opts:['1','5','6'],ans:'6',why:'Un texto se recorre carácter por carácter: "Python" tiene 6.'}
+]});
+makeQuiz({boxId:'qiQuiz',scoreId:'qiScore',totalId:'qiTotal',resetId:'qiReset',xp:10,data:[
+  {code:'for c in "sol":\n    print(c, end="-")',opts:['s-o-l','s-o-l-','sol-','s\no\nl'],ans:'s-o-l-',why:'end="-" se escribe después de CADA carácter, también del último.'},
+  {code:'t = 0\nfor i in range(3):\n    t += i\nprint(t)',opts:['3','6','0 1 3','2'],ans:'3',why:'i toma 0, 1 y 2: 0 + 1 + 2 = 3. El print está fuera del ciclo: se imprime una vez.'},
+  {code:'for i in range(2, 9, 3):\n    print(i, end=" ")',opts:['2 5 8','2 5 8 11','3 6 9','2 4 6 8'],ans:'2 5 8',why:'Empieza en 2 y suma 3: 2, 5, 8. El 11 ya pasa la parada 9.'},
+  {code:'n = 0\nfor letra in "Mississippi":\n    if letra == "s":\n        n += 1\nprint(n)',opts:['2','4','5','11'],ans:'4',why:'Un contador que solo aumenta cuando la letra es "s": M-i-s-s-i-s-s-i-p-p-i tiene 4.'},
+  {code:'p = 1\nfor k in range(1, 5):\n    p *= 2\nprint(p)',opts:['8','10','16','32'],ans:'16',why:'4 vueltas (k = 1, 2, 3, 4) multiplicando por 2: 2 × 2 × 2 × 2 = 16.'}
+]});
+makeQuiz({boxId:'naQuiz',scoreId:'naScore',totalId:'naTotal',resetId:'naReset',xp:10,data:[
+  {code:'for i in range(3):\n    for j in range(4):\n        print("*")      # ←',opts:['7','12','4','3'],ans:'12',why:'3 vueltas externas × 4 internas = 12.'},
+  {code:'for i in range(5):\n    for j in range(2):\n        x = i + j\n    print(x)            # ←',opts:['10','5','2','7'],ans:'5',why:'El print está en el ciclo externo (4 espacios), no en el interno: se ejecuta 5 veces.'},
+  {code:'for i in range(4):\n    for j in range(i):\n        print(i, j)     # ←',opts:['16','10','6','4'],ans:'6',why:'El interno da i vueltas: 0 + 1 + 2 + 3 = 6.'},
+  {code:'for i in range(1, 4):\n    for j in range(i, 4):\n        print("#")      # ←',opts:['9','6','3','4'],ans:'6',why:'i = 1 → j de 1 a 3 (3); i = 2 → 2; i = 3 → 1. Total 6.'},
+  {code:'for f in "ab":\n    for c in "xyz":\n        print(f + c)    # ←',opts:['5','6','9','2'],ans:'6',why:'2 letras externas × 3 internas = 6: ax ay az bx by bz.'}
+]});
+const CE=['SyntaxError','IndentationError','TypeError','Error lógico (sin mensaje)','Funciona bien'];
+makeQuiz({boxId:'ceQuiz',scoreId:'ceScore',totalId:'ceTotal',resetId:'ceReset',xp:10,
+  onDone:()=>flag('hunter','Cazaerrores'),
+  data:[
+  {tag:'Fragmento 1',code:'for i in range(5)\n    print(i)',opts:CE,ans:'SyntaxError',why:'Faltan los dos puntos al final de la línea del for.'},
+  {tag:'Fragmento 2',code:'n = float(input("¿Cuántas vueltas? "))\nfor i in range(n):\n    print(i)',opts:CE,ans:'TypeError',why:'range() solo acepta enteros: "\'float\' object cannot be interpreted as an integer". Se lee con int().'},
+  {tag:'Fragmento 3 · se quería: sumar 5 notas',code:'for i in range(5):\n    total = 0\n    total += float(input("Nota: "))\nprint(total)',opts:CE,ans:'Error lógico (sin mensaje)',why:'total = 0 está dentro del ciclo: se reinicia en cada vuelta y al final solo queda la última nota.'},
+  {tag:'Fragmento 4 · se quería: mostrar del 1 al 10',code:'for i in range(1, 10):\n    print(i)',opts:CE,ans:'Error lógico (sin mensaje)',why:'Muestra del 1 al 9: la parada no se incluye. Debía ser range(1, 11).'},
+  {tag:'Fragmento 5 · se quería: 5! = 120',code:'producto = 0\nfor i in range(1, 6):\n    producto *= i\nprint(producto)',opts:CE,ans:'Error lógico (sin mensaje)',why:'Imprime 0: el acumulador de producto debe empezar en 1.'},
+  {tag:'Fragmento 6',code:'for letra in "hola":\nprint(letra)',opts:CE,ans:'IndentationError',why:'El cuerpo del for necesita sangría: "expected an indented block".'},
+  {tag:'Fragmento 7 · se quería: imprimir solo la suma final',code:'suma = 0\nfor i in range(1, 4):\n    suma += i\n    print(suma)',opts:CE,ans:'Error lógico (sin mensaje)',why:'El print quedó dentro del ciclo: imprime 1, 3 y 6. Debía ir sin sangría.'},
+  {tag:'Fragmento 8',code:'for i in range(10, 0, -2):\n    print(i, end=" ")',opts:CE,ans:'Funciona bien',why:'Imprime 10 8 6 4 2.'}
+]});
+
+/* ===================== Explorador de range ===================== */
+(function(){
+  const a=document.getElementById('rxA'), b=document.getElementById('rxB'), c=document.getElementById('rxC'),
+        call=document.getElementById('rxCall'), out=document.getElementById('rxOut'), meta=document.getElementById('rxMeta');
+  function upd(){
+    const A=parseInt(a.value,10), B=parseInt(b.value,10), C=parseInt(c.value,10);
+    if([A,B,C].some(isNaN)){ call.textContent='Escribe tres números enteros.'; out.innerHTML=''; meta.textContent=''; return; }
+    call.innerHTML='for i in <b>range('+A+', '+B+', '+C+')</b>:';
+    if(C===0){ out.innerHTML='<span class="ko">ValueError: el paso no puede ser 0</span>'; meta.textContent='Con paso 0 el ciclo nunca avanzaría: Python lo prohíbe.'; return; }
+    const v=[]; for(let i=A; C>0? i<B : i>B; i+=C){ v.push(i); if(v.length>400)break; }
+    out.innerHTML=v.length? v.slice(0,60).map(x=>'<span>'+x+'</span>').join('')+(v.length>60?'<span class="more">… ('+(v.length-60)+' más)</span>':'') : '<span class="more">(vacío: el cuerpo no se ejecuta)</span>';
+    const last=v.length?v[v.length-1]:null;
+    meta.innerHTML='🔁 <b>'+(v.length>400?'más de 400':v.length)+'</b> vuelta(s)'+(last!==null?' · último valor: <b>'+last+'</b>':'')+
+      (v.length?' · PSeInt: <span class="mono">Para i &lt;- '+A+' Hasta '+last+(C!==1?' Con Paso '+C:'')+' Hacer</span>':'');
+  }
+  [a,b,c].forEach(e=>e.addEventListener('input',upd)); upd();
+})();
+
+/* ===================== Francotirador del range ===================== */
+const SNIPER=[[0,1,2,3,4],[1,2,3,4,5,6,7,8,9,10],[2,4,6,8,10],[5,10,15,20,25,30,35,40,45,50],[10,9,8,7,6,5,4,3,2,1],[100,75,50,25,0],[-3,-2,-1,0,1,2,3],[1,4,7,10,13,16]];
+function renderSniper(){
+  const box=document.getElementById('sniper'); box.innerHTML=''; let hits=0;
+  SNIPER.forEach((t,i)=>{
+    const done=!!S.rng[i]; if(done)hits++;
+    const c=document.createElement('div'); c.className='q sn'+(done?' hit':'');
+    c.innerHTML='<span class="tag">Objetivo '+(i+1)+'</span> <span class="mono tgt">'+t.join(' ')+'</span>'+
+      '<div class="snrow"><span class="mono">range(</span><input type="number" aria-label="inicio"><span class="mono">,</span><input type="number" aria-label="parada"><span class="mono">,</span><input type="number" aria-label="paso" value="1"><span class="mono">)</span><button class="btn">🎯 Disparar</button></div><div class="feedback"></div>';
+    const ins=c.querySelectorAll('input'), fb=c.querySelector('.feedback');
+    if(done){ const sv=S.rng[i]; ins[0].value=sv[0]; ins[1].value=sv[1]; ins[2].value=sv[2]; fb.textContent='✔ ¡En el blanco!'; fb.className='feedback ok'; }
+    const go=()=>{ const A=parseInt(ins[0].value,10),B=parseInt(ins[1].value,10),C=parseInt(ins[2].value,10);
+      if([A,B,C].some(isNaN)){ fb.textContent='Completa los tres valores.'; fb.className='feedback no'; return; }
+      if(C===0){ fb.textContent='El paso no puede ser 0 (ValueError).'; fb.className='feedback no'; return; }
+      const v=[]; for(let x=A; C>0?x<B:x>B; x+=C){ v.push(x); if(v.length>200)break; }
+      if(v.length===t.length && v.every((x,j)=>x===t[j])){ fb.textContent='✔ ¡En el blanco! range('+A+', '+B+', '+C+') genera exactamente esa secuencia.'; fb.className='feedback ok';
+        c.classList.add('hit'); if(!S.rng[i]){ S.rng[i]=[A,B,C]; save(); } addXP('sn:'+i,10,'¡blanco!');
+        document.getElementById('snScore').textContent=SNIPER.filter((_,k)=>S.rng[k]).length;
+        if(SNIPER.every((_,k)=>S.rng[k])) flag('sniper','Francotirador'); }
+      else { fb.innerHTML='✘ Tu range genera: <span class="mono">'+(v.length?v.slice(0,15).join(' ')+(v.length>15?' …':''):'(nada)')+'</span>. '+(v.length&&v[0]!==t[0]?'Revisa el inicio.':v.length!==t.length?'Revisa la parada: ¿se incluye o no?':'Revisa el paso.'); fb.className='feedback no'; } };
+    c.querySelector('button').addEventListener('click',go); ins.forEach(e=>e.addEventListener('keydown',ev=>{if(ev.key==='Enter')go();}));
+    box.appendChild(c);
+  });
+  document.getElementById('snScore').textContent=hits; document.getElementById('snTotal').textContent=SNIPER.length;
+}
+document.getElementById('snReset').addEventListener('click',()=>{ S.rng={}; save(); renderSniper(); });
+renderSniper(); RESET_HOOKS.push(renderSniper);
+
+/* ===================== Prueba de escritorio ===================== */
+const DESK=[
+  {id:'d1',title:'Programa A · acumulador',code:'total = 0\nfor i in range(1, 6, 2):\n    total += i * 2',cols:['i','total'],rows:[[1,2],[3,8],[5,18]]},
+  {id:'d2',title:'Programa B · producto hacia atrás',code:'r = 1\nfor k in range(4, 0, -1):\n    r *= k',cols:['k','r'],rows:[[4,4],[3,12],[2,24],[1,24]]},
+  {id:'d3',title:'Programa C · contador con condición',code:'cuenta = 0\nfor n in range(10, 30, 4):\n    if n % 3 == 0:\n        cuenta += 1',cols:['n','cuenta'],rows:[[10,0],[14,0],[18,1],[22,1],[26,1]]}
+];
+function renderDesk(){
+  const box=document.getElementById('desk'); box.innerHTML='';
+  DESK.forEach(d=>{
+    const c=document.createElement('div'); c.className='q';
+    c.innerHTML='<h3 style="margin:0 0 6px">'+d.title+(S.desk[d.id]?' <span class="ok">✔</span>':'')+'</h3><div class="grid3"><pre>'+esc(d.code)+'</pre><div class="tablewrap"><table class="mini desk"><thead><tr><th>Vuelta</th>'+d.cols.map(x=>'<th class="mono">'+x+'</th>').join('')+'</tr></thead><tbody>'+
+      d.rows.map((r,i)=>'<tr><td>'+(i+1)+'</td>'+r.map((_,j)=>'<td><input type="text" inputmode="numeric" data-r="'+i+'" data-c="'+j+'"></td>').join('')+'</tr>').join('')+'</tbody></table></div></div>'+
+      '<div class="btns"><button class="btn">✅ Comprobar</button></div><div class="feedback"></div>';
+    const ins=c.querySelectorAll('input'), fb=c.querySelector('.feedback');
+    if(S.desk[d.id]) ins.forEach(e=>{ e.value=d.rows[+e.dataset.r][+e.dataset.c]; e.classList.add('good'); });
+    c.querySelector('button').addEventListener('click',()=>{
+      let ok=0, empty=0;
+      ins.forEach(e=>{ const exp=String(d.rows[+e.dataset.r][+e.dataset.c]); const v=e.value.trim(); e.classList.remove('good','bad'); if(v===''){empty++;return;} if(v===exp){ok++;e.classList.add('good');} else e.classList.add('bad'); });
+      if(ok===ins.length){ fb.textContent='🎉 ¡Prueba de escritorio perfecta! Así se verifica un ciclo sin computador.'; fb.className='feedback ok';
+        if(!S.desk[d.id]){ S.desk[d.id]=true; save(); c.querySelector('h3').innerHTML=d.title+' <span class="ok">✔</span>'; }
+        addXP('desk:'+d.id,20,'prueba de escritorio'); if(DESK.every(x=>S.desk[x.id])) flag('desk','Escritorio impecable'); }
+      else { fb.textContent=(empty?'Te faltan '+empty+' casilla(s). ':'')+'Correctas: '+ok+' de '+ins.length+'. Recuerda: cada fila es el estado AL FINAL de esa vuelta.'; fb.className='feedback no'; }
+    });
+    box.appendChild(c);
+  });
+}
+renderDesk(); RESET_HOOKS.push(renderDesk);
+
+/* ===================== Simulador paso a paso ===================== */
+const vq=(s)=>'"'+s+'"';
+makeSim({root:'sim10',xp:15,onAll:()=>flag('tracer','Rastreador'),progs:{
+  suma:{title:'➕ Suma de 1 a n (acumulador)',
+    inputs:[{id:'n',label:'n =',type:'number',value:4,w:'80px'}],
+    code:['n = int(input("n: "))','total = 0','for i in range(1, n + 1):','    total += i','print(f"Suma = {total}")'],
+    trace(v){ const n=Math.max(0,Math.min(12,parseInt(v.n,10)||0)); const st=[]; let total=0;
+      st.push({l:0,vars:{n},note:'Se lee n = '+n+'. range(1, '+(n+1)+') generará '+(n||'ningún')+' valor(es).'});
+      st.push({l:1,vars:{n,total},note:'El acumulador se crea ANTES del ciclo, en 0.'});
+      for(let i=1;i<=n;i++){ st.push({l:2,vars:{n,total,i},tag:'i = '+i,it:i,note:'Vuelta '+i+': la variable i toma el valor '+i+'.'});
+        total+=i; st.push({l:3,vars:{n,total,i},it:i,note:'total = '+(total-i)+' + '+i+' = '+total}); }
+      st.push({l:2,s:'false',vars:n?{n,total,i:n}:{n,total},tag:'fin del range',note:'range ya no tiene más valores: el ciclo termina.'});
+      st.push({l:4,vars:n?{n,total,i:n}:{n,total},out:'Suma = '+total+'\n',note:'Sin sangría: se ejecuta una sola vez, después del ciclo.'});
+      return st; }},
+  vocales:{title:'🔤 Contar vocales (recorrer texto)',
+    inputs:[{id:'p',label:'palabra =',type:'text',value:'ciclo',w:'130px'}],
+    code:['palabra = input("Palabra: ")','vocales = 0','for letra in palabra:','    if letra in "aeiou":','        vocales += 1','print("Vocales:", vocales)'],
+    trace(v){ const p=String(v.p||'').slice(0,14); const st=[]; let c=0;
+      st.push({l:0,vars:{palabra:vq(p)},note:'El texto tiene '+p.length+' carácter(es): el ciclo dará '+p.length+' vuelta(s).'});
+      st.push({l:1,vars:{palabra:vq(p),vocales:0}});
+      [...p].forEach((ch,k)=>{ const base={palabra:vq(p),vocales:c,letra:vq(ch)};
+        st.push({l:2,vars:base,tag:'letra = '+vq(ch),it:k+1,note:'Vuelta '+(k+1)+': letra toma el carácter '+vq(ch)+'.'});
+        const yes='aeiou'.includes(ch); st.push({l:3,s:yes?'true':'false',vars:base,tag:yes?'True':'False',it:k+1,note:yes?vq(ch)+' está en "aeiou".':vq(ch)+' no es vocal minúscula sin tilde: no se cuenta.'});
+        if(yes){ c++; st.push({l:4,vars:{palabra:vq(p),vocales:c,letra:vq(ch)},it:k+1,note:'El contador aumenta en 1.'}); } });
+      const fin=p.length?{palabra:vq(p),vocales:c,letra:vq(p[p.length-1])}:{palabra:vq(p),vocales:c};
+      st.push({l:2,s:'false',vars:fin,tag:'no quedan letras',note:'Se recorrió todo el texto: el ciclo termina.'});
+      st.push({l:5,vars:fin,out:'Vocales: '+c+'\n'}); return st; }},
+  triangulo:{title:'🧱 Triángulo (ciclos anidados)',
+    inputs:[{id:'n',label:'n =',type:'number',value:3,w:'80px'}],
+    code:['n = int(input("Filas: "))','for i in range(1, n + 1):','    for j in range(1, i + 1):','        print(j, end=" ")','    print()','print("Fin")'],
+    trace(v){ const n=Math.max(0,Math.min(6,parseInt(v.n,10)||0)); const st=[{l:0,vars:{n},note:'El externo dará '+n+' vuelta(s).'}];
+      for(let i=1;i<=n;i++){ st.push({l:1,vars:{n,i},tag:'i = '+i,it:'i='+i,note:'Externo, vuelta '+i+'. El interno va a dar '+i+' vuelta(s), desde el principio.'});
+        for(let j=1;j<=i;j++){ st.push({l:2,vars:{n,i,j},tag:'j = '+j,it:'i='+i+' · j='+j}); st.push({l:3,vars:{n,i,j},out:j+' ',it:'i='+i+' · j='+j}); }
+        st.push({l:2,s:'false',vars:{n,i,j:i},tag:'fin interno',it:'i='+i,note:'Terminó el interno: volvemos al cuerpo del externo.'});
+        st.push({l:4,vars:{n,i,j:i},out:'\n',it:'i='+i,note:'print() vacío: salto de línea al terminar cada fila.'}); }
+      st.push({l:1,s:'false',vars:n?{n,i:n,j:n}:{n},tag:'fin externo'});
+      st.push({l:5,vars:n?{n,i:n,j:n}:{n},out:'Fin\n'}); return st; }}
+}});
+
+/* ===================== Arma el programa ===================== */
+makeParsons({root:'parsons',xp:15,onAll:()=>flag('builder','Ensamblador'),puzzles:[
+  {id:'p1',title:'1 · Promedio de N notas',goal:'Pide cuántas notas hay, léelas una por una y muestra el promedio.',
+   lines:['n = int(input("¿Cuántas notas? "))','suma = 0','for i in range(n):','    nota = float(input("Nota: "))','    suma += nota','print(f"Promedio: {suma / n:.2f}")'],
+   valid:[[0,1,2,3,4,5],[1,0,2,3,4,5]]},
+  {id:'p2',title:'2 · Contar vocales',goal:'Pide una palabra y muestra cuántas vocales tiene.',
+   lines:['palabra = input("Palabra: ")','vocales = 0','for letra in palabra:','    if letra in "aeiou":','        vocales += 1','print("Vocales:", vocales)'],
+   valid:[[0,1,2,3,4,5],[1,0,2,3,4,5]]},
+  {id:'p3',title:'3 · Tabla 3 × 3',goal:'Muestra los productos fila × columna en 3 líneas.',
+   lines:['for fila in range(1, 4):','    for col in range(1, 4):','        print(fila * col, end=" ")','    print()']}
+]});
+
+/* ===================== Motor Python (Pyodide) ===================== */
+const qp=new URLSearchParams(location.search);
+const PYO_BASE=qp.get('pyo')||'https://cdn.jsdelivr.net/npm/pyodide@314.0.7/';
+const RUN_TIMEOUT=8000;
+const statusEl=document.getElementById('pyStatus');
+function setStatus(t){statusEl.textContent=t;}
+const WORKER_SRC = `
+let py=null;
+self.onmessage = async (e)=>{
+  const m=e.data;
+  if(m.type==='init'){
+    try{
+      const mod = await import(m.base+'pyodide.mjs');
+      py = await mod.loadPyodide({indexURL:m.base});
+      py.runPython(m.harness);
+      self.postMessage({type:'ready', version: py.runPython("import sys; sys.version.split()[0]")});
+    }catch(err){ self.postMessage({type:'fail', error:String(err)}); }
+  } else if(m.type==='run'){
+    let r;
+    try{
+      py.globals.set('S_', m.src); py.globals.set('I_', py.toPy(m.inputs)); py.globals.set('E_', m.echo);
+      const res = py.runPython('__run_user(S_, I_, E_)'); r=res.toJs(); res.destroy();
+      self.postMessage({type:'result', id:m.id, out:r[0], etype:r[1], err:r[2], line:(r[3]==null?null:r[3])});
+    }catch(err){ self.postMessage({type:'result', id:m.id, out:'', etype:'ErrorInterno', err:String(err), line:null}); }
+  }
+};`;
+const PY={mode:null, worker:null, ready:null, pend:{}, seq:0, main:null, version:''};
+function initWorker(){
+  return new Promise((resolve,reject)=>{
+    let w;
+    try{ w=new Worker(URL.createObjectURL(new Blob([WORKER_SRC],{type:'text/javascript'})),{type:'module'}); }catch(e){ reject(e); return; }
+    const to=setTimeout(()=>{ try{w.terminate();}catch(e){} reject(new Error('timeout de carga')); },120000);
+    w.onmessage=(e)=>{ const m=e.data;
+      if(m.type==='ready'){ clearTimeout(to); PY.version=m.version; resolve(w); }
+      else if(m.type==='fail'){ clearTimeout(to); try{w.terminate();}catch(_){} reject(new Error(m.error)); }
+      else if(m.type==='result'){ const p=PY.pend[m.id]; if(p){ delete PY.pend[m.id]; clearTimeout(p.to); p.resolve(m); } } };
+    w.onerror=(ev)=>{ clearTimeout(to); reject(new Error(ev.message||'error del worker')); };
+    w.postMessage({type:'init', base:PYO_BASE, harness:HARNESS_PY});
+  });
+}
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('No se pudo descargar '+src));document.head.appendChild(s);});}
+async function initMain(){
+  if(!window.loadPyodide) await loadScript(PYO_BASE+'pyodide.js');
+  const py=await window.loadPyodide({indexURL:PYO_BASE});
+  py.runPython(HARNESS_PY); PY.version=py.runPython("import sys; sys.version.split()[0]"); return py;
+}
+function ensurePy(){
+  if(PY.ready) return PY.ready;
+  setStatus('🟡 Cargando Python… (solo la primera vez)');
+  PY.ready=(async()=>{
+    try{ PY.worker=await initWorker(); PY.mode='worker'; }
+    catch(e1){ console.warn('Worker no disponible, uso hilo principal:',e1);
+      try{ PY.main=await initMain(); PY.mode='main'; }
+      catch(e2){ PY.ready=null; setStatus('🔴 No se pudo cargar Python'); throw e2; } }
+    setStatus('🟢 Python '+PY.version+' listo'); return true;
+  })();
+  return PY.ready;
+}
+function runPy(src,inputs,echo){
+  return ensurePy().then(()=>{
+    if(PY.mode==='main'){
+      const g=PY.main.globals; g.set('S_',src); g.set('I_',PY.main.toPy(inputs)); g.set('E_',echo);
+      const res=PY.main.runPython('__run_user(S_, I_, E_)'); const r=res.toJs(); res.destroy();
+      return {out:r[0],etype:r[1],err:r[2],line:r[3]==null?null:r[3]};
+    }
+    return new Promise(resolve=>{
+      const id=++PY.seq;
+      const to=setTimeout(()=>{ delete PY.pend[id]; try{PY.worker.terminate();}catch(e){} PY.worker=null; PY.ready=null; PY.mode=null;
+        setStatus('🟡 Python se reinició'); resolve({timeout:true,out:'',etype:'',err:'',line:null}); },RUN_TIMEOUT);
+      PY.pend[id]={resolve,to};
+      PY.worker.postMessage({type:'run',id,src,inputs,echo});
+    });
+  });
+}
+
+const HINTS={
+  SyntaxError:'Python no entiende cómo está escrito. En ciclos revisa: los dos puntos (:) al final de for, while, if y else; que escribiste "in" en el for; que usas == para comparar; y que break y continue están dentro de un ciclo.',
+  IndentationError:'Sangría incorrecta: el cuerpo del ciclo lleva 4 espacios más que la línea del for/while, y cada ciclo anidado suma otros 4. Lo que va después del ciclo vuelve a la izquierda.',
+  TabError:'Mezclaste tabulaciones y espacios en la sangría. Usa solo espacios (4 por nivel).',
+  NameError:'Usas un nombre que no existe: ¿está bien escrito? ¿Creaste el contador o acumulador ANTES del ciclo? ¿Olvidaste comillas en un texto?',
+  TypeError:'Operación entre tipos incompatibles. range() solo acepta enteros: si el dato viene de input(), conviértelo con int(), no con float(). Y para sumar números leídos, conviértelos primero.',
+  ValueError:'No se pudo convertir el dato: revisa lo que escribiste en Entradas (por ejemplo, int("3.5") falla; usa float()).',
+  ZeroDivisionError:'Estás dividiendo entre cero: si el ciclo no dio ninguna vuelta, el contador sigue en 0. Revisa ese caso con un if antes de dividir.',
+  EOFError:'Tu programa pidió más datos con input() de los que hay en Entradas. Si usas un centinela o una opción de salida, ¿tu ciclo la reconoce y termina? (Una entrada por línea).',
+  CicloInfinito:'Ciclo infinito: la condición del while nunca se vuelve False. Revisa que algo DENTRO del ciclo cambie la variable de la condición (y que un continue no se salte ese cambio).',
+  DemasiadaSalida:'Tu programa imprimió muchísimo: casi siempre es un ciclo infinito con un print adentro. Revisa la condición y la actualización de la variable de control.',
+  RecursionError:'Demasiadas llamadas anidadas. Revisa tu programa.'
+};
+
+/* ===================== Laboratorio UI ===================== */
+const codeEl=document.getElementById('code'), stdinEl=document.getElementById('stdin'), termEl=document.getElementById('term'),
+      checkEl=document.getElementById('checkRes'), selEl=document.getElementById('retoSel'), infoEl=document.getElementById('retoInfo');
+let currentReto='libre';
+function draftKey(id){return CFG.draft+id;}
+function getDraft(id){try{return localStorage.getItem(draftKey(id));}catch(e){return null;}}
+function setDraft(id,v){try{localStorage.setItem(draftKey(id),v);}catch(e){}}
+function retoById(id){return RETOS.find(r=>r.id===id);}
+function tagHTML(r){return '<span style="font-size:.72rem;color:#2a2000;background:var(--py);padding:2px 9px;border-radius:999px;font-weight:700">'+r.tag+'</span> ';}
+function renderRetoSel(){
+  const keep=currentReto; selEl.innerHTML='';
+  const o0=document.createElement('option'); o0.value='libre'; o0.textContent='🧪 Zona libre'; selEl.appendChild(o0);
+  const groups={};
+  RETOS.forEach(r=>{ let g=groups[r.lvl]; if(!g){ g=groups[r.lvl]=document.createElement('optgroup'); g.label=LVNAME[r.lvl]; selEl.appendChild(g); }
+    const o=document.createElement('option'); o.value=r.id; o.textContent=(S.retos[r.id]?'✅ ':'🎯 ')+r.t+'  (+'+r.xp+' XP)'; g.appendChild(o); });
+  selEl.value=keep;
+}
+function renderInfo(r){ infoEl.innerHTML=tagHTML(r)+'<b>'+r.t+'</b>'+(S.retos[r.id]?' <span style="color:var(--good);font-weight:700">✅ superado</span>':'')+'<br>'+r.d; }
+function loadReto(id, extra){
+  currentReto=id; selEl.value=id; checkEl.innerHTML='';
+  const r=retoById(id), btnC=document.getElementById('checkBtn'), btnS=document.getElementById('solBtn');
+  if(!r){
+    const ex=EXTRA_CODE[extra||'libre']||EXTRA_CODE.libre;
+    infoEl.innerHTML='<b>🧪 Zona libre.</b> Experimenta con lo que quieras: prueba los ejemplos de la clase, cambia los datos y observa cuántas vueltas da cada ciclo.';
+    codeEl.value = extra? ex.code : (getDraft('libre') ?? ex.code); stdinEl.value = extra? ex.stdin : EXTRA_CODE.libre.stdin;
+    btnC.disabled=true; btnS.disabled=true;
+  } else {
+    renderInfo(r); codeEl.value = getDraft(r.id) ?? r.starter; stdinEl.value = r.tests[0].in.join('\n');
+    btnC.disabled=false; btnS.disabled=false;
+  }
+  termEl.innerHTML='<span class="sys">La salida de tu programa aparecerá aquí.</span>';
+}
+selEl.addEventListener('change',()=>loadReto(selEl.value));
+codeEl.addEventListener('input',()=>setDraft(currentReto,codeEl.value));
+codeEl.addEventListener('keydown',e=>{
+  if(e.key==='Tab'){ e.preventDefault(); const s=codeEl.selectionStart, en=codeEl.selectionEnd;
+    codeEl.value=codeEl.value.slice(0,s)+'    '+codeEl.value.slice(en); codeEl.selectionStart=codeEl.selectionEnd=s+4; setDraft(currentReto,codeEl.value); }
+  if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){ e.preventDefault(); doRun(); }
+});
+function termWrite(r){
+  termEl.innerHTML='';
+  if(r.timeout){ termEl.innerHTML='<span class="err">⏱ Tu programa tardó demasiado y se detuvo (¿quedó en un ciclo infinito?).</span>'; return; }
+  const o=document.createElement('span'); o.textContent=r.out; termEl.appendChild(o);
+  if(r.etype){
+    const e=document.createElement('span'); e.className='err';
+    e.textContent=(r.out&&!r.out.endsWith('\n')?'\n':'')+'❌ '+r.etype+(r.line?' en la línea '+r.line:'')+': '+r.err+'\n'; termEl.appendChild(e);
+    const h=HINTS[r.etype]; if(h){ const hh=document.createElement('span'); hh.className='hint'; hh.textContent='💡 '+h; termEl.appendChild(hh); }
+  } else if(!r.out){ termEl.innerHTML='<span class="sys">(El programa terminó sin mostrar nada. ¿El ciclo no dio ninguna vuelta? ¿Te faltó un print()?)</span>'; }
+}
+async function doRun(){
+  const btn=document.getElementById('runBtn'); btn.disabled=true; checkEl.innerHTML='';
+  termEl.innerHTML='<span class="sys">Ejecutando…</span>';
+  try{
+    const inputs=stdinEl.value===''?[]:stdinEl.value.replace(/\r/g,'').split('\n');
+    const r=await runPy(codeEl.value, inputs, true);
+    termWrite(r);
+    if(!r.timeout && !r.etype && r.out){ if(!S.flags.firstRun){ S.flags.firstRun=true; save(); renderXP(); setTimeout(()=>pop('🏅 Insignia: '+CFG.firstRunLabel),1600); } addXP('firstrun',10); }
+  }catch(e){
+    termEl.innerHTML='<span class="err">No se pudo cargar Python en este navegador ('+esc(e.message)+').\n</span><span class="hint">💡 Revisa tu conexión a internet y recarga la página. También puedes usar IDLE, Thonny o Google Colab.</span>';
+  }finally{ btn.disabled=false; }
+}
+document.getElementById('runBtn').addEventListener('click',doRun);
+document.getElementById('resetCode').addEventListener('click',()=>{ const r=retoById(currentReto); codeEl.value=r?r.starter:EXTRA_CODE.libre.code; setDraft(currentReto,codeEl.value); });
+document.getElementById('solBtn').addEventListener('click',()=>{
+  const r=retoById(currentReto); if(!r)return;
+  if(!S.retos[r.id] && !S.sol[r.id] && !confirm('Si ves la solución antes de superar el reto, ganarás la mitad de XP. ¿Ver la solución?'))return;
+  S.sol[r.id]=true; save(); codeEl.value=r.sol+'\n'; setDraft(r.id,codeEl.value);
+});
+document.getElementById('checkBtn').addEventListener('click',async()=>{
+  const r=retoById(currentReto); if(!r)return;
+  const btn=document.getElementById('checkBtn'); btn.disabled=true;
+  checkEl.innerHTML='<div class="row">🧪 Probando tu programa con '+r.tests.length+' casos…</div>';
+  let rows='', all=true;
+  try{
+    for(let i=0;i<r.tests.length;i++){
+      const tc=r.tests[i], res=await runPy(codeEl.value, tc.in, false);
+      let ok=false, why='';
+      if(res.timeout){why='tardó demasiado';}
+      else if(res.etype){why=res.etype+(res.line?' (línea '+res.line+')':'')+': '+res.err;}
+      else { const miss=tc.must.some(p=>!new RegExp(p,'i').test(res.out)), extra=(tc.not||[]).some(p=>new RegExp(p,'i').test(res.out));
+        ok=!miss&&!extra; if(miss) why='falta algo de lo esperado'; else if(extra) why='muestra algo que no debería (¿una vuelta de más? ¿un mensaje repetido?)'; }
+      all=all&&ok;
+      rows+='<div class="row '+(ok?'ok':'no')+'">'+(ok?'✅':'❌')+' <b>Caso '+(i+1)+'</b> · entradas: <code>'+esc(tc.in.join(' | '))+'</code> → se espera: <code>'+esc(tc.show)+'</code>'+
+        (ok?'':'<br><small>Tu salida: <code>'+esc((res.out||'').trim().replace(/\n/g,' ⏎ ')||'(vacía)')+'</code> — '+esc(why)+'</small>')+'</div>';
+    }
+    checkEl.innerHTML=rows;
+    if(all){
+      const first=!S.retos[r.id]; S.retos[r.id]=true; save();
+      const base=r.xp||30, amt=S.sol[r.id]?Math.round(base/2):base;
+      addXP('reto:'+r.id,amt,r.t.replace(/^[★\s]*\d*\.?\s*/,''));
+      checkEl.innerHTML+='<div class="win">🎉 ¡Reto superado!'+(first?' Nuevo ✅ en tu lista.':'')+' '+(S.sol[r.id]?'(XP reducida por ver la solución)':'')+'</div>';
+      renderRetoSel(); renderTaller(); renderXP(); renderInfo(r);
+    }
+  }catch(e){ checkEl.innerHTML='<div class="row no">No se pudo ejecutar Python ('+esc(e.message)+'). Revisa tu conexión.</div>'; }
+  finally{ btn.disabled=false; }
+});
+function openInLab(idOrExtra){ showTab('lab'); if(retoById(idOrExtra)) loadReto(idOrExtra); else loadReto('libre', idOrExtra); }
+document.querySelectorAll('[data-try]').forEach(b=>b.addEventListener('click',()=>openInLab(b.dataset.try)));
+
+RESET_HOOKS.push(()=>{renderRetoSel(); renderTaller(); loadReto(currentReto);});
+/* ===================== Taller ===================== */
+function renderTaller(){
+  const box=document.getElementById('ejercicios'); box.innerHTML='';
+  let lastLv=0;
+  RETOS.forEach(r=>{
+    if(r.lvl!==lastLv){ lastLv=r.lvl; const done=RETOS.filter(x=>x.lvl===r.lvl&&S.retos[x.id]).length, tot=RETOS.filter(x=>x.lvl===r.lvl).length;
+      const h=document.createElement('h3'); h.className='lvh'; h.innerHTML=LVNAME[r.lvl]+' <span>· '+r.xp+' XP c/u · '+done+'/'+tot+' superados</span><small>'+LVDESC[r.lvl]+'</small>'; box.appendChild(h); }
+    const c=document.createElement('div'); c.className='ex';
+    c.innerHTML='<span class="tag">'+r.tag+'</span>'+(S.retos[r.id]?'<span class="done">✅ superado en el laboratorio</span>':'')+
+      '<h3>'+r.t+'</h3><p>'+r.d+'</p><div class="btns"><button class="btn py">🐍 Resolver en el laboratorio</button></div>'+
+      '<details><summary>Ver solución en Python</summary><pre>'+esc(r.sol)+'</pre></details>';
+    c.querySelector('button').addEventListener('click',()=>openInLab(r.id));
+    c.querySelector('details').addEventListener('toggle',function(){ if(this.open && !S.retos[r.id] && !S.sol[r.id]){ S.sol[r.id]=true; save(); } });
+    box.appendChild(c);
+  });
+}
+renderRetoSel(); renderTaller(); loadReto('libre');
+
+</script>
+<!-- lp1-home:start -->
+<a id="lp1-home" href="index.html" title="Volver al índice de lecciones" aria-label="Volver al índice de lecciones"><span class="i" aria-hidden="true">🏠</span><span class="t">Lecciones</span></a>
+<style>
+#lp1-home{position:fixed;left:max(16px,env(safe-area-inset-left));bottom:max(16px,env(safe-area-inset-bottom));z-index:2147483000;display:inline-flex;align-items:center;gap:7px;padding:9px 15px 9px 12px;border-radius:999px;background:#1f4f7a;color:#fff!important;border:1px solid rgba(63,208,192,.65);box-shadow:0 6px 18px rgba(0,0,0,.35);font:600 14px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;text-decoration:none!important;letter-spacing:.2px;transition:transform .15s,background .15s}
+#lp1-home:hover{background:#2b6a9e;transform:translateY(-2px)}
+#lp1-home:focus-visible{outline:3px solid #3fd0c0;outline-offset:3px}
+#lp1-home .i{font-size:17px;line-height:1}
+@media (max-width:600px){#lp1-home{padding:0;width:46px;height:46px;justify-content:center}#lp1-home .t{display:none}#lp1-home .i{font-size:20px}}
+@media print{#lp1-home{display:none!important}}
+</style>
+<!-- lp1-home:end -->
+</body>
+</html>

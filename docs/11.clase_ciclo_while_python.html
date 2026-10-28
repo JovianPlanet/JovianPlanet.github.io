@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ciclo while en Python · Clase Interactiva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%84%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#0f1720; --panel:#18222e; --panel2:#1f2c3a; --ink:#e8eef5; --muted:#9fb0c3;
+    --line:#2b3a4d; --accent:#4fd1c5; --accent2:#7c9cff; --good:#48d597; --bad:#ff7a7a;
+    --warn:#ffcf6b; --chip:#243447; --py:#ffd43b; --pyb:#4b8bbe;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(160deg,#0f1720,#111c27);color:var(--ink);line-height:1.55}
+  header{padding:22px 22px 12px;text-align:center;border-bottom:1px solid var(--line);background:radial-gradient(1200px 300px at 50% -60px,rgba(75,139,190,.22),transparent)}
+  header h1{margin:0 0 4px;font-size:clamp(1.3rem,3.4vw,2rem)}
+  header p{margin:0;color:var(--muted);font-size:.92rem}
+  .xpwrap{max-width:680px;margin:12px auto 4px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+  .xprow{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);margin-bottom:6px;gap:8px;flex-wrap:wrap}
+  .xprow b{color:var(--warn)}
+  .xpbar{height:12px;background:#0c141d;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .xpfill{height:100%;width:0;background:linear-gradient(90deg,var(--pyb),var(--py));transition:width .5s}
+  .badges2{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+  .bdg{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:.74rem;color:#5f7085;opacity:.6;transition:.3s}
+  .bdg.on{opacity:1;color:var(--ink);border-color:var(--warn);box-shadow:0 0 0 2px rgba(255,207,107,.15)}
+  .linkbtn{background:none;border:none;color:var(--muted);font-size:.74rem;cursor:pointer;text-decoration:underline;padding:0}
+  .wrap{max-width:1000px;margin:0 auto;padding:16px 16px 60px}
+  nav.tabs{position:sticky;top:0;z-index:10;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:11px 6px;background:rgba(15,23,32,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.tabs button{background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:8px 12px;border-radius:10px;cursor:pointer;font-size:.82rem;font-weight:600;transition:.15s}
+  nav.tabs button:hover{border-color:var(--accent)}
+  nav.tabs button.active{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border-color:transparent}
+  nav.tabs button.lab{border-color:var(--py)}
+  html{background:#0f1720}
+  @media(max-width:640px){
+    nav.tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:thin}
+    nav.tabs button{flex:0 0 auto}
+    .typebtns{grid-template-columns:repeat(2,1fr)}
+  }
+  section.tab{display:none;animation:fade .25s ease}
+  section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2{font-size:1.3rem;margin:20px 0 10px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:1.05rem;margin:18px 0 8px;color:var(--accent)}
+  p{color:#d5deea}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .note{background:rgba(255,207,107,.08);border:1px solid rgba(255,207,107,.35);border-radius:12px;padding:12px 14px;margin:14px 0;font-size:.92rem}
+  .note b{color:var(--warn)}
+  .tip{background:rgba(75,139,190,.12);border:1px solid rgba(75,139,190,.45);border-left:4px solid var(--pyb);border-radius:10px;padding:12px 14px;margin:14px 0;font-size:.9rem}
+  .tip b{color:#9cc4e8}
+  code{font-family:"SF Mono",Consolas,Menlo,monospace}
+  pre{background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.85rem;color:#d7e3f0;margin:10px 0}
+  .fname{display:inline-block;background:var(--chip);border:1px solid var(--line);border-bottom:none;border-radius:8px 8px 0 0;padding:3px 10px;font-family:monospace;font-size:.75rem;color:var(--muted);margin-top:8px}
+  .fname + pre{margin-top:0;border-top-left-radius:0}
+  .kw{color:#ff9d6c;font-weight:600}.st{color:#9fe6b0}.cm{color:#6f8194;font-style:italic}.fn{color:#7cc4ff}.nu{color:#c9a3ff}
+  .tout{color:#e8eef5}.tprompt{color:#9fb0c3}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.87rem;overflow:hidden;border-radius:12px}
+  th,td{padding:8px 10px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:var(--accent);font-weight:700}
+  tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+  td.mono,code.mono{font-family:"SF Mono",Consolas,monospace;color:var(--accent)}
+  .tablewrap{overflow-x:auto}
+  details{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:10px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--accent)}
+  details[open]{border-color:var(--accent)}
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+  .tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .tile b{display:block;margin-bottom:3px}
+  .tile small{color:var(--muted)}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin:14px 0;text-align:center}
+  .flow .st2{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;min-width:120px}
+  .flow .st2 small{display:block;color:var(--muted);font-size:.74rem}
+  .flow .ar{color:var(--accent);font-weight:800;font-size:1.3rem}
+  .types{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+  .type{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--panel)}
+  .type .tn{font-family:monospace;font-size:1.3rem;font-weight:800}
+  .t-int .tn{color:#7cc4ff}.t-float .tn{color:#c9a3ff}.t-str .tn{color:#9fe6b0}.t-bool .tn{color:#ffcf6b}
+  .btn{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.88rem}
+  .btn.ghost{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+  .btn.py{background:linear-gradient(180deg,#ffe066,#f2c200);color:#2a2000}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .scorebar{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:12px 0;gap:10px;flex-wrap:wrap}
+  .scorebar b{color:var(--accent);font-size:1.1rem}
+  .q{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .q .tag{font-size:.72rem;color:#0a1330;background:var(--accent2);padding:2px 9px;border-radius:999px;font-weight:700}
+  .q .scn{color:#cfe0ff;margin:8px 0 2px}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .opt{background:#0c141d;border:1px solid var(--line);color:var(--ink);padding:9px 12px;border-radius:9px;cursor:pointer;font-family:monospace;font-size:.85rem;text-align:left;transition:.12s}
+  .opt:hover{border-color:var(--accent)}
+  .opt.correct{background:var(--good);color:#052b1c;border-color:transparent;font-weight:700}
+  .opt.wrong{background:var(--bad);color:#2b0505;border-color:transparent}
+  .opt.locked{pointer-events:none}
+  .feedback{margin-top:8px;font-size:.86rem;min-height:1.1em}
+  .feedback.ok{color:var(--good)}.feedback.no{color:var(--bad)}
+  .center{text-align:center}
+  .xppop{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--warn);color:#2a1e00;font-weight:800;padding:10px 18px;border-radius:999px;opacity:0;transition:.35s;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.35);pointer-events:none}
+  .xppop.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  /* tipo-matic */
+  .game{background:linear-gradient(160deg,#16212e,#1b2a3a);border:1px solid var(--line);border-radius:16px;padding:18px;margin:12px 0}
+  .bigval{font-family:monospace;font-size:clamp(1.4rem,4vw,2.1rem);text-align:center;background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:16px;margin:10px 0;color:#fff}
+  .typebtns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .typebtns button{font-family:monospace;font-size:1rem;font-weight:800;padding:12px 6px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer}
+  .typebtns button:hover{border-color:var(--accent)}
+  .typebtns button.right{background:var(--good);color:#052b1c}
+  .typebtns button.wrongb{background:var(--bad);color:#2b0505}
+  .gstat{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:6px 0}
+  .gchip{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:6px 12px;font-family:monospace;font-size:.88rem}
+  .gchip b{color:var(--warn)}
+  .flame{font-size:1.2rem}
+  /* nombres */
+  .names{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .nm{font-family:monospace;padding:9px 13px;border-radius:10px;border:1px solid var(--line);background:#0c141d;color:var(--ink);cursor:pointer;font-size:.92rem}
+  .nm.v{border-color:var(--good);background:rgba(72,213,151,.15)}
+  .nm.x{border-color:var(--bad);background:rgba(255,122,122,.15)}
+  .nm.ok::after{content:" ✔";color:var(--good)} .nm.ko::after{content:" ✘";color:var(--bad)}
+  /* ordena */
+  .slots{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .slot{min-height:42px;border:2px dashed var(--line);border-radius:10px;display:flex;align-items:center;gap:10px;padding:7px 10px;color:var(--muted);font-size:.85rem;background:#0c141d;cursor:pointer;font-family:monospace}
+  .slot .ph{font-family:system-ui;font-size:.7rem;font-weight:700;border-radius:999px;padding:2px 8px;white-space:nowrap}
+  .ph.e{background:#1d3b5c;color:#9cc4e8}.ph.p{background:#3b2f5c;color:#c9a3ff}.ph.s{background:#1f4a3a;color:#9fe6b0}
+  .slot.filled{border-style:solid;color:var(--ink);background:var(--panel2)}
+  .slot.okk{border-color:var(--good)} .slot.noo{border-color:var(--bad)}
+  .pool{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .piece{text-align:left;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 12px;cursor:pointer;font-size:.85rem;font-family:monospace}
+  .piece:hover{border-color:var(--accent)} .piece.used{opacity:.3;pointer-events:none}
+  /* lab */
+  .lab{background:linear-gradient(160deg,#141f2b,#182636);border:1px solid #3a5168;border-radius:16px;padding:14px;margin:12px 0}
+  .labbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+  .labbar select{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:9px 10px;font-size:.88rem;max-width:100%}
+  .pystat{font-size:.8rem;color:var(--muted);background:#0c141d;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+  .retoinfo{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0;font-size:.9rem}
+  .labgrid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:820px){.labgrid{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}}
+  .lab label{display:block;font-size:.78rem;color:var(--muted);margin:6px 0 4px;font-weight:600}
+  textarea.code{width:100%;min-height:230px;background:#0b1118;color:#e8eef5;border:1px solid var(--line);border-radius:10px;padding:12px;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.88rem;line-height:1.5;resize:vertical;tab-size:4;white-space:pre}
+  textarea.stdin{width:100%;min-height:70px;background:#0b1118;color:#ffe9a8;border:1px solid var(--line);border-radius:10px;padding:10px;font-family:monospace;font-size:.85rem;resize:vertical}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .term{min-height:230px;max-height:420px;overflow:auto;background:#050a0f;border:1px solid #2b3a4d;border-radius:10px;padding:12px;font-size:.86rem;white-space:pre-wrap;word-break:break-word;margin:0}
+  .term .err{color:#ff8f8f}.term .hint{color:#ffe08a}.term .sys{color:#6f8194}
+  .chk{margin-top:10px;font-size:.88rem}
+  .chk .row{padding:6px 10px;border-radius:8px;margin:5px 0;background:var(--panel);border:1px solid var(--line)}
+  .chk .row.ok{border-color:rgba(72,213,151,.6)} .chk .row.no{border-color:rgba(255,122,122,.6)}
+  .win{background:rgba(72,213,151,.12);border:1px solid var(--good);border-radius:12px;padding:10px 12px;margin-top:8px;font-weight:700;color:var(--good)}
+  .ex{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0}
+  .ex .tag{font-size:.72rem;color:#2a2000;background:var(--py);padding:2px 9px;border-radius:999px;font-weight:700}
+  .ex h3{margin:8px 0 4px}
+  .ex .done{color:var(--good);font-weight:700;font-size:.82rem;margin-left:6px}
+  footer{text-align:center;color:var(--muted);font-size:.82rem;padding:24px 12px;border-top:1px solid var(--line)}
+  /* --- lección 9 --- */
+  .anat{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:10px 0}
+  .anat .tile code{color:var(--py)}
+  .sim{background:linear-gradient(160deg,#141f2b,#182636);border:1px solid #3a5168;border-radius:16px;padding:14px;margin:12px 0}
+  .simbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .simbar select,.simin input,.simin select{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:8px 10px;font-size:.9rem}
+  .simin{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0;font-family:monospace}
+  .simin input[type=number]{width:96px}
+  .simin input[type=text]{width:130px}
+  .simgrid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:820px){.simgrid{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)}}
+  .scode{background:#0b1118;border:1px solid var(--line);border-radius:12px;padding:8px 0;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.84rem;overflow-x:auto}
+  .sl{display:flex;align-items:center;gap:10px;padding:3px 12px;white-space:pre;transition:background .2s,opacity .2s;min-height:26px}
+  .sl .ln{color:#4f6175;width:20px;text-align:right;flex:0 0 auto}
+  .sl .tx{flex:1 1 auto}
+  .sl .st{flex:0 0 auto;font-family:system-ui;font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap}
+  .sl.dim{opacity:.38}
+  .sl.run{background:rgba(79,209,197,.13)} .sl.run .st{background:#1c4d47;color:#9ff3e8}
+  .sl.true{background:rgba(72,213,151,.13)} .sl.true .st{background:#1f4a3a;color:#9fe6b0}
+  .sl.false{background:rgba(255,122,122,.10)} .sl.false .st{background:#4a2323;color:#ffb3b3}
+  .sl.skip .st{background:#2a3442;color:#9fb0c3}
+  .sl.cur{box-shadow:inset 3px 0 0 var(--warn)}
+  .cov{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0}
+  .cov span{font-size:.78rem;border:1px dashed var(--line);border-radius:999px;padding:3px 10px;color:var(--muted)}
+  .cov span.hit{border-style:solid;border-color:var(--good);color:var(--good);background:rgba(72,213,151,.08)}
+  .slots2{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .slot2{display:flex;align-items:center;gap:10px;min-height:42px;border:2px dashed var(--line);border-radius:10px;padding:7px 12px;background:#0c141d;font-family:monospace;font-size:.88rem;cursor:pointer}
+  .slot2 .kwd{color:#ff9d6c;font-weight:700;min-width:44px}
+  .slot2.filled{border-style:solid;background:var(--panel2)}
+  .slot2.fixed{cursor:default;border-style:solid;opacity:.85}
+  .slot2.okk{border-color:var(--good)}.slot2.noo{border-color:var(--bad)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+  .chipb{font-family:monospace;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 12px;cursor:pointer;font-size:.86rem}
+  .chipb:hover{border-color:var(--accent)} .chipb.used{opacity:.3;pointer-events:none}
+  .mini{width:auto;font-size:.84rem} .mini td,.mini th{padding:5px 9px}
+  .ok{color:var(--good);font-weight:700}.ko{color:var(--bad);font-weight:700}
+  .bug{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:14px 0}
+  .bug .spec{background:rgba(75,139,190,.12);border:1px solid rgba(75,139,190,.45);border-radius:10px;padding:8px 12px;font-size:.88rem;margin:6px 0}
+  .bug .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+  .bug input{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:9px 10px;width:130px;font-family:monospace}
+  .bug.broken{border-color:var(--good)}
+  .bug .fix{display:none;margin-top:8px}
+  .bug.broken .fix{display:block}
+.lvh{margin:22px 0 8px;font-size:1.08rem}.lvh span{color:var(--muted);font-weight:500;font-size:.85rem}.lvh small{display:block;color:var(--muted);font-weight:400;font-size:.85rem;margin-top:2px}
+  /* --- componentes ciclos --- */
+  .itc{margin-left:auto;font-size:.85rem;color:var(--muted)} .itc b{color:var(--warn);font-size:1rem}
+  .vars{background:#0b1118;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .vars table{margin:0;width:100%;font-size:.84rem} .vars th,.vars td{padding:5px 10px}
+  .vars td.chg{color:var(--warn);font-weight:700;background:rgba(255,206,92,.08)}
+  .snote{font-size:.86rem;margin-top:8px;color:var(--ink);min-height:1.2em}
+  .scode{max-height:380px;overflow:auto}
+  .pz{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:14px 0}
+  .pzgrid{display:grid;grid-template-columns:1fr;gap:12px} @media(min-width:820px){.pzgrid{grid-template-columns:1fr 1fr}}
+  .pzlab{font-size:.78rem;color:var(--muted);font-weight:600;margin-bottom:5px}
+  .pzpool,.pzprog{display:flex;flex-direction:column;gap:6px;min-height:60px;background:#0b1118;border:1px dashed var(--line);border-radius:12px;padding:8px}
+  .pzline{font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.84rem;white-space:pre;text-align:left;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:7px 10px;cursor:pointer;overflow-x:auto}
+  .pzline:hover{border-color:var(--accent)} .pzline.used{opacity:.25;pointer-events:none}
+  .pzline.in{background:var(--panel2)} .pzline.good{border-color:var(--good)} .pzline.bad{border-color:var(--bad);background:rgba(255,122,122,.08)}
+  .pzempty{color:var(--muted);font-size:.82rem;text-align:center;padding:10px}
+  .tile small b{display:inline;margin:0}
+  .center{text-align:center}
+  .sl.cur{background:rgba(255,207,107,.10)}
+
+  /* --- lección 11 --- */
+  .flowbox{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.86rem;padding:8px}
+  .fstep{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:7px 14px;text-align:center}
+  .fstep small{color:var(--muted);font-family:monospace}
+  .fcond{background:rgba(255,207,107,.12);border:2px solid var(--warn);transform:rotate(0);border-radius:14px;padding:8px 18px;font-family:monospace;font-weight:700}
+  .farrow{color:var(--muted)}
+  .fsplit{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;text-align:center}
+  .fsplit>div{display:flex;flex-direction:column;align-items:center;gap:4px}
+  .fback{color:var(--accent);font-size:.8rem}
+  .ibar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:10px 0}
+  .ibar select{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:8px 10px;font-size:.9rem}
+  .lives{font-size:1.2rem;letter-spacing:2px} .iprog{color:var(--muted);font-size:.85rem;margin-left:auto}
+  pre.ipcode span{display:inline-block;width:100%;padding:0 4px;border-radius:4px}
+  pre.ipcode span.hl{background:rgba(255,207,107,.16);box-shadow:inset 3px 0 0 var(--warn)}
+  .ipq{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  .ipq .scn{margin:0 0 6px;font-size:1rem}
+
+</style>
+</head>
+<body>
+<header>
+  <h1>🔄 Ciclo while en Python</h1>
+  <p>while · validación · ciclos infinitos · break · continue · else · centinela · bandera · <b>modo juego</b></p>
+  <div class="xpwrap">
+    <div class="xprow"><span>Nivel <b id="lvl">1</b> · <span id="lvlname">Novato del while</span></span><span><b id="xp">0</b> XP · <button class="linkbtn" id="resetProg" title="Borra tu XP e insignias en este navegador">reiniciar progreso</button></span></div>
+    <div class="xpbar"><div class="xpfill" id="xpfill"></div></div>
+    <div class="badges2" id="badges"></div>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="active" data-tab="intro">💡 Mientras</button>
+  <button data-tab="infinito">♾️ Infinitos</button>
+  <button data-tab="control">✋ break · continue</button>
+  <button data-tab="centinela">🚩 Centinela</button>
+  <button data-tab="interprete">🎮 Intérprete</button>
+  <button data-tab="paso">🧭 Paso a paso</button>
+  <button data-tab="retos">🧨 Retos</button>
+  <button data-tab="lab" class="lab">🐍 Laboratorio</button>
+  <button data-tab="taller">🏆 Taller</button>
+</nav>
+
+<div class="wrap">
+
+<!-- ===================== MIENTRAS ===================== -->
+<section class="tab active" id="intro">
+  <h2>Repetir mientras algo sea cierto</h2>
+  <p>Con <code>for</code> sabías de antemano cuántas vueltas habría. Pero muchas veces <b>no lo sabes</b>: ¿cuántas veces escribirá mal la contraseña el usuario? ¿cuántos meses tardarás en reunir para el viaje? ¿cuántos productos pasará el cajero? Para eso está <code>while</code>: <b>repite un bloque mientras una condición sea <code>True</code></b>.</p>
+  <div class="grid3">
+    <div class="tile"><b>🔐 Validar</b><small>Mientras el PIN no tenga 4 dígitos, vuelve a pedirlo.</small></div>
+    <div class="tile"><b>💰 Ahorrar</b><small>Mientras el saldo no llegue a la meta, suma un mes más.</small></div>
+    <div class="tile"><b>🛒 Registrar</b><small>Mientras el cajero no escriba "fin", sigue sumando productos.</small></div>
+  </div>
+
+  <h3>Anatomía del <code>while</code></h3>
+  <div class="grid3">
+    <div><span class="fname">regresiva.py</span><pre>n = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"¿Desde qué número? "</span>))  <span class="cm"># 1. valor inicial</span>
+<span class="kw">while</span> n &gt; <span class="nu">0</span>:                   <span class="cm"># 2. se revisa antes de cada vuelta</span>
+    <span class="fn">print</span>(n)
+    n -= <span class="nu">1</span>                     <span class="cm"># 3. el cuerpo cambia n</span>
+<span class="fn">print</span>(<span class="st">"🚀 ¡Despegue!"</span>)         <span class="cm"># al salir del ciclo</span></pre>
+    <div class="center"><button class="btn py" data-try="regresiva">🐍 Probarlo en el laboratorio</button></div></div>
+    <div class="flowbox">
+      <div class="fstep">▶ antes del ciclo</div>
+      <div class="farrow">↓</div>
+      <div class="fcond">¿n &gt; 0?</div>
+      <div class="fsplit"><div><span class="ok">True</span> ↓<div class="fstep">cuerpo<br><small>print(n) · n -= 1</small></div><span class="fback">↺ vuelve a preguntar</span></div><div><span class="ko">False</span> ↓<div class="fstep">sigue después<br><small>print("🚀 …")</small></div></div></div>
+    </div>
+  </div>
+  <div class="note"><b>Las 3 partes de todo while:</b> (1) la variable de la condición tiene un valor <b>antes</b> de empezar, (2) la condición se revisa <b>antes</b> de cada vuelta (si es False desde el principio, el cuerpo no se ejecuta ni una vez) y (3) algo <b>dentro</b> del cuerpo la cambia. Si falta la parte 3, tienes un <b>ciclo infinito</b>.</div>
+
+  <h3>Ejemplo: validar un dato</h3>
+  <span class="fname">pin.py</span>
+  <pre>pin = <span class="fn">input</span>(<span class="st">"PIN de 4 dígitos: "</span>)
+<span class="kw">while</span> <span class="fn">len</span>(pin) != <span class="nu">4</span> <span class="kw">or</span> <span class="kw">not</span> pin.isdigit():     <span class="cm"># mientras esté MAL…</span>
+    <span class="fn">print</span>(<span class="st">"PIN inválido"</span>)
+    pin = <span class="fn">input</span>(<span class="st">"PIN de 4 dígitos: "</span>)         <span class="cm"># …vuelve a pedirlo</span>
+<span class="fn">print</span>(<span class="st">"PIN registrado ✔"</span>)</pre>
+  <div class="center"><button class="btn py" data-try="pin">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>Ejemplo: ¿cuántos meses para la meta?</h3>
+  <span class="fname">ahorro.py</span>
+  <pre>saldo = <span class="fn">float</span>(<span class="fn">input</span>(<span class="st">"Ahorro inicial: "</span>))
+meta = <span class="fn">float</span>(<span class="fn">input</span>(<span class="st">"Meta: "</span>))
+meses = <span class="nu">0</span>
+<span class="kw">while</span> saldo &lt; meta:
+    saldo *= <span class="nu">1.05</span>          <span class="cm"># el ahorro rinde 5 % cada mes</span>
+    meses += <span class="nu">1</span>             <span class="cm"># contador de vueltas</span>
+<span class="fn">print</span>(<span class="st">f"Meta alcanzada en {meses} meses: {saldo:.2f}"</span>)</pre>
+  <div class="center"><button class="btn py" data-try="ahorro">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>De PSeInt a Python</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>PSeInt</th><th>Python</th><th>Ojo</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">Mientras cond Hacer … FinMientras</td><td class="mono">while cond:</td><td>igual: revisa la condición antes de cada vuelta</td></tr>
+      <tr><td class="mono">Repetir … Hasta Que cond</td><td class="mono">while True:<br>&nbsp;&nbsp;&nbsp;&nbsp;…<br>&nbsp;&nbsp;&nbsp;&nbsp;if cond:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break</td><td>Python no tiene <i>Repetir</i>: se escribe un ciclo "infinito" con una salida</td></tr>
+      <tr><td class="mono">FinMientras</td><td>(desaparece)</td><td>la sangría marca el cuerpo</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>🤔 ¿for o while?</h3>
+  <p><b>Enunciado:</b> para cada situación, elige el ciclo más natural. Regla: si sabes cuántas vueltas habrá o recorres una colección → <code>for</code>; si depende de un evento → <code>while</code>.</p>
+  <div class="scorebar"><span>Aciertos: <b id="fwScore">0</b> / <b id="fwTotal">6</b></span><button class="btn ghost" id="fwReset">Reiniciar</button></div>
+  <div id="fwQuiz"></div>
+</section>
+
+<!-- ===================== INFINITOS ===================== -->
+<section class="tab" id="infinito">
+  <h2>♾️ Ciclos infinitos</h2>
+  <p>Un ciclo infinito es un <code>while</code> cuya condición <b>nunca se vuelve False</b>. Hay dos tipos:</p>
+  <div class="grid3">
+    <div class="card" style="margin:0"><h3 style="margin-top:0">😱 Accidental (un error)</h3>
+      <pre>i = <span class="nu">1</span>
+<span class="kw">while</span> i &lt;= <span class="nu">5</span>:
+    <span class="fn">print</span>(<span class="st">"Vuelta"</span>, i)
+<span class="cm"># ¡olvidamos i += 1!</span></pre>
+      <p style="font-size:.9rem">i siempre vale 1: imprime "Vuelta 1" para siempre. En tu computador se detiene con <b>Ctrl + C</b>. En el laboratorio de esta lección, Python lo detecta y te avisa.</p>
+      <div class="center"><button class="btn py" data-try="infinito">🐍 Ver qué pasa en el laboratorio</button></div></div>
+    <div class="card" style="margin:0"><h3 style="margin-top:0">😎 Intencional (un patrón)</h3>
+      <pre><span class="kw">while</span> <span class="kw">True</span>:
+    cmd = <span class="fn">input</span>(<span class="st">"Comando: "</span>)
+    <span class="kw">if</span> cmd == <span class="st">"salir"</span>:
+        <span class="kw">break</span>              <span class="cm"># la única salida</span>
+    <span class="fn">print</span>(<span class="st">f"Ejecutando «{cmd}»…"</span>)
+<span class="fn">print</span>(<span class="st">"Sesión cerrada"</span>)</pre>
+      <p style="font-size:.9rem"><code>while True</code> se usa a propósito en menús, juegos y servidores, que deben repetirse <b>hasta que el usuario decida salir</b>. La salida es un <code>break</code>.</p>
+      <div class="center"><button class="btn py" data-try="comandos">🐍 Probarlo en el laboratorio</button></div></div>
+  </div>
+  <div class="note"><b>Las 4 causas más comunes de un ciclo infinito accidental:</b> (1) olvidar actualizar la variable de control, (2) actualizarla en la dirección equivocada (<code>i += 1</code> cuando la condición es <code>i &gt; 0</code>), (3) usar <code>!=</code> con un valor que nunca se alcanza exacto (<code>x += 2</code> nunca llega a 10 si empieza en 1), y (4) un <code>continue</code> que se salta la actualización.</div>
+
+  <h3>🔮 ¿Termina o no termina?</h3>
+  <p><b>Enunciado:</b> sin ejecutarlo, decide qué pasa con cada ciclo. Responde todos para la insignia <b>Vidente</b>.</p>
+  <div class="scorebar"><span>Aciertos: <b id="teScore">0</b> / <b id="teTotal">8</b></span><button class="btn ghost" id="teReset">Reiniciar</button></div>
+  <div id="teQuiz"></div>
+</section>
+
+<!-- ===================== CONTROL ===================== -->
+<section class="tab" id="control">
+  <h2>✋ break, continue y else</h2>
+  <div class="grid3">
+    <div class="tile"><b><code>break</code></b><small>Sale del ciclo <b>de inmediato</b>. Lo que quedaba del cuerpo y las vueltas pendientes no se ejecutan.</small></div>
+    <div class="tile"><b><code>continue</code></b><small>Termina <b>solo esta vuelta</b> y salta a la siguiente (en un while, vuelve a revisar la condición).</small></div>
+    <div class="tile"><b><code>else</code> del ciclo</b><small>Se ejecuta cuando el ciclo termina <b>normalmente</b>, es decir, <b>sin</b> break.</small></div>
+  </div>
+
+  <h3><code>break</code>: el menú de comandos</h3>
+  <span class="fname">comandos.py</span>
+  <pre><span class="kw">while</span> <span class="kw">True</span>:
+    cmd = <span class="fn">input</span>(<span class="st">"Comando (salir para terminar): "</span>)
+    <span class="kw">if</span> cmd == <span class="st">"salir"</span>:
+        <span class="kw">break</span>                            <span class="cm"># ← sale del ciclo</span>
+    <span class="fn">print</span>(<span class="st">f"Ejecutando «{cmd}»…"</span>)
+<span class="fn">print</span>(<span class="st">"Sesión cerrada"</span>)</pre>
+  <div class="center"><button class="btn py" data-try="comandos">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3><code>continue</code>: saltar los productos agotados</h3>
+  <span class="fname">agotados.py</span>
+  <pre><span class="kw">for</span> codigo <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">1</span>, <span class="nu">8</span>):
+    stock = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">f"Stock del producto {codigo}: "</span>))
+    <span class="kw">if</span> stock == <span class="nu">0</span>:
+        <span class="kw">continue</span>          <span class="cm"># agotado: salta al siguiente producto</span>
+    <span class="fn">print</span>(<span class="st">f"Producto {codigo}: {stock} unidades listas para despacho"</span>)</pre>
+  <div class="center"><button class="btn py" data-try="agotados">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3><code>else</code>: ¿encontré un divisor?</h3>
+  <span class="fname">divisor.py</span>
+  <pre>n = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Número (mayor que 1): "</span>))
+d = <span class="nu">2</span>
+<span class="kw">while</span> d * d &lt;= n:                    <span class="cm"># basta probar hasta la raíz cuadrada</span>
+    <span class="kw">if</span> n % d == <span class="nu">0</span>:
+        <span class="fn">print</span>(<span class="st">f"{n} = {d} × {n // d}: NO es primo"</span>)
+        <span class="kw">break</span>                        <span class="cm"># encontré un divisor: no sigo buscando</span>
+    d += <span class="nu">1</span>
+<span class="kw">else</span>:                                <span class="cm"># solo si el while terminó SIN break</span>
+    <span class="fn">print</span>(<span class="st">f"{n} es primo"</span>)</pre>
+  <div class="center"><button class="btn py" data-try="divisor">🐍 Probarlo en el laboratorio</button></div>
+  <div class="tip">Prueba con 91 (= 7 × 13), con 97 y con 1. ¿Qué pasa con 1? <code>2 * 2 &lt;= 1</code> es False: el ciclo no da ninguna vuelta, no hay break… y el <code>else</code> dice que 1 es primo. <b>Valida los datos antes del ciclo.</b></div>
+
+  <h3>🎯 ¿Qué imprime?</h3>
+  <p><b>Enunciado:</b> predice la salida exacta de cada programa.</p>
+  <div class="scorebar"><span>Aciertos: <b id="qiScore">0</b> / <b id="qiTotal">6</b></span><button class="btn ghost" id="qiReset">Reiniciar</button></div>
+  <div id="qiQuiz"></div>
+</section>
+
+<!-- ===================== CENTINELA Y BANDERA ===================== -->
+<section class="tab" id="centinela">
+  <h2>🚩 Centinela y bandera</h2>
+  <h3>Centinela: "escribe X para terminar"</h3>
+  <p>Un <b>centinela</b> es un valor acordado que avisa que <b>ya no hay más datos</b>. Se usa cuando el usuario ingresa una serie de datos de tamaño desconocido. Debe ser un valor que <b>nunca</b> aparezca en los datos reales (y nunca se procesa como dato).</p>
+  <span class="fname">peaje.py — centinela "fin"</span>
+  <pre>total = <span class="nu">0</span>
+vehiculos = <span class="nu">0</span>
+tarifa = <span class="fn">input</span>(<span class="st">"Tarifa (fin para terminar): "</span>)     <span class="cm"># 1. lectura ANTES del ciclo</span>
+<span class="kw">while</span> tarifa != <span class="st">"fin"</span>:                              <span class="cm"># 2. ¿llegó el centinela?</span>
+    total += <span class="fn">int</span>(tarifa)                            <span class="cm"># 3. procesar el dato</span>
+    vehiculos += <span class="nu">1</span>
+    tarifa = <span class="fn">input</span>(<span class="st">"Tarifa (fin para terminar): "</span>)  <span class="cm"># 4. leer el siguiente, al FINAL</span>
+<span class="fn">print</span>(<span class="st">f"{vehiculos} vehículos · recaudo {total}"</span>)
+<span class="kw">if</span> vehiculos &gt; <span class="nu">0</span>:                                   <span class="cm"># evita dividir entre 0</span>
+    <span class="fn">print</span>(<span class="st">f"Promedio por vehículo: {total / vehiculos:.2f}"</span>)</pre>
+  <div class="center"><button class="btn py" data-try="peaje">🐍 Probarlo en el laboratorio</button></div>
+  <div class="note"><b>Patrón "leer – revisar – procesar – leer":</b> se lee antes del ciclo y otra vez al final del cuerpo. Así, cuando llega el centinela, la condición lo detecta <b>antes</b> de procesarlo.</div>
+
+  <h3>Bandera: "¿ya ocurrió?"</h3>
+  <p>Una <b>bandera</b> (flag) es una variable booleana que indica si algo ya pasó: encontrado / no encontrado, éxito / fracaso. Empieza en un valor y <b>cambia</b> cuando ocurre el evento. Es útil cuando el ciclo tiene <b>varias razones</b> para terminar.</p>
+  <span class="fname">clave.py — bandera acceso</span>
+  <pre>CLAVE = <span class="st">"lp1-2026"</span>
+acceso = <span class="kw">False</span>          <span class="cm"># bandera: ¿ya entró?</span>
+intentos = <span class="nu">0</span>
+<span class="kw">while</span> <span class="kw">not</span> acceso <span class="kw">and</span> intentos &lt; <span class="nu">3</span>:     <span class="cm"># dos razones para parar</span>
+    intento = <span class="fn">input</span>(<span class="st">"Contraseña: "</span>)
+    intentos += <span class="nu">1</span>
+    <span class="kw">if</span> intento == CLAVE:
+        acceso = <span class="kw">True</span>                   <span class="cm"># la bandera cambia</span>
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="st">f"Incorrecta. Te quedan {3 - intentos} intento(s)"</span>)
+<span class="kw">if</span> acceso:                              <span class="cm"># al salir, la bandera dice POR QUÉ salió</span>
+    <span class="fn">print</span>(<span class="st">"🔓 Bienvenido"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"🔒 Cuenta bloqueada"</span>)</pre>
+  <div class="center"><button class="btn py" data-try="clave">🐍 Probarlo en el laboratorio</button></div>
+  <div class="tablewrap"><table>
+    <thead><tr><th></th><th>Centinela</th><th>Bandera</th></tr></thead>
+    <tbody>
+      <tr><td><b>¿Qué es?</b></td><td>un <b>dato especial</b> que escribe el usuario</td><td>una <b>variable booleana</b> del programa</td></tr>
+      <tr><td><b>¿Quién decide parar?</b></td><td>el usuario ("escribe 0 para terminar")</td><td>el programa (cuando ocurre algo)</td></tr>
+      <tr><td><b>Ejemplos</b></td><td>notas hasta −1 · precios hasta 0 · nombres hasta "fin"</td><td>encontrado · acceso · hay_error · es_primo</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ===================== INTÉRPRETE ===================== -->
+<section class="tab" id="interprete">
+  <h2>🎮 Sé el intérprete</h2>
+  <p><b>Enunciado:</b> ahora tú eres Python. En cada paso, responde lo que haría el intérprete: si la condición es <code>True</code> o <code>False</code>, cuál es el nuevo valor de una variable o qué pasa con cada dato. Tienes <b>3 vidas ❤️</b> por programa: si las pierdes, el programa vuelve a empezar. Cada programa superado da 20 XP; los tres, la insignia <b>Intérprete humano</b>.</p>
+  <div class="ibar"><select id="ipSel" aria-label="Programa"></select><span class="lives" id="ipLives"></span><span class="iprog" id="ipProg"></span></div>
+  <div class="simgrid">
+    <div><pre id="ipCode" class="ipcode"></pre><div class="vars"><table><thead><tr><th>Variable</th><th>Valor</th></tr></thead><tbody id="ipVars"></tbody></table></div></div>
+    <div class="ipq"><div id="ipQ"></div><div class="opts" id="ipOpts"></div><div class="feedback" id="ipFb"></div><div class="btns"><button class="btn" id="ipNext" style="display:none">Siguiente ▶</button><button class="btn ghost" id="ipRestart">↺ Empezar de nuevo</button></div></div>
+  </div>
+</section>
+
+<!-- ===================== PASO A PASO ===================== -->
+<section class="tab" id="paso">
+  <h2>🧭 Paso a paso</h2>
+  <p>Elige un programa, escribe los datos de entrada (separados por comas) y avanza con <b>▶ Paso</b>. Verás cuándo se revisa la condición, qué valor tiene cada variable y por qué termina el ciclo.</p>
+  <div class="note">🎯 <b>Misión:</b> recorre los tres programas hasta el final (15 XP cada uno) para la insignia <b>Rastreador</b>. Prueba también tus propios datos: ¿qué pasa si el primer dato ya es el centinela?</div>
+  <div class="sim" id="sim11"></div>
+</section>
+
+<!-- ===================== RETOS ===================== -->
+<section class="tab" id="retos">
+  <h2>🧩 Arma el programa</h2>
+  <p><b>Enunciado:</b> las líneas de cada programa están desordenadas (con su sangría). Tócalas en el orden correcto. Cada programa armado da 15 XP; los tres, la insignia <b>Ensamblador</b>.</p>
+  <div id="parsons"></div>
+
+  <h2>🕵️ Caza el error</h2>
+  <p><b>Enunciado:</b> ¿qué pasa con cada fragmento? Puede tener un error de sintaxis, quedar en un ciclo infinito, correr pero hacer algo distinto a lo que se quería (error lógico) o funcionar bien.</p>
+  <div class="scorebar"><span>Cazados: <b id="ceScore">0</b> / <b id="ceTotal">8</b></span><button class="btn ghost" id="ceReset">Reiniciar</button></div>
+  <div id="ceQuiz"></div>
+</section>
+
+<!-- ===================== LABORATORIO ===================== -->
+<section class="tab" id="lab">
+  <h2>🐍 Laboratorio: Python de verdad en tu navegador</h2>
+  <p>Escribe tu programa, pon los datos de entrada (uno por línea) y pulsa <b>▶ Ejecutar</b>. Elige un <b>reto</b> y pulsa <b>✅ Comprobar reto</b> para probarlo con varios datos. Si tu programa queda en un <b>ciclo infinito</b>, el laboratorio lo detiene y te avisa; si pide más datos de los que hay, revisa tu centinela o tu opción de salida. <small style="color:var(--muted)">La primera vez se descarga Python (≈ 12 MB); necesitas conexión a internet.</small></p>
+  <div class="lab">
+    <div class="labbar">
+      <select id="retoSel" aria-label="Reto"></select>
+      <span class="pystat" id="pyStatus">⚪ Python sin cargar</span>
+    </div>
+    <div class="retoinfo" id="retoInfo"></div>
+    <div class="labgrid">
+      <div>
+        <label for="code">📝 Tu programa (.py) · <span style="font-weight:400">Tab = 4 espacios · Ctrl+Enter = ejecutar</span></label>
+        <textarea id="code" class="code" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+        <label for="stdin">⌨️ Entradas: una por línea (cada <code>input()</code> toma la siguiente)</label>
+        <textarea id="stdin" class="stdin" spellcheck="false"></textarea>
+        <div class="btns">
+          <button class="btn py" id="runBtn">▶ Ejecutar</button>
+          <button class="btn" id="checkBtn">✅ Comprobar reto</button>
+          <button class="btn ghost" id="resetCode">↺ Plantilla</button>
+          <button class="btn ghost" id="solBtn">👀 Solución</button>
+        </div>
+      </div>
+      <div>
+        <label>🖥️ Terminal</label>
+        <pre class="term" id="term"><span class="sys">La salida de tu programa aparecerá aquí.</span></pre>
+        <div class="chk" id="checkRes"></div>
+      </div>
+    </div>
+  </div>
+  <div class="tip">🏅 Los retos suben de dificultad y de premio: <b>🟢 Nivel 1 = 20 XP</b> · <b>🟡 Nivel 2 = 30 XP</b> · <b>🟠 Nivel 3 = 40 XP</b> · <b>🔴 Nivel 4 ★ = 60 XP</b>. Si abres la solución antes de superarlo, da la <b>mitad</b>. Supera 6 retos para la insignia <b>Persistente</b>, los 3 del nivel 4 para <b>Domador del infinito</b> y los 12 para <b>Leyenda</b>.</div>
+</section>
+
+<!-- ===================== TALLER ===================== -->
+<section class="tab" id="taller">
+  <h2>🏆 Taller — 12 ejercicios de ciclos while</h2>
+  <p>Los ejercicios van de menor a mayor dificultad, en <b>4 niveles</b>. Todos combinan <b>ciclos</b> con <b>cálculos</b>: porcentajes, IVA, interés compuesto, comisiones, dígitos y estadísticas. Antes de programar, responde: ¿qué hace que el ciclo termine?, ¿qué variable cambia en cada vuelta?, ¿hay un centinela, una bandera o una opción de salida?, ¿cómo evito un ciclo infinito? Resuélvelos en el <b>🐍 Laboratorio</b> (o en IDLE/Thonny) e intenta antes de abrir la solución.</p>
+  <div class="card">
+    <h3 style="margin-top:0">🧮 Caja de herramientas</h3>
+    <div class="tablewrap"><table class="mini"><thead><tr><th>Quiero…</th><th>Patrón</th></tr></thead><tbody>
+      <tr><td>validar un dato</td><td class="mono">x = leer() · while x es inválido: avisar y x = leer()</td></tr>
+      <tr><td>leer hasta un centinela</td><td class="mono">x = leer() · while x != centinela: procesar · x = leer()</td></tr>
+      <tr><td>repetir hasta que el usuario salga</td><td class="mono">while True: … if opcion == salir: break</td></tr>
+      <tr><td>saltar un dato inválido</td><td class="mono">if dato_malo: continue</td></tr>
+      <tr><td>parar por varias razones</td><td class="mono">while not encontrado and intentos &lt; 3:</td></tr>
+      <tr><td>contar vueltas hasta una meta</td><td class="mono">while saldo &lt; meta: saldo += saldo * tasa / 100 · meses += 1</td></tr>
+      <tr><td>última cifra / quitarla</td><td class="mono">n % 10  ·  n // 10</td></tr>
+      <tr><td>máximo y mínimo</td><td class="mono">el primer dato válido es a la vez el máximo y el mínimo</td></tr>
+      <tr><td>protegerte de un ciclo infinito</td><td class="mono">revisa antes del ciclo los datos que lo harían infinito (pago 0, tasa 0…) o pon un límite de vueltas</td></tr>
+    </tbody></table></div>
+  </div>
+  <div id="ejercicios"></div>
+</section>
+
+</div>
+<div class="xppop" id="xppop"></div>
+<footer>Material interactivo · Lógica de Programación 1 · Ciclo while en Python (Python 3.14)</footer>
+
+<script>
+const CFG = {"key": "lp1-clase11-while-v1", "draft": "lp1-c11-draft-", "firstRunLabel": "¡Hola, while!"};
+const RETOS = [{"id": "descuento", "lvl": 1, "xp": 20, "t": "1. Descuento validado", "tag": "Nivel 1 · while de validación", "d": "Una tienda permite que el cajero digite el porcentaje de descuento, pero <b>solo se aceptan valores de 0 a 50<\/b>. Pide el porcentaje (real); <b>mientras<\/b> esté fuera de ese rango, muestra <code>Porcentaje inválido<\/code> y vuelve a pedirlo. Cuando sea válido, pide el precio (real) y muestra <code>Precio final: X<\/code> con 2 decimales.<br><b>Entrada:<\/b> uno o más reales y luego un real · <b>Salida:<\/b> los avisos y el precio final<br><b>Ejemplo:<\/b> 60, −5, 20 y luego 100000 → <code>Porcentaje inválido<\/code> (dos veces) · <code>Precio final: 80000.00<\/code>.<br>💡 <b>Pista:<\/b> el dato se pide una vez antes del ciclo y otra vez <b>dentro<\/b> de él; la condición del <code>while<\/code> describe cuándo el dato está <b>mal<\/b>.", "starter": "porcentaje = float(input(\"Descuento (%): \"))\n", "sol": "porcentaje = float(input(\"Descuento (%): \"))\nwhile porcentaje < 0 or porcentaje > 50:\n    print(\"Porcentaje inválido\")\n    porcentaje = float(input(\"Descuento (%): \"))\nprecio = float(input(\"Precio: \"))\nfinal = precio * (1 - porcentaje / 100)\nprint(f\"Precio final: {final:.2f}\")", "tests": [{"in": ["60", "-5", "20", "100000"], "must": ["(?:[\\s\\S]*?inv[aá]lid){2}", "precio final[^\\n\\d]*(?<![\\d.])(?:79999\\.99|80000(?:\\.0{1,2})?|80000\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?inv[aá]lid){3}"], "show": "2 aviso(s) de porcentaje inválido · Precio final: 80000.00"}, {"in": ["0", "59900"], "must": ["precio final[^\\n\\d]*(?<![\\d.])(?:59899\\.99|59900(?:\\.0{1,2})?|59900\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?inv[aá]lid){1}"], "show": "0 aviso(s) de porcentaje inválido · Precio final: 59900.00"}, {"in": ["50", "80000"], "must": ["precio final[^\\n\\d]*(?<![\\d.])(?:39999\\.99|40000(?:\\.0{1,2})?|40000\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?inv[aá]lid){1}"], "show": "0 aviso(s) de porcentaje inválido · Precio final: 40000.00"}, {"in": ["51", "50.5", "-0.1", "49.5", "200000"], "must": ["(?:[\\s\\S]*?inv[aá]lid){3}", "precio final[^\\n\\d]*(?<![\\d.])(?:100999\\.99|101000(?:\\.0{1,2})?|101000\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?inv[aá]lid){4}"], "show": "3 aviso(s) de porcentaje inválido · Precio final: 101000.00"}]}, {"id": "deuda", "lvl": 1, "xp": 20, "t": "2. ¿Cuándo termino de pagar?", "tag": "Nivel 1 · while + contador", "d": "Le debes dinero a un amigo y le pagas una cuota fija cada mes (sin intereses). El último mes solo pagas <b>lo que falte<\/b>. Pide la deuda y el pago mensual (reales) y muestra cuántos meses tardas, <code>Meses: M<\/code>, y el valor del último pago, <code>Último pago: X<\/code> (2 decimales). Si el pago mensual es 0 o negativo, muestra <code>Pago inválido<\/code> (¡piensa qué le pasaría al ciclo!).<br><b>Entrada:<\/b> dos reales · <b>Salida:<\/b> meses y último pago, o el aviso<br><b>Ejemplo:<\/b> 1000000 y 300000 → <code>Meses: 4<\/code> · <code>Último pago: 100000.00<\/code>.<br>💡 <b>Pista:<\/b> no sabes de antemano cuántas vueltas habrá: el ciclo sigue mientras quede deuda. En cada vuelta decide cuánto se paga realmente ese mes.", "starter": "deuda = float(input(\"Deuda: \"))\npago = float(input(\"Pago mensual: \"))\n", "sol": "deuda = float(input(\"Deuda: \"))\npago = float(input(\"Pago mensual: \"))\nif pago <= 0:\n    print(\"Pago inválido\")\nelse:\n    meses = 0\n    ultimo = 0\n    while deuda > 0:\n        if deuda < pago:\n            ultimo = deuda\n        else:\n            ultimo = pago\n        deuda -= ultimo\n        meses += 1\n    print(f\"Meses: {meses}\")\n    print(f\"Último pago: {ultimo:.2f}\")", "tests": [{"in": ["1000000", "300000"], "must": ["meses[^\\n\\d]*(?<![\\d.])4(?:\\.0{1,2})?(?!\\d)", "[uú]ltimo pago[^\\n\\d]*(?<![\\d.])(?:99999\\.99|100000(?:\\.0{1,2})?|100000\\.01)(?!\\d)"], "not": [], "show": "Meses: 4 · Último pago: 100000.00"}, {"in": ["900000", "300000"], "must": ["meses[^\\n\\d]*(?<![\\d.])3(?:\\.0{1,2})?(?!\\d)", "[uú]ltimo pago[^\\n\\d]*(?<![\\d.])(?:299999\\.99|300000(?:\\.0{1,2})?|300000\\.01)(?!\\d)"], "not": [], "show": "Meses: 3 · Último pago: 300000.00"}, {"in": ["50000", "80000"], "must": ["meses[^\\n\\d]*(?<![\\d.])1(?:\\.0{1,2})?(?!\\d)", "[uú]ltimo pago[^\\n\\d]*(?<![\\d.])(?:49999\\.99|50000(?:\\.0{1,2})?|50000\\.01)(?!\\d)"], "not": [], "show": "Meses: 1 · Último pago: 50000.00"}, {"in": ["500000", "0"], "must": ["pago inv[aá]lido"], "not": ["meses"], "show": "Pago inválido"}, {"in": ["250000", "-1000"], "must": ["pago inv[aá]lido"], "not": ["meses"], "show": "Pago inválido"}]}, {"id": "caja", "lvl": 1, "xp": 20, "t": "3. Caja registradora", "tag": "Nivel 1 · while + centinela", "d": "Una caja registradora recibe los precios de los productos uno por uno; el cajero escribe <b>0<\/b> cuando termina. Los precios negativos se rechazan con <code>Precio inválido<\/code> y no se cuentan. Al final muestra <code>Productos: N<\/code>, <code>Subtotal: X<\/code>, <code>IVA: X<\/code> (19 %) y <code>Total: X<\/code>, con 2 decimales. Si no se registró ningún producto, muestra <code>No se registraron productos<\/code>.<br><b>Entrada:<\/b> varios reales terminados en 0 · <b>Salida:<\/b> cuatro líneas o el aviso<br><b>Ejemplo:<\/b> 12000, 3500, −200, 8000, 0 → <code>Precio inválido<\/code> · <code>Productos: 3<\/code> · <code>Subtotal: 23500.00<\/code> · <code>IVA: 4465.00<\/code> · <code>Total: 27965.00<\/code>.<br>💡 <b>Pista:<\/b> el 0 es un <b>centinela<\/b>: avisa que se acabaron los datos, así que nunca debe sumarse. Piensa dónde se lee el siguiente precio para que el centinela se revise antes de procesarlo.", "starter": "precio = float(input(\"Precio (0 para terminar): \"))\n", "sol": "productos = 0\nsubtotal = 0\nprecio = float(input(\"Precio (0 para terminar): \"))\nwhile precio != 0:\n    if precio < 0:\n        print(\"Precio inválido\")\n    else:\n        productos += 1\n        subtotal += precio\n    precio = float(input(\"Precio (0 para terminar): \"))\nif productos == 0:\n    print(\"No se registraron productos\")\nelse:\n    iva = subtotal * 0.19\n    print(f\"Productos: {productos}\")\n    print(f\"Subtotal: {subtotal:.2f}\")\n    print(f\"IVA: {iva:.2f}\")\n    print(f\"Total: {subtotal + iva:.2f}\")", "tests": [{"in": ["12000", "3500", "-200", "8000", "0"], "must": ["(?:[\\s\\S]*?precio inv[aá]lido){1}", "productos[^\\n\\d]*(?<![\\d.])3(?:\\.0{1,2})?(?!\\d)", "subtotal[^\\n\\d]*(?<![\\d.])(?:23499\\.99|23500(?:\\.0{1,2})?|23500\\.01)(?!\\d)", "iva[^\\n\\d]*(?<![\\d.])(?:4464\\.99|4465(?:\\.0{1,2})?|4465\\.01)(?!\\d)", "\\btotal[^\\n\\d]*(?<![\\d.])(?:27964\\.99|27965(?:\\.0{1,2})?|27965\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?precio inv[aá]lido){2}"], "show": "1 aviso(s) · Productos: 3 · Subtotal: 23500.00 · IVA: 4465.00 · Total: 27965.00"}, {"in": ["0"], "must": ["no se registraron"], "not": ["(?:[\\s\\S]*?precio inv[aá]lido){1}", "subtotal"], "show": "No se registraron productos"}, {"in": ["-5", "-10", "0"], "must": ["(?:[\\s\\S]*?precio inv[aá]lido){2}", "no se registraron"], "not": ["(?:[\\s\\S]*?precio inv[aá]lido){3}", "subtotal"], "show": "No se registraron productos"}, {"in": ["99990.25", "0"], "must": ["productos[^\\n\\d]*(?<![\\d.])1(?:\\.0{1,2})?(?!\\d)", "subtotal[^\\n\\d]*(?<![\\d.])(?:99990\\.24|99990\\.25|99990\\.26)(?!\\d)", "iva[^\\n\\d]*(?<![\\d.])(?:18998\\.14|18998\\.15|18998\\.16)(?!\\d)", "\\btotal[^\\n\\d]*(?<![\\d.])(?:118988\\.39|118988\\.40?|118988\\.41)(?!\\d)"], "not": ["(?:[\\s\\S]*?precio inv[aá]lido){1}"], "show": "0 aviso(s) · Productos: 1 · Subtotal: 99990.25 · IVA: 18998.15 · Total: 118988.40"}, {"in": ["1500", "2500", "1000", "-1", "4000", "800", "0"], "must": ["(?:[\\s\\S]*?precio inv[aá]lido){1}", "productos[^\\n\\d]*(?<![\\d.])5(?:\\.0{1,2})?(?!\\d)", "subtotal[^\\n\\d]*(?<![\\d.])(?:9799\\.99|9800(?:\\.0{1,2})?|9800\\.01)(?!\\d)", "iva[^\\n\\d]*(?<![\\d.])(?:1861\\.99|1862(?:\\.0{1,2})?|1862\\.01)(?!\\d)", "\\btotal[^\\n\\d]*(?<![\\d.])(?:11661\\.99|11662(?:\\.0{1,2})?|11662\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?precio inv[aá]lido){2}"], "show": "1 aviso(s) · Productos: 5 · Subtotal: 9800.00 · IVA: 1862.00 · Total: 11662.00"}]}, {"id": "duplicar", "lvl": 2, "xp": 30, "t": "4. ¿Cuándo se duplica mi inversión?", "tag": "Nivel 2 · while + interés compuesto", "d": "Inviertes un capital que crece cada año un porcentaje fijo <b>sobre el saldo acumulado<\/b> (interés compuesto). Pide el capital y la tasa anual en % (reales) y muestra cuántos años pasan hasta que el saldo llega <b>por lo menos al doble<\/b> del capital inicial, <code>Años: A<\/code>, y el saldo en ese momento, <code>Saldo final: X<\/code> (2 decimales). Si la tasa es 0 o negativa, muestra <code>La inversión nunca se duplica<\/code>.<br><b>Entrada:<\/b> dos reales · <b>Salida:<\/b> años y saldo final, o el aviso<br><b>Ejemplo:<\/b> 1000000 al 10 % → <code>Años: 8<\/code> · <code>Saldo final: 2143588.81<\/code>.<br>💡 <b>Pista:<\/b> el ciclo se repite <b>mientras<\/b> la meta no se haya alcanzado; cuenta las vueltas. ¿Qué pasaría con el ciclo si la tasa fuera 0?", "starter": "capital = float(input(\"Capital: \"))\ntasa = float(input(\"Tasa anual (%): \"))\n", "sol": "capital = float(input(\"Capital: \"))\ntasa = float(input(\"Tasa anual (%): \"))\nif tasa <= 0:\n    print(\"La inversión nunca se duplica\")\nelse:\n    saldo = capital\n    anios = 0\n    while saldo < 2 * capital:\n        saldo += saldo * tasa / 100\n        anios += 1\n    print(f\"Años: {anios}\")\n    print(f\"Saldo final: {saldo:.2f}\")", "tests": [{"in": ["1000000", "10"], "must": ["a[nñ]os[^\\n\\d]*(?<![\\d.])8(?:\\.0{1,2})?(?!\\d)", "saldo final[^\\n\\d]*(?<![\\d.])(?:2143588\\.80?|2143588\\.81|2143588\\.82)(?!\\d)"], "not": [], "show": "Años: 8 · Saldo final: 2143588.81"}, {"in": ["5000000", "7"], "must": ["a[nñ]os[^\\n\\d]*(?<![\\d.])11(?:\\.0{1,2})?(?!\\d)", "saldo final[^\\n\\d]*(?<![\\d.])(?:10524259\\.75|10524259\\.76|10524259\\.77)(?!\\d)"], "not": [], "show": "Años: 11 · Saldo final: 10524259.76"}, {"in": ["200000", "25"], "must": ["a[nñ]os[^\\n\\d]*(?<![\\d.])4(?:\\.0{1,2})?(?!\\d)", "saldo final[^\\n\\d]*(?<![\\d.])(?:488281\\.24|488281\\.25|488281\\.26)(?!\\d)"], "not": [], "show": "Años: 4 · Saldo final: 488281.25"}, {"in": ["300000", "100"], "must": ["a[nñ]os[^\\n\\d]*(?<![\\d.])1(?:\\.0{1,2})?(?!\\d)", "saldo final[^\\n\\d]*(?<![\\d.])(?:599999\\.99|600000(?:\\.0{1,2})?|600000\\.01)(?!\\d)"], "not": [], "show": "Años: 1 · Saldo final: 600000.00"}, {"in": ["1000000", "0"], "must": ["nunca"], "not": ["años:"], "show": "La inversión nunca se duplica"}]}, {"id": "adivina", "lvl": 2, "xp": 30, "t": "5. Adivina el número", "tag": "Nivel 2 · while + bandera + contador", "d": "Juego para dos: el jugador 1 escribe un <b>número secreto<\/b> (1 a 100) y el jugador 2 tiene <b>máximo 7 intentos<\/b> para adivinarlo. Después de cada intento fallido, muestra <code>Más alto<\/code> si el secreto es mayor o <code>Más bajo<\/code> si es menor. Si acierta, muestra <code>¡Correcto! Lo lograste en N intentos<\/code>; si se le acaban los intentos, <code>Perdiste. El número era S<\/code>.<br><b>Entrada:<\/b> un entero (secreto) y luego los intentos (enteros) · <b>Salida:<\/b> las pistas y el resultado<br><b>Ejemplo:<\/b> secreto 42; intentos 50, 25, 42 → <code>Más bajo<\/code> · <code>Más alto<\/code> · <code>¡Correcto! Lo lograste en 3 intentos<\/code>.<br>💡 <b>Pista:<\/b> el ciclo tiene <b>dos<\/b> razones para terminar: que acierte o que se acaben los intentos. Una variable booleana (bandera) te dice, al salir, cuál de las dos ocurrió.", "starter": "secreto = int(input(\"Número secreto: \"))\n", "sol": "secreto = int(input(\"Número secreto: \"))\nintentos = 0\nacerto = False\nwhile not acerto and intentos < 7:\n    n = int(input(\"Intento: \"))\n    intentos += 1\n    if n == secreto:\n        acerto = True\n    elif n < secreto:\n        print(\"Más alto\")\n    else:\n        print(\"Más bajo\")\nif acerto:\n    print(f\"¡Correcto! Lo lograste en {intentos} intentos\")\nelse:\n    print(f\"Perdiste. El número era {secreto}\")", "tests": [{"in": ["42", "50", "25", "42"], "must": ["correcto[^\\n]*\\b3 intentos?", "(?:[\\s\\S]*?m[aá]s alto){1}", "(?:[\\s\\S]*?m[aá]s bajo){1}"], "not": ["perdiste", "(?:[\\s\\S]*?m[aá]s alto){2}", "(?:[\\s\\S]*?m[aá]s bajo){2}"], "show": "1 «Más alto», 1 «Más bajo» · ¡Correcto! Lo lograste en 3 intentos"}, {"in": ["7", "7"], "must": ["correcto[^\\n]*\\b1 intentos?"], "not": ["perdiste", "(?:[\\s\\S]*?m[aá]s alto){1}", "(?:[\\s\\S]*?m[aá]s bajo){1}"], "show": "0 «Más alto», 0 «Más bajo» · ¡Correcto! Lo lograste en 1 intentos"}, {"in": ["99", "50", "75", "90", "95", "97", "98", "100"], "must": ["perdiste[^\\n]*\\b99\\b", "(?:[\\s\\S]*?m[aá]s alto){6}", "(?:[\\s\\S]*?m[aá]s bajo){1}"], "not": ["correcto", "(?:[\\s\\S]*?m[aá]s alto){7}", "(?:[\\s\\S]*?m[aá]s bajo){2}"], "show": "6 «Más alto», 1 «Más bajo» · Perdiste. El número era 99"}, {"in": ["1", "50", "25", "12", "6", "3", "2", "1"], "must": ["correcto[^\\n]*\\b7 intentos?", "(?:[\\s\\S]*?m[aá]s bajo){6}"], "not": ["perdiste", "(?:[\\s\\S]*?m[aá]s alto){1}", "(?:[\\s\\S]*?m[aá]s bajo){7}"], "show": "0 «Más alto», 6 «Más bajo» · ¡Correcto! Lo lograste en 7 intentos"}, {"in": ["64", "10", "90", "64"], "must": ["correcto[^\\n]*\\b3 intentos?", "(?:[\\s\\S]*?m[aá]s alto){1}", "(?:[\\s\\S]*?m[aá]s bajo){1}"], "not": ["perdiste", "(?:[\\s\\S]*?m[aá]s alto){2}", "(?:[\\s\\S]*?m[aá]s bajo){2}"], "show": "1 «Más alto», 1 «Más bajo» · ¡Correcto! Lo lograste en 3 intentos"}]}, {"id": "digitos", "lvl": 2, "xp": 30, "t": "6. Radiografía de un número", "tag": "Nivel 2 · while + // y %", "d": "Pide un entero positivo y, usando solo operaciones aritméticas (sin convertirlo a texto), muestra: <code>Dígitos: C<\/code> (cuántos tiene), <code>Suma de dígitos: S<\/code>, <code>Invertido: R<\/code> (el número con las cifras al revés, como entero) y si <code>Es palíndromo<\/code> o <code>No es palíndromo<\/code> (se lee igual al derecho y al revés).<br><b>Entrada:<\/b> un entero positivo · <b>Salida:<\/b> cuatro líneas<br><b>Ejemplo:<\/b> 4070 → <code>Dígitos: 4<\/code> · <code>Suma de dígitos: 11<\/code> · <code>Invertido: 704<\/code> · <code>No es palíndromo<\/code>.<br>💡 <b>Pista:<\/b> con <code>% 10<\/code> obtienes la última cifra y con <code>// 10<\/code> la quitas. Repite mientras queden cifras. Para armar el invertido, cada cifra nueva \"empuja\" a las anteriores una posición a la izquierda. Guarda una copia del número original antes de destruirlo.", "starter": "n = int(input(\"Número: \"))\n", "sol": "n = int(input(\"Número: \"))\noriginal = n\ncifras = 0\nsuma = 0\ninvertido = 0\nwhile n > 0:\n    d = n % 10\n    cifras += 1\n    suma += d\n    invertido = invertido * 10 + d\n    n //= 10\nprint(f\"Dígitos: {cifras}\")\nprint(f\"Suma de dígitos: {suma}\")\nprint(f\"Invertido: {invertido}\")\nif invertido == original:\n    print(\"Es palíndromo\")\nelse:\n    print(\"No es palíndromo\")", "tests": [{"in": ["12321"], "must": ["d[ií]gitos[^\\n\\d]*(?<![\\d.])5(?:\\.0{1,2})?(?!\\d)", "suma[^\\n\\d]*(?<![\\d.])9(?:\\.0{1,2})?(?!\\d)", "invertido[^\\n\\d]*(?<![\\d.])12321(?:\\.0{1,2})?(?!\\d)", "es pal[ií]ndromo"], "not": ["no es pal"], "show": "Dígitos: 5 · Suma de dígitos: 9 · Invertido: 12321 · Es palíndromo"}, {"in": ["4070"], "must": ["d[ií]gitos[^\\n\\d]*(?<![\\d.])4(?:\\.0{1,2})?(?!\\d)", "suma[^\\n\\d]*(?<![\\d.])11(?:\\.0{1,2})?(?!\\d)", "invertido[^\\n\\d]*(?<![\\d.])704(?:\\.0{1,2})?(?!\\d)", "no es pal[ií]ndromo"], "not": [], "show": "Dígitos: 4 · Suma de dígitos: 11 · Invertido: 704 · No es palíndromo"}, {"in": ["7"], "must": ["d[ií]gitos[^\\n\\d]*(?<![\\d.])1(?:\\.0{1,2})?(?!\\d)", "suma[^\\n\\d]*(?<![\\d.])7(?:\\.0{1,2})?(?!\\d)", "invertido[^\\n\\d]*(?<![\\d.])7(?:\\.0{1,2})?(?!\\d)", "es pal[ií]ndromo"], "not": ["no es pal"], "show": "Dígitos: 1 · Suma de dígitos: 7 · Invertido: 7 · Es palíndromo"}, {"in": ["1200"], "must": ["d[ií]gitos[^\\n\\d]*(?<![\\d.])4(?:\\.0{1,2})?(?!\\d)", "suma[^\\n\\d]*(?<![\\d.])3(?:\\.0{1,2})?(?!\\d)", "invertido[^\\n\\d]*(?<![\\d.])21(?:\\.0{1,2})?(?!\\d)", "no es pal[ií]ndromo"], "not": [], "show": "Dígitos: 4 · Suma de dígitos: 3 · Invertido: 21 · No es palíndromo"}, {"in": ["98765432"], "must": ["d[ií]gitos[^\\n\\d]*(?<![\\d.])8(?:\\.0{1,2})?(?!\\d)", "suma[^\\n\\d]*(?<![\\d.])44(?:\\.0{1,2})?(?!\\d)", "invertido[^\\n\\d]*(?<![\\d.])23456789(?:\\.0{1,2})?(?!\\d)", "no es pal[ií]ndromo"], "not": [], "show": "Dígitos: 8 · Suma de dígitos: 44 · Invertido: 23456789 · No es palíndromo"}]}, {"id": "cajero", "lvl": 3, "xp": 40, "t": "7. Cajero automático", "tag": "Nivel 3 · while + centinela + continue", "d": "Simula un cajero. Pide el saldo inicial (real) y luego montos a retirar hasta que el usuario escriba <b>0<\/b>. Un monto es válido solo si es <b>positivo y múltiplo de 10000<\/b>; si no, muestra <code>Monto inválido<\/code>. Cada retiro cobra una <b>comisión del 1 %<\/b> del monto; si el monto más la comisión supera el saldo, muestra <code>Fondos insuficientes<\/code>. Si se aprueba, descuenta ambos y muestra <code>Retiro aprobado. Saldo: X<\/code>. Al terminar muestra <code>Retiros: N<\/code>, <code>Comisiones: X<\/code> y <code>Saldo final: X<\/code> (dinero con 2 decimales).<br><b>Entrada:<\/b> un real y luego enteros terminados en 0 · <b>Salida:<\/b> un mensaje por retiro y el resumen<br><b>Ejemplo:<\/b> saldo 500000; retiros 100000, 25000, 450000, 200000, 0 → <code>Retiro aprobado. Saldo: 399000.00<\/code> · <code>Monto inválido<\/code> · <code>Fondos insuficientes<\/code> · <code>Retiro aprobado. Saldo: 197000.00<\/code> · <code>Retiros: 2<\/code> · <code>Comisiones: 3000.00<\/code> · <code>Saldo final: 197000.00<\/code>.<br>💡 <b>Pista:<\/b> cuando un monto no sirve no hay nada más que hacer en esa vuelta: existe una instrucción que salta directo a la siguiente. Revisa las reglas en orden: primero si el monto es válido y luego si alcanza el saldo.", "starter": "saldo = float(input(\"Saldo inicial: \"))\n", "sol": "saldo = float(input(\"Saldo inicial: \"))\nretiros = 0\ncomisiones = 0\nwhile True:\n    monto = int(input(\"Monto a retirar (0 para salir): \"))\n    if monto == 0:\n        break\n    if monto < 0 or monto % 10000 != 0:\n        print(\"Monto inválido\")\n        continue\n    comision = monto * 0.01\n    if monto + comision > saldo:\n        print(\"Fondos insuficientes\")\n        continue\n    saldo -= monto + comision\n    retiros += 1\n    comisiones += comision\n    print(f\"Retiro aprobado. Saldo: {saldo:.2f}\")\nprint(f\"Retiros: {retiros}\")\nprint(f\"Comisiones: {comisiones:.2f}\")\nprint(f\"Saldo final: {saldo:.2f}\")", "tests": [{"in": ["500000", "100000", "25000", "450000", "200000", "0"], "must": ["aprobado[^\\n]*saldo[^\\n\\d]*(?<![\\d.])(?:398999\\.99|399000(?:\\.0{1,2})?|399000\\.01)(?!\\d)", "aprobado[^\\n]*saldo[^\\n\\d]*(?<![\\d.])(?:196999\\.99|197000(?:\\.0{1,2})?|197000\\.01)(?!\\d)", "(?:[\\s\\S]*?monto inv[aá]lido){1}", "(?:[\\s\\S]*?fondos insuficientes){1}", "retiros[^\\n\\d]*(?<![\\d.])2(?:\\.0{1,2})?(?!\\d)", "comisiones[^\\n\\d]*(?<![\\d.])(?:2999\\.99|3000(?:\\.0{1,2})?|3000\\.01)(?!\\d)", "saldo final[^\\n\\d]*(?<![\\d.])(?:196999\\.99|197000(?:\\.0{1,2})?|197000\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?monto inv[aá]lido){2}", "(?:[\\s\\S]*?fondos insuficientes){2}"], "show": "2 retiro(s) aprobado(s), 1 inválido(s), 1 sin fondos · Retiros: 2 · Comisiones: 3000.00 · Saldo final: 197000.00"}, {"in": ["100000", "0"], "must": ["retiros[^\\n\\d]*(?<![\\d.])0(?:\\.0{1,2})?(?!\\d)", "comisiones[^\\n\\d]*(?<![\\d.])(?:0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "saldo final[^\\n\\d]*(?<![\\d.])(?:99999\\.99|100000(?:\\.0{1,2})?|100000\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?monto inv[aá]lido){1}", "(?:[\\s\\S]*?fondos insuficientes){1}"], "show": "0 retiro(s) aprobado(s), 0 inválido(s), 0 sin fondos · Retiros: 0 · Comisiones: 0.00 · Saldo final: 100000.00"}, {"in": ["1000000", "-10000", "990000", "980000", "20000", "0"], "must": ["aprobado[^\\n]*saldo[^\\n\\d]*(?<![\\d.])(?:99\\.99|100(?:\\.0{1,2})?|100\\.01)(?!\\d)", "(?:[\\s\\S]*?monto inv[aá]lido){1}", "(?:[\\s\\S]*?fondos insuficientes){2}", "retiros[^\\n\\d]*(?<![\\d.])1(?:\\.0{1,2})?(?!\\d)", "comisiones[^\\n\\d]*(?<![\\d.])(?:9899\\.99|9900(?:\\.0{1,2})?|9900\\.01)(?!\\d)", "saldo final[^\\n\\d]*(?<![\\d.])(?:99\\.99|100(?:\\.0{1,2})?|100\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?monto inv[aá]lido){2}", "(?:[\\s\\S]*?fondos insuficientes){3}"], "show": "1 retiro(s) aprobado(s), 1 inválido(s), 2 sin fondos · Retiros: 1 · Comisiones: 9900.00 · Saldo final: 100.00"}, {"in": ["50000", "60000", "40000", "10000", "0"], "must": ["aprobado[^\\n]*saldo[^\\n\\d]*(?<![\\d.])(?:9599\\.99|9600(?:\\.0{1,2})?|9600\\.01)(?!\\d)", "(?:[\\s\\S]*?fondos insuficientes){2}", "retiros[^\\n\\d]*(?<![\\d.])1(?:\\.0{1,2})?(?!\\d)", "comisiones[^\\n\\d]*(?<![\\d.])(?:399\\.99|400(?:\\.0{1,2})?|400\\.01)(?!\\d)", "saldo final[^\\n\\d]*(?<![\\d.])(?:9599\\.99|9600(?:\\.0{1,2})?|9600\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?monto inv[aá]lido){1}", "(?:[\\s\\S]*?fondos insuficientes){3}"], "show": "1 retiro(s) aprobado(s), 0 inválido(s), 2 sin fondos · Retiros: 1 · Comisiones: 400.00 · Saldo final: 9600.00"}]}, {"id": "primos", "lvl": 3, "xp": 40, "t": "8. Cazador de primos", "tag": "Nivel 3 · ciclos anidados + bandera", "d": "Un número es <b>primo<\/b> si es mayor que 1 y solo es divisible entre 1 y sí mismo. Pide dos enteros a y b (a ≤ b) y muestra en una línea todos los primos entre a y b, inclusive: <code>Primos: …<\/code> separados por espacios (o <code>Primos: ninguno<\/code>). Luego muestra <code>Cantidad: C<\/code> y <code>Suma: S<\/code>.<br><b>Entrada:<\/b> dos enteros · <b>Salida:<\/b> tres líneas<br><b>Ejemplo:<\/b> 1 y 20 → <code>Primos: 2 3 5 7 11 13 17 19<\/code> · <code>Cantidad: 8<\/code> · <code>Suma: 77<\/code>.<br>💡 <b>Pista:<\/b> un ciclo externo recorre los candidatos y otro interno busca divisores. En cuanto aparece un divisor ya sabes la respuesta: no hace falta seguir buscando. ¿Cómo tratas al 0, al 1 y a los negativos?", "starter": "a = int(input(\"Desde: \"))\nb = int(input(\"Hasta: \"))\n", "sol": "a = int(input(\"Desde: \"))\nb = int(input(\"Hasta: \"))\ncantidad = 0\nsuma = 0\nprint(\"Primos:\", end=\" \")\nfor n in range(a, b + 1):\n    if n < 2:\n        continue\n    es_primo = True\n    d = 2\n    while d * d <= n:\n        if n % d == 0:\n            es_primo = False\n            break\n        d += 1\n    if es_primo:\n        print(n, end=\" \")\n        cantidad += 1\n        suma += n\nif cantidad == 0:\n    print(\"ninguno\", end=\"\")\nprint()\nprint(f\"Cantidad: {cantidad}\")\nprint(f\"Suma: {suma}\")", "tests": [{"in": ["1", "20"], "must": ["primos\\D*2[ ,]+3[ ,]+5[ ,]+7[ ,]+11[ ,]+13[ ,]+17[ ,]+19(?![ ,]*\\d)", "cantidad[^\\n\\d]*(?<![\\d.])8(?:\\.0{1,2})?(?!\\d)", "suma[^\\n\\d]*(?<![\\d.])77(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "Primos: 2 3 5 7 11 13 17 19 · Cantidad: 8 · Suma: 77"}, {"in": ["24", "28"], "must": ["primos\\W*ninguno", "cantidad[^\\n\\d]*(?<![\\d.])0(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "Primos: ninguno · Cantidad: 0 · Suma: 0"}, {"in": ["89", "101"], "must": ["primos\\D*89[ ,]+97[ ,]+101(?![ ,]*\\d)", "cantidad[^\\n\\d]*(?<![\\d.])3(?:\\.0{1,2})?(?!\\d)", "suma[^\\n\\d]*(?<![\\d.])287(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "Primos: 89 97 101 · Cantidad: 3 · Suma: 287"}, {"in": ["-5", "3"], "must": ["primos\\D*2[ ,]+3(?![ ,]*\\d)", "cantidad[^\\n\\d]*(?<![\\d.])2(?:\\.0{1,2})?(?!\\d)", "suma[^\\n\\d]*(?<![\\d.])5(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "Primos: 2 3 · Cantidad: 2 · Suma: 5"}, {"in": ["2", "2"], "must": ["primos\\D*2(?![ ,]*\\d)", "cantidad[^\\n\\d]*(?<![\\d.])1(?:\\.0{1,2})?(?!\\d)", "suma[^\\n\\d]*(?<![\\d.])2(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "Primos: 2 · Cantidad: 1 · Suma: 2"}]}, {"id": "menu", "lvl": 3, "xp": 40, "t": "9. Carrito de compras con menú", "tag": "Nivel 3 · while True + break + match", "d": "Crea un menú que se repita hasta que el usuario elija salir: <b>1<\/b> Agregar producto (pide precio real y cantidad entera), <b>2<\/b> Aplicar cupón (pide el % de descuento; solo se aceptan cupones de 1 a 30 % —si no, <code>Cupón inválido<\/code>— y solo se puede aplicar <b>uno<\/b>: si ya hay uno, muestra <code>Ya aplicaste un cupón<\/code> <b>sin pedir el porcentaje<\/b>), <b>3<\/b> Ver total (muestra <code>Total: X<\/code>: subtotal con el descuento y luego el IVA del 19 %), <b>4<\/b> Salir (muestra <code>Gracias. Total a pagar: X<\/code>). Cualquier otra opción muestra <code>Opción no válida<\/code>. Dinero con 2 decimales.<br><b>Entrada:<\/b> una secuencia de opciones con sus datos · <b>Salida:<\/b> los mensajes de cada opción<br><b>Ejemplo:<\/b> 1 → 20000 × 2; 2 → 10; 3; 4 → <code>Total: 42840.00<\/code> · <code>Gracias. Total a pagar: 42840.00<\/code>.<br>💡 <b>Pista:<\/b> un ciclo que solo termina cuando el usuario lo decide se escribe como un ciclo \"infinito\" con una salida explícita. Guarda en variables el subtotal y el porcentaje del cupón; el total se calcula cada vez que se pide, no se acumula.", "starter": "subtotal = 0\nwhile True:\n    print(\"1. Agregar  2. Cupón  3. Ver total  4. Salir\")\n    opcion = input(\"Opción: \")\n", "sol": "subtotal = 0\ncupon = 0\nhay_cupon = False\nwhile True:\n    print(\"1. Agregar  2. Cupón  3. Ver total  4. Salir\")\n    opcion = input(\"Opción: \")\n    match opcion:\n        case \"1\":\n            precio = float(input(\"Precio: \"))\n            cantidad = int(input(\"Cantidad: \"))\n            subtotal += precio * cantidad\n        case \"2\":\n            if hay_cupon:\n                print(\"Ya aplicaste un cupón\")\n            else:\n                p = float(input(\"Descuento (%): \"))\n                if 1 <= p <= 30:\n                    cupon = p\n                    hay_cupon = True\n                else:\n                    print(\"Cupón inválido\")\n        case \"3\":\n            total = subtotal * (1 - cupon / 100) * 1.19\n            print(f\"Total: {total:.2f}\")\n        case \"4\":\n            break\n        case _:\n            print(\"Opción no válida\")\ntotal = subtotal * (1 - cupon / 100) * 1.19\nprint(f\"Gracias. Total a pagar: {total:.2f}\")", "tests": [{"in": ["1", "20000", "2", "2", "10", "3", "4"], "must": ["(?:^|\\n)total[^\\n\\d]*(?<![\\d.])(?:42839\\.99|42840(?:\\.0{1,2})?|42840\\.01)(?!\\d)", "gracias[^\\n]*total a pagar[^\\n\\d]*(?<![\\d.])(?:42839\\.99|42840(?:\\.0{1,2})?|42840\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?(no v[aá]lid|inv[aá]lid)){1}", "(?:[\\s\\S]*?ya aplicaste){1}"], "show": "Total: 42840.00 · Gracias. Total a pagar: 42840.00"}, {"in": ["4"], "must": ["gracias[^\\n]*total a pagar[^\\n\\d]*(?<![\\d.])(?:0(?:\\.0{1,2})?|0\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?(no v[aá]lid|inv[aá]lid)){1}", "(?:[\\s\\S]*?ya aplicaste){1}"], "show": "Gracias. Total a pagar: 0.00"}, {"in": ["1", "15000", "3", "2", "40", "2", "30", "2", "9", "3", "1", "5000.5", "2", "4"], "must": ["(?:^|\\n)total[^\\n\\d]*(?<![\\d.])(?:37484\\.99|37485(?:\\.0{1,2})?|37485\\.01)(?!\\d)", "gracias[^\\n]*total a pagar[^\\n\\d]*(?<![\\d.])(?:45815\\.82|45815\\.83|45815\\.84)(?!\\d)", "(?:[\\s\\S]*?(no v[aá]lid|inv[aá]lid)){2}", "(?:[\\s\\S]*?ya aplicaste){1}"], "not": ["(?:[\\s\\S]*?(no v[aá]lid|inv[aá]lid)){3}", "(?:[\\s\\S]*?ya aplicaste){2}"], "show": "Cupón inválido · Ya aplicaste un cupón · Opción no válida · Total: 37485.00 · Gracias. Total a pagar: 45815.83"}, {"in": ["x", "1", "100000", "1", "4"], "must": ["gracias[^\\n]*total a pagar[^\\n\\d]*(?<![\\d.])(?:118999\\.99|119000(?:\\.0{1,2})?|119000\\.01)(?!\\d)", "(?:[\\s\\S]*?(no v[aá]lid|inv[aá]lid)){1}"], "not": ["(?:[\\s\\S]*?(no v[aá]lid|inv[aá]lid)){2}", "(?:[\\s\\S]*?ya aplicaste){1}"], "show": "Opción no válida · Gracias. Total a pagar: 119000.00"}]}, {"id": "cierre", "lvl": 4, "xp": 60, "t": "★ 10. Cierre de caja con estadísticas", "tag": "Nivel 4 · centinela + validación + máx/mín", "d": "Al cerrar la tienda se digitan las ventas del día (reales) una por una, terminando con <b>−1<\/b>. Una venta negativa distinta de −1 se rechaza con <code>Venta inválida<\/code> (una venta de 0 sí es válida). Al final muestra <code>Cantidad: N<\/code>, <code>Total: X<\/code>, <code>Promedio: X<\/code>, <code>Máxima: X<\/code> y <code>Mínima: X<\/code>. La meta del día es <b>1000000<\/b>: si se alcanzó, muestra <code>Meta cumplida: bono de X<\/code> (2 % del total); si no, <code>Faltan X para la meta<\/code>. Si no hubo ventas válidas, muestra solo <code>No hubo ventas<\/code>. Dinero con 2 decimales.<br><b>Entrada:<\/b> reales terminados en −1 · <b>Salida:<\/b> el resumen<br><b>Ejemplo:<\/b> 250000, −30, 480000, 120000, −1 → <code>Venta inválida<\/code> · <code>Cantidad: 3<\/code> · <code>Total: 850000.00<\/code> · <code>Promedio: 283333.33<\/code> · <code>Máxima: 480000.00<\/code> · <code>Mínima: 120000.00<\/code> · <code>Faltan 150000.00 para la meta<\/code>.<br>💡 <b>Pista:<\/b> para el máximo y el mínimo necesitas un punto de partida: puede ser la primera venta válida, o una bandera que diga si ya viste alguna. El centinela y las ventas inválidas nunca deben afectar las estadísticas.", "starter": "venta = float(input(\"Venta (-1 para terminar): \"))\n", "sol": "cantidad = 0\ntotal = 0\nmaxima = 0\nminima = 0\nventa = float(input(\"Venta (-1 para terminar): \"))\nwhile venta != -1:\n    if venta < 0:\n        print(\"Venta inválida\")\n    else:\n        if cantidad == 0:\n            maxima = venta\n            minima = venta\n        elif venta > maxima:\n            maxima = venta\n        elif venta < minima:\n            minima = venta\n        cantidad += 1\n        total += venta\n    venta = float(input(\"Venta (-1 para terminar): \"))\nif cantidad == 0:\n    print(\"No hubo ventas\")\nelse:\n    print(f\"Cantidad: {cantidad}\")\n    print(f\"Total: {total:.2f}\")\n    print(f\"Promedio: {total / cantidad:.2f}\")\n    print(f\"Máxima: {maxima:.2f}\")\n    print(f\"Mínima: {minima:.2f}\")\n    if total >= 1000000:\n        print(f\"Meta cumplida: bono de {total * 0.02:.2f}\")\n    else:\n        print(f\"Faltan {1000000 - total:.2f} para la meta\")", "tests": [{"in": ["250000", "-30", "480000", "120000", "-1"], "must": ["(?:[\\s\\S]*?venta inv[aá]lida){1}", "cantidad[^\\n\\d]*(?<![\\d.])3(?:\\.0{1,2})?(?!\\d)", "\\btotal[^\\n\\d]*(?<![\\d.])(?:849999\\.99|850000(?:\\.0{1,2})?|850000\\.01)(?!\\d)", "promedio[^\\n\\d]*(?<![\\d.])(?:283333\\.32|283333\\.33|283333\\.34)(?!\\d)", "m[aá]xima[^\\n\\d]*(?<![\\d.])(?:479999\\.99|480000(?:\\.0{1,2})?|480000\\.01)(?!\\d)", "m[ií]nima[^\\n\\d]*(?<![\\d.])(?:119999\\.99|120000(?:\\.0{1,2})?|120000\\.01)(?!\\d)", "faltan[^\\n\\d]*(?<![\\d.])(?:149999\\.99|150000(?:\\.0{1,2})?|150000\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?venta inv[aá]lida){2}", "meta cumplida"], "show": "1 aviso(s) · Cantidad: 3 · Total: 850000.00 · Promedio: 283333.33 · Máxima: 480000.00 · Mínima: 120000.00 · Faltan 150000.00 para la meta"}, {"in": ["-1"], "must": ["no hubo ventas"], "not": ["(?:[\\s\\S]*?venta inv[aá]lida){1}", "promedio"], "show": "No hubo ventas"}, {"in": ["-5", "-1"], "must": ["(?:[\\s\\S]*?venta inv[aá]lida){1}", "no hubo ventas"], "not": ["(?:[\\s\\S]*?venta inv[aá]lida){2}", "promedio"], "show": "No hubo ventas"}, {"in": ["500000", "0", "700000", "90000.5", "-1"], "must": ["cantidad[^\\n\\d]*(?<![\\d.])4(?:\\.0{1,2})?(?!\\d)", "\\btotal[^\\n\\d]*(?<![\\d.])(?:1290000\\.49|1290000\\.50?|1290000\\.51)(?!\\d)", "promedio[^\\n\\d]*(?<![\\d.])(?:322500\\.11|322500\\.12|322500\\.13)(?!\\d)", "m[aá]xima[^\\n\\d]*(?<![\\d.])(?:699999\\.99|700000(?:\\.0{1,2})?|700000\\.01)(?!\\d)", "m[ií]nima[^\\n\\d]*(?<![\\d.])(?:0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "meta cumplida[^\\n]*bono[^\\n\\d]*(?<![\\d.])(?:25800(?:\\.0{1,2})?|25800\\.01|25800\\.02)(?!\\d)"], "not": ["(?:[\\s\\S]*?venta inv[aá]lida){1}", "faltan"], "show": "0 aviso(s) · Cantidad: 4 · Total: 1290000.50 · Promedio: 322500.12 · Máxima: 700000.00 · Mínima: 0.00 · Meta cumplida: bono de 25800.01"}, {"in": ["1000000", "-1"], "must": ["cantidad[^\\n\\d]*(?<![\\d.])1(?:\\.0{1,2})?(?!\\d)", "\\btotal[^\\n\\d]*(?<![\\d.])(?:999999\\.99|1000000(?:\\.0{1,2})?|1000000\\.01)(?!\\d)", "promedio[^\\n\\d]*(?<![\\d.])(?:999999\\.99|1000000(?:\\.0{1,2})?|1000000\\.01)(?!\\d)", "m[aá]xima[^\\n\\d]*(?<![\\d.])(?:999999\\.99|1000000(?:\\.0{1,2})?|1000000\\.01)(?!\\d)", "m[ií]nima[^\\n\\d]*(?<![\\d.])(?:999999\\.99|1000000(?:\\.0{1,2})?|1000000\\.01)(?!\\d)", "meta cumplida[^\\n]*bono[^\\n\\d]*(?<![\\d.])(?:19999\\.99|20000(?:\\.0{1,2})?|20000\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?venta inv[aá]lida){1}", "faltan"], "show": "0 aviso(s) · Cantidad: 1 · Total: 1000000.00 · Promedio: 1000000.00 · Máxima: 1000000.00 · Mínima: 1000000.00 · Meta cumplida: bono de 20000.00"}]}, {"id": "meta", "lvl": 4, "xp": 60, "t": "★ 11. Plan de ahorro con meta", "tag": "Nivel 4 · while + interés + reporte periódico", "d": "Quieres reunir una meta de dinero. Cada mes, primero el banco paga un <b>interés mensual<\/b> (en %) sobre el saldo que tenías y luego depositas tu <b>ahorro mensual<\/b>. Pide la meta, el ahorro mensual y la tasa mensual en % (reales). Cada vez que se completa un año (cada 12 meses) muestra <code>Año k: saldo X<\/code>. Cuando se alcance la meta, muestra <code>Meses: M<\/code> y <code>Saldo final: X<\/code>. Protege tu programa de un ciclo infinito: si el ahorro mensual es 0 o negativo muestra <code>Con ese ahorro nunca llegarás a la meta<\/code>, y si después de 600 meses no se ha alcanzado, muestra <code>La meta tardaría más de 50 años<\/code>. Dinero con 2 decimales.<br><b>Entrada:<\/b> tres reales · <b>Salida:<\/b> reporte anual y resultado<br><b>Ejemplo:<\/b> meta 3000000, ahorro 200000, tasa 1 % → <code>Año 1: saldo 2536500.60<\/code> · <code>Meses: 15<\/code> · <code>Saldo final: 3219379.11<\/code>.<br>💡 <b>Pista:<\/b> la condición del <code>while<\/code> puede combinar dos razones para seguir (¿no he llegado? ¿y aún no paso del límite?). Para saber si se completó un año, piensa en el residuo de dividir el número de meses entre 12. Después del ciclo, averigua cuál de las dos razones lo detuvo.", "starter": "meta = float(input(\"Meta: \"))\nahorro = float(input(\"Ahorro mensual: \"))\ntasa = float(input(\"Tasa mensual (%): \"))\n", "sol": "meta = float(input(\"Meta: \"))\nahorro = float(input(\"Ahorro mensual: \"))\ntasa = float(input(\"Tasa mensual (%): \"))\nif ahorro <= 0:\n    print(\"Con ese ahorro nunca llegarás a la meta\")\nelse:\n    saldo = 0\n    meses = 0\n    while saldo < meta and meses < 600:\n        saldo += saldo * tasa / 100\n        saldo += ahorro\n        meses += 1\n        if meses % 12 == 0:\n            print(f\"Año {meses // 12}: saldo {saldo:.2f}\")\n    if saldo >= meta:\n        print(f\"Meses: {meses}\")\n        print(f\"Saldo final: {saldo:.2f}\")\n    else:\n        print(\"La meta tardaría más de 50 años\")", "tests": [{"in": ["3000000", "200000", "1"], "must": ["a[nñ]o 1\\b[^\\n\\d]*(?<![\\d.])(?:2536500\\.59|2536500\\.60?|2536500\\.61)(?!\\d)", "meses[^\\n\\d]*(?<![\\d.])15(?:\\.0{1,2})?(?!\\d)", "saldo final[^\\n\\d]*(?<![\\d.])(?:3219379\\.10?|3219379\\.11|3219379\\.12)(?!\\d)"], "not": ["a[nñ]o 2\\b"], "show": "1 línea(s) «Año k: saldo X»; Meses: 15 · Saldo final: 3219379.11"}, {"in": ["500000", "100000", "0.5"], "must": ["meses[^\\n\\d]*(?<![\\d.])5(?:\\.0{1,2})?(?!\\d)", "saldo final[^\\n\\d]*(?<![\\d.])(?:505025\\.05|505025\\.06|505025\\.07)(?!\\d)"], "not": ["a[nñ]o 1\\b"], "show": "Meses: 5 · Saldo final: 505025.06"}, {"in": ["20000000", "150000", "0.8"], "must": ["a[nñ]o 1\\b[^\\n\\d]*(?<![\\d.])(?:1881350\\.50?|1881350\\.51|1881350\\.52)(?!\\d)", "a[nñ]o 2\\b[^\\n\\d]*(?<![\\d.])(?:3951473\\.26|3951473\\.27|3951473\\.28)(?!\\d)", "a[nñ]o 3\\b[^\\n\\d]*(?<![\\d.])(?:6229309\\.43|6229309\\.44|6229309\\.45)(?!\\d)", "meses[^\\n\\d]*(?<![\\d.])92(?:\\.0{1,2})?(?!\\d)", "saldo final[^\\n\\d]*(?<![\\d.])(?:20277454\\.50?|20277454\\.51|20277454\\.52)(?!\\d)"], "not": ["a[nñ]o 8\\b"], "show": "7 línea(s) «Año k: saldo X»; Meses: 92 · Saldo final: 20277454.51"}, {"in": ["1000000", "0", "1"], "must": ["nunca"], "not": ["meses:"], "show": "Con ese ahorro nunca llegarás a la meta"}, {"in": ["1000000000000.0", "1000", "0"], "must": ["m[aá]s de 50 a[nñ]os"], "not": ["meses:"], "show": "La meta tardaría más de 50 años"}]}, {"id": "nim", "lvl": 4, "xp": 60, "t": "★ 12. Juego del 21", "tag": "Nivel 4 · while + turnos + validación", "d": "En la mesa hay <b>21 fichas<\/b>. Dos jugadores se turnan (empieza el jugador 1) y en cada turno el jugador escribe cuántas fichas toma: <b>1, 2 o 3<\/b>, y nunca más de las que quedan. Si la jugada no cumple, muestra <code>Jugada inválida<\/code> y el <b>mismo<\/b> jugador vuelve a intentarlo. Después de cada jugada válida muestra <code>Quedan X fichas<\/code>. <b>Quien toma la última ficha pierde<\/b>: al final muestra <code>Gana el jugador N<\/code>.<br><b>Entrada:<\/b> enteros (las jugadas) · <b>Salida:<\/b> el estado tras cada jugada y el ganador<br><b>Ejemplo:<\/b> jugadas 3, 3, 3, 3, 3, 3, 3 → … <code>Quedan 0 fichas<\/code> · <code>Gana el jugador 2<\/code> (el jugador 1 tomó la última).<br>💡 <b>Pista:<\/b> necesitas una variable para las fichas y otra para saber de quién es el turno; el turno solo cambia después de una jugada válida. Piensa qué significa, para elegir al ganador, quién tenía el turno cuando las fichas llegaron a 0.", "starter": "fichas = 21\njugador = 1\n", "sol": "fichas = 21\njugador = 1\nwhile fichas > 0:\n    toma = int(input(f\"Jugador {jugador}, ¿cuántas fichas tomas? \"))\n    if toma < 1 or toma > 3 or toma > fichas:\n        print(\"Jugada inválida\")\n        continue\n    fichas -= toma\n    print(f\"Quedan {fichas} fichas\")\n    if fichas == 0:\n        break\n    if jugador == 1:\n        jugador = 2\n    else:\n        jugador = 1\nif jugador == 1:\n    print(\"Gana el jugador 2\")\nelse:\n    print(\"Gana el jugador 1\")", "tests": [{"in": ["3", "3", "3", "3", "3", "3", "3"], "must": ["(?:[\\s\\S]*?quedan\\W*18\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*15\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*12\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*9\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*6\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*3\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*0\\W*ficha){1}", "gana el jugador 2"], "not": ["(?:[\\s\\S]*?jugada inv[aá]lida){1}", "gana el jugador 1"], "show": "… · Gana el jugador 2"}, {"in": ["2", "3", "1", "4", "3", "0", "2", "3", "3", "1", "3"], "must": ["(?:[\\s\\S]*?quedan\\W*19\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*16\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*15\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*12\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*10\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*7\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*4\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*3\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*0\\W*ficha){1}", "(?:[\\s\\S]*?jugada inv[aá]lida){2}", "gana el jugador 2"], "not": ["(?:[\\s\\S]*?jugada inv[aá]lida){3}", "gana el jugador 1"], "show": "… · Gana el jugador 2"}, {"in": ["3", "3", "3", "3", "3", "3", "2", "1"], "must": ["(?:[\\s\\S]*?quedan\\W*18\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*15\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*12\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*9\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*6\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*3\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*1\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*0\\W*ficha){1}", "gana el jugador 1"], "not": ["(?:[\\s\\S]*?jugada inv[aá]lida){1}", "gana el jugador 2"], "show": "… · Gana el jugador 1"}, {"in": ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"], "must": ["(?:[\\s\\S]*?quedan\\W*20\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*19\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*18\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*17\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*16\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*15\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*14\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*13\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*12\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*11\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*10\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*9\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*8\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*7\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*6\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*5\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*4\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*3\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*2\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*1\\W*ficha){1}", "(?:[\\s\\S]*?quedan\\W*0\\W*ficha){1}", "gana el jugador 2"], "not": ["(?:[\\s\\S]*?jugada inv[aá]lida){1}", "gana el jugador 1"], "show": "… · Gana el jugador 2"}]}];
+const HARNESS_PY = "import builtins, io, contextlib, traceback, sys\nclass CicloInfinito(Exception):\n    pass\nclass DemasiadaSalida(Exception):\n    pass\nLP_MAX_PASOS = 3000000\nLP_MAX_SALIDA = 30000\nclass LP_Salida(io.StringIO):\n    def write(self, s):\n        if self.tell() + len(s) > LP_MAX_SALIDA:\n            super().write(s[:max(0, LP_MAX_SALIDA - self.tell())])\n            raise DemasiadaSalida(\"tu programa imprimió demasiado texto (más de 30 000 caracteres): ¿quedó en un ciclo infinito?\")\n        return super().write(s)\ndef __run_user(src, inputs, echo):\n    q = list(inputs)\n    def _inp(prompt=''):\n        if not q:\n            raise EOFError(\"input() pidió un dato, pero no hay más entradas\")\n        v = q.pop(0)\n        if echo:\n            print(str(prompt) + v)\n        return v\n    builtins.input = _inp\n    buf = LP_Salida()\n    pasos = [0]\n    def _local(frame, event, arg):\n        if event == 'line':\n            pasos[0] += 1\n            if pasos[0] > LP_MAX_PASOS:\n                raise CicloInfinito(\"tu programa ejecutó más de 3 millones de pasos sin terminar: revisa que la condición del ciclo pueda volverse False\")\n        return _local\n    def _global(frame, event, arg):\n        if frame.f_code.co_filename == \"tu_programa.py\":\n            return _local\n        return None\n    etype, err, line = \"\", \"\", None\n    try:\n        code = compile(src, \"tu_programa.py\", \"exec\")\n        sys.settrace(_global)\n        try:\n            with contextlib.redirect_stdout(buf):\n                exec(code, {\"__name__\": \"__main__\"})\n        finally:\n            sys.settrace(None)\n    except SyntaxError as e:\n        etype, err, line = type(e).__name__, str(e.msg), e.lineno\n    except BaseException as e:\n        etype, err = type(e).__name__, str(e)\n        for fr in traceback.extract_tb(e.__traceback__):\n            if fr.filename == \"tu_programa.py\":\n                line = fr.lineno\n    return [buf.getvalue(), etype, err, line]\n";
+const EXTRA_CODE = {
+  regresiva:{code:'n = int(input("¿Desde qué número? "))\nwhile n > 0:\n    print(n)\n    n -= 1\nprint("🚀 ¡Despegue!")\n', stdin:'5'},
+  pin:{code:'pin = input("PIN de 4 dígitos: ")\nwhile len(pin) != 4 or not pin.isdigit():\n    print("PIN inválido")\n    pin = input("PIN de 4 dígitos: ")\nprint("PIN registrado ✔")\n', stdin:'12a4\n123\n2026'},
+  ahorro:{code:'saldo = float(input("Ahorro inicial: "))\nmeta = float(input("Meta: "))\nmeses = 0\nwhile saldo < meta:\n    saldo *= 1.05          # el ahorro rinde 5 % cada mes\n    meses += 1\nprint(f"Meta alcanzada en {meses} meses: {saldo:.2f}")\n', stdin:'100000\n150000'},
+  infinito:{code:'i = 1\nwhile i <= 5:\n    print("Vuelta", i)\n# ¡olvidamos escribir i += 1 dentro del ciclo!\n', stdin:''},
+  comandos:{code:'while True:\n    cmd = input("Comando (salir para terminar): ")\n    if cmd == "salir":\n        break\n    print(f"Ejecutando «{cmd}»…")\nprint("Sesión cerrada")\n', stdin:'abrir\nguardar\nsalir'},
+  agotados:{code:'for codigo in range(1, 8):\n    stock = int(input(f"Stock del producto {codigo}: "))\n    if stock == 0:\n        continue          # agotado: salta al siguiente producto\n    print(f"Producto {codigo}: {stock} unidades listas para despacho")\n', stdin:'5\n0\n3\n0\n0\n8\n1'},
+  divisor:{code:'n = int(input("Número (mayor que 1): "))\nd = 2\nwhile d * d <= n:\n    if n % d == 0:\n        print(f"{n} = {d} × {n // d}: NO es primo")\n        break\n    d += 1\nelse:\n    print(f"{n} es primo")\n', stdin:'91'},
+  peaje:{code:'total = 0\nvehiculos = 0\ntarifa = input("Tarifa (fin para terminar): ")\nwhile tarifa != "fin":\n    total += int(tarifa)\n    vehiculos += 1\n    tarifa = input("Tarifa (fin para terminar): ")\nprint(f"{vehiculos} vehículos · recaudo {total}")\nif vehiculos > 0:\n    print(f"Promedio por vehículo: {total / vehiculos:.2f}")\n', stdin:'12500\n18900\n12500\nfin'},
+  clave:{code:'CLAVE = "lp1-2026"\nacceso = False          # bandera: ¿ya entró?\nintentos = 0\nwhile not acceso and intentos < 3:\n    intento = input("Contraseña: ")\n    intentos += 1\n    if intento == CLAVE:\n        acceso = True\n    else:\n        print(f"Incorrecta. Te quedan {3 - intentos} intento(s)")\nif acceso:\n    print("🔓 Bienvenido")\nelse:\n    print("🔒 Cuenta bloqueada")\n', stdin:'hola\nlp1-2026'},
+  libre:{code:'# Zona libre: experimenta con while\nn = 1\nwhile n < 100:\n    n *= 3\n    print(n)\nprint("Terminé con n =", n)\n', stdin:''}
+};
+const LEVELS=['Novato del while','Validador','Cazador de centinelas','Domador de bucles','Maestro del control'];
+const PER=150;
+const BADGES=[
+  {icon:'🥉',label:'Primer paso',test:()=>S.xp>=30},
+  {icon:'🐍',label:'¡Hola, while!',test:()=>!!S.flags.firstRun},
+  {icon:'🔮',label:'Vidente',test:()=>!!S.flags.oracle},
+  {icon:'🎮',label:'Intérprete humano',test:()=>!!S.flags.interp},
+  {icon:'🧭',label:'Rastreador',test:()=>!!S.flags.tracer},
+  {icon:'🧩',label:'Ensamblador',test:()=>!!S.flags.builder},
+  {icon:'🕵️',label:'Cazaerrores',test:()=>!!S.flags.hunter},
+  {icon:'🏅',label:'Persistente',test:()=>RETOS.filter(r=>S.retos[r.id]).length>=6},
+  {icon:'♾️',label:'Domador del infinito',test:()=>RETOS.filter(r=>r.lvl===4).every(r=>S.retos[r.id])},
+  {icon:'🧠',label:'Leyenda',test:()=>RETOS.every(r=>S.retos[r.id])}
+];
+const LVNAME={1:'🟢 Nivel 1 · Calentamiento',2:'🟡 Nivel 2 · Intermedio',3:'🟠 Nivel 3 · Avanzado',4:'🔴 Nivel 4 · Reto ★'};
+const LVDESC={1:'Un while con validación, un contador o un centinela.',2:'Interés compuesto, juegos con bandera y aritmética con // y %.',3:'while True con break y continue, menús y ciclos anidados.',4:'Programas completos: estadísticas, protección contra ciclos infinitos y turnos. ¡Para valientes!'};
+
+/* ===================== Progreso / XP ===================== */
+const KEY=CFG.key;
+function freshS(){ return {xp:0, awarded:[], flags:{}, retos:{}, sol:{}, cov:{}, desk:{}, rng:{}, pz:{}, trace:{}, interp:{}}; }
+let S=freshS();
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null'); if(s&&typeof s==='object') S=Object.assign(freshS(),s);}catch(e){}
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} }
+const RESET_HOOKS=[];
+function renderXP(){
+  const lvl=Math.min(LEVELS.length,Math.floor(S.xp/PER)+1);
+  document.getElementById('lvl').textContent=lvl;
+  document.getElementById('lvlname').textContent=LEVELS[lvl-1];
+  document.getElementById('xp').textContent=S.xp;
+  document.getElementById('xpfill').style.width=(lvl===LEVELS.length?100:Math.round((S.xp%PER)/PER*100))+'%';
+  const box=document.getElementById('badges'); box.innerHTML='';
+  BADGES.forEach(b=>{const e=document.createElement('span');e.className='bdg'+(b.test()?' on':'');e.textContent=b.icon+' '+b.label;e.title=b.hint||'';box.appendChild(e);});
+}
+let popT=null;
+function pop(t){const p=document.getElementById('xppop');p.textContent=t;p.classList.add('show');clearTimeout(popT);popT=setTimeout(()=>p.classList.remove('show'),1600);}
+function addXP(key,amt,label){
+  if(S.awarded.includes(key))return false;
+  S.awarded.push(key); S.xp+=amt; save(); renderXP(); pop('+'+amt+' XP'+(label?' · '+label:'')); return true;
+}
+function flag(name,label){ if(S.flags[name])return; S.flags[name]=true; save(); renderXP(); if(label)setTimeout(()=>pop('🏅 Insignia: '+label),1700); }
+document.getElementById('resetProg').addEventListener('click',()=>{
+  if(!confirm('¿Borrar tu XP, insignias y retos superados en este navegador?'))return;
+  S=freshS(); save(); renderXP(); RESET_HOOKS.forEach(f=>{try{f();}catch(e){console.warn(e);}});
+});
+renderXP();
+
+/* ===================== Pestañas ===================== */
+const tabs=document.querySelectorAll('#tabs button');
+function showTab(name){
+  tabs.forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('active',s.id===name));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+tabs.forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+
+/* ===================== Quiz genérico ===================== */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function makeQuiz(cfg){
+  document.getElementById(cfg.totalId).textContent=cfg.data.length;
+  function build(){
+    const box=document.getElementById(cfg.boxId); box.innerHTML='';
+    let answered=0, correct=0;
+    document.getElementById(cfg.scoreId).textContent='0';
+    cfg.data.forEach((q,i)=>{
+      const c=document.createElement('div'); c.className='q';
+      c.innerHTML='<span class="tag">'+(q.tag||('#'+(i+1)))+'</span>'+(q.scn?'<p class="scn">'+q.scn+'</p>':'')+(q.code?'<pre>'+esc(q.code)+'</pre>':'');
+      const opts=document.createElement('div'); opts.className='opts';
+      const fb=document.createElement('div'); fb.className='feedback';
+      let done=false;
+      q.opts.forEach(o=>{
+        const b=document.createElement('button'); b.className='opt'; b.textContent=o;
+        b.addEventListener('click',()=>{
+          if(done)return; done=true; answered++;
+          opts.querySelectorAll('.opt').forEach(x=>x.classList.add('locked'));
+          if(o===q.ans){ b.classList.add('correct'); correct++; document.getElementById(cfg.scoreId).textContent=correct;
+            fb.textContent='✔ ¡Correcto! '+q.why; fb.className='feedback ok'; addXP(cfg.boxId+':'+i,cfg.xp||10); }
+          else{ b.classList.add('wrong'); opts.querySelectorAll('.opt').forEach(x=>{if(x.textContent===q.ans)x.classList.add('correct');});
+            fb.textContent='✘ Respuesta: '+q.ans+'. '+q.why; fb.className='feedback no'; }
+          if(answered===cfg.data.length && cfg.onDone) cfg.onDone(correct);
+        });
+        opts.appendChild(b);
+      });
+      c.appendChild(opts); c.appendChild(fb); box.appendChild(c);
+    });
+  }
+  document.getElementById(cfg.resetId).addEventListener('click',build); build();
+}
+/* ===================== Componentes: simulador paso a paso ===================== */
+function makeSim(cfg){
+  // cfg: {root, progs:{id:{title,code:[...],inputs:[...],trace(v)}} , xp, onAll}
+  const root=document.getElementById(cfg.root);
+  root.innerHTML='<div class="simbar"><select aria-label="Programa"></select><span class="itc">Vuelta: <b>–</b></span></div>'+
+    '<div class="simin"></div>'+
+    '<div class="btns" style="margin-top:0"><button class="btn sstep">▶ Paso</button><button class="btn ghost sauto">⏩ Automático</button><button class="btn ghost sreset">↺ Reiniciar</button></div>'+
+    '<div class="simgrid" style="margin-top:8px"><div class="scode"></div><div><div class="vars"><table><thead><tr><th>Variable</th><th>Valor</th></tr></thead><tbody></tbody></table></div>'+
+    '<label style="display:block;font-size:.78rem;color:var(--muted);margin:8px 0 4px;font-weight:600">🖥️ Salida</label><pre class="term sout" style="min-height:90px"></pre><div class="snote"></div></div></div>';
+  const sel=root.querySelector('select'), inBox=root.querySelector('.simin'), codeBox=root.querySelector('.scode'), tb=root.querySelector('tbody'),
+        out=root.querySelector('.sout'), note=root.querySelector('.snote'), itc=root.querySelector('.itc b'),
+        bStep=root.querySelector('.sstep'), bAuto=root.querySelector('.sauto'), bReset=root.querySelector('.sreset');
+  let id=Object.keys(cfg.progs)[0], steps=[], k=-1, timer=null, prevVars={};
+  Object.entries(cfg.progs).forEach(([key,p])=>{const o=document.createElement('option');o.value=key;o.textContent=(S.trace[cfg.root+':'+key]?'✅ ':'')+p.title;sel.appendChild(o);});
+  function renderInputs(){ const p=cfg.progs[id]; inBox.innerHTML='';
+    (p.inputs||[]).forEach(inp=>{ const w=document.createElement('label'); w.textContent=inp.label+' ';
+      const el=document.createElement('input'); el.type=inp.type||'text'; el.value=inp.value; el.dataset.id=inp.id; if(inp.w) el.style.width=inp.w;
+      el.addEventListener('change',reset); w.appendChild(el); inBox.appendChild(w); }); }
+  function renderCode(){ const p=cfg.progs[id]; codeBox.innerHTML='';
+    p.code.forEach((t,i)=>{ const d=document.createElement('div'); d.className='sl'; d.innerHTML='<span class="ln">'+(i+1)+'</span><span class="tx">'+esc(t)+'</span>'; codeBox.appendChild(d); }); }
+  function stop(){ if(timer){clearInterval(timer);timer=null;bAuto.textContent='⏩ Automático';} }
+  function reset(){ stop(); const p=cfg.progs[id], v={}; inBox.querySelectorAll('[data-id]').forEach(el=>v[el.dataset.id]=el.value);
+    try{ steps=p.trace(v); }catch(e){ steps=[]; }
+    k=-1; prevVars={}; renderCode(); tb.innerHTML='<tr><td colspan="2" style="color:var(--muted)">Pulsa ▶ Paso para empezar</td></tr>'; out.textContent=''; note.textContent=''; itc.textContent='–'; bStep.disabled=false; }
+  function show(){
+    const st=steps[k], rows=codeBox.children;
+    [...rows].forEach((r,i)=>{ r.classList.remove('cur','run','true','false'); const s=r.querySelector('.st'); if(s) s.remove(); });
+    const r=rows[st.l]; r.classList.add('cur', st.s||'run');
+    if(st.tag){ const s=document.createElement('span'); s.className='st'; s.textContent=st.tag; r.appendChild(s); }
+    r.scrollIntoView({block:'nearest'});
+    tb.innerHTML=''; Object.entries(st.vars||{}).forEach(([n,val])=>{ const tr=document.createElement('tr'); const ch=prevVars[n]!==undefined&&prevVars[n]!==val || prevVars[n]===undefined;
+      tr.innerHTML='<td class="mono">'+esc(n)+'</td><td class="mono'+(ch?' chg':'')+'">'+esc(val)+'</td>'; tb.appendChild(tr); });
+    prevVars=Object.assign({},st.vars||{});
+    if(st.out!==undefined) out.textContent+=st.out;
+    note.innerHTML=st.note?('💬 '+st.note):'';
+    itc.textContent=st.it===undefined?(itc.textContent):String(st.it);
+    if(k===steps.length-1){ bStep.disabled=true; stop(); note.innerHTML+=(note.innerHTML?'<br>':'')+'🏁 <b>Fin del programa.</b>';
+      const key=cfg.root+':'+id; if(!S.trace[key]){ S.trace[key]=true; save(); [...sel.options].forEach(o=>{ if(o.value===id && !o.textContent.startsWith('✅')) o.textContent='✅ '+o.textContent; }); }
+      addXP('trace:'+key,cfg.xp||15,'programa recorrido');
+      if(Object.keys(cfg.progs).every(x=>S.trace[cfg.root+':'+x]) && cfg.onAll) cfg.onAll(); }
+  }
+  function step(){ if(k<steps.length-1){ k++; show(); } }
+  bStep.addEventListener('click',step);
+  bAuto.addEventListener('click',()=>{ if(timer){stop();return;} if(k>=steps.length-1) reset(); bAuto.textContent='⏸ Pausa'; timer=setInterval(()=>{ if(k>=steps.length-1){stop();return;} step(); },650); });
+  bReset.addEventListener('click',reset);
+  sel.addEventListener('change',()=>{ id=sel.value; renderInputs(); reset(); });
+  renderInputs(); reset();
+  return {load(x){ id=x; sel.value=x; renderInputs(); reset(); root.scrollIntoView({behavior:'smooth'}); }};
+}
+
+/* ===================== Componentes: arma el programa (Parsons) ===================== */
+function makeParsons(cfg){
+  // cfg: {root, puzzles:[{id,title,goal,lines:[...],valid:[[...]]}], xp, onAll}
+  const root=document.getElementById(cfg.root);
+  cfg.puzzles.forEach(pz=>{
+    const box=document.createElement('div'); box.className='pz';
+    box.innerHTML='<h3 style="margin:0 0 4px">'+pz.title+(S.pz[pz.id]?' <span class="ok">✔</span>':'')+'</h3><p style="margin:2px 0 8px">'+pz.goal+'</p>'+
+      '<div class="pzgrid"><div><div class="pzlab">🧩 Piezas (toca para usar)</div><div class="pzpool"></div></div><div><div class="pzlab">📝 Tu programa (toca una línea para devolverla)</div><div class="pzprog"></div></div></div>'+
+      '<div class="btns"><button class="btn pzchk">✅ Comprobar</button><button class="btn ghost pzrst">↺ Reiniciar</button></div><div class="feedback pzfb"></div>';
+    root.appendChild(box);
+    const pool=box.querySelector('.pzpool'), prog=box.querySelector('.pzprog'), fb=box.querySelector('.pzfb');
+    let order=[];
+    const valid=pz.valid||[pz.lines.map((_,i)=>i)];
+    function build(){ order=[]; fb.textContent=''; fb.className='feedback pzfb'; pool.innerHTML=''; prog.innerHTML='';
+      const idx=pz.lines.map((_,i)=>i); for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
+      idx.forEach(i=>{ const b=document.createElement('button'); b.className='pzline'; b.dataset.i=i; b.textContent=pz.lines[i];
+        b.addEventListener('click',()=>{ if(b.classList.contains('used'))return; b.classList.add('used'); order.push(i); render(); }); pool.appendChild(b); });
+      render(); }
+    function render(){ prog.innerHTML=''; if(!order.length){ prog.innerHTML='<div class="pzempty">— vacío —</div>'; }
+      order.forEach((i,pos)=>{ const d=document.createElement('div'); d.className='pzline in'; d.textContent=pz.lines[i];
+        d.addEventListener('click',()=>{ order.splice(pos,1); pool.querySelector('[data-i="'+i+'"]').classList.remove('used'); render(); }); prog.appendChild(d); }); }
+    box.querySelector('.pzchk').addEventListener('click',()=>{
+      if(order.length<pz.lines.length){ fb.textContent='Usa todas las piezas antes de comprobar.'; fb.className='feedback no pzfb'; return; }
+      const ok=valid.some(v=>v.every((x,j)=>x===order[j]));
+      const ref=valid[0]; [...prog.children].forEach((d,j)=>d.classList.add(ref[j]===order[j]||ok?'good':'bad'));
+      if(ok){ fb.textContent='🎉 ¡Programa armado correctamente! Fíjate en la sangría: decide qué está dentro de cada ciclo.'; fb.className='feedback ok pzfb';
+        if(!S.pz[pz.id]){ S.pz[pz.id]=true; save(); box.querySelector('h3').innerHTML=pz.title+' <span class="ok">✔</span>'; }
+        addXP('pz:'+pz.id,cfg.xp||15,'programa armado');
+        if(cfg.puzzles.every(p=>S.pz[p.id]) && cfg.onAll) cfg.onAll(); }
+      else { fb.textContent='Aún no. Las líneas en rojo no están donde deberían (compáralas con el orden en que Python las necesita: primero se prepara, luego se repite, al final se muestra).'; fb.className='feedback no pzfb'; }
+    });
+    box.querySelector('.pzrst').addEventListener('click',build);
+    build();
+  });
+}
+
+/* ===================== Quizzes ===================== */
+const FW=['for','while'];
+makeQuiz({boxId:'fwQuiz',scoreId:'fwScore',totalId:'fwTotal',resetId:'fwReset',xp:8,data:[
+  {scn:'Imprimir la tabla del 7, del 7 × 1 al 7 × 10.',opts:FW,ans:'for',why:'Sabes que son exactamente 10 vueltas.'},
+  {scn:'Pedir una contraseña hasta que el usuario la escriba bien.',opts:FW,ans:'while',why:'No sabes cuántos intentos necesitará: depende de lo que escriba.'},
+  {scn:'Revisar cada letra de un nombre para contar las vocales.',opts:FW,ans:'for',why:'Recorres una colección (el texto) de principio a fin.'},
+  {scn:'Sumar los precios que digita el cajero hasta que escriba 0.',opts:FW,ans:'while',why:'El final depende de un centinela: no sabes cuántos productos habrá.'},
+  {scn:'Calcular cuántos años tarda una población en duplicarse si crece 3 % anual.',opts:FW,ans:'while',why:'Justamente quieres averiguar el número de vueltas: repites mientras no se haya duplicado.'},
+  {scn:'Liquidar la nómina de los 25 empleados de una empresa.',opts:FW,ans:'for',why:'Conoces la cantidad: 25 vueltas.'}
+]});
+const TE=['Termina','Ciclo infinito','No entra nunca'];
+makeQuiz({boxId:'teQuiz',scoreId:'teScore',totalId:'teTotal',resetId:'teReset',xp:10,onDone:()=>flag('oracle','Vidente'),data:[
+  {code:'i = 0\nwhile i < 5:\n    i += 1',opts:TE,ans:'Termina',why:'i sube de 1 en 1 y al llegar a 5 la condición da False: 5 vueltas.'},
+  {code:'i = 10\nwhile i > 0:\n    i += 1',opts:TE,ans:'Ciclo infinito',why:'i se aleja de la condición de salida: 11, 12, 13… siempre mayor que 0.'},
+  {code:'x = 1\nwhile x != 10:\n    x += 2',opts:TE,ans:'Ciclo infinito',why:'x toma 1, 3, 5, 7, 9, 11… nunca vale exactamente 10. Con < en vez de != sí terminaría.'},
+  {code:'n = 5\nwhile n < 0:\n    n -= 1',opts:TE,ans:'No entra nunca',why:'La condición se revisa antes: 5 < 0 es False desde el principio y el cuerpo no se ejecuta.'},
+  {code:'saldo = 100\nwhile saldo > 0:\n    saldo -= 30',opts:TE,ans:'Termina',why:'100 → 70 → 40 → 10 → −20: con −20 la condición es False. 4 vueltas.'},
+  {code:'k = 1\nwhile k <= 3:\n    print(k)\nk += 1',opts:TE,ans:'Ciclo infinito',why:'k += 1 no tiene sangría: está FUERA del ciclo. k siempre vale 1.'},
+  {code:'i = 0\nwhile i < 10:\n    if i % 2 == 0:\n        continue\n    i += 1',opts:TE,ans:'Ciclo infinito',why:'Con i = 0 el continue salta la línea i += 1: i nunca cambia.'},
+  {code:'while True:\n    print("hola")\n    break',opts:TE,ans:'Termina',why:'Imprime una vez y el break sale del ciclo de inmediato.'}
+]});
+makeQuiz({boxId:'qiQuiz',scoreId:'qiScore',totalId:'qiTotal',resetId:'qiReset',xp:10,data:[
+  {code:'for i in range(1, 10):\n    if i == 4:\n        break\n    print(i, end=" ")',opts:['1 2 3','1 2 3 4','1 2 3 5 6 7 8 9','4'],ans:'1 2 3',why:'Con i = 4 el break sale antes de imprimir.'},
+  {code:'for i in range(1, 6):\n    if i % 2 == 0:\n        continue\n    print(i, end=" ")',opts:['2 4','1 3 5','1 2 3 4 5','1'],ans:'1 3 5',why:'continue salta el print en las vueltas pares.'},
+  {code:'n = 0\nwhile True:\n    n += 3\n    if n > 10:\n        break\nprint(n)',opts:['9','10','12','15'],ans:'12',why:'n toma 3, 6, 9, 12; con 12 la condición n > 10 es True y sale.'},
+  {code:'for c in "python":\n    if c == "h":\n        break\nelse:\n    print("sin h")\nprint(c)',opts:['sin h\nh','h','n','sin h'],ans:'h',why:'Hubo break: el else NO se ejecuta. c se quedó con "h".'},
+  {code:'i = 0\nwhile i < 3:\n    i += 1\nelse:\n    print("fin", i)',opts:['fin 2','fin 3','fin 4','(nada)'],ans:'fin 3',why:'El while terminó normalmente (sin break), así que el else sí se ejecuta, con i = 3.'},
+  {code:'t = 0\nfor x in range(1, 8):\n    if x == 5:\n        continue\n    if x == 7:\n        break\n    t += x\nprint(t)',opts:['16','21','28','15'],ans:'16',why:'Suma 1 + 2 + 3 + 4 + 6 = 16: el 5 se salta y en el 7 se sale.'}
+]});
+const CE=['SyntaxError','Ciclo infinito','Error lógico (sin mensaje)','Funciona bien'];
+makeQuiz({boxId:'ceQuiz',scoreId:'ceScore',totalId:'ceTotal',resetId:'ceReset',xp:10,onDone:()=>flag('hunter','Cazaerrores'),data:[
+  {tag:'Fragmento 1',code:'n = 5\nwhile n > 0\n    n -= 1',opts:CE,ans:'SyntaxError',why:'Faltan los dos puntos al final del while.'},
+  {tag:'Fragmento 2',code:'i = 1\nwhile i <= 3:\n    print(i)',opts:CE,ans:'Ciclo infinito',why:'Nada dentro del ciclo cambia i.'},
+  {tag:'Fragmento 3 · se quería: pedir la nota hasta que sea válida',code:'nota = float(input("Nota: "))\nif nota < 0 or nota > 5:\n    nota = float(input("Nota: "))',opts:CE,ans:'Error lógico (sin mensaje)',why:'Un if solo pregunta una vez: si el segundo dato también es inválido, se acepta. Debía ser while.'},
+  {tag:'Fragmento 4 · se quería: sumar hasta el centinela −1',code:'total = 0\nx = 0\nwhile x != -1:\n    x = int(input())\n    total += x\nprint(total)',opts:CE,ans:'Error lógico (sin mensaje)',why:'El −1 se suma antes de que la condición lo revise: el total queda con 1 de menos. Hay que leer antes del ciclo y al final del cuerpo.'},
+  {tag:'Fragmento 5',code:'i = 0\nwhile i < 10:\n    if i == 5:\n        continue\n    i += 1',opts:CE,ans:'Ciclo infinito',why:'Al llegar a 5, el continue salta i += 1 para siempre.'},
+  {tag:'Fragmento 6',code:'n = int(input())\nif n > 0:\n    break',opts:CE,ans:'SyntaxError',why:'"\'break\' outside loop": break solo puede ir dentro de un ciclo.'},
+  {tag:'Fragmento 7',code:'x = 1\nwhile x = 1:\n    x += 1',opts:CE,ans:'SyntaxError',why:'= asigna; para comparar se usa ==.'},
+  {tag:'Fragmento 8 · se quería: máximo 3 intentos',code:'intentos = 0\nwhile intentos < 3:\n    clave = input("Clave: ")\n    if clave == "1234":\n        break\n    intentos += 1',opts:CE,ans:'Funciona bien',why:'Sale con break si acierta o cuando intentos llega a 3.'}
+]});
+
+/* ===================== Sé el intérprete ===================== */
+const IP={
+  ahorro:{title:'💰 Meta de ahorro (condición)',code:['saldo = 100000','meses = 0','while saldo < 150000:','    saldo = saldo * 1.10','    meses += 1','print(meses)'],
+    build(){ const q=[]; let s=100000, m=0;
+      while(true){ const c=s<150000; q.push({line:2,vars:{saldo:Math.round(s),meses:m},q:'¿La condición <code>saldo &lt; 150000</code> es True o False?',opts:['True','False'],ans:c?'True':'False',
+          why:Math.round(s)+(c?' &lt; 150000 → True: se ejecuta el cuerpo.':' no es menor que 150000 → False: el ciclo termina.')});
+        if(!c)break; const prev=s; s=s*1.10; m++;
+        if(m===1||m===3){ const ok=Math.round(s); q.push({line:3,vars:{saldo:Math.round(prev),meses:m-1},q:'Se ejecuta <code>saldo = saldo * 1.10</code>. ¿Cuál es el nuevo saldo?',opts:[...new Set([ok,Math.round(prev+10000),Math.round(prev*1.01),Math.round(prev*1.2)])].slice(0,3).sort((x,y)=>x-y).map(String),ans:String(ok),why:'Multiplicar por 1.10 es sumar el 10 %: '+Math.round(prev)+' + '+Math.round(prev*0.10)+' = '+ok+'.'}); } }
+      q.push({line:5,vars:{saldo:Math.round(s),meses:m},q:'¿Qué imprime <code>print(meses)</code>?',opts:[String(m-1),String(m),String(m+1)],ans:String(m),why:'El cuerpo se ejecutó '+m+' veces: meses = '+m+'.'}); return q; }},
+  collatz:{title:'🔢 Secuencia 3n + 1 (nuevo valor)',code:['n = 6','pasos = 0','while n != 1:','    if n % 2 == 0:','        n = n // 2','    else:','        n = 3 * n + 1','    pasos += 1','print(pasos)'],
+    build(){ const q=[]; let n=6, p=0;
+      while(n!==1){ const nx=n%2===0?n/2:3*n+1; const opts=[...new Set([nx,Math.floor(n/2),3*n+1,n-1,n+2])].slice(0,3).sort((a,b)=>a-b).map(String);
+        q.push({line:n%2===0?4:6,vars:{n,pasos:p},q:'n vale <b>'+n+'</b> ('+(n%2===0?'par':'impar')+'). ¿Cuál será el nuevo valor de n?',opts,ans:String(nx),why:n%2===0?n+' es par: n // 2 = '+nx+'.':n+' es impar: 3 × '+n+' + 1 = '+nx+'.'});
+        n=nx; p++; }
+      q.push({line:2,vars:{n,pasos:p},q:'¿La condición <code>n != 1</code> es True o False?',opts:['True','False'],ans:'False',why:'n ya vale 1: la condición es False y el ciclo termina.'});
+      q.push({line:8,vars:{n,pasos:p},q:'¿Qué imprime <code>print(pasos)</code>?',opts:[String(p-1),String(p),String(p+1)],ans:String(p),why:'Hubo '+p+' vueltas: 6 → 3 → 10 → 5 → 16 → 8 → 4 → 2 → 1.'}); return q; }},
+  centinela:{title:'🚩 break y continue con datos',code:['# datos que escribe el usuario: 5, 8, -2, 4, 0, 7','total = 0','while True:','    x = int(input())','    if x == 0:','        break','    if x < 0:','        continue','    total += x','print(total)'],
+    build(){ const q=[]; let t=0; const A=['Se suma a total','continue: se salta','break: sale del ciclo'];
+      for(const x of [5,8,-2,4,0]){ const a=x===0?A[2]:x<0?A[1]:A[0];
+        q.push({line:3,vars:{total:t,x},q:'Se lee <b>x = '+x+'</b>. ¿Qué hace el programa con este dato?',opts:A,ans:a,why:x===0?'0 es el centinela: el break sale del ciclo de inmediato.':x<0?'Es negativo: el continue salta total += x y vuelve a pedir otro dato.':'No es 0 ni negativo: llega a total += x → total = '+(t+x)+'.'});
+        if(x>0)t+=x; if(x===0)break; }
+      q.push({line:9,vars:{total:t,x:0},q:'¿El programa llega a leer el <b>7</b>?',opts:['Sí','No'],ans:'No',why:'El break ya sacó al programa del ciclo: el 7 nunca se lee.'});
+      q.push({line:9,vars:{total:t,x:0},q:'¿Qué imprime <code>print(total)</code>?',opts:['15','17','24','22'],ans:String(t),why:'5 + 8 + 4 = 17. El −2 se saltó con continue y el 0 es el centinela.'}); return q; }}
+};
+(function(){
+  const sel=document.getElementById('ipSel'), codeEl=document.getElementById('ipCode'), varsEl=document.getElementById('ipVars'), qEl=document.getElementById('ipQ'),
+        optsEl=document.getElementById('ipOpts'), fb=document.getElementById('ipFb'), next=document.getElementById('ipNext'), livesEl=document.getElementById('ipLives'), progEl=document.getElementById('ipProg');
+  let id='ahorro', Q=[], k=0, lives=3, over=false;
+  function fillSel(){ const keep=id; sel.innerHTML=''; Object.entries(IP).forEach(([key,p])=>{const o=document.createElement('option');o.value=key;o.textContent=(S.interp[key]?'✅ ':'')+p.title;sel.appendChild(o);}); sel.value=keep; }
+  function start(){ Q=IP[id].build(); k=0; lives=3; over=false; render(); }
+  function render(){
+    livesEl.textContent='❤️'.repeat(lives)+'🖤'.repeat(3-lives); progEl.textContent='Paso '+Math.min(k+1,Q.length)+' de '+Q.length;
+    const q=Q[k]; codeEl.innerHTML=IP[id].code.map((t,i)=>'<span class="'+(i===q.line?'hl':'')+'">'+esc(t)+'</span>').join('\n');
+    varsEl.innerHTML=Object.entries(q.vars).map(([n,v])=>'<tr><td class="mono">'+n+'</td><td class="mono">'+v+'</td></tr>').join('');
+    qEl.innerHTML='<p class="scn">'+q.q+'</p>'; fb.textContent=''; fb.className='feedback'; next.style.display='none'; optsEl.innerHTML='';
+    q.opts.forEach(o=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=o;
+      b.addEventListener('click',()=>{ if(over||b.classList.contains('locked'))return; optsEl.querySelectorAll('.opt').forEach(x=>x.classList.add('locked'));
+        if(o===q.ans){ b.classList.add('correct'); fb.innerHTML='✔ '+q.why; fb.className='feedback ok'; }
+        else { b.classList.add('wrong'); optsEl.querySelectorAll('.opt').forEach(x=>{if(x.textContent===q.ans)x.classList.add('correct');}); lives--; livesEl.textContent='❤️'.repeat(lives)+'🖤'.repeat(3-lives);
+          fb.innerHTML='✘ '+q.why; fb.className='feedback no';
+          if(lives<=0){ over=true; fb.innerHTML+='<br>💔 <b>Sin vidas.</b> El programa vuelve a empezar: ¡tú puedes!'; next.textContent='↺ Reintentar'; next.style.display=''; return; } }
+        next.textContent=k===Q.length-1?'🏁 Terminar':'Siguiente ▶'; next.style.display=''; });
+      optsEl.appendChild(b); });
+  }
+  next.addEventListener('click',()=>{
+    if(over){ start(); return; }
+    if(k<Q.length-1){ k++; render(); return; }
+    qEl.innerHTML='<div class="win">🎉 ¡Programa interpretado con '+lives+' vida(s)! Pensaste exactamente como Python.</div>'; optsEl.innerHTML=''; fb.textContent=''; next.style.display='none';
+    if(!S.interp[id]){ S.interp[id]=true; save(); fillSel(); }
+    addXP('interp:'+id,20,'intérprete');
+    if(Object.keys(IP).every(x=>S.interp[x])) flag('interp','Intérprete humano');
+  });
+  document.getElementById('ipRestart').addEventListener('click',start);
+  sel.addEventListener('change',()=>{ id=sel.value; start(); });
+  fillSel(); start(); RESET_HOOKS.push(()=>{fillSel(); start();});
+})();
+
+/* ===================== Simulador paso a paso ===================== */
+function parseList(s){ return String(s||'').split(',').map(x=>x.trim()).filter(x=>x!=='').slice(0,12); }
+makeSim({root:'sim11',xp:15,onAll:()=>flag('tracer','Rastreador'),progs:{
+  valida:{title:'🔐 Validar una edad',
+    inputs:[{id:'d',label:'datos =',type:'text',value:'150, -3, 25',w:'170px'}],
+    code:['edad = int(input("Edad: "))','while edad < 0 or edad > 120:','    print("Edad inválida")','    edad = int(input("Edad: "))','print(f"Edad registrada: {edad}")'],
+    trace(v){ const d=parseList(v.d).map(x=>parseInt(x,10)); const st=[]; let i=0, it=0;
+      if(!d.length) return [{l:0,vars:{},note:'Escribe al menos un dato.'}];
+      let e=d[i++]; st.push({l:0,vars:{edad:e},out:'Edad: '+e+'\n',note:'Primera lectura, ANTES del ciclo.'});
+      while(true){ const c=e<0||e>120; st.push({l:1,s:c?'true':'false',vars:{edad:e},tag:c?'True':'False',it,note:c?e+' está fuera de 0–120: entra al ciclo.':e+' es válida: la condición es False y el ciclo termina.'});
+        if(!c)break; it++; st.push({l:2,vars:{edad:e},out:'Edad inválida\n',it});
+        if(i>=d.length){ st.push({l:3,vars:{edad:e},it,note:'No hay más datos: en Python esto sería un EOFError. Agrega una edad válida a la lista.'}); return st; }
+        e=d[i++]; st.push({l:3,vars:{edad:e},out:'Edad: '+e+'\n',it,note:'Se vuelve a pedir: edad = '+e+'.'}); }
+      st.push({l:4,vars:{edad:e},out:'Edad registrada: '+e+'\n',note:'Se validó en '+it+' intento(s) extra.'}); return st; }},
+  promedio:{title:'🚩 Promedio con centinela −1',
+    inputs:[{id:'d',label:'notas =',type:'text',value:'4.5, 3.0, 5, -1',w:'170px'}],
+    code:['total = 0','cantidad = 0','nota = float(input("Nota: "))','while nota != -1:','    total += nota','    cantidad += 1','    nota = float(input("Nota: "))','if cantidad > 0:','    print(f"Promedio: {total / cantidad:.2f}")'],
+    trace(v){ const d=parseList(v.d).map(Number); const st=[]; let i=0, t=0, c=0;
+      if(!d.length||d[d.length-1]!==-1) d.push(-1);
+      const fmt=x=>Number.isInteger(x)?x.toFixed(1):String(x);
+      st.push({l:0,vars:{total:0}}); st.push({l:1,vars:{total:0,cantidad:0}});
+      let n=d[i++]; st.push({l:2,vars:{total:0,cantidad:0,nota:fmt(n)},out:'Nota: '+fmt(n)+'\n',note:'Lectura ANTES del ciclo.'});
+      while(true){ const go=n!==-1; st.push({l:3,s:go?'true':'false',vars:{total:fmt(t),cantidad:c,nota:fmt(n)},tag:go?'True':'False',it:c,note:go?'No es el centinela: se procesa.':'¡Llegó el centinela −1! Se sale SIN sumarlo.'});
+        if(!go)break; t+=n; st.push({l:4,vars:{total:fmt(t),cantidad:c,nota:fmt(n)},it:c+1}); c++; st.push({l:5,vars:{total:fmt(t),cantidad:c,nota:fmt(n)},it:c});
+        n=d[i++]; st.push({l:6,vars:{total:fmt(t),cantidad:c,nota:fmt(n)},out:'Nota: '+fmt(n)+'\n',it:c,note:'Lectura al FINAL del cuerpo.'}); }
+      st.push({l:7,s:c>0?'true':'false',vars:{total:fmt(t),cantidad:c,nota:'-1.0'},tag:c>0?'True':'False',note:c>0?'Hay notas: se puede dividir.':'No hubo notas: así se evita dividir entre 0.'});
+      if(c>0) st.push({l:8,vars:{total:fmt(t),cantidad:c,nota:'-1.0'},out:'Promedio: '+(t/c).toFixed(2)+'\n'});
+      return st; }},
+  primo:{title:'🔍 ¿Es primo? (break y else)',
+    inputs:[{id:'n',label:'n =',type:'number',value:91,w:'90px'}],
+    code:['n = int(input("Número: "))','d = 2','while d * d <= n:','    if n % d == 0:','        print(f"{n} no es primo: divisible entre {d}")','        break','    d += 1','else:','    print(f"{n} es primo")'],
+    trace(v){ const n=Math.max(-5,Math.min(400,parseInt(v.n,10)||0)); const st=[{l:0,vars:{n}},{l:1,vars:{n,d:2}}]; let d=2, it=0;
+      while(true){ const c=d*d<=n; st.push({l:2,s:c?'true':'false',vars:{n,d},tag:(d*d)+' <= '+n+' → '+(c?'True':'False'),it,note:c?'Todavía hay divisores por probar.':'Se probaron todos los candidatos sin encontrar divisor: el ciclo termina normalmente.'});
+        if(!c){ st.push({l:7,s:'true',vars:{n,d},tag:'sin break',note:'Como no hubo break, se ejecuta el else.'}); st.push({l:8,vars:{n,d},out:n+' es primo\n',note:n<2?'¡Ojo! '+n+' no es primo: el programa debió validar n > 1 antes del ciclo.':''}); break; }
+        it++; const div=n%d===0; st.push({l:3,s:div?'true':'false',vars:{n,d},tag:n+' % '+d+' = '+(n%d),it});
+        if(div){ st.push({l:4,vars:{n,d},out:n+' no es primo: divisible entre '+d+'\n',it}); st.push({l:5,vars:{n,d},it,tag:'break',note:'break: sale del ciclo y SALTA el else.'}); break; }
+        d++; st.push({l:6,vars:{n,d},it}); }
+      return st; }}
+}});
+
+/* ===================== Arma el programa ===================== */
+makeParsons({root:'parsons',xp:15,onAll:()=>flag('builder','Ensamblador'),puzzles:[
+  {id:'p1',title:'1 · Validar una nota',goal:'Pide una nota y, mientras no esté entre 0 y 5, avisa y vuelve a pedirla.',
+   lines:['nota = float(input("Nota (0-5): "))','while nota < 0 or nota > 5:','    print("Nota inválida")','    nota = float(input("Nota (0-5): "))','print(f"Nota registrada: {nota}")'],
+   valid:[[0,1,2,3,4],[0,1,3,2,4]]},
+  {id:'p2',title:'2 · Sumar hasta el centinela 0',goal:'Suma los números que escribe el usuario hasta que escriba 0.',
+   lines:['total = 0','n = int(input("Número (0 para terminar): "))','while n != 0:','    total += n','    n = int(input("Número (0 para terminar): "))','print("Suma:", total)'],
+   valid:[[0,1,2,3,4,5],[1,0,2,3,4,5]]},
+  {id:'p3',title:'3 · Menú que se repite',goal:'Repite el menú hasta que el usuario elija la opción 3.',
+   lines:['while True:','    op = input("Opción (1-3): ")','    if op == "3":','        break','    print("Elegiste la opción", op)','print("Adiós")']}
+]});
+
+/* ===================== Motor Python (Pyodide) ===================== */
+const qp=new URLSearchParams(location.search);
+const PYO_BASE=qp.get('pyo')||'https://cdn.jsdelivr.net/npm/pyodide@314.0.7/';
+const RUN_TIMEOUT=8000;
+const statusEl=document.getElementById('pyStatus');
+function setStatus(t){statusEl.textContent=t;}
+const WORKER_SRC = `
+let py=null;
+self.onmessage = async (e)=>{
+  const m=e.data;
+  if(m.type==='init'){
+    try{
+      const mod = await import(m.base+'pyodide.mjs');
+      py = await mod.loadPyodide({indexURL:m.base});
+      py.runPython(m.harness);
+      self.postMessage({type:'ready', version: py.runPython("import sys; sys.version.split()[0]")});
+    }catch(err){ self.postMessage({type:'fail', error:String(err)}); }
+  } else if(m.type==='run'){
+    let r;
+    try{
+      py.globals.set('S_', m.src); py.globals.set('I_', py.toPy(m.inputs)); py.globals.set('E_', m.echo);
+      const res = py.runPython('__run_user(S_, I_, E_)'); r=res.toJs(); res.destroy();
+      self.postMessage({type:'result', id:m.id, out:r[0], etype:r[1], err:r[2], line:(r[3]==null?null:r[3])});
+    }catch(err){ self.postMessage({type:'result', id:m.id, out:'', etype:'ErrorInterno', err:String(err), line:null}); }
+  }
+};`;
+const PY={mode:null, worker:null, ready:null, pend:{}, seq:0, main:null, version:''};
+function initWorker(){
+  return new Promise((resolve,reject)=>{
+    let w;
+    try{ w=new Worker(URL.createObjectURL(new Blob([WORKER_SRC],{type:'text/javascript'})),{type:'module'}); }catch(e){ reject(e); return; }
+    const to=setTimeout(()=>{ try{w.terminate();}catch(e){} reject(new Error('timeout de carga')); },120000);
+    w.onmessage=(e)=>{ const m=e.data;
+      if(m.type==='ready'){ clearTimeout(to); PY.version=m.version; resolve(w); }
+      else if(m.type==='fail'){ clearTimeout(to); try{w.terminate();}catch(_){} reject(new Error(m.error)); }
+      else if(m.type==='result'){ const p=PY.pend[m.id]; if(p){ delete PY.pend[m.id]; clearTimeout(p.to); p.resolve(m); } } };
+    w.onerror=(ev)=>{ clearTimeout(to); reject(new Error(ev.message||'error del worker')); };
+    w.postMessage({type:'init', base:PYO_BASE, harness:HARNESS_PY});
+  });
+}
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('No se pudo descargar '+src));document.head.appendChild(s);});}
+async function initMain(){
+  if(!window.loadPyodide) await loadScript(PYO_BASE+'pyodide.js');
+  const py=await window.loadPyodide({indexURL:PYO_BASE});
+  py.runPython(HARNESS_PY); PY.version=py.runPython("import sys; sys.version.split()[0]"); return py;
+}
+function ensurePy(){
+  if(PY.ready) return PY.ready;
+  setStatus('🟡 Cargando Python… (solo la primera vez)');
+  PY.ready=(async()=>{
+    try{ PY.worker=await initWorker(); PY.mode='worker'; }
+    catch(e1){ console.warn('Worker no disponible, uso hilo principal:',e1);
+      try{ PY.main=await initMain(); PY.mode='main'; }
+      catch(e2){ PY.ready=null; setStatus('🔴 No se pudo cargar Python'); throw e2; } }
+    setStatus('🟢 Python '+PY.version+' listo'); return true;
+  })();
+  return PY.ready;
+}
+function runPy(src,inputs,echo){
+  return ensurePy().then(()=>{
+    if(PY.mode==='main'){
+      const g=PY.main.globals; g.set('S_',src); g.set('I_',PY.main.toPy(inputs)); g.set('E_',echo);
+      const res=PY.main.runPython('__run_user(S_, I_, E_)'); const r=res.toJs(); res.destroy();
+      return {out:r[0],etype:r[1],err:r[2],line:r[3]==null?null:r[3]};
+    }
+    return new Promise(resolve=>{
+      const id=++PY.seq;
+      const to=setTimeout(()=>{ delete PY.pend[id]; try{PY.worker.terminate();}catch(e){} PY.worker=null; PY.ready=null; PY.mode=null;
+        setStatus('🟡 Python se reinició'); resolve({timeout:true,out:'',etype:'',err:'',line:null}); },RUN_TIMEOUT);
+      PY.pend[id]={resolve,to};
+      PY.worker.postMessage({type:'run',id,src,inputs,echo});
+    });
+  });
+}
+
+const HINTS={
+  SyntaxError:'Python no entiende cómo está escrito. En ciclos revisa: los dos puntos (:) al final de for, while, if y else; que escribiste "in" en el for; que usas == para comparar; y que break y continue están dentro de un ciclo.',
+  IndentationError:'Sangría incorrecta: el cuerpo del ciclo lleva 4 espacios más que la línea del for/while, y cada ciclo anidado suma otros 4. Lo que va después del ciclo vuelve a la izquierda.',
+  TabError:'Mezclaste tabulaciones y espacios en la sangría. Usa solo espacios (4 por nivel).',
+  NameError:'Usas un nombre que no existe: ¿está bien escrito? ¿Creaste el contador o acumulador ANTES del ciclo? ¿Olvidaste comillas en un texto?',
+  TypeError:'Operación entre tipos incompatibles. range() solo acepta enteros: si el dato viene de input(), conviértelo con int(), no con float(). Y para sumar números leídos, conviértelos primero.',
+  ValueError:'No se pudo convertir el dato: revisa lo que escribiste en Entradas (por ejemplo, int("3.5") falla; usa float()).',
+  ZeroDivisionError:'Estás dividiendo entre cero: si el ciclo no dio ninguna vuelta, el contador sigue en 0. Revisa ese caso con un if antes de dividir.',
+  EOFError:'Tu programa pidió más datos con input() de los que hay en Entradas. Si usas un centinela o una opción de salida, ¿tu ciclo la reconoce y termina? (Una entrada por línea).',
+  CicloInfinito:'Ciclo infinito: la condición del while nunca se vuelve False. Revisa que algo DENTRO del ciclo cambie la variable de la condición (y que un continue no se salte ese cambio).',
+  DemasiadaSalida:'Tu programa imprimió muchísimo: casi siempre es un ciclo infinito con un print adentro. Revisa la condición y la actualización de la variable de control.',
+  RecursionError:'Demasiadas llamadas anidadas. Revisa tu programa.'
+};
+
+/* ===================== Laboratorio UI ===================== */
+const codeEl=document.getElementById('code'), stdinEl=document.getElementById('stdin'), termEl=document.getElementById('term'),
+      checkEl=document.getElementById('checkRes'), selEl=document.getElementById('retoSel'), infoEl=document.getElementById('retoInfo');
+let currentReto='libre';
+function draftKey(id){return CFG.draft+id;}
+function getDraft(id){try{return localStorage.getItem(draftKey(id));}catch(e){return null;}}
+function setDraft(id,v){try{localStorage.setItem(draftKey(id),v);}catch(e){}}
+function retoById(id){return RETOS.find(r=>r.id===id);}
+function tagHTML(r){return '<span style="font-size:.72rem;color:#2a2000;background:var(--py);padding:2px 9px;border-radius:999px;font-weight:700">'+r.tag+'</span> ';}
+function renderRetoSel(){
+  const keep=currentReto; selEl.innerHTML='';
+  const o0=document.createElement('option'); o0.value='libre'; o0.textContent='🧪 Zona libre'; selEl.appendChild(o0);
+  const groups={};
+  RETOS.forEach(r=>{ let g=groups[r.lvl]; if(!g){ g=groups[r.lvl]=document.createElement('optgroup'); g.label=LVNAME[r.lvl]; selEl.appendChild(g); }
+    const o=document.createElement('option'); o.value=r.id; o.textContent=(S.retos[r.id]?'✅ ':'🎯 ')+r.t+'  (+'+r.xp+' XP)'; g.appendChild(o); });
+  selEl.value=keep;
+}
+function renderInfo(r){ infoEl.innerHTML=tagHTML(r)+'<b>'+r.t+'</b>'+(S.retos[r.id]?' <span style="color:var(--good);font-weight:700">✅ superado</span>':'')+'<br>'+r.d; }
+function loadReto(id, extra){
+  currentReto=id; selEl.value=id; checkEl.innerHTML='';
+  const r=retoById(id), btnC=document.getElementById('checkBtn'), btnS=document.getElementById('solBtn');
+  if(!r){
+    const ex=EXTRA_CODE[extra||'libre']||EXTRA_CODE.libre;
+    infoEl.innerHTML='<b>🧪 Zona libre.</b> Experimenta con lo que quieras: prueba los ejemplos de la clase, cambia los datos y observa cuántas vueltas da cada ciclo.';
+    codeEl.value = extra? ex.code : (getDraft('libre') ?? ex.code); stdinEl.value = extra? ex.stdin : EXTRA_CODE.libre.stdin;
+    btnC.disabled=true; btnS.disabled=true;
+  } else {
+    renderInfo(r); codeEl.value = getDraft(r.id) ?? r.starter; stdinEl.value = r.tests[0].in.join('\n');
+    btnC.disabled=false; btnS.disabled=false;
+  }
+  termEl.innerHTML='<span class="sys">La salida de tu programa aparecerá aquí.</span>';
+}
+selEl.addEventListener('change',()=>loadReto(selEl.value));
+codeEl.addEventListener('input',()=>setDraft(currentReto,codeEl.value));
+codeEl.addEventListener('keydown',e=>{
+  if(e.key==='Tab'){ e.preventDefault(); const s=codeEl.selectionStart, en=codeEl.selectionEnd;
+    codeEl.value=codeEl.value.slice(0,s)+'    '+codeEl.value.slice(en); codeEl.selectionStart=codeEl.selectionEnd=s+4; setDraft(currentReto,codeEl.value); }
+  if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){ e.preventDefault(); doRun(); }
+});
+function termWrite(r){
+  termEl.innerHTML='';
+  if(r.timeout){ termEl.innerHTML='<span class="err">⏱ Tu programa tardó demasiado y se detuvo (¿quedó en un ciclo infinito?).</span>'; return; }
+  const o=document.createElement('span'); o.textContent=r.out; termEl.appendChild(o);
+  if(r.etype){
+    const e=document.createElement('span'); e.className='err';
+    e.textContent=(r.out&&!r.out.endsWith('\n')?'\n':'')+'❌ '+r.etype+(r.line?' en la línea '+r.line:'')+': '+r.err+'\n'; termEl.appendChild(e);
+    const h=HINTS[r.etype]; if(h){ const hh=document.createElement('span'); hh.className='hint'; hh.textContent='💡 '+h; termEl.appendChild(hh); }
+  } else if(!r.out){ termEl.innerHTML='<span class="sys">(El programa terminó sin mostrar nada. ¿El ciclo no dio ninguna vuelta? ¿Te faltó un print()?)</span>'; }
+}
+async function doRun(){
+  const btn=document.getElementById('runBtn'); btn.disabled=true; checkEl.innerHTML='';
+  termEl.innerHTML='<span class="sys">Ejecutando…</span>';
+  try{
+    const inputs=stdinEl.value===''?[]:stdinEl.value.replace(/\r/g,'').split('\n');
+    const r=await runPy(codeEl.value, inputs, true);
+    termWrite(r);
+    if(!r.timeout && !r.etype && r.out){ if(!S.flags.firstRun){ S.flags.firstRun=true; save(); renderXP(); setTimeout(()=>pop('🏅 Insignia: '+CFG.firstRunLabel),1600); } addXP('firstrun',10); }
+  }catch(e){
+    termEl.innerHTML='<span class="err">No se pudo cargar Python en este navegador ('+esc(e.message)+').\n</span><span class="hint">💡 Revisa tu conexión a internet y recarga la página. También puedes usar IDLE, Thonny o Google Colab.</span>';
+  }finally{ btn.disabled=false; }
+}
+document.getElementById('runBtn').addEventListener('click',doRun);
+document.getElementById('resetCode').addEventListener('click',()=>{ const r=retoById(currentReto); codeEl.value=r?r.starter:EXTRA_CODE.libre.code; setDraft(currentReto,codeEl.value); });
+document.getElementById('solBtn').addEventListener('click',()=>{
+  const r=retoById(currentReto); if(!r)return;
+  if(!S.retos[r.id] && !S.sol[r.id] && !confirm('Si ves la solución antes de superar el reto, ganarás la mitad de XP. ¿Ver la solución?'))return;
+  S.sol[r.id]=true; save(); codeEl.value=r.sol+'\n'; setDraft(r.id,codeEl.value);
+});
+document.getElementById('checkBtn').addEventListener('click',async()=>{
+  const r=retoById(currentReto); if(!r)return;
+  const btn=document.getElementById('checkBtn'); btn.disabled=true;
+  checkEl.innerHTML='<div class="row">🧪 Probando tu programa con '+r.tests.length+' casos…</div>';
+  let rows='', all=true;
+  try{
+    for(let i=0;i<r.tests.length;i++){
+      const tc=r.tests[i], res=await runPy(codeEl.value, tc.in, false);
+      let ok=false, why='';
+      if(res.timeout){why='tardó demasiado';}
+      else if(res.etype){why=res.etype+(res.line?' (línea '+res.line+')':'')+': '+res.err;}
+      else { const miss=tc.must.some(p=>!new RegExp(p,'i').test(res.out)), extra=(tc.not||[]).some(p=>new RegExp(p,'i').test(res.out));
+        ok=!miss&&!extra; if(miss) why='falta algo de lo esperado'; else if(extra) why='muestra algo que no debería (¿una vuelta de más? ¿un mensaje repetido?)'; }
+      all=all&&ok;
+      rows+='<div class="row '+(ok?'ok':'no')+'">'+(ok?'✅':'❌')+' <b>Caso '+(i+1)+'</b> · entradas: <code>'+esc(tc.in.join(' | '))+'</code> → se espera: <code>'+esc(tc.show)+'</code>'+
+        (ok?'':'<br><small>Tu salida: <code>'+esc((res.out||'').trim().replace(/\n/g,' ⏎ ')||'(vacía)')+'</code> — '+esc(why)+'</small>')+'</div>';
+    }
+    checkEl.innerHTML=rows;
+    if(all){
+      const first=!S.retos[r.id]; S.retos[r.id]=true; save();
+      const base=r.xp||30, amt=S.sol[r.id]?Math.round(base/2):base;
+      addXP('reto:'+r.id,amt,r.t.replace(/^[★\s]*\d*\.?\s*/,''));
+      checkEl.innerHTML+='<div class="win">🎉 ¡Reto superado!'+(first?' Nuevo ✅ en tu lista.':'')+' '+(S.sol[r.id]?'(XP reducida por ver la solución)':'')+'</div>';
+      renderRetoSel(); renderTaller(); renderXP(); renderInfo(r);
+    }
+  }catch(e){ checkEl.innerHTML='<div class="row no">No se pudo ejecutar Python ('+esc(e.message)+'). Revisa tu conexión.</div>'; }
+  finally{ btn.disabled=false; }
+});
+function openInLab(idOrExtra){ showTab('lab'); if(retoById(idOrExtra)) loadReto(idOrExtra); else loadReto('libre', idOrExtra); }
+document.querySelectorAll('[data-try]').forEach(b=>b.addEventListener('click',()=>openInLab(b.dataset.try)));
+
+RESET_HOOKS.push(()=>{renderRetoSel(); renderTaller(); loadReto(currentReto);});
+/* ===================== Taller ===================== */
+function renderTaller(){
+  const box=document.getElementById('ejercicios'); box.innerHTML='';
+  let lastLv=0;
+  RETOS.forEach(r=>{
+    if(r.lvl!==lastLv){ lastLv=r.lvl; const done=RETOS.filter(x=>x.lvl===r.lvl&&S.retos[x.id]).length, tot=RETOS.filter(x=>x.lvl===r.lvl).length;
+      const h=document.createElement('h3'); h.className='lvh'; h.innerHTML=LVNAME[r.lvl]+' <span>· '+r.xp+' XP c/u · '+done+'/'+tot+' superados</span><small>'+LVDESC[r.lvl]+'</small>'; box.appendChild(h); }
+    const c=document.createElement('div'); c.className='ex';
+    c.innerHTML='<span class="tag">'+r.tag+'</span>'+(S.retos[r.id]?'<span class="done">✅ superado en el laboratorio</span>':'')+
+      '<h3>'+r.t+'</h3><p>'+r.d+'</p><div class="btns"><button class="btn py">🐍 Resolver en el laboratorio</button></div>'+
+      '<details><summary>Ver solución en Python</summary><pre>'+esc(r.sol)+'</pre></details>';
+    c.querySelector('button').addEventListener('click',()=>openInLab(r.id));
+    c.querySelector('details').addEventListener('toggle',function(){ if(this.open && !S.retos[r.id] && !S.sol[r.id]){ S.sol[r.id]=true; save(); } });
+    box.appendChild(c);
+  });
+}
+renderRetoSel(); renderTaller(); loadReto('libre');
+
+</script>
+<!-- lp1-home:start -->
+<a id="lp1-home" href="index.html" title="Volver al índice de lecciones" aria-label="Volver al índice de lecciones"><span class="i" aria-hidden="true">🏠</span><span class="t">Lecciones</span></a>
+<style>
+#lp1-home{position:fixed;left:max(16px,env(safe-area-inset-left));bottom:max(16px,env(safe-area-inset-bottom));z-index:2147483000;display:inline-flex;align-items:center;gap:7px;padding:9px 15px 9px 12px;border-radius:999px;background:#1f4f7a;color:#fff!important;border:1px solid rgba(63,208,192,.65);box-shadow:0 6px 18px rgba(0,0,0,.35);font:600 14px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;text-decoration:none!important;letter-spacing:.2px;transition:transform .15s,background .15s}
+#lp1-home:hover{background:#2b6a9e;transform:translateY(-2px)}
+#lp1-home:focus-visible{outline:3px solid #3fd0c0;outline-offset:3px}
+#lp1-home .i{font-size:17px;line-height:1}
+@media (max-width:600px){#lp1-home{padding:0;width:46px;height:46px;justify-content:center}#lp1-home .t{display:none}#lp1-home .i{font-size:20px}}
+@media print{#lp1-home{display:none!important}}
+</style>
+<!-- lp1-home:end -->
+</body>
+</html>
