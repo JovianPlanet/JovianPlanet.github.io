@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Funciones en Python · Clase Interactiva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%A9%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#0f1720; --panel:#18222e; --panel2:#1f2c3a; --ink:#e8eef5; --muted:#9fb0c3;
+    --line:#2b3a4d; --accent:#4fd1c5; --accent2:#7c9cff; --good:#48d597; --bad:#ff7a7a;
+    --warn:#ffcf6b; --chip:#243447; --py:#ffd43b; --pyb:#4b8bbe;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(160deg,#0f1720,#111c27);color:var(--ink);line-height:1.55}
+  header{padding:22px 22px 12px;text-align:center;border-bottom:1px solid var(--line);background:radial-gradient(1200px 300px at 50% -60px,rgba(75,139,190,.22),transparent)}
+  header h1{margin:0 0 4px;font-size:clamp(1.3rem,3.4vw,2rem)}
+  header p{margin:0;color:var(--muted);font-size:.92rem}
+  .xpwrap{max-width:680px;margin:12px auto 4px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+  .xprow{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);margin-bottom:6px;gap:8px;flex-wrap:wrap}
+  .xprow b{color:var(--warn)}
+  .xpbar{height:12px;background:#0c141d;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .xpfill{height:100%;width:0;background:linear-gradient(90deg,var(--pyb),var(--py));transition:width .5s}
+  .badges2{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+  .bdg{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:.74rem;color:#5f7085;opacity:.6;transition:.3s}
+  .bdg.on{opacity:1;color:var(--ink);border-color:var(--warn);box-shadow:0 0 0 2px rgba(255,207,107,.15)}
+  .linkbtn{background:none;border:none;color:var(--muted);font-size:.74rem;cursor:pointer;text-decoration:underline;padding:0}
+  .wrap{max-width:1000px;margin:0 auto;padding:16px 16px 60px}
+  nav.tabs{position:sticky;top:0;z-index:10;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:11px 6px;background:rgba(15,23,32,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.tabs button{background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:8px 12px;border-radius:10px;cursor:pointer;font-size:.82rem;font-weight:600;transition:.15s}
+  nav.tabs button:hover{border-color:var(--accent)}
+  nav.tabs button.active{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border-color:transparent}
+  nav.tabs button.lab{border-color:var(--py)}
+  html{background:#0f1720}
+  @media(max-width:640px){
+    nav.tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:thin}
+    nav.tabs button{flex:0 0 auto}
+    .typebtns{grid-template-columns:repeat(2,1fr)}
+  }
+  section.tab{display:none;animation:fade .25s ease}
+  section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2{font-size:1.3rem;margin:20px 0 10px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:1.05rem;margin:18px 0 8px;color:var(--accent)}
+  p{color:#d5deea}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .note{background:rgba(255,207,107,.08);border:1px solid rgba(255,207,107,.35);border-radius:12px;padding:12px 14px;margin:14px 0;font-size:.92rem}
+  .note b{color:var(--warn)}
+  .tip{background:rgba(75,139,190,.12);border:1px solid rgba(75,139,190,.45);border-left:4px solid var(--pyb);border-radius:10px;padding:12px 14px;margin:14px 0;font-size:.9rem}
+  .tip b{color:#9cc4e8}
+  code{font-family:"SF Mono",Consolas,Menlo,monospace}
+  pre{background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.85rem;color:#d7e3f0;margin:10px 0}
+  .fname{display:inline-block;background:var(--chip);border:1px solid var(--line);border-bottom:none;border-radius:8px 8px 0 0;padding:3px 10px;font-family:monospace;font-size:.75rem;color:var(--muted);margin-top:8px}
+  .fname + pre{margin-top:0;border-top-left-radius:0}
+  .kw{color:#ff9d6c;font-weight:600}.st{color:#9fe6b0}.cm{color:#6f8194;font-style:italic}.fn{color:#7cc4ff}.nu{color:#c9a3ff}
+  .tout{color:#e8eef5}.tprompt{color:#9fb0c3}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.87rem;overflow:hidden;border-radius:12px}
+  th,td{padding:8px 10px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:var(--accent);font-weight:700}
+  tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+  td.mono,code.mono{font-family:"SF Mono",Consolas,monospace;color:var(--accent)}
+  .tablewrap{overflow-x:auto}
+  details{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:10px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--accent)}
+  details[open]{border-color:var(--accent)}
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+  .tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .tile b{display:block;margin-bottom:3px}
+  .tile small{color:var(--muted)}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin:14px 0;text-align:center}
+  .flow .st2{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;min-width:120px}
+  .flow .st2 small{display:block;color:var(--muted);font-size:.74rem}
+  .flow .ar{color:var(--accent);font-weight:800;font-size:1.3rem}
+  .types{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+  .type{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--panel)}
+  .type .tn{font-family:monospace;font-size:1.3rem;font-weight:800}
+  .t-int .tn{color:#7cc4ff}.t-float .tn{color:#c9a3ff}.t-str .tn{color:#9fe6b0}.t-bool .tn{color:#ffcf6b}
+  .btn{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.88rem}
+  .btn.ghost{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+  .btn.py{background:linear-gradient(180deg,#ffe066,#f2c200);color:#2a2000}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .scorebar{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:12px 0;gap:10px;flex-wrap:wrap}
+  .scorebar b{color:var(--accent);font-size:1.1rem}
+  .q{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .q .tag{font-size:.72rem;color:#0a1330;background:var(--accent2);padding:2px 9px;border-radius:999px;font-weight:700}
+  .q .scn{color:#cfe0ff;margin:8px 0 2px}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .opt{background:#0c141d;border:1px solid var(--line);color:var(--ink);padding:9px 12px;border-radius:9px;cursor:pointer;font-family:monospace;font-size:.85rem;text-align:left;transition:.12s}
+  .opt:hover{border-color:var(--accent)}
+  .opt.correct{background:var(--good);color:#052b1c;border-color:transparent;font-weight:700}
+  .opt.wrong{background:var(--bad);color:#2b0505;border-color:transparent}
+  .opt.locked{pointer-events:none}
+  .feedback{margin-top:8px;font-size:.86rem;min-height:1.1em}
+  .feedback.ok{color:var(--good)}.feedback.no{color:var(--bad)}
+  .center{text-align:center}
+  .xppop{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--warn);color:#2a1e00;font-weight:800;padding:10px 18px;border-radius:999px;opacity:0;transition:.35s;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.35);pointer-events:none}
+  .xppop.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  /* tipo-matic */
+  .game{background:linear-gradient(160deg,#16212e,#1b2a3a);border:1px solid var(--line);border-radius:16px;padding:18px;margin:12px 0}
+  .bigval{font-family:monospace;font-size:clamp(1.4rem,4vw,2.1rem);text-align:center;background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:16px;margin:10px 0;color:#fff}
+  .typebtns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .typebtns button{font-family:monospace;font-size:1rem;font-weight:800;padding:12px 6px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer}
+  .typebtns button:hover{border-color:var(--accent)}
+  .typebtns button.right{background:var(--good);color:#052b1c}
+  .typebtns button.wrongb{background:var(--bad);color:#2b0505}
+  .gstat{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:6px 0}
+  .gchip{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:6px 12px;font-family:monospace;font-size:.88rem}
+  .gchip b{color:var(--warn)}
+  .flame{font-size:1.2rem}
+  /* nombres */
+  .names{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .nm{font-family:monospace;padding:9px 13px;border-radius:10px;border:1px solid var(--line);background:#0c141d;color:var(--ink);cursor:pointer;font-size:.92rem}
+  .nm.v{border-color:var(--good);background:rgba(72,213,151,.15)}
+  .nm.x{border-color:var(--bad);background:rgba(255,122,122,.15)}
+  .nm.ok::after{content:" ✔";color:var(--good)} .nm.ko::after{content:" ✘";color:var(--bad)}
+  /* ordena */
+  .slots{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .slot{min-height:42px;border:2px dashed var(--line);border-radius:10px;display:flex;align-items:center;gap:10px;padding:7px 10px;color:var(--muted);font-size:.85rem;background:#0c141d;cursor:pointer;font-family:monospace}
+  .slot .ph{font-family:system-ui;font-size:.7rem;font-weight:700;border-radius:999px;padding:2px 8px;white-space:nowrap}
+  .ph.e{background:#1d3b5c;color:#9cc4e8}.ph.p{background:#3b2f5c;color:#c9a3ff}.ph.s{background:#1f4a3a;color:#9fe6b0}
+  .slot.filled{border-style:solid;color:var(--ink);background:var(--panel2)}
+  .slot.okk{border-color:var(--good)} .slot.noo{border-color:var(--bad)}
+  .pool{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .piece{text-align:left;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 12px;cursor:pointer;font-size:.85rem;font-family:monospace}
+  .piece:hover{border-color:var(--accent)} .piece.used{opacity:.3;pointer-events:none}
+  /* lab */
+  .lab{background:linear-gradient(160deg,#141f2b,#182636);border:1px solid #3a5168;border-radius:16px;padding:14px;margin:12px 0}
+  .labbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+  .labbar select{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:9px 10px;font-size:.88rem;max-width:100%}
+  .pystat{font-size:.8rem;color:var(--muted);background:#0c141d;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+  .retoinfo{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0;font-size:.9rem}
+  .labgrid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:820px){.labgrid{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}}
+  .lab label{display:block;font-size:.78rem;color:var(--muted);margin:6px 0 4px;font-weight:600}
+  textarea.code{width:100%;min-height:230px;background:#0b1118;color:#e8eef5;border:1px solid var(--line);border-radius:10px;padding:12px;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.88rem;line-height:1.5;resize:vertical;tab-size:4;white-space:pre}
+  textarea.stdin{width:100%;min-height:70px;background:#0b1118;color:#ffe9a8;border:1px solid var(--line);border-radius:10px;padding:10px;font-family:monospace;font-size:.85rem;resize:vertical}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .term{min-height:230px;max-height:420px;overflow:auto;background:#050a0f;border:1px solid #2b3a4d;border-radius:10px;padding:12px;font-size:.86rem;white-space:pre-wrap;word-break:break-word;margin:0}
+  .term .err{color:#ff8f8f}.term .hint{color:#ffe08a}.term .sys{color:#6f8194}
+  .chk{margin-top:10px;font-size:.88rem}
+  .chk .row{padding:6px 10px;border-radius:8px;margin:5px 0;background:var(--panel);border:1px solid var(--line)}
+  .chk .row.ok{border-color:rgba(72,213,151,.6)} .chk .row.no{border-color:rgba(255,122,122,.6)}
+  .win{background:rgba(72,213,151,.12);border:1px solid var(--good);border-radius:12px;padding:10px 12px;margin-top:8px;font-weight:700;color:var(--good)}
+  .ex{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0}
+  .ex .tag{font-size:.72rem;color:#2a2000;background:var(--py);padding:2px 9px;border-radius:999px;font-weight:700}
+  .ex h3{margin:8px 0 4px}
+  .ex .done{color:var(--good);font-weight:700;font-size:.82rem;margin-left:6px}
+  footer{text-align:center;color:var(--muted);font-size:.82rem;padding:24px 12px;border-top:1px solid var(--line)}
+  /* --- lección 9 --- */
+  .anat{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:10px 0}
+  .anat .tile code{color:var(--py)}
+  .sim{background:linear-gradient(160deg,#141f2b,#182636);border:1px solid #3a5168;border-radius:16px;padding:14px;margin:12px 0}
+  .simbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .simbar select,.simin input,.simin select{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:8px 10px;font-size:.9rem}
+  .simin{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0;font-family:monospace}
+  .simin input[type=number]{width:96px}
+  .simin input[type=text]{width:130px}
+  .simgrid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:820px){.simgrid{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)}}
+  .scode{background:#0b1118;border:1px solid var(--line);border-radius:12px;padding:8px 0;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.84rem;overflow-x:auto}
+  .sl{display:flex;align-items:center;gap:10px;padding:3px 12px;white-space:pre;transition:background .2s,opacity .2s;min-height:26px}
+  .sl .ln{color:#4f6175;width:20px;text-align:right;flex:0 0 auto}
+  .sl .tx{flex:1 1 auto}
+  .sl .st{flex:0 0 auto;font-family:system-ui;font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap}
+  .sl.dim{opacity:.38}
+  .sl.run{background:rgba(79,209,197,.13)} .sl.run .st{background:#1c4d47;color:#9ff3e8}
+  .sl.true{background:rgba(72,213,151,.13)} .sl.true .st{background:#1f4a3a;color:#9fe6b0}
+  .sl.false{background:rgba(255,122,122,.10)} .sl.false .st{background:#4a2323;color:#ffb3b3}
+  .sl.skip .st{background:#2a3442;color:#9fb0c3}
+  .sl.cur{box-shadow:inset 3px 0 0 var(--warn)}
+  .cov{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0}
+  .cov span{font-size:.78rem;border:1px dashed var(--line);border-radius:999px;padding:3px 10px;color:var(--muted)}
+  .cov span.hit{border-style:solid;border-color:var(--good);color:var(--good);background:rgba(72,213,151,.08)}
+  .slots2{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .slot2{display:flex;align-items:center;gap:10px;min-height:42px;border:2px dashed var(--line);border-radius:10px;padding:7px 12px;background:#0c141d;font-family:monospace;font-size:.88rem;cursor:pointer}
+  .slot2 .kwd{color:#ff9d6c;font-weight:700;min-width:44px}
+  .slot2.filled{border-style:solid;background:var(--panel2)}
+  .slot2.fixed{cursor:default;border-style:solid;opacity:.85}
+  .slot2.okk{border-color:var(--good)}.slot2.noo{border-color:var(--bad)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+  .chipb{font-family:monospace;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 12px;cursor:pointer;font-size:.86rem}
+  .chipb:hover{border-color:var(--accent)} .chipb.used{opacity:.3;pointer-events:none}
+  .mini{width:auto;font-size:.84rem} .mini td,.mini th{padding:5px 9px}
+  .ok{color:var(--good);font-weight:700}.ko{color:var(--bad);font-weight:700}
+  .bug{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:14px 0}
+  .bug .spec{background:rgba(75,139,190,.12);border:1px solid rgba(75,139,190,.45);border-radius:10px;padding:8px 12px;font-size:.88rem;margin:6px 0}
+  .bug .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+  .bug input{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:9px 10px;width:130px;font-family:monospace}
+  .bug.broken{border-color:var(--good)}
+  .bug .fix{display:none;margin-top:8px}
+  .bug.broken .fix{display:block}
+.lvh{margin:22px 0 8px;font-size:1.08rem}.lvh span{color:var(--muted);font-weight:500;font-size:.85rem}.lvh small{display:block;color:var(--muted);font-weight:400;font-size:.85rem;margin-top:2px}
+  /* --- componentes ciclos --- */
+  .itc{margin-left:auto;font-size:.85rem;color:var(--muted)} .itc b{color:var(--warn);font-size:1rem}
+  .vars{background:#0b1118;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .vars table{margin:0;width:100%;font-size:.84rem} .vars th,.vars td{padding:5px 10px}
+  .vars td.chg{color:var(--warn);font-weight:700;background:rgba(255,206,92,.08)}
+  .snote{font-size:.86rem;margin-top:8px;color:var(--ink);min-height:1.2em}
+  .scode{max-height:380px;overflow:auto}
+  .pz{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:14px 0}
+  .pzgrid{display:grid;grid-template-columns:1fr;gap:12px} @media(min-width:820px){.pzgrid{grid-template-columns:1fr 1fr}}
+  .pzlab{font-size:.78rem;color:var(--muted);font-weight:600;margin-bottom:5px}
+  .pzpool,.pzprog{display:flex;flex-direction:column;gap:6px;min-height:60px;background:#0b1118;border:1px dashed var(--line);border-radius:12px;padding:8px}
+  .pzline{font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.84rem;white-space:pre;text-align:left;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:7px 10px;cursor:pointer;overflow-x:auto}
+  .pzline:hover{border-color:var(--accent)} .pzline.used{opacity:.25;pointer-events:none}
+  .pzline.in{background:var(--panel2)} .pzline.good{border-color:var(--good)} .pzline.bad{border-color:var(--bad);background:rgba(255,122,122,.08)}
+  .pzempty{color:var(--muted);font-size:.82rem;text-align:center;padding:10px}
+  .tile small b{display:inline;margin:0}
+  .center{text-align:center}
+  .sl.cur{background:rgba(255,207,107,.10)}
+
+  /* --- lección 12 --- */
+  .machine{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:16px 0 6px}
+  .mbox{border-radius:14px;padding:12px 16px;text-align:center;font-size:.9rem;border:1px solid var(--line);background:var(--panel)}
+  .mbox.in{border-color:rgba(124,156,255,.6)} .mbox.out{border-color:var(--good);font-size:1.15rem;color:var(--good)}
+  .mbox.fn{background:linear-gradient(160deg,#1c3046,#16283a);border:2px solid var(--py);min-width:220px}
+  .mbox.fn .mono{color:var(--py);font-weight:700} .mbox.fn small{display:block;color:var(--muted);margin-top:6px;text-align:left}
+  .marrow{font-size:1.6rem;color:var(--accent)}
+  .steps4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:10px 0}
+  .steps4>div{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:.88rem}
+  .steps4 b:first-child{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#06231f;margin-right:6px}
+  .conn{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+  .conn label{display:flex;align-items:center;gap:6px;font-size:.88rem}
+  .conn input{width:110px;background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:6px 8px;font-family:monospace}
+  .conn input.good{border-color:var(--good);background:rgba(72,213,151,.1)} .conn input.bad{border-color:var(--bad);background:rgba(255,122,122,.1)}
+
+</style>
+</head>
+<body>
+<header>
+  <h1>🧩 Funciones en Python</h1>
+  <p>def · parámetros · return · ámbito · argumentos por posición, por nombre y por defecto · *args · <b>modo juego</b></p>
+  <div class="xpwrap">
+    <div class="xprow"><span>Nivel <b id="lvl">1</b> · <span id="lvlname">Novato del def</span></span><span><b id="xp">0</b> XP · <button class="linkbtn" id="resetProg" title="Borra tu XP e insignias en este navegador">reiniciar progreso</button></span></div>
+    <div class="xpbar"><div class="xpfill" id="xpfill"></div></div>
+    <div class="badges2" id="badges"></div>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="active" data-tab="intro">💡 ¿Qué es?</button>
+  <button data-tab="definir">🛠️ def</button>
+  <button data-tab="retorno">↩️ return</button>
+  <button data-tab="ambito">🌍 Ámbito</button>
+  <button data-tab="args">🎛️ Argumentos</button>
+  <button data-tab="paso">🧭 Paso a paso</button>
+  <button data-tab="retos">🧨 Retos</button>
+  <button data-tab="lab" class="lab">🐍 Laboratorio</button>
+  <button data-tab="taller">🏆 Taller</button>
+</nav>
+
+<div class="wrap">
+
+<!-- ===================== QUÉ ES ===================== -->
+<section class="tab active" id="intro">
+  <h2>Ya usas funciones todos los días</h2>
+  <p>Desde la primera clase de Python usas funciones que otros escribieron: <code>print()</code> muestra, <code>input()</code> lee, <code>int()</code> convierte, <code>range()</code> genera números, <code>len()</code> mide. Las usas <b>sin saber cómo están hechas por dentro</b>: solo sabes qué reciben y qué devuelven. Hoy vas a crear las tuyas.</p>
+  <div class="grid3">
+    <div class="tile"><b>📥 Entradas</b><small>Los datos que recibe: sus <b>parámetros</b>.</small></div>
+    <div class="tile"><b>⚙️ Proceso</b><small>El bloque de código con nombre que hace una tarea específica.</small></div>
+    <div class="tile"><b>📤 Salida</b><small>El resultado que <b>devuelve</b> con <code>return</code> (opcional).</small></div>
+  </div>
+  <div class="machine">
+    <div class="mbox in">precio = <b>100000</b><br>descuento = <b>20</b></div>
+    <div class="marrow">→</div>
+    <div class="mbox fn"><span class="mono">precio_final(precio, descuento)</span><small>1. quita el descuento<br>2. suma el IVA del 19 %</small></div>
+    <div class="marrow">→</div>
+    <div class="mbox out"><b>95200.0</b></div>
+  </div>
+  <p class="center" style="color:var(--muted);font-size:.9rem">Como una máquina dispensadora: metes los datos, presionas el botón y sale el resultado. No necesitas saber cómo funciona por dentro para usarla.</p>
+
+  <h3>¿Por qué crear funciones?</h3>
+  <div class="grid3">
+    <div class="tile"><b>🧱 Modularidad</b><small>Divides un programa grande en piezas pequeñas que puedes probar por separado.</small></div>
+    <div class="tile"><b>♻️ Reutilización</b><small>Escribes el código una vez y lo usas las veces que quieras, con datos distintos.</small></div>
+    <div class="tile"><b>🎁 Abstracción</b><small>Quien la usa solo necesita su nombre, sus entradas y su salida.</small></div>
+  </div>
+  <div class="grid3">
+    <div><span class="fname">sin_funcion.py</span><pre><span class="fn">print</span>(<span class="st">"─"</span> * <span class="nu">30</span>)
+<span class="fn">print</span>(<span class="st">"  FACTURA ELECTRÓNICA"</span>)
+<span class="fn">print</span>(<span class="st">"─"</span> * <span class="nu">30</span>)
+<span class="fn">print</span>(<span class="st">"  Cliente: Laura Restrepo"</span>)
+<span class="fn">print</span>(<span class="st">"  Total: $48.500"</span>)
+<span class="fn">print</span>(<span class="st">"─"</span> * <span class="nu">30</span>)</pre>
+    <p style="color:var(--muted);font-size:.86rem">Si cambias el estilo de la línea, debes corregirlo en 3 lugares.</p></div>
+    <div><span class="fname">con_funcion.py</span><pre><span class="kw">def</span> linea():
+    <span class="fn">print</span>(<span class="st">"─"</span> * <span class="nu">30</span>)
+
+linea()
+<span class="fn">print</span>(<span class="st">"  FACTURA ELECTRÓNICA"</span>)
+linea()
+<span class="fn">print</span>(<span class="st">"  Cliente: Laura Restrepo"</span>)
+<span class="fn">print</span>(<span class="st">"  Total: $48.500"</span>)
+linea()</pre>
+    <p style="color:var(--muted);font-size:.86rem">Lo cambias en un solo lugar: dentro de <code>linea()</code>.</p></div>
+  </div>
+  <div class="center"><button class="btn py" data-try="encabezado">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>🏭 Máquina misteriosa</h3>
+  <p><b>Enunciado:</b> cada máquina es una función <code>f</code> de la que solo conoces algunas entradas y salidas. Descubre cuál es su <code>return</code>. Resuélvelas todas para la insignia <b>Detective de funciones</b>.</p>
+  <div class="scorebar"><span>Máquinas descubiertas: <b id="mqScore">0</b> / <b id="mqTotal">7</b></span><button class="btn ghost" id="mqReset">Reiniciar</button></div>
+  <div id="mqQuiz"></div>
+</section>
+
+<!-- ===================== DEFINIR Y LLAMAR ===================== -->
+<section class="tab" id="definir">
+  <h2>🛠️ Definir y llamar una función</h2>
+  <span class="fname">bienvenida.py</span>
+  <pre><span class="kw">def</span> bienvenida(nombre):
+    mensaje = <span class="st">f"¡Hola, {nombre}! Bienvenido al curso"</span>
+    <span class="kw">return</span> mensaje
+
+texto = bienvenida(<span class="st">"Laura"</span>)
+<span class="fn">print</span>(texto)
+<span class="fn">print</span>(bienvenida(<span class="st">"Mateo"</span>))</pre>
+  <div class="anat">
+    <div class="tile"><b><code>def</code></b><small>Palabra reservada: "defino una función".</small></div>
+    <div class="tile"><b><code>bienvenida</code></b><small>El nombre: un verbo en snake_case (<code>calcular_iva</code>, <code>es_par</code>).</small></div>
+    <div class="tile"><b><code>(nombre)</code></b><small>Los parámetros: sus entradas. Pueden ser cero o varios.</small></div>
+    <div class="tile"><b><code>:</code> y sangría</b><small>El cuerpo: lo que hace la función.</small></div>
+    <div class="tile"><b><code>return</code></b><small>Entrega el resultado a quien la llamó (opcional).</small></div>
+  </div>
+  <div class="center"><button class="btn py" data-try="bienvenida">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>¿Qué pasa cuando se llama?</h3>
+  <div class="steps4">
+    <div><b>1</b>Python lee el <code>def</code> y <b>guarda</b> la función. No ejecuta su cuerpo todavía.</div>
+    <div><b>2</b>Al llegar a <code>bienvenida("Laura")</code>, el programa <b>salta</b> a la función: <code>nombre</code> vale <code>"Laura"</code>.</div>
+    <div><b>3</b>Se ejecuta el cuerpo y <code>return</code> devuelve el mensaje.</div>
+    <div><b>4</b>El programa <b>regresa</b> a donde estaba: <code>texto</code> recibe el mensaje y sigue.</div>
+  </div>
+  <div class="tip">Míralo línea por línea en <b>🧭 Paso a paso</b>: verás cómo el programa salta a la función y regresa.</div>
+
+  <h3>Errores frecuentes</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Error</th><th>Ejemplo</th><th>Qué pasa</th></tr></thead>
+    <tbody>
+      <tr><td>Llamar antes de definir</td><td class="mono">calcular(5)<br>def calcular(x): …</td><td><b>NameError</b>: la función todavía no existe. Define primero, llama después.</td></tr>
+      <tr><td>Olvidar los paréntesis</td><td class="mono">print(bienvenida)</td><td>No se ejecuta: muestra algo como <code>&lt;function bienvenida at 0x…&gt;</code>.</td></tr>
+      <tr><td>Faltan argumentos</td><td class="mono">bienvenida()</td><td><b>TypeError</b>: missing 1 required positional argument: 'nombre'.</td></tr>
+      <tr><td>Sobran argumentos</td><td class="mono">bienvenida("Ana", "Luis")</td><td><b>TypeError</b>: takes 1 positional argument but 2 were given.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>🎯 ¿Qué imprime?</h3>
+  <p><b>Enunciado:</b> predice la salida exacta de cada programa (las líneas se muestran separadas por espacios).</p>
+  <div class="scorebar"><span>Aciertos: <b id="qiScore">0</b> / <b id="qiTotal">6</b></span><button class="btn ghost" id="qiReset">Reiniciar</button></div>
+  <div id="qiQuiz"></div>
+</section>
+
+<!-- ===================== RETURN ===================== -->
+<section class="tab" id="retorno">
+  <h2>↩️ Parámetros y return</h2>
+  <div class="grid3">
+    <div class="tile"><b>Parámetro</b><small>La variable que aparece en la <b>definición</b>: <code>def area(base, altura):</code></small></div>
+    <div class="tile"><b>Argumento</b><small>El valor que se envía en la <b>llamada</b>: <code>area(5, 3)</code>. Se copia en el parámetro de la misma posición.</small></div>
+    <div class="tile"><b><code>return</code></b><small>Entrega un valor y <b>termina</b> la función de inmediato. Sin return, la función devuelve <code>None</code>.</small></div>
+  </div>
+  <span class="fname">precio.py</span>
+  <pre><span class="kw">def</span> precio_final(precio, descuento):
+    con_descuento = precio * (<span class="nu">1</span> - descuento / <span class="nu">100</span>)
+    <span class="kw">return</span> con_descuento * <span class="nu">1.19</span>
+
+total = precio_final(<span class="nu">100000</span>, <span class="nu">20</span>)                 <span class="cm"># se guarda en una variable</span>
+<span class="fn">print</span>(<span class="st">f"Pagas: {total:.2f}"</span>)
+<span class="fn">print</span>(<span class="st">f"Dos unidades: {2 * precio_final(100000, 20):.2f}"</span>)   <span class="cm"># se usa en una operación</span></pre>
+  <div class="center"><button class="btn py" data-try="precio">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>¿print o return?</h3>
+  <div class="grid3">
+    <div><span class="fname">printreturn.py</span><pre><span class="kw">def</span> doble_print(x):
+    <span class="fn">print</span>(x * <span class="nu">2</span>)          <span class="cm"># muestra, pero no devuelve</span>
+
+<span class="kw">def</span> doble_return(x):
+    <span class="kw">return</span> x * <span class="nu">2</span>          <span class="cm"># devuelve, pero no muestra</span>
+
+a = doble_print(<span class="nu">5</span>)
+b = doble_return(<span class="nu">5</span>)
+<span class="fn">print</span>(<span class="st">"a ="</span>, a, <span class="st">"| b ="</span>, b)</pre></div>
+    <div><pre class="tout">10
+a = None | b = 10</pre>
+    <div class="note" style="margin-top:6px"><b>print</b> le muestra algo a la persona; <b>return</b> le entrega un valor al programa para que lo siga usando. Una función que solo hace print devuelve <code>None</code>: no puedes sumarlo, compararlo ni guardarlo.</div></div>
+  </div>
+  <div class="center"><button class="btn py" data-try="printreturn">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>Funciones que devuelven True o False</h3>
+  <span class="fname">votar.py</span>
+  <pre><span class="kw">def</span> es_mayor_de_edad(edad):
+    <span class="kw">return</span> edad &gt;= <span class="nu">18</span>                <span class="cm"># la comparación ya es True o False</span>
+
+<span class="kw">for</span> edad <span class="kw">in</span> [<span class="nu">15</span>, <span class="nu">18</span>, <span class="nu">32</span>, <span class="nu">17</span>]:
+    <span class="kw">if</span> es_mayor_de_edad(edad):       <span class="cm"># se usa directo como condición</span>
+        <span class="fn">print</span>(edad, <span class="st">"→ puede votar"</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(edad, <span class="st">"→ aún no"</span>)</pre>
+  <div class="center"><button class="btn py" data-try="votar">🐍 Probarlo en el laboratorio</button></div>
+  <div class="tip">Nombra las funciones booleanas como una pregunta: <code>es_par</code>, <code>es_primo</code>, <code>tiene_descuento</code>, <code>fecha_valida</code>.</div>
+</section>
+
+<!-- ===================== ÁMBITO ===================== -->
+<section class="tab" id="ambito">
+  <h2>🌍 Ámbito de las variables</h2>
+  <div class="grid3">
+    <div class="tile"><b>📦 Local</b><small>Se crea <b>dentro</b> de la función (incluidos sus parámetros). Solo existe mientras la función se ejecuta y desaparece al terminar.</small></div>
+    <div class="tile"><b>🌍 Global</b><small>Se crea <b>fuera</b> de las funciones. Las funciones pueden <b>leerla</b>.</small></div>
+  </div>
+  <span class="fname">ambito.py</span>
+  <pre>tasa_iva = <span class="nu">0.19</span>                      <span class="cm"># global</span>
+
+<span class="kw">def</span> con_iva(precio):
+    total = precio * (<span class="nu">1</span> + tasa_iva)  <span class="cm"># total es local</span>
+    <span class="kw">return</span> total
+
+<span class="fn">print</span>(con_iva(<span class="nu">1000</span>))
+<span class="fn">print</span>(total)                         <span class="cm"># ¿existe total aquí afuera?</span></pre>
+  <pre class="tout">1190.0
+NameError: name 'total' is not defined</pre>
+  <div class="center"><button class="btn py" data-try="ambito">🐍 Probarlo en el laboratorio</button></div>
+  <h3>Mismo nombre, distinta variable</h3>
+  <div class="grid3">
+    <div><span class="fname">sombra.py</span><pre>puntos = <span class="nu">10</span>
+
+<span class="kw">def</span> jugar():
+    puntos = <span class="nu">99</span>              <span class="cm"># crea OTRA variable, local</span>
+    <span class="fn">print</span>(<span class="st">"Dentro:"</span>, puntos)
+
+jugar()
+<span class="fn">print</span>(<span class="st">"Fuera:"</span>, puntos)</pre></div>
+    <div><pre class="tout">Dentro: 99
+Fuera: 10</pre><div class="note" style="margin-top:6px"><b>La global no cambia.</b> Si una función necesita un dato, lo correcto es recibirlo como <b>parámetro</b>; si produce un resultado, entregarlo con <b>return</b>. Así cada función es una caja independiente.</div></div>
+  </div>
+  <div class="center"><button class="btn py" data-try="sombra">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>🔎 ¿Qué imprime? (ámbito)</h3>
+  <div class="scorebar"><span>Aciertos: <b id="amScore">0</b> / <b id="amTotal">4</b></span><button class="btn ghost" id="amReset">Reiniciar</button></div>
+  <div id="amQuiz"></div>
+</section>
+
+<!-- ===================== ARGUMENTOS ===================== -->
+<section class="tab" id="args">
+  <h2>🎛️ Formas de pasar argumentos</h2>
+  <span class="fname">pedido.py</span>
+  <pre><span class="kw">def</span> pedido(producto, cantidad, precio, envio=<span class="nu">5000</span>):    <span class="cm"># envio tiene valor por defecto</span>
+    total = cantidad * precio + envio
+    <span class="kw">return</span> <span class="st">f"{cantidad} x {producto}: ${total}"</span>
+
+<span class="fn">print</span>(pedido(<span class="st">"empanada"</span>, <span class="nu">6</span>, <span class="nu">2500</span>))                       <span class="cm"># posicionales; envio = 5000</span>
+<span class="fn">print</span>(pedido(<span class="st">"arepa"</span>, <span class="nu">3</span>, <span class="nu">4000</span>, envio=<span class="nu">0</span>))                 <span class="cm"># posicionales + uno por nombre</span>
+<span class="fn">print</span>(pedido(precio=<span class="nu">12000</span>, producto=<span class="st">"pizza"</span>, cantidad=<span class="nu">2</span>))  <span class="cm"># por nombre, en cualquier orden</span></pre>
+  <pre class="tout">6 x empanada: $20000
+3 x arepa: $12000
+2 x pizza: $29000</pre>
+  <div class="center"><button class="btn py" data-try="pedido">🐍 Probarlo en el laboratorio</button></div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Forma</th><th>Cómo se escribe</th><th>Regla</th></tr></thead>
+    <tbody>
+      <tr><td><b>Posicional</b></td><td class="mono">pedido("arepa", 3, 4000)</td><td>cada valor va al parámetro de la <b>misma posición</b>: el orden importa</td></tr>
+      <tr><td><b>Por nombre</b></td><td class="mono">pedido(cantidad=3, producto="arepa", precio=4000)</td><td>el orden no importa; el nombre debe existir (si no: <b>TypeError</b>)</td></tr>
+      <tr><td><b>Por defecto</b></td><td class="mono">def pedido(…, envio=5000):</td><td>si no lo envías, usa ese valor. Van <b>al final</b> de la definición (si no: <b>SyntaxError</b>)</td></tr>
+      <tr><td><b>Combinadas</b></td><td class="mono">pedido("arepa", 3, 4000, envio=0)</td><td>al llamar, primero los posicionales y después los nombrados</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Cualquier cantidad de argumentos: <code>*args</code></h3>
+  <span class="fname">args.py</span>
+  <pre><span class="kw">def</span> promedio(*notas):              <span class="cm"># notas agrupa TODOS los valores recibidos</span>
+    <span class="kw">if</span> <span class="fn">len</span>(notas) == <span class="nu">0</span>:
+        <span class="kw">return</span> <span class="nu">0</span>
+    suma = <span class="nu">0</span>
+    <span class="kw">for</span> n <span class="kw">in</span> notas:                <span class="cm"># se recorren con un for</span>
+        suma += n
+    <span class="kw">return</span> suma / <span class="fn">len</span>(notas)
+
+<span class="fn">print</span>(<span class="fn">round</span>(promedio(<span class="nu">4.5</span>, <span class="nu">3.0</span>, <span class="nu">5.0</span>), <span class="nu">2</span>))
+<span class="fn">print</span>(<span class="fn">round</span>(promedio(<span class="nu">2.8</span>, <span class="nu">3.6</span>), <span class="nu">2</span>))
+<span class="fn">print</span>(promedio())</pre>
+  <div class="center"><button class="btn py" data-try="args">🐍 Probarlo en el laboratorio</button></div>
+  <div class="tip">Así funciona <code>print()</code>: recibe cualquier cantidad de valores. Existe también <code>**kwargs</code> (cualquier cantidad de argumentos <b>por nombre</b>); lo usarás cuando veas diccionarios.</div>
+
+  <h3>🔌 Conecta los argumentos</h3>
+  <p><b>Enunciado:</b> para cada llamada, escribe qué valor recibe <b>cada parámetro</b> (los textos, sin comillas). Cada llamada bien conectada da 15 XP; todas, la insignia <b>Conector</b>.</p>
+  <div id="conecta"></div>
+</section>
+
+<!-- ===================== PASO A PASO ===================== -->
+<section class="tab" id="paso">
+  <h2>🧭 Paso a paso</h2>
+  <p>Avanza con <b>▶ Paso</b> y observa cómo el programa <b>salta</b> a la función, crea sus variables locales (📦), ejecuta el <code>return</code> y <b>regresa</b>. Las variables globales están marcadas con 🌍. Fíjate en que las locales <b>desaparecen</b> al terminar la función.</p>
+  <div class="note">🎯 <b>Misión:</b> recorre los tres programas hasta el final (15 XP cada uno) para la insignia <b>Rastreador</b>.</div>
+  <div class="sim" id="sim12"></div>
+</section>
+
+<!-- ===================== RETOS ===================== -->
+<section class="tab" id="retos">
+  <h2>🧩 Arma el programa</h2>
+  <p><b>Enunciado:</b> las líneas están desordenadas (con su sangría). Arma cada programa: primero se <b>define</b> la función y después se <b>usa</b>. Cada uno da 15 XP; los tres, la insignia <b>Ensamblador</b>.</p>
+  <div id="parsons"></div>
+
+  <h2>🕵️ Caza el error</h2>
+  <p><b>Enunciado:</b> ¿qué pasa con cada fragmento? Puede producir un error con mensaje, correr pero hacer algo distinto a lo que se quería (error lógico) o funcionar bien.</p>
+  <div class="scorebar"><span>Cazados: <b id="ceScore">0</b> / <b id="ceTotal">9</b></span><button class="btn ghost" id="ceReset">Reiniciar</button></div>
+  <div id="ceQuiz"></div>
+</section>
+
+<!-- ===================== LABORATORIO ===================== -->
+<section class="tab" id="lab">
+  <h2>🐍 Laboratorio: Python de verdad en tu navegador</h2>
+  <p>Escribe tu programa, pon los datos de entrada (uno por línea) y pulsa <b>▶ Ejecutar</b>. Elige un <b>reto</b> y pulsa <b>✅ Comprobar reto</b>: el laboratorio ejecuta tu programa con varios datos y, además, <b>llama directamente a tus funciones</b> para revisar lo que devuelven. Por eso los nombres de las funciones y de sus parámetros deben ser exactamente los del enunciado, y deben <b>devolver</b> el resultado con <code>return</code>. <small style="color:var(--muted)">La primera vez se descarga Python (≈ 12 MB); necesitas conexión a internet.</small></p>
+  <div class="lab">
+    <div class="labbar">
+      <select id="retoSel" aria-label="Reto"></select>
+      <span class="pystat" id="pyStatus">⚪ Python sin cargar</span>
+    </div>
+    <div class="retoinfo" id="retoInfo"></div>
+    <div class="labgrid">
+      <div>
+        <label for="code">📝 Tu programa (.py) · <span style="font-weight:400">Tab = 4 espacios · Ctrl+Enter = ejecutar</span></label>
+        <textarea id="code" class="code" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+        <label for="stdin">⌨️ Entradas: una por línea (cada <code>input()</code> toma la siguiente)</label>
+        <textarea id="stdin" class="stdin" spellcheck="false"></textarea>
+        <div class="btns">
+          <button class="btn py" id="runBtn">▶ Ejecutar</button>
+          <button class="btn" id="checkBtn">✅ Comprobar reto</button>
+          <button class="btn ghost" id="resetCode">↺ Plantilla</button>
+          <button class="btn ghost" id="solBtn">👀 Solución</button>
+        </div>
+      </div>
+      <div>
+        <label>🖥️ Terminal</label>
+        <pre class="term" id="term"><span class="sys">La salida de tu programa aparecerá aquí.</span></pre>
+        <div class="chk" id="checkRes"></div>
+      </div>
+    </div>
+  </div>
+  <div class="tip">🏅 Los retos suben de dificultad y de premio: <b>🟢 Nivel 1 = 20 XP</b> · <b>🟡 Nivel 2 = 30 XP</b> · <b>🟠 Nivel 3 = 40 XP</b> · <b>🔴 Nivel 4 ★ = 60 XP</b>. Si abres la solución antes de superarlo, da la <b>mitad</b>. Supera 6 retos para la insignia <b>Modular</b>, los 3 del nivel 4 para <b>Arquitecto</b> y los 12 para <b>Leyenda</b>.</div>
+</section>
+
+<!-- ===================== TALLER ===================== -->
+<section class="tab" id="taller">
+  <h2>🏆 Taller — 12 ejercicios con funciones</h2>
+  <p>Los ejercicios van de menor a mayor dificultad, en <b>4 niveles</b>, y combinan funciones con <b>cálculos</b>: IVA, descuentos, cuotas de crédito, combinaciones, nómina, billetes y fechas. En cada uno, antes de programar, decide: ¿qué funciones necesito?, ¿qué recibe cada una (parámetros) y qué devuelve (return)?, ¿qué hace el programa principal? Las plantillas ya traen los nombres de las funciones que el corrector va a llamar.</p>
+  <div class="card">
+    <h3 style="margin-top:0">🧮 Caja de herramientas</h3>
+    <div class="tablewrap"><table class="mini"><thead><tr><th>Quiero…</th><th>En Python</th></tr></thead><tbody>
+      <tr><td>definir una función</td><td class="mono">def nombre(parametro1, parametro2):</td></tr>
+      <tr><td>devolver un resultado</td><td class="mono">return valor</td></tr>
+      <tr><td>usar lo que devuelve</td><td class="mono">x = nombre(a, b) · print(nombre(a, b)) · if es_algo(x):</td></tr>
+      <tr><td>parámetro opcional</td><td class="mono">def f(precio, porcentaje=10):</td></tr>
+      <tr><td>llamar por nombre</td><td class="mono">f(porcentaje=50, precio=80000)</td></tr>
+      <tr><td>una función que usa otra</td><td class="mono">def neto(h, v):  b = bruto(h, v) · return b - deducciones(b)</td></tr>
+      <tr><td>salir apenas sepa la respuesta</td><td class="mono">return dentro de un if o de un for</td></tr>
+      <tr><td>potencia (también negativa)</td><td class="mono">(1 + i) ** (-n)</td></tr>
+      <tr><td>cociente y residuo</td><td class="mono">monto // 20000 · monto % 20000</td></tr>
+    </tbody></table></div>
+    <p style="margin-bottom:0">💡 Escribe y prueba <b>primero la función más pequeña</b>; cuando funcione, construye la siguiente encima de ella.</p>
+  </div>
+  <div id="ejercicios"></div>
+</section>
+
+</div>
+<div class="xppop" id="xppop"></div>
+<footer>Material interactivo · Lógica de Programación 1 · Funciones en Python (Python 3.14)</footer>
+
+<script>
+const CFG = {"key": "lp1-clase12-func-v1", "draft": "lp1-c12-draft-", "firstRunLabel": "¡Hola, def!"};
+const RETOS = [{"id": "iva", "lvl": 1, "xp": 20, "t": "1. Precios con IVA", "tag": "Nivel 1 · def + return + for", "d": "Crea la función <code>precio_con_iva(precio)<\/code> que <b>devuelva<\/b> (no que imprima) el precio con el IVA del 19 % incluido. Luego escribe el programa principal: pide cuántos productos hay (N) y el precio sin IVA de cada uno; usando la función, muestra <code>Producto k: X<\/code> para cada uno y al final <code>Total con IVA: X<\/code> (2 decimales).<br><b>Entrada:<\/b> un entero N y N reales · <b>Salida:<\/b> una línea por producto y el total<br><b>Ejemplo:<\/b> 2 productos: 1000 y 2500 → <code>Producto 1: 1190.00<\/code> · <code>Producto 2: 2975.00<\/code> · <code>Total con IVA: 4165.00<\/code>. Además, el corrector llama a tu función directamente: <code>precio_con_iva(1000)<\/code> debe devolver 1190.0.<br>💡 <b>Pista:<\/b> la función solo calcula y devuelve; los <code>input<\/code> y los <code>print<\/code> van en el programa principal. El total se puede acumular con lo que devuelve la función en cada vuelta.", "starter": "def precio_con_iva(precio):\n    # devuelve el precio con IVA del 19 %\n    pass\n\n# Programa principal\n", "sol": "def precio_con_iva(precio):\n    return precio * 1.19\n\n# Programa principal\nn = int(input(\"¿Cuántos productos? \"))\ntotal = 0\nfor k in range(1, n + 1):\n    precio = float(input(f\"Precio del producto {k}: \"))\n    con_iva = precio_con_iva(precio)\n    print(f\"Producto {k}: {con_iva:.2f}\")\n    total += con_iva\nprint(f\"Total con IVA: {total:.2f}\")", "tests": [{"in": ["2", "1000", "2500"], "must": ["producto 1\\b[^\\n\\d]*(?<![\\d.])(?:1189\\.99|1190(?:\\.0{1,2})?|1190\\.01)(?!\\d)", "producto 2\\b[^\\n\\d]*(?<![\\d.])(?:2974\\.99|2975(?:\\.0{1,2})?|2975\\.01)(?!\\d)", "total con iva[^\\n\\d]*(?<![\\d.])(?:4164\\.99|4165(?:\\.0{1,2})?|4165\\.01)(?!\\d)", "§1[^\\n\\d]*(?<![\\d.])(?:1189\\.99|1190(?:\\.0{1,2})?|1190\\.01)(?!\\d)", "§2[^\\n\\d]*(?<![\\d.])(?:0(?:\\.0{1,2})?|0\\.01)(?!\\d)"], "not": [], "show": "Producto 1: 1190.00 · Producto 2: 2975.00 · Total con IVA: 4165.00", "call": "print(\"§1\", f\"{float(precio_con_iva(1000)):.2f}\")\nprint(\"§2\", f\"{float(precio_con_iva(0)):.2f}\")", "callShow": "precio_con_iva(1000) → 1190.00 · precio_con_iva(0) → 0.00"}, {"in": ["3", "4990.5", "12000", "350"], "must": ["producto 1\\b[^\\n\\d]*(?<![\\d.])(?:5938\\.68|5938\\.69|5938\\.70?)(?!\\d)", "producto 2\\b[^\\n\\d]*(?<![\\d.])(?:14279\\.99|14280(?:\\.0{1,2})?|14280\\.01)(?!\\d)", "producto 3\\b[^\\n\\d]*(?<![\\d.])(?:416\\.49|416\\.50?|416\\.51)(?!\\d)", "total con iva[^\\n\\d]*(?<![\\d.])(?:20635\\.18|20635\\.19|20635\\.20?)(?!\\d)"], "not": [], "show": "Producto 1: 5938.69 · Producto 2: 14280.00 · Producto 3: 416.50 · Total con IVA: 20635.19"}, {"in": ["1", "80000"], "must": ["producto 1\\b[^\\n\\d]*(?<![\\d.])(?:95199\\.99|95200(?:\\.0{1,2})?|95200\\.01)(?!\\d)", "total con iva[^\\n\\d]*(?<![\\d.])(?:95199\\.99|95200(?:\\.0{1,2})?|95200\\.01)(?!\\d)", "§1[^\\n\\d]*(?<![\\d.])(?:95199\\.99|95200(?:\\.0{1,2})?|95200\\.01)(?!\\d)"], "not": [], "show": "Producto 1: 95200.00 · Total con IVA: 95200.00", "call": "print(\"§1\", f\"{float(precio_con_iva(80000)):.2f}\")", "callShow": "precio_con_iva(80000) → 95200.00"}]}, {"id": "promedio", "lvl": 1, "xp": 20, "t": "2. Promedio de tres notas", "tag": "Nivel 1 · parámetros + return", "d": "Crea <code>promedio(a, b, c)<\/code> que reciba tres notas y <b>devuelva<\/b> su promedio. En el programa principal pide las tres notas, usa la función y muestra <code>Promedio: X<\/code> (2 decimales) y <code>Aprobó<\/code> si el promedio es de 3.0 o más, o <code>Reprobó<\/code> si no.<br><b>Entrada:<\/b> tres reales · <b>Salida:<\/b> dos líneas<br><b>Ejemplo:<\/b> 4.0, 3.5 y 4.2 → <code>Promedio: 3.90<\/code> · <code>Aprobó<\/code>. El corrector también prueba <code>promedio(5, 5, 5)<\/code>, que debe devolver 5.0.<br>💡 <b>Pista:<\/b> los tres valores llegan a la función por sus parámetros, en el mismo orden en que los escribes al llamarla. Guarda lo que devuelve en una variable para poder mostrarlo y decidir con él.", "starter": "def promedio(a, b, c):\n    pass\n\n# Programa principal\n", "sol": "def promedio(a, b, c):\n    return (a + b + c) / 3\n\n# Programa principal\nn1 = float(input(\"Nota 1: \"))\nn2 = float(input(\"Nota 2: \"))\nn3 = float(input(\"Nota 3: \"))\np = promedio(n1, n2, n3)\nprint(f\"Promedio: {p:.2f}\")\nif p >= 3.0:\n    print(\"Aprobó\")\nelse:\n    print(\"Reprobó\")", "tests": [{"in": ["4.0", "3.5", "4.2"], "must": ["promedio[^\\n\\d]*(?<![\\d.])(?:3\\.89|3\\.90?|3\\.91)(?!\\d)", "aprob", "§1[^\\n\\d]*(?<![\\d.])(?:3\\.89|3\\.90?|3\\.91)(?!\\d)", "§2[^\\n\\d]*(?<![\\d.])(?:4\\.99|5(?:\\.0{1,2})?|5\\.01)(?!\\d)"], "not": ["reprob"], "show": "Promedio: 3.90 · Aprobó", "call": "print(\"§1\", f\"{float(promedio(4.0, 3.5, 4.2)):.2f}\")\nprint(\"§2\", f\"{float(promedio(5, 5, 5)):.2f}\")", "callShow": "promedio(4.0, 3.5, 4.2) → 3.90 · promedio(5, 5, 5) → 5.00"}, {"in": ["2.0", "3.0", "2.5"], "must": ["promedio[^\\n\\d]*(?<![\\d.])(?:2\\.49|2\\.50?|2\\.51)(?!\\d)", "reprob"], "not": ["aprob"], "show": "Promedio: 2.50 · Reprobó"}, {"in": ["3.0", "3.0", "3.0"], "must": ["promedio[^\\n\\d]*(?<![\\d.])(?:2\\.99|3(?:\\.0{1,2})?|3\\.01)(?!\\d)", "aprob", "§1[^\\n\\d]*(?<![\\d.])(?:2\\.49|2\\.50?|2\\.51)(?!\\d)"], "not": ["reprob"], "show": "Promedio: 3.00 · Aprobó", "call": "print(\"§1\", f\"{float(promedio(0, 3, 4.5)):.2f}\")", "callShow": "promedio(0, 3, 4.5) → 2.50"}, {"in": ["1.5", "4.8", "2.7"], "must": ["promedio[^\\n\\d]*(?<![\\d.])(?:2\\.99|3(?:\\.0{1,2})?|3\\.01)(?!\\d)", "aprob"], "not": ["reprob"], "show": "Promedio: 3.00 · Aprobó"}]}, {"id": "par", "lvl": 1, "xp": 20, "t": "3. ¿Par o impar?", "tag": "Nivel 1 · return booleano", "d": "Crea <code>es_par(n)<\/code> que <b>devuelva <code>True<\/code><\/b> si n es par y <b><code>False<\/code><\/b> si no. La función <b>no imprime nada<\/b>. En el programa principal pide un entero y usa la función dentro de un <code>if<\/code> para mostrar <code>N es par<\/code> o <code>N es impar<\/code>.<br><b>Entrada:<\/b> un entero · <b>Salida:<\/b> un mensaje<br><b>Ejemplo:<\/b> 7 → <code>7 es impar<\/code>; 12 → <code>12 es par<\/code>. El corrector comprueba que <code>es_par(4)<\/code> devuelva el booleano <code>True<\/code> (no el texto \"True\").<br>💡 <b>Pista:<\/b> una comparación ya es un valor True o False: puedes devolverla directamente. Una función que devuelve un booleano se puede escribir tal cual como condición de un if.", "starter": "def es_par(n):\n    pass\n\n# Programa principal\n", "sol": "def es_par(n):\n    return n % 2 == 0\n\n# Programa principal\nn = int(input(\"Número: \"))\nif es_par(n):\n    print(f\"{n} es par\")\nelse:\n    print(f\"{n} es impar\")", "tests": [{"in": ["7"], "must": ["7 es impar", "§1 True bool", "§2 False bool"], "not": ["7 es par\\b"], "show": "7 es impar", "call": "print(\"§1\", es_par(4), type(es_par(4)).__name__)\nprint(\"§2\", es_par(9), type(es_par(9)).__name__)", "callShow": "es_par(4) → True · es_par(9) → False"}, {"in": ["12"], "must": ["12 es par"], "not": ["12 es impar"], "show": "12 es par"}, {"in": ["0"], "must": ["0 es par", "§1 True bool"], "not": ["0 es impar"], "show": "0 es par", "call": "print(\"§1\", es_par(-6), type(es_par(-6)).__name__)", "callShow": "es_par(-6) → True"}, {"in": ["-3"], "must": ["-3 es impar"], "not": ["-3 es par\\b"], "show": "-3 es impar"}]}, {"id": "descuento", "lvl": 2, "xp": 30, "t": "4. Descuento con valor por defecto", "tag": "Nivel 2 · parámetro por defecto + argumentos por nombre", "d": "Crea <code>descuento(precio, porcentaje=10)<\/code> que devuelva el precio después de aplicar el descuento. Si al llamarla no se da el porcentaje, debe usar <b>10 %<\/b>. En el programa principal pide el precio y el porcentaje y muestra <code>Precio final: X<\/code> (2 decimales).<br><b>Entrada:<\/b> dos reales · <b>Salida:<\/b> una línea<br><b>Ejemplo:<\/b> 80000 y 25 → <code>Precio final: 60000.00<\/code>. El corrector llama <code>descuento(50000)<\/code> (debe usar el 10 %: 45000.0) y <code>descuento(porcentaje=50, precio=80000)<\/code> (40000.0).<br>💡 <b>Pista:<\/b> el valor por defecto se escribe en la lista de parámetros de la definición; quien llama puede omitir ese argumento o darlo por su nombre en cualquier orden.", "starter": "def descuento(precio, porcentaje):\n    pass\n\n# Programa principal\n", "sol": "def descuento(precio, porcentaje=10):\n    return precio * (1 - porcentaje / 100)\n\n# Programa principal\nprecio = float(input(\"Precio: \"))\nporcentaje = float(input(\"Descuento (%): \"))\nprint(f\"Precio final: {descuento(precio, porcentaje):.2f}\")", "tests": [{"in": ["80000", "25"], "must": ["precio final[^\\n\\d]*(?<![\\d.])(?:59999\\.99|60000(?:\\.0{1,2})?|60000\\.01)(?!\\d)", "§1[^\\n\\d]*(?<![\\d.])(?:44999\\.99|45000(?:\\.0{1,2})?|45000\\.01)(?!\\d)", "§2[^\\n\\d]*(?<![\\d.])(?:39999\\.99|40000(?:\\.0{1,2})?|40000\\.01)(?!\\d)"], "not": [], "show": "Precio final: 60000.00", "call": "print(\"§1\", f\"{float(descuento(50000)):.2f}\")\nprint(\"§2\", f\"{float(descuento(porcentaje=50, precio=80000)):.2f}\")", "callShow": "descuento(50000) → 45000.00 · descuento(porcentaje=50, precio=80000) → 40000.00"}, {"in": ["129900", "15"], "must": ["precio final[^\\n\\d]*(?<![\\d.])(?:110414\\.99|110415(?:\\.0{1,2})?|110415\\.01)(?!\\d)"], "not": [], "show": "Precio final: 110415.00"}, {"in": ["35000", "0"], "must": ["precio final[^\\n\\d]*(?<![\\d.])(?:34999\\.99|35000(?:\\.0{1,2})?|35000\\.01)(?!\\d)", "§1[^\\n\\d]*(?<![\\d.])(?:0(?:\\.0{1,2})?|0\\.01)(?!\\d)"], "not": [], "show": "Precio final: 35000.00", "call": "print(\"§1\", f\"{float(descuento(1000, 100)):.2f}\")", "callShow": "descuento(1000, 100) → 0.00"}]}, {"id": "mayor", "lvl": 2, "xp": 30, "t": "5. El mayor de tres", "tag": "Nivel 2 · return + condicionales", "d": "Crea <code>mayor_de_tres(a, b, c)<\/code> que devuelva el mayor de los tres números <b>sin usar <code>max()<\/code><\/b>. Debe funcionar también cuando hay valores repetidos o negativos. En el programa principal pide tres enteros y muestra <code>El mayor es X<\/code>.<br><b>Entrada:<\/b> tres enteros · <b>Salida:<\/b> una línea<br><b>Ejemplo:<\/b> 4, 9 y 2 → <code>El mayor es 9<\/code>. El corrector prueba, entre otras, <code>mayor_de_tres(7, 7, 3)<\/code> → 7 y <code>mayor_de_tres(-5, -2, -9)<\/code> → −2.<br>💡 <b>Pista:<\/b> puedes suponer que el primero es el mayor y luego compararlo con los otros dos, o comparar con <code>and<\/code>. Prueba casos con empates: ahí suelen fallar las comparaciones estrictas.", "starter": "def mayor_de_tres(a, b, c):\n    pass\n\n# Programa principal\n", "sol": "def mayor_de_tres(a, b, c):\n    mayor = a\n    if b > mayor:\n        mayor = b\n    if c > mayor:\n        mayor = c\n    return mayor\n\n# Programa principal\na = int(input(\"a: \"))\nb = int(input(\"b: \"))\nc = int(input(\"c: \"))\nprint(f\"El mayor es {mayor_de_tres(a, b, c)}\")", "tests": [{"in": ["4", "9", "2"], "must": ["mayor\\D*(?<![\\d.])9(?:\\.0{1,2})?(?!\\d)", "§1 7(?![\\d.])", "§2 -2(?![\\d.])", "§3 8(?![\\d.])"], "not": [], "show": "El mayor es 9", "call": "print(\"§1\", mayor_de_tres(7, 7, 3))\nprint(\"§2\", mayor_de_tres(-5, -2, -9))\nprint(\"§3\", mayor_de_tres(1, 2, 8))", "callShow": "mayor_de_tres(7, 7, 3) → 7 · mayor_de_tres(-5, -2, -9) → -2 · mayor_de_tres(1, 2, 8) → 8"}, {"in": ["10", "3", "10"], "must": ["mayor\\D*(?<![\\d.])10(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "El mayor es 10"}, {"in": ["5", "5", "5"], "must": ["mayor\\D*(?<![\\d.])5(?:\\.0{1,2})?(?!\\d)", "§1 0(?![\\d.])"], "not": [], "show": "El mayor es 5", "call": "print(\"§1\", mayor_de_tres(0, -1, 0))", "callShow": "mayor_de_tres(0, -1, 0) → 0"}, {"in": ["-8", "-3", "-12"], "must": ["mayor\\D*(?<![\\d.])-3(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "El mayor es -3"}]}, {"id": "cuota", "lvl": 2, "xp": 30, "t": "6. Cuota fija de un crédito", "tag": "Nivel 2 · return con fórmula financiera", "d": "Un banco presta con <b>cuota fija<\/b>. Si i es la tasa mensual en decimal (2 % → 0.02), la cuota es <code>monto × i ÷ (1 − (1 + i)<sup>−meses<\/sup>)<\/code>; si la tasa es 0, la cuota es simplemente <code>monto ÷ meses<\/code>. Crea <code>cuota_mensual(monto, tasa, meses)<\/code> (tasa en %) que devuelva la cuota. En el programa principal pide los tres datos y muestra <code>Cuota: X<\/code>, <code>Total pagado: X<\/code> y <code>Intereses: X<\/code> (2 decimales).<br><b>Entrada:<\/b> un real, un real y un entero · <b>Salida:<\/b> tres líneas<br><b>Ejemplo:<\/b> 1000000, 2 % y 12 meses → <code>Cuota: 94559.60<\/code> · <code>Total pagado: 1134715.16<\/code> · <code>Intereses: 134715.16<\/code>.<br>💡 <b>Pista:<\/b> en Python la potencia es <code>**<\/code> y un exponente negativo es válido. Convierte la tasa de porcentaje a decimal dentro de la función, y no olvides el caso de la tasa 0 (¿qué pasaría con la fórmula?).", "starter": "def cuota_mensual(monto, tasa, meses):\n    pass\n\n# Programa principal\n", "sol": "def cuota_mensual(monto, tasa, meses):\n    i = tasa / 100\n    if i == 0:\n        return monto / meses\n    return monto * i / (1 - (1 + i) ** (-meses))\n\n# Programa principal\nmonto = float(input(\"Monto: \"))\ntasa = float(input(\"Tasa mensual (%): \"))\nmeses = int(input(\"Meses: \"))\nc = cuota_mensual(monto, tasa, meses)\ntotal = c * meses\nprint(f\"Cuota: {c:.2f}\")\nprint(f\"Total pagado: {total:.2f}\")\nprint(f\"Intereses: {total - monto:.2f}\")", "tests": [{"in": ["1000000", "2", "12"], "must": ["cuota[^\\n\\d]*(?<![\\d.])(?:94559\\.59|94559\\.60?|94559\\.61)(?!\\d)", "total pagado[^\\n\\d]*(?<![\\d.])(?:1134715\\.15|1134715\\.16|1134715\\.17)(?!\\d)", "intereses[^\\n\\d]*(?<![\\d.])(?:134715\\.15|134715\\.16|134715\\.17)(?!\\d)", "§1[^\\n\\d]*(?<![\\d.])(?:99999\\.99|100000(?:\\.0{1,2})?|100000\\.01)(?!\\d)"], "not": [], "show": "Cuota: 94559.60 · Total pagado: 1134715.16 · Intereses: 134715.16", "call": "print(\"§1\", f\"{float(cuota_mensual(1200000, 0, 12)):.2f}\")", "callShow": "cuota_mensual(1200000, 0, 12) → 100000.00"}, {"in": ["5000000", "1.5", "36"], "must": ["cuota[^\\n\\d]*(?<![\\d.])(?:180761\\.97|180761\\.98|180761\\.99)(?!\\d)", "total pagado[^\\n\\d]*(?<![\\d.])(?:6507431\\.19|6507431\\.20?|6507431\\.21)(?!\\d)", "intereses[^\\n\\d]*(?<![\\d.])(?:1507431\\.19|1507431\\.20?|1507431\\.21)(?!\\d)"], "not": [], "show": "Cuota: 180761.98 · Total pagado: 6507431.20 · Intereses: 1507431.20"}, {"in": ["800000", "3", "6"], "must": ["cuota[^\\n\\d]*(?<![\\d.])(?:147677\\.99|147678(?:\\.0{1,2})?|147678\\.01)(?!\\d)", "total pagado[^\\n\\d]*(?<![\\d.])(?:886067\\.99|886068(?:\\.0{1,2})?|886068\\.01)(?!\\d)", "intereses[^\\n\\d]*(?<![\\d.])(?:86067\\.99|86068(?:\\.0{1,2})?|86068\\.01)(?!\\d)", "§1[^\\n\\d]*(?<![\\d.])(?:94559\\.59|94559\\.60?|94559\\.61)(?!\\d)"], "not": [], "show": "Cuota: 147678.00 · Total pagado: 886068.00 · Intereses: 86068.00", "call": "print(\"§1\", f\"{float(cuota_mensual(1000000, 2, 12)):.2f}\")", "callShow": "cuota_mensual(1000000, 2, 12) → 94559.60"}, {"in": ["2400000", "0", "24"], "must": ["cuota[^\\n\\d]*(?<![\\d.])(?:99999\\.99|100000(?:\\.0{1,2})?|100000\\.01)(?!\\d)", "total pagado[^\\n\\d]*(?<![\\d.])(?:2399999\\.99|2400000(?:\\.0{1,2})?|2400000\\.01)(?!\\d)", "intereses[^\\n\\d]*(?<![\\d.])(?:0(?:\\.0{1,2})?|0\\.01)(?!\\d)"], "not": [], "show": "Cuota: 100000.00 · Total pagado: 2400000.00 · Intereses: 0.00"}]}, {"id": "combinaciones", "lvl": 3, "xp": 40, "t": "7. ¿De cuántas formas?", "tag": "Nivel 3 · funciones que usan funciones + for + while", "d": "En una heladería hay n sabores y quieres un helado de k sabores distintos. El número de formas de elegirlos es <code>n! ÷ (k! × (n − k)!)<\/code>. Crea <code>factorial(n)<\/code> (con un ciclo y un acumulador, sin <code>math<\/code>) y <code>combinaciones(n, k)<\/code>, que <b>use<\/b> <code>factorial<\/code>. En el programa principal pide n y luego k; mientras k no esté entre 0 y n, muestra <code>k debe estar entre 0 y n<\/code> y vuelve a pedirlo. Muestra <code>Formas: X<\/code> (entero).<br><b>Entrada:<\/b> dos o más enteros · <b>Salida:<\/b> los avisos y el resultado<br><b>Ejemplo:<\/b> n = 5, k = 2 → <code>Formas: 10<\/code>; n = 4, k = 7, luego 2 → <code>k debe estar entre 0 y n<\/code> · <code>Formas: 6<\/code>. El corrector prueba <code>factorial(0)<\/code> → 1 y <code>factorial(6)<\/code> → 720.<br>💡 <b>Pista:<\/b> 0! vale 1: piensa con qué valor empieza el acumulador y qué rango recorre el ciclo para que ese caso salga solo. Para que el resultado sea entero, la división entre factoriales puede hacerse con <code>//<\/code>.", "starter": "def factorial(n):\n    pass\n\ndef combinaciones(n, k):\n    pass\n\n# Programa principal\n", "sol": "def factorial(n):\n    resultado = 1\n    for i in range(2, n + 1):\n        resultado *= i\n    return resultado\n\ndef combinaciones(n, k):\n    return factorial(n) // (factorial(k) * factorial(n - k))\n\n# Programa principal\nn = int(input(\"Sabores disponibles (n): \"))\nk = int(input(\"Sabores por helado (k): \"))\nwhile k < 0 or k > n:\n    print(\"k debe estar entre 0 y n\")\n    k = int(input(\"Sabores por helado (k): \"))\nprint(f\"Formas: {combinaciones(n, k)}\")", "tests": [{"in": ["5", "2"], "must": ["formas[^\\n\\d]*(?<![\\d.])10(?:\\.0{1,2})?(?!\\d)", "§1 1(?![\\d.])", "§2 720(?![\\d.])", "§3 120(?![\\d.])"], "not": ["(?:[\\s\\S]*?entre 0 y){1}"], "show": "Formas: 10", "call": "print(\"§1\", factorial(0))\nprint(\"§2\", factorial(6))\nprint(\"§3\", combinaciones(10, 3))", "callShow": "factorial(0) → 1 · factorial(6) → 720 · combinaciones(10, 3) → 120"}, {"in": ["4", "7", "2"], "must": ["(?:[\\s\\S]*?entre 0 y){1}", "formas[^\\n\\d]*(?<![\\d.])6(?:\\.0{1,2})?(?!\\d)"], "not": ["(?:[\\s\\S]*?entre 0 y){2}"], "show": "1 aviso(s) · Formas: 6"}, {"in": ["12", "-1", "13", "0"], "must": ["(?:[\\s\\S]*?entre 0 y){2}", "formas[^\\n\\d]*(?<![\\d.])1(?:\\.0{1,2})?(?!\\d)", "§1 1(?![\\d.])"], "not": ["(?:[\\s\\S]*?entre 0 y){3}"], "show": "2 aviso(s) · Formas: 1", "call": "print(\"§1\", combinaciones(6, 6))", "callShow": "combinaciones(6, 6) → 1"}, {"in": ["20", "10"], "must": ["formas[^\\n\\d]*(?<![\\d.])184756(?:\\.0{1,2})?(?!\\d)"], "not": ["(?:[\\s\\S]*?entre 0 y){1}"], "show": "Formas: 184756"}]}, {"id": "palindromo", "lvl": 3, "xp": 40, "t": "8. Detector de palíndromos", "tag": "Nivel 3 · funciones + recorrer texto", "d": "Un palíndromo se lee igual al derecho y al revés, sin contar espacios ni mayúsculas (\"Anita lava la tina\"). Crea <code>limpiar(frase)<\/code> que devuelva la frase en minúsculas y <b>sin espacios<\/b>, y <code>es_palindromo(frase)<\/code> que use <code>limpiar<\/code> y devuelva <code>True<\/code> o <code>False<\/code>. En el programa principal pide una frase y muestra <code>Es palíndromo<\/code> o <code>No es palíndromo<\/code>.<br><b>Entrada:<\/b> un texto · <b>Salida:<\/b> un mensaje<br><b>Ejemplo:<\/b> \"Anita lava la tina\" → <code>Es palíndromo<\/code>; \"Lógica\" → <code>No es palíndromo<\/code>. El corrector prueba <code>limpiar(\"Ana Mar\")<\/code> → <code>\"anamar\"<\/code>.<br>💡 <b>Pista:<\/b> para limpiar, recorre la frase carácter por carácter y construye un texto nuevo solo con los que no son espacio. Para comparar, puedes recorrer desde los dos extremos hacia el centro, o construir la versión invertida.", "starter": "def limpiar(frase):\n    pass\n\ndef es_palindromo(frase):\n    pass\n\n# Programa principal\n", "sol": "def limpiar(frase):\n    resultado = \"\"\n    for c in frase.lower():\n        if c != \" \":\n            resultado += c\n    return resultado\n\ndef es_palindromo(frase):\n    texto = limpiar(frase)\n    invertido = \"\"\n    for c in texto:\n        invertido = c + invertido\n    return texto == invertido\n\n# Programa principal\nfrase = input(\"Frase: \")\nif es_palindromo(frase):\n    print(\"Es palíndromo\")\nelse:\n    print(\"No es palíndromo\")", "tests": [{"in": ["Anita lava la tina"], "must": ["(?<!no )es pal[ií]ndromo", "§1\\ 'anamar'", "§2 True bool"], "not": ["no es pal"], "show": "Es palíndromo", "call": "print(\"§1\", repr(limpiar(\"Ana Mar\")))\nprint(\"§2\", es_palindromo(\"Somos o no somos\"), type(es_palindromo(\"Somos o no somos\")).__name__)", "callShow": "limpiar(\"Ana Mar\") → 'anamar' · es_palindromo(\"Somos o no somos\") → True"}, {"in": ["Lógica"], "must": ["no es pal[ií]ndromo", "§1 False bool"], "not": [], "show": "No es palíndromo", "call": "print(\"§1\", es_palindromo(\"Python\"), type(es_palindromo(\"Python\")).__name__)", "callShow": "es_palindromo(\"Python\") → False"}, {"in": ["Oso"], "must": ["(?<!no )es pal[ií]ndromo"], "not": ["no es pal"], "show": "Es palíndromo"}, {"in": ["La ruta nos aporto otro paso natural"], "must": ["(?<!no )es pal[ií]ndromo"], "not": ["no es pal"], "show": "Es palíndromo"}]}, {"id": "conversor", "lvl": 3, "xp": 40, "t": "9. Conversor de unidades", "tag": "Nivel 3 · funciones + menú con while", "d": "Crea tres funciones que devuelvan la conversión: <code>c_a_f(c)<\/code> (°C a °F: multiplica por 9/5 y suma 32), <code>km_a_millas(km)<\/code> (1 km = 0.621371 millas) y <code>kg_a_libras(kg)<\/code> (1 kg = 2.20462 libras). El programa muestra un menú que se repite hasta elegir salir: <b>1<\/b> °C→°F, <b>2<\/b> km→millas, <b>3<\/b> kg→libras, <b>4<\/b> Salir. Cada conversión pide el valor y muestra <code>Resultado: X<\/code> (2 decimales); otra opción muestra <code>Opción no válida<\/code>. Al salir muestra <code>Conversiones realizadas: N<\/code>.<br><b>Entrada:<\/b> opciones del menú y sus valores · <b>Salida:<\/b> un resultado por conversión y el conteo final<br><b>Ejemplo:<\/b> 1 → 100, 3 → 50, 4 → <code>Resultado: 212.00<\/code> · <code>Resultado: 110.23<\/code> · <code>Conversiones realizadas: 2<\/code>.<br>💡 <b>Pista:<\/b> cada función hace un solo cálculo y lo devuelve; el menú (ciclo, lectura de la opción, mensajes y contador) va en el programa principal. ¿Cómo se escribe un ciclo que solo termina cuando el usuario lo decide?", "starter": "def c_a_f(c):\n    pass\n\ndef km_a_millas(km):\n    pass\n\ndef kg_a_libras(kg):\n    pass\n\n# Programa principal\n", "sol": "def c_a_f(c):\n    return c * 9 / 5 + 32\n\ndef km_a_millas(km):\n    return km * 0.621371\n\ndef kg_a_libras(kg):\n    return kg * 2.20462\n\n# Programa principal\nconversiones = 0\nwhile True:\n    print(\"1. °C→°F  2. km→millas  3. kg→libras  4. Salir\")\n    opcion = input(\"Opción: \")\n    if opcion == \"4\":\n        break\n    if opcion == \"1\":\n        r = c_a_f(float(input(\"Grados °C: \")))\n    elif opcion == \"2\":\n        r = km_a_millas(float(input(\"Kilómetros: \")))\n    elif opcion == \"3\":\n        r = kg_a_libras(float(input(\"Kilogramos: \")))\n    else:\n        print(\"Opción no válida\")\n        continue\n    print(f\"Resultado: {r:.2f}\")\n    conversiones += 1\nprint(f\"Conversiones realizadas: {conversiones}\")", "tests": [{"in": ["1", "100", "3", "50", "4"], "must": ["(?:[\\s\\S]*?resultado[^\\n\\d]*(?<![\\d.])(?:211\\.99|212(?:\\.0{1,2})?|212\\.01)(?!\\d)){1}", "(?:[\\s\\S]*?resultado[^\\n\\d]*(?<![\\d.])(?:110\\.22|110\\.23|110\\.24)(?!\\d)){1}", "conversiones realizadas[^\\n\\d]*(?<![\\d.])2(?:\\.0{1,2})?(?!\\d)", "§1[^\\n\\d]*(?<![\\d.])(?:)(?!\\d)", "§2[^\\n\\d]*(?<![\\d.])(?:6\\.20?|6\\.21|6\\.22)(?!\\d)"], "not": ["(?:[\\s\\S]*?no v[aá]lida){1}"], "show": "Resultado: 212.00 · Resultado: 110.23 · Conversiones realizadas: 2", "call": "print(\"§1\", f\"{float(c_a_f(-40)):.2f}\")\nprint(\"§2\", f\"{float(km_a_millas(10)):.2f}\")", "callShow": "c_a_f(-40) → -40.00 · km_a_millas(10) → 6.21"}, {"in": ["4"], "must": ["conversiones realizadas[^\\n\\d]*(?<![\\d.])0(?:\\.0{1,2})?(?!\\d)"], "not": ["(?:[\\s\\S]*?no v[aá]lida){1}"], "show": "Conversiones realizadas: 0"}, {"in": ["7", "2", "42.195", "1", "36.5", "x", "4"], "must": ["(?:[\\s\\S]*?resultado[^\\n\\d]*(?<![\\d.])(?:26\\.21|26\\.22|26\\.23)(?!\\d)){1}", "(?:[\\s\\S]*?resultado[^\\n\\d]*(?<![\\d.])(?:97\\.69|97\\.70?|97\\.71)(?!\\d)){1}", "(?:[\\s\\S]*?no v[aá]lida){2}", "conversiones realizadas[^\\n\\d]*(?<![\\d.])2(?:\\.0{1,2})?(?!\\d)", "§1[^\\n\\d]*(?<![\\d.])(?:154\\.31|154\\.32|154\\.33)(?!\\d)"], "not": ["(?:[\\s\\S]*?no v[aá]lida){3}"], "show": "Opción no válida · Resultado: 26.22 · Resultado: 97.70 · Opción no válida · Conversiones realizadas: 2", "call": "print(\"§1\", f\"{float(kg_a_libras(70)):.2f}\")", "callShow": "kg_a_libras(70) → 154.32"}]}, {"id": "nomina", "lvl": 4, "xp": 60, "t": "★ 10. Nómina modular", "tag": "Nivel 4 · varias funciones + ciclo", "d": "Divide la liquidación de una nómina en funciones: <code>salario_bruto(horas, valor_hora)<\/code> paga normal las primeras <b>48<\/b> horas y cada hora adicional con un <b>recargo del 25 %<\/b>; <code>deducciones(bruto)<\/code> devuelve el <b>8 %<\/b> (salud y pensión); <code>neto(horas, valor_hora)<\/code> usa las dos anteriores. El programa pide el valor de la hora (real), la cantidad de empleados y, para cada uno, su nombre y sus horas (entero); muestra <code>Nombre: neto X<\/code> y al final <code>Total nómina: X<\/code> (2 decimales).<br><b>Entrada:<\/b> un real, un entero y, por empleado, un texto y un entero · <b>Salida:<\/b> una línea por empleado y el total<br><b>Ejemplo:<\/b> valor hora 10000; Ana 40 h, Luis 50 h → <code>Ana: neto 368000.00<\/code> · <code>Luis: neto 464600.00<\/code> · <code>Total nómina: 832600.00<\/code>. El corrector prueba <code>salario_bruto(50, 10000)<\/code> → 505000.0.<br>💡 <b>Pista:<\/b> cada función hace una sola cosa y las más grandes se construyen llamando a las pequeñas. Si cambiara el porcentaje de deducción, ¿en cuántos lugares tendrías que corregir tu programa?", "starter": "def salario_bruto(horas, valor_hora):\n    pass\n\ndef deducciones(bruto):\n    pass\n\ndef neto(horas, valor_hora):\n    pass\n\n# Programa principal\n", "sol": "def salario_bruto(horas, valor_hora):\n    if horas <= 48:\n        return horas * valor_hora\n    extra = horas - 48\n    return 48 * valor_hora + extra * valor_hora * 1.25\n\ndef deducciones(bruto):\n    return bruto * 0.08\n\ndef neto(horas, valor_hora):\n    b = salario_bruto(horas, valor_hora)\n    return b - deducciones(b)\n\n# Programa principal\nvalor_hora = float(input(\"Valor de la hora: \"))\nn = int(input(\"Empleados: \"))\ntotal = 0\nfor _ in range(n):\n    nombre = input(\"Nombre: \")\n    horas = int(input(\"Horas trabajadas: \"))\n    pago = neto(horas, valor_hora)\n    print(f\"{nombre}: neto {pago:.2f}\")\n    total += pago\nprint(f\"Total nómina: {total:.2f}\")", "tests": [{"in": ["10000", "2", "Ana", "40", "Luis", "50"], "must": ["Ana[^\\n]*neto[^\\n\\d]*(?<![\\d.])(?:367999\\.99|368000(?:\\.0{1,2})?|368000\\.01)(?!\\d)", "Luis[^\\n]*neto[^\\n\\d]*(?<![\\d.])(?:464599\\.99|464600(?:\\.0{1,2})?|464600\\.01)(?!\\d)", "total n[oó]mina[^\\n\\d]*(?<![\\d.])(?:832599\\.99|832600(?:\\.0{1,2})?|832600\\.01)(?!\\d)", "§1[^\\n\\d]*(?<![\\d.])(?:504999\\.99|505000(?:\\.0{1,2})?|505000\\.01)(?!\\d)", "§2[^\\n\\d]*(?<![\\d.])(?:40399\\.99|40400(?:\\.0{1,2})?|40400\\.01)(?!\\d)", "§3[^\\n\\d]*(?<![\\d.])(?:441599\\.99|441600(?:\\.0{1,2})?|441600\\.01)(?!\\d)"], "not": [], "show": "Ana: neto 368000.00 · Luis: neto 464600.00 · Total nómina: 832600.00", "call": "print(\"§1\", f\"{float(salario_bruto(50, 10000)):.2f}\")\nprint(\"§2\", f\"{float(deducciones(505000)):.2f}\")\nprint(\"§3\", f\"{float(neto(48, 10000)):.2f}\")", "callShow": "salario_bruto(50, 10000) → 505000.00 · deducciones(505000) → 40400.00 · neto(48, 10000) → 441600.00"}, {"in": ["8500.5", "3", "Sara", "60", "Pedro", "48", "Lina", "12"], "must": ["Sara[^\\n]*neto[^\\n\\d]*(?<![\\d.])(?:492688\\.97|492688\\.98|492688\\.99)(?!\\d)", "Pedro[^\\n]*neto[^\\n\\d]*(?<![\\d.])(?:375382\\.07|375382\\.08|375382\\.09)(?!\\d)", "Lina[^\\n]*neto[^\\n\\d]*(?<![\\d.])(?:93845\\.51|93845\\.52|93845\\.53)(?!\\d)", "total n[oó]mina[^\\n\\d]*(?<![\\d.])(?:961916\\.57|961916\\.58|961916\\.59)(?!\\d)"], "not": [], "show": "Sara: neto 492688.98 · Pedro: neto 375382.08 · Lina: neto 93845.52 · Total nómina: 961916.58"}, {"in": ["15000", "1", "Eva", "49"], "must": ["Eva[^\\n]*neto[^\\n\\d]*(?<![\\d.])(?:679649\\.99|679650(?:\\.0{1,2})?|679650\\.01)(?!\\d)", "total n[oó]mina[^\\n\\d]*(?<![\\d.])(?:679649\\.99|679650(?:\\.0{1,2})?|679650\\.01)(?!\\d)", "§1[^\\n\\d]*(?<![\\d.])(?:479999\\.99|480000(?:\\.0{1,2})?|480000\\.01)(?!\\d)"], "not": [], "show": "Eva: neto 679650.00 · Total nómina: 679650.00", "call": "print(\"§1\", f\"{float(salario_bruto(40, 12000)):.2f}\")", "callShow": "salario_bruto(40, 12000) → 480000.00"}]}, {"id": "billetes", "lvl": 4, "xp": 60, "t": "★ 11. Cajero que entrega billetes", "tag": "Nivel 4 · funciones + // y % + validación", "d": "Un cajero entrega la <b>menor cantidad de billetes<\/b> posible con las denominaciones 100000, 50000, 20000, 10000, 5000 y 2000 (en ese orden); lo que no alcanza para un billete de 2000 se entrega en monedas. Crea <code>cantidad_billetes(monto, denominacion)<\/code>, que devuelva cuántos billetes de esa denominación caben en el monto, y <code>desglosar(monto)<\/code>, que muestre una línea <code>C x D<\/code> por cada denominación usada (solo si C &gt; 0) y <b>devuelva<\/b> el total de billetes. El programa pide el monto y, mientras no sea positivo y múltiplo de 1000, muestra <code>Monto inválido<\/code> y lo vuelve a pedir; al final muestra <code>Total de billetes: N<\/code> y <code>Resto en monedas: R<\/code>.<br><b>Entrada:<\/b> uno o más enteros · <b>Salida:<\/b> el desglose, el total y el resto<br><b>Ejemplo:<\/b> 370000 → <code>3 x 100000<\/code> · <code>1 x 50000<\/code> · <code>1 x 20000<\/code> · <code>Total de billetes: 5<\/code> · <code>Resto en monedas: 0<\/code>.<br>💡 <b>Pista:<\/b> con la división entera sabes cuántos billetes caben y con el residuo, cuánto falta por entregar. El resto en monedas es lo que queda después de la última denominación (el programa principal puede calcularlo aplicando el residuo con cada denominación, en orden).", "starter": "def cantidad_billetes(monto, denominacion):\n    pass\n\ndef desglosar(monto):\n    pass\n\n# Programa principal\n", "sol": "DENOMINACIONES = [100000, 50000, 20000, 10000, 5000, 2000]\n\ndef cantidad_billetes(monto, denominacion):\n    return monto // denominacion\n\ndef desglosar(monto):\n    total = 0\n    for d in DENOMINACIONES:\n        c = cantidad_billetes(monto, d)\n        if c > 0:\n            print(f\"{c} x {d}\")\n            total += c\n            monto = monto % d\n    return total\n\n# Programa principal\nmonto = int(input(\"Monto a retirar: \"))\nwhile monto <= 0 or monto % 1000 != 0:\n    print(\"Monto inválido\")\n    monto = int(input(\"Monto a retirar: \"))\nbilletes = desglosar(monto)\nprint(f\"Total de billetes: {billetes}\")\nresto = monto\nfor d in DENOMINACIONES:\n    resto = resto % d\nprint(f\"Resto en monedas: {resto}\")", "tests": [{"in": ["370000"], "must": ["(?:^|\\n)\\s*3 x 100000\\b", "(?:^|\\n)\\s*1 x 50000\\b", "(?:^|\\n)\\s*1 x 20000\\b", "total de billetes[^\\n\\d]*(?<![\\d.])5(?:\\.0{1,2})?(?!\\d)", "resto en monedas[^\\n\\d]*(?<![\\d.])0(?:\\.0{1,2})?(?!\\d)", "§1 3(?![\\d.])", "§2 0(?![\\d.])"], "not": ["(?:^|\\n)\\s*0 x ", "(?:[\\s\\S]*?monto inv[aá]lido){1}"], "show": "3 x 100000 · 1 x 50000 · 1 x 20000 · Total de billetes: 5 · Resto en monedas: 0", "call": "print(\"§1\", cantidad_billetes(370000, 100000))\nprint(\"§2\", cantidad_billetes(15000, 20000))", "callShow": "cantidad_billetes(370000, 100000) → 3 · cantidad_billetes(15000, 20000) → 0"}, {"in": ["188000"], "must": ["(?:^|\\n)\\s*1 x 100000\\b", "(?:^|\\n)\\s*1 x 50000\\b", "(?:^|\\n)\\s*1 x 20000\\b", "(?:^|\\n)\\s*1 x 10000\\b", "(?:^|\\n)\\s*1 x 5000\\b", "(?:^|\\n)\\s*1 x 2000\\b", "total de billetes[^\\n\\d]*(?<![\\d.])6(?:\\.0{1,2})?(?!\\d)", "resto en monedas[^\\n\\d]*(?<![\\d.])1000(?:\\.0{1,2})?(?!\\d)"], "not": ["(?:^|\\n)\\s*0 x ", "(?:[\\s\\S]*?monto inv[aá]lido){1}"], "show": "1 x 100000 · 1 x 50000 · 1 x 20000 · 1 x 10000 · 1 x 5000 · 1 x 2000 · Total de billetes: 6 · Resto en monedas: 1000"}, {"in": ["-5000", "2500", "1000"], "must": ["(?:[\\s\\S]*?monto inv[aá]lido){2}", "total de billetes[^\\n\\d]*(?<![\\d.])0(?:\\.0{1,2})?(?!\\d)", "resto en monedas[^\\n\\d]*(?<![\\d.])1000(?:\\.0{1,2})?(?!\\d)"], "not": ["(?:^|\\n)\\s*0 x ", "(?:[\\s\\S]*?monto inv[aá]lido){3}"], "show": " · Total de billetes: 0 · Resto en monedas: 1000"}, {"in": ["999000"], "must": ["(?:^|\\n)\\s*9 x 100000\\b", "(?:^|\\n)\\s*1 x 50000\\b", "(?:^|\\n)\\s*2 x 20000\\b", "(?:^|\\n)\\s*1 x 5000\\b", "(?:^|\\n)\\s*2 x 2000\\b", "total de billetes[^\\n\\d]*(?<![\\d.])15(?:\\.0{1,2})?(?!\\d)", "resto en monedas[^\\n\\d]*(?<![\\d.])0(?:\\.0{1,2})?(?!\\d)", "§1 3(?![\\d.])"], "not": ["(?:^|\\n)\\s*0 x ", "(?:[\\s\\S]*?monto inv[aá]lido){1}"], "show": "9 x 100000 · 1 x 50000 · 2 x 20000 · 1 x 5000 · 2 x 2000 · Total de billetes: 15 · Resto en monedas: 0", "call": "print(\"§1\", desglosar(42000))", "callShow": "desglosar(42000) → 3"}]}, {"id": "diadelanio", "lvl": 4, "xp": 60, "t": "★ 12. ¿Qué día del año es?", "tag": "Nivel 4 · funciones encadenadas + condiciones + ciclo", "d": "Un año es <b>bisiesto<\/b> si es divisible entre 4 pero no entre 100, o si es divisible entre 400. Crea: <code>es_bisiesto(anio)<\/code> → True/False; <code>dias_mes(mes, anio)<\/code> → días de ese mes (febrero tiene 29 en bisiesto); <code>fecha_valida(dia, mes, anio)<\/code> → True/False; y <code>dia_del_anio(dia, mes, anio)<\/code> → el número de día dentro del año (1 de enero = 1), sumando con un ciclo los días de los meses anteriores. El programa pide día, mes y año: si la fecha no es válida muestra <code>Fecha inválida<\/code>; si lo es, <code>Día N del año<\/code> y <code>Faltan X días para terminar el año<\/code>.<br><b>Entrada:<\/b> tres enteros · <b>Salida:<\/b> dos líneas o el aviso<br><b>Ejemplo:<\/b> 1, 3, 2025 → <code>Día 60 del año<\/code> · <code>Faltan 305 días para terminar el año<\/code>; 29, 2, 2023 → <code>Fecha inválida<\/code>. El corrector prueba <code>es_bisiesto(1900)<\/code> → False y <code>es_bisiesto(2000)<\/code> → True.<br>💡 <b>Pista:<\/b> construye de abajo hacia arriba: primero la función más pequeña (bisiesto), y prueba cada una antes de usarla en la siguiente. Para los días de cada mes, agrupa los meses que tienen la misma cantidad.", "starter": "def es_bisiesto(anio):\n    pass\n\ndef dias_mes(mes, anio):\n    pass\n\ndef fecha_valida(dia, mes, anio):\n    pass\n\ndef dia_del_anio(dia, mes, anio):\n    pass\n\n# Programa principal\n", "sol": "def es_bisiesto(anio):\n    return (anio % 4 == 0 and anio % 100 != 0) or anio % 400 == 0\n\ndef dias_mes(mes, anio):\n    if mes == 2:\n        if es_bisiesto(anio):\n            return 29\n        return 28\n    if mes in (4, 6, 9, 11):\n        return 30\n    return 31\n\ndef fecha_valida(dia, mes, anio):\n    return 1 <= mes <= 12 and 1 <= dia <= dias_mes(mes, anio)\n\ndef dia_del_anio(dia, mes, anio):\n    total = dia\n    for m in range(1, mes):\n        total += dias_mes(m, anio)\n    return total\n\n# Programa principal\ndia = int(input(\"Día: \"))\nmes = int(input(\"Mes: \"))\nanio = int(input(\"Año: \"))\nif not fecha_valida(dia, mes, anio):\n    print(\"Fecha inválida\")\nelse:\n    n = dia_del_anio(dia, mes, anio)\n    total = 366 if es_bisiesto(anio) else 365\n    print(f\"Día {n} del año\")\n    print(f\"Faltan {total - n} días para terminar el año\")", "tests": [{"in": ["1", "3", "2025"], "must": ["d[ií]a[^\\n\\d]*(?<![\\d.])60(?:\\.0{1,2})?(?!\\d)[^\\n]*del a[nñ]o", "faltan[^\\n\\d]*(?<![\\d.])305(?:\\.0{1,2})?(?!\\d)", "§1 False bool", "§2 True bool", "§3 29(?![\\d.])"], "not": ["inv[aá]lida"], "show": "Día 60 del año · Faltan 305 días para terminar el año", "call": "print(\"§1\", es_bisiesto(1900), type(es_bisiesto(1900)).__name__)\nprint(\"§2\", es_bisiesto(2000), type(es_bisiesto(2000)).__name__)\nprint(\"§3\", dias_mes(2, 2024))", "callShow": "es_bisiesto(1900) → False · es_bisiesto(2000) → True · dias_mes(2, 2024) → 29"}, {"in": ["29", "2", "2023"], "must": ["fecha inv[aá]lida"], "not": ["d[ií]a \\d+ del a"], "show": "Fecha inválida"}, {"in": ["31", "12", "2024"], "must": ["d[ií]a[^\\n\\d]*(?<![\\d.])366(?:\\.0{1,2})?(?!\\d)[^\\n]*del a[nñ]o", "faltan[^\\n\\d]*(?<![\\d.])0(?:\\.0{1,2})?(?!\\d)", "§1 61(?![\\d.])", "§2 False bool"], "not": ["inv[aá]lida"], "show": "Día 366 del año · Faltan 0 días para terminar el año", "call": "print(\"§1\", dia_del_anio(1, 3, 2024))\nprint(\"§2\", fecha_valida(31, 4, 2025), type(fecha_valida(31, 4, 2025)).__name__)", "callShow": "dia_del_anio(1, 3, 2024) → 61 · fecha_valida(31, 4, 2025) → False"}, {"in": ["15", "13", "2025"], "must": ["fecha inv[aá]lida"], "not": ["d[ií]a \\d+ del a"], "show": "Fecha inválida"}, {"in": ["12", "10", "2026"], "must": ["d[ií]a[^\\n\\d]*(?<![\\d.])285(?:\\.0{1,2})?(?!\\d)[^\\n]*del a[nñ]o", "faltan[^\\n\\d]*(?<![\\d.])80(?:\\.0{1,2})?(?!\\d)"], "not": ["inv[aá]lida"], "show": "Día 285 del año · Faltan 80 días para terminar el año"}]}];
+const HARNESS_PY = "import builtins, io, contextlib, traceback, sys\nclass CicloInfinito(Exception):\n    pass\nclass DemasiadaSalida(Exception):\n    pass\nLP_MAX_PASOS = 3000000\nLP_MAX_SALIDA = 30000\nclass LP_Salida(io.StringIO):\n    def write(self, s):\n        if self.tell() + len(s) > LP_MAX_SALIDA:\n            super().write(s[:max(0, LP_MAX_SALIDA - self.tell())])\n            raise DemasiadaSalida(\"tu programa imprimió demasiado texto (más de 30 000 caracteres): ¿quedó en un ciclo infinito?\")\n        return super().write(s)\ndef __run_user(src, inputs, echo):\n    q = list(inputs)\n    def _inp(prompt=''):\n        if not q:\n            raise EOFError(\"input() pidió un dato, pero no hay más entradas\")\n        v = q.pop(0)\n        if echo:\n            print(str(prompt) + v)\n        return v\n    builtins.input = _inp\n    buf = LP_Salida()\n    pasos = [0]\n    def _local(frame, event, arg):\n        if event == 'line':\n            pasos[0] += 1\n            if pasos[0] > LP_MAX_PASOS:\n                raise CicloInfinito(\"tu programa ejecutó más de 3 millones de pasos sin terminar: revisa que la condición del ciclo pueda volverse False\")\n        return _local\n    def _global(frame, event, arg):\n        if frame.f_code.co_filename == \"tu_programa.py\":\n            return _local\n        return None\n    etype, err, line = \"\", \"\", None\n    try:\n        code = compile(src, \"tu_programa.py\", \"exec\")\n        sys.settrace(_global)\n        try:\n            with contextlib.redirect_stdout(buf):\n                exec(code, {\"__name__\": \"__main__\"})\n        finally:\n            sys.settrace(None)\n    except SyntaxError as e:\n        etype, err, line = type(e).__name__, str(e.msg), e.lineno\n    except BaseException as e:\n        etype, err = type(e).__name__, str(e)\n        for fr in traceback.extract_tb(e.__traceback__):\n            if fr.filename == \"tu_programa.py\":\n                line = fr.lineno\n    return [buf.getvalue(), etype, err, line]\n";
+const EXTRA_CODE = {
+  encabezado:{code:'def linea():\n    print("─" * 30)\n\nlinea()\nprint("  FACTURA ELECTRÓNICA")\nlinea()\nprint("  Cliente: Laura Restrepo")\nprint("  Total: $48.500")\nlinea()\n', stdin:''},
+  bienvenida:{code:'def bienvenida(nombre):\n    mensaje = f"¡Hola, {nombre}! Bienvenido al curso"\n    return mensaje\n\ntexto = bienvenida("Laura")\nprint(texto)\nprint(bienvenida("Mateo"))\n', stdin:''},
+  precio:{code:'def precio_final(precio, descuento):\n    con_descuento = precio * (1 - descuento / 100)\n    return con_descuento * 1.19\n\ntotal = precio_final(100000, 20)\nprint(f"Pagas: {total:.2f}")\nprint(f"Dos unidades: {2 * precio_final(100000, 20):.2f}")\n', stdin:''},
+  printreturn:{code:'def doble_print(x):\n    print(x * 2)\n\ndef doble_return(x):\n    return x * 2\n\na = doble_print(5)\nb = doble_return(5)\nprint("a =", a, "| b =", b)\n', stdin:''},
+  votar:{code:'def es_mayor_de_edad(edad):\n    return edad >= 18\n\nfor edad in [15, 18, 32, 17]:\n    if es_mayor_de_edad(edad):\n        print(edad, "→ puede votar")\n    else:\n        print(edad, "→ aún no")\n', stdin:''},
+  ambito:{code:'tasa_iva = 0.19                      # global\n\ndef con_iva(precio):\n    total = precio * (1 + tasa_iva)  # total es local\n    return total\n\nprint(con_iva(1000))\nprint(total)                         # ¿existe total aquí afuera?\n', stdin:''},
+  sombra:{code:'puntos = 10\n\ndef jugar():\n    puntos = 99\n    print("Dentro:", puntos)\n\njugar()\nprint("Fuera:", puntos)\n', stdin:''},
+  pedido:{code:'def pedido(producto, cantidad, precio, envio=5000):\n    total = cantidad * precio + envio\n    return f"{cantidad} x {producto}: ${total}"\n\nprint(pedido("empanada", 6, 2500))\nprint(pedido("arepa", 3, 4000, envio=0))\nprint(pedido(precio=12000, producto="pizza", cantidad=2))\n', stdin:''},
+  args:{code:'def promedio(*notas):\n    if len(notas) == 0:\n        return 0\n    suma = 0\n    for n in notas:\n        suma += n\n    return suma / len(notas)\n\nprint(round(promedio(4.5, 3.0, 5.0), 2))\nprint(round(promedio(2.8, 3.6), 2))\nprint(promedio())\n', stdin:''},
+  libre:{code:'# Zona libre: crea y prueba tus funciones\ndef cuadrado(x):\n    return x * x\n\nfor n in range(1, 6):\n    print(n, "→", cuadrado(n))\n', stdin:''}
+};
+const LEVELS=['Novato del def','Aprendiz de parámetros','Maestro del return','Arquitecto modular','Gran programador'];
+const PER=150;
+const BADGES=[
+  {icon:'🥉',label:'Primer paso',test:()=>S.xp>=30},
+  {icon:'🐍',label:'¡Hola, def!',test:()=>!!S.flags.firstRun},
+  {icon:'🏭',label:'Detective de funciones',test:()=>!!S.flags.machine},
+  {icon:'🔌',label:'Conector',test:()=>!!S.flags.connector},
+  {icon:'🧭',label:'Rastreador',test:()=>!!S.flags.tracer},
+  {icon:'🧩',label:'Ensamblador',test:()=>!!S.flags.builder},
+  {icon:'🕵️',label:'Cazaerrores',test:()=>!!S.flags.hunter},
+  {icon:'🏅',label:'Modular',test:()=>RETOS.filter(r=>S.retos[r.id]).length>=6},
+  {icon:'🏗️',label:'Arquitecto',test:()=>RETOS.filter(r=>r.lvl===4).every(r=>S.retos[r.id])},
+  {icon:'🧠',label:'Leyenda',test:()=>RETOS.every(r=>S.retos[r.id])}
+];
+const LVNAME={1:'🟢 Nivel 1 · Calentamiento',2:'🟡 Nivel 2 · Intermedio',3:'🟠 Nivel 3 · Avanzado',4:'🔴 Nivel 4 · Reto ★'};
+const LVDESC={1:'Una función que calcula y devuelve, y un programa principal que la usa.',2:'Valores por defecto, argumentos por nombre, condiciones y fórmulas financieras.',3:'Funciones que llaman a otras funciones, ciclos dentro de funciones y menús.',4:'Programas divididos en varias funciones que trabajan juntas. ¡Para valientes!'};
+
+/* ===================== Progreso / XP ===================== */
+const KEY=CFG.key;
+function freshS(){ return {xp:0, awarded:[], flags:{}, retos:{}, sol:{}, cov:{}, desk:{}, rng:{}, pz:{}, trace:{}, interp:{}}; }
+let S=freshS();
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null'); if(s&&typeof s==='object') S=Object.assign(freshS(),s);}catch(e){}
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} }
+const RESET_HOOKS=[];
+function renderXP(){
+  const lvl=Math.min(LEVELS.length,Math.floor(S.xp/PER)+1);
+  document.getElementById('lvl').textContent=lvl;
+  document.getElementById('lvlname').textContent=LEVELS[lvl-1];
+  document.getElementById('xp').textContent=S.xp;
+  document.getElementById('xpfill').style.width=(lvl===LEVELS.length?100:Math.round((S.xp%PER)/PER*100))+'%';
+  const box=document.getElementById('badges'); box.innerHTML='';
+  BADGES.forEach(b=>{const e=document.createElement('span');e.className='bdg'+(b.test()?' on':'');e.textContent=b.icon+' '+b.label;e.title=b.hint||'';box.appendChild(e);});
+}
+let popT=null;
+function pop(t){const p=document.getElementById('xppop');p.textContent=t;p.classList.add('show');clearTimeout(popT);popT=setTimeout(()=>p.classList.remove('show'),1600);}
+function addXP(key,amt,label){
+  if(S.awarded.includes(key))return false;
+  S.awarded.push(key); S.xp+=amt; save(); renderXP(); pop('+'+amt+' XP'+(label?' · '+label:'')); return true;
+}
+function flag(name,label){ if(S.flags[name])return; S.flags[name]=true; save(); renderXP(); if(label)setTimeout(()=>pop('🏅 Insignia: '+label),1700); }
+document.getElementById('resetProg').addEventListener('click',()=>{
+  if(!confirm('¿Borrar tu XP, insignias y retos superados en este navegador?'))return;
+  S=freshS(); save(); renderXP(); RESET_HOOKS.forEach(f=>{try{f();}catch(e){console.warn(e);}});
+});
+renderXP();
+
+/* ===================== Pestañas ===================== */
+const tabs=document.querySelectorAll('#tabs button');
+function showTab(name){
+  tabs.forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('active',s.id===name));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+tabs.forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+
+/* ===================== Quiz genérico ===================== */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function makeQuiz(cfg){
+  document.getElementById(cfg.totalId).textContent=cfg.data.length;
+  function build(){
+    const box=document.getElementById(cfg.boxId); box.innerHTML='';
+    let answered=0, correct=0;
+    document.getElementById(cfg.scoreId).textContent='0';
+    cfg.data.forEach((q,i)=>{
+      const c=document.createElement('div'); c.className='q';
+      c.innerHTML='<span class="tag">'+(q.tag||('#'+(i+1)))+'</span>'+(q.scn?'<p class="scn">'+q.scn+'</p>':'')+(q.code?'<pre>'+esc(q.code)+'</pre>':'');
+      const opts=document.createElement('div'); opts.className='opts';
+      const fb=document.createElement('div'); fb.className='feedback';
+      let done=false;
+      q.opts.forEach(o=>{
+        const b=document.createElement('button'); b.className='opt'; b.textContent=o;
+        b.addEventListener('click',()=>{
+          if(done)return; done=true; answered++;
+          opts.querySelectorAll('.opt').forEach(x=>x.classList.add('locked'));
+          if(o===q.ans){ b.classList.add('correct'); correct++; document.getElementById(cfg.scoreId).textContent=correct;
+            fb.textContent='✔ ¡Correcto! '+q.why; fb.className='feedback ok'; addXP(cfg.boxId+':'+i,cfg.xp||10); }
+          else{ b.classList.add('wrong'); opts.querySelectorAll('.opt').forEach(x=>{if(x.textContent===q.ans)x.classList.add('correct');});
+            fb.textContent='✘ Respuesta: '+q.ans+'. '+q.why; fb.className='feedback no'; }
+          if(answered===cfg.data.length && cfg.onDone) cfg.onDone(correct);
+        });
+        opts.appendChild(b);
+      });
+      c.appendChild(opts); c.appendChild(fb); box.appendChild(c);
+    });
+  }
+  document.getElementById(cfg.resetId).addEventListener('click',build); build();
+}
+/* ===================== Componentes: simulador paso a paso ===================== */
+function makeSim(cfg){
+  // cfg: {root, progs:{id:{title,code:[...],inputs:[...],trace(v)}} , xp, onAll}
+  const root=document.getElementById(cfg.root);
+  root.innerHTML='<div class="simbar"><select aria-label="Programa"></select><span class="itc">'+(cfg.itLabel||'Vuelta')+': <b>–</b></span></div>'+
+    '<div class="simin"></div>'+
+    '<div class="btns" style="margin-top:0"><button class="btn sstep">▶ Paso</button><button class="btn ghost sauto">⏩ Automático</button><button class="btn ghost sreset">↺ Reiniciar</button></div>'+
+    '<div class="simgrid" style="margin-top:8px"><div class="scode"></div><div><div class="vars"><table><thead><tr><th>Variable</th><th>Valor</th></tr></thead><tbody></tbody></table></div>'+
+    '<label style="display:block;font-size:.78rem;color:var(--muted);margin:8px 0 4px;font-weight:600">🖥️ Salida</label><pre class="term sout" style="min-height:90px"></pre><div class="snote"></div></div></div>';
+  const sel=root.querySelector('select'), inBox=root.querySelector('.simin'), codeBox=root.querySelector('.scode'), tb=root.querySelector('tbody'),
+        out=root.querySelector('.sout'), note=root.querySelector('.snote'), itc=root.querySelector('.itc b'),
+        bStep=root.querySelector('.sstep'), bAuto=root.querySelector('.sauto'), bReset=root.querySelector('.sreset');
+  let id=Object.keys(cfg.progs)[0], steps=[], k=-1, timer=null, prevVars={}; let lastV={};
+  Object.entries(cfg.progs).forEach(([key,p])=>{const o=document.createElement('option');o.value=key;o.textContent=(S.trace[cfg.root+':'+key]?'✅ ':'')+p.title;sel.appendChild(o);});
+  function renderInputs(){ const p=cfg.progs[id]; inBox.innerHTML='';
+    (p.inputs||[]).forEach(inp=>{ const w=document.createElement('label'); w.textContent=inp.label+' ';
+      const el=document.createElement('input'); el.type=inp.type||'text'; el.value=inp.value; el.dataset.id=inp.id; if(inp.w) el.style.width=inp.w;
+      el.addEventListener('change',reset); w.appendChild(el); inBox.appendChild(w); }); }
+  function renderCode(){ const p=cfg.progs[id]; codeBox.innerHTML='';
+    (typeof p.code==='function'?p.code(lastV):p.code).forEach((t,i)=>{ const d=document.createElement('div'); d.className='sl'; d.innerHTML='<span class="ln">'+(i+1)+'</span><span class="tx">'+esc(t)+'</span>'; codeBox.appendChild(d); }); }
+  function stop(){ if(timer){clearInterval(timer);timer=null;bAuto.textContent='⏩ Automático';} }
+  function reset(){ stop(); const p=cfg.progs[id], v={}; inBox.querySelectorAll('[data-id]').forEach(el=>v[el.dataset.id]=el.value); lastV=v;
+    try{ steps=p.trace(v); }catch(e){ steps=[]; }
+    k=-1; prevVars={}; renderCode(); tb.innerHTML='<tr><td colspan="2" style="color:var(--muted)">Pulsa ▶ Paso para empezar</td></tr>'; out.textContent=''; note.textContent=''; itc.textContent='–'; bStep.disabled=false; }
+  function show(){
+    const st=steps[k], rows=codeBox.children;
+    [...rows].forEach((r,i)=>{ r.classList.remove('cur','run','true','false'); const s=r.querySelector('.st'); if(s) s.remove(); });
+    const r=rows[st.l]; r.classList.add('cur', st.s||'run');
+    if(st.tag){ const s=document.createElement('span'); s.className='st'; s.textContent=st.tag; r.appendChild(s); }
+    r.scrollIntoView({block:'nearest'});
+    tb.innerHTML=''; Object.entries(st.vars||{}).forEach(([n,val])=>{ const tr=document.createElement('tr'); const ch=prevVars[n]!==undefined&&prevVars[n]!==val || prevVars[n]===undefined;
+      tr.innerHTML='<td class="mono">'+esc(n)+'</td><td class="mono'+(ch?' chg':'')+'">'+esc(val)+'</td>'; tb.appendChild(tr); });
+    prevVars=Object.assign({},st.vars||{});
+    if(st.out!==undefined) out.textContent+=st.out;
+    note.innerHTML=st.note?('💬 '+st.note):'';
+    itc.textContent=st.it===undefined?(itc.textContent):String(st.it);
+    if(k===steps.length-1){ bStep.disabled=true; stop(); note.innerHTML+=(note.innerHTML?'<br>':'')+'🏁 <b>Fin del programa.</b>';
+      const key=cfg.root+':'+id; if(!S.trace[key]){ S.trace[key]=true; save(); [...sel.options].forEach(o=>{ if(o.value===id && !o.textContent.startsWith('✅')) o.textContent='✅ '+o.textContent; }); }
+      addXP('trace:'+key,cfg.xp||15,'programa recorrido');
+      if(Object.keys(cfg.progs).every(x=>S.trace[cfg.root+':'+x]) && cfg.onAll) cfg.onAll(); }
+  }
+  function step(){ if(k<steps.length-1){ k++; show(); } }
+  bStep.addEventListener('click',step);
+  bAuto.addEventListener('click',()=>{ if(timer){stop();return;} if(k>=steps.length-1) reset(); bAuto.textContent='⏸ Pausa'; timer=setInterval(()=>{ if(k>=steps.length-1){stop();return;} step(); },650); });
+  bReset.addEventListener('click',reset);
+  sel.addEventListener('change',()=>{ id=sel.value; renderInputs(); reset(); });
+  renderInputs(); reset();
+  return {load(x){ id=x; sel.value=x; renderInputs(); reset(); root.scrollIntoView({behavior:'smooth'}); }};
+}
+
+/* ===================== Componentes: arma el programa (Parsons) ===================== */
+function makeParsons(cfg){
+  // cfg: {root, puzzles:[{id,title,goal,lines:[...],valid:[[...]]}], xp, onAll}
+  const root=document.getElementById(cfg.root);
+  cfg.puzzles.forEach(pz=>{
+    const box=document.createElement('div'); box.className='pz';
+    box.innerHTML='<h3 style="margin:0 0 4px">'+pz.title+(S.pz[pz.id]?' <span class="ok">✔</span>':'')+'</h3><p style="margin:2px 0 8px">'+pz.goal+'</p>'+
+      '<div class="pzgrid"><div><div class="pzlab">🧩 Piezas (toca para usar)</div><div class="pzpool"></div></div><div><div class="pzlab">📝 Tu programa (toca una línea para devolverla)</div><div class="pzprog"></div></div></div>'+
+      '<div class="btns"><button class="btn pzchk">✅ Comprobar</button><button class="btn ghost pzrst">↺ Reiniciar</button></div><div class="feedback pzfb"></div>';
+    root.appendChild(box);
+    const pool=box.querySelector('.pzpool'), prog=box.querySelector('.pzprog'), fb=box.querySelector('.pzfb');
+    let order=[];
+    const valid=pz.valid||[pz.lines.map((_,i)=>i)];
+    function build(){ order=[]; fb.textContent=''; fb.className='feedback pzfb'; pool.innerHTML=''; prog.innerHTML='';
+      const idx=pz.lines.map((_,i)=>i); for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
+      idx.forEach(i=>{ const b=document.createElement('button'); b.className='pzline'; b.dataset.i=i; b.textContent=pz.lines[i];
+        b.addEventListener('click',()=>{ if(b.classList.contains('used'))return; b.classList.add('used'); order.push(i); render(); }); pool.appendChild(b); });
+      render(); }
+    function render(){ prog.innerHTML=''; if(!order.length){ prog.innerHTML='<div class="pzempty">— vacío —</div>'; }
+      order.forEach((i,pos)=>{ const d=document.createElement('div'); d.className='pzline in'; d.textContent=pz.lines[i];
+        d.addEventListener('click',()=>{ order.splice(pos,1); pool.querySelector('[data-i="'+i+'"]').classList.remove('used'); render(); }); prog.appendChild(d); }); }
+    box.querySelector('.pzchk').addEventListener('click',()=>{
+      if(order.length<pz.lines.length){ fb.textContent='Usa todas las piezas antes de comprobar.'; fb.className='feedback no pzfb'; return; }
+      const ok=valid.some(v=>v.every((x,j)=>x===order[j]));
+      const ref=valid[0]; [...prog.children].forEach((d,j)=>d.classList.add(ref[j]===order[j]||ok?'good':'bad'));
+      if(ok){ fb.textContent='🎉 ¡Programa armado correctamente! Fíjate en la sangría: decide qué está dentro de cada ciclo.'; fb.className='feedback ok pzfb';
+        if(!S.pz[pz.id]){ S.pz[pz.id]=true; save(); box.querySelector('h3').innerHTML=pz.title+' <span class="ok">✔</span>'; }
+        addXP('pz:'+pz.id,cfg.xp||15,'programa armado');
+        if(cfg.puzzles.every(p=>S.pz[p.id]) && cfg.onAll) cfg.onAll(); }
+      else { fb.textContent='Aún no. Las líneas en rojo no están donde deberían (compáralas con el orden en que Python las necesita: primero se prepara, luego se repite, al final se muestra).'; fb.className='feedback no pzfb'; }
+    });
+    box.querySelector('.pzrst').addEventListener('click',build);
+    build();
+  });
+}
+
+/* ===================== Quizzes ===================== */
+makeQuiz({boxId:'mqQuiz',scoreId:'mqScore',totalId:'mqTotal',resetId:'mqReset',xp:10,onDone:()=>flag('machine','Detective de funciones'),data:[
+  {tag:'Máquina 1',code:'f(1)  → 5\nf(2)  → 7\nf(10) → 23',opts:['return 2 * x + 3','return x + 4','return 3 * x + 2'],ans:'return 2 * x + 3',why:'2·1+3 = 5, 2·2+3 = 7, 2·10+3 = 23. Las otras fallan con x = 2.'},
+  {tag:'Máquina 2',code:'f(100) → 119.0\nf(50)  → 59.5\nf(0)   → 0.0',opts:['return x + 19','return x * 1.19','return x * 0.19'],ans:'return x * 1.19',why:'Es el precio con IVA del 19 %: 50 × 1.19 = 59.5.'},
+  {tag:'Máquina 3',code:'f(3)  → True\nf(8)  → False\nf(11) → True',opts:['return x % 2 == 0','return x % 2 == 1','return x > 5'],ans:'return x % 2 == 1',why:'Devuelve True para los impares. x > 5 daría False con 3.'},
+  {tag:'Máquina 4',code:'f("sol")  → "SOL!"\nf("hola") → "HOLA!"',opts:['return x + "!"','return x.upper() + "!"','return x.upper()'],ans:'return x.upper() + "!"',why:'Convierte a mayúsculas y agrega "!".'},
+  {tag:'Máquina 5 · dos parámetros',code:'f(4, 3) → 12\nf(5, 0) → 0\nf(2, 7) → 14',opts:['return a + b','return a * b','return a ** b'],ans:'return a * b',why:'4 × 3 = 12. a ** b daría 64.'},
+  {tag:'Máquina 6',code:'f(7)  → 49\nf(-3) → 9\nf(0)  → 0',opts:['return x * 2','return x ** 2','return abs(x) * 7'],ans:'return x ** 2',why:'El cuadrado: (−3)² = 9. abs(x) × 7 daría 21.'},
+  {tag:'Máquina 7 · porcentajes',code:'f(10, 50)   → 5.0\nf(200, 25)  → 50.0\nf(80, 100)  → 80.0',opts:['return a * b / 100','return a / b * 100','return a + b / 100'],ans:'return a * b / 100',why:'Calcula el b % de a: el 25 % de 200 es 50.'}
+]});
+makeQuiz({boxId:'qiQuiz',scoreId:'qiScore',totalId:'qiTotal',resetId:'qiReset',xp:10,data:[
+  {code:'def mensaje():\n    print("B")\nprint("A")\nmensaje()\nprint("C")\nmensaje()',opts:['A B C B','B A C B','A C B B','A B C'],ans:'A B C B',why:'Definir no ejecuta: el cuerpo corre cada vez que se llama la función.'},
+  {code:'def f(x):\n    return x + 1\n    print("hola")\nprint(f(4))',opts:['5','hola 5','5 hola','4'],ans:'5',why:'return termina la función: el print que está después nunca se ejecuta.'},
+  {code:'def g(n):\n    n = n * 2\nprint(g(5))',opts:['10','None','5','Error'],ans:'None',why:'g calcula, pero no tiene return: devuelve None.'},
+  {code:'def suma(a, b=10):\n    return a + b\nprint(suma(5), suma(5, 1))',opts:['15 6','15 15','6 6','Error'],ans:'15 6',why:'Sin segundo argumento, b vale 10; con él, b vale 1.'},
+  {code:'def f(a, b):\n    return a - b\nprint(f(b=2, a=9))',opts:['-7','7','11','Error'],ans:'7',why:'Por nombre, a = 9 y b = 2, sin importar el orden: 9 − 2 = 7.'},
+  {code:'def contar(*cosas):\n    return len(cosas)\nprint(contar("a", "b", "c"), contar())',opts:['3 0','3 None','1 0','Error'],ans:'3 0',why:'*cosas agrupa todos los argumentos: tres en la primera llamada y ninguno en la segunda.'}
+]});
+makeQuiz({boxId:'amQuiz',scoreId:'amScore',totalId:'amTotal',resetId:'amReset',xp:10,data:[
+  {code:'puntos = 10\ndef jugar():\n    puntos = 99\n    print("Dentro:", puntos)\njugar()\nprint("Fuera:", puntos)',opts:['Dentro: 99 · Fuera: 99','Dentro: 99 · Fuera: 10','Dentro: 10 · Fuera: 10'],ans:'Dentro: 99 · Fuera: 10',why:'puntos = 99 crea una variable local nueva; la global sigue en 10.'},
+  {code:'def calcular():\n    resultado = 42\ncalcular()\nprint(resultado)',opts:['42','None','NameError'],ans:'NameError',why:'resultado es local: deja de existir cuando calcular() termina. Debía devolverse con return.'},
+  {code:'tasa = 0.19\ndef iva(p):\n    return p * tasa\nprint(iva(100))',opts:['19.0','0.19','NameError'],ans:'19.0',why:'Una función puede leer una variable global.'},
+  {code:'x = 5\ndef f(x):\n    x = x + 1\n    return x\ny = f(x)\nprint(x, y)',opts:['6 6','5 6','5 5'],ans:'5 6',why:'El parámetro x es una copia local: cambiarlo no altera la x global. y recibe 6.'}
+]});
+const CE=['NameError','TypeError','SyntaxError','Error lógico (sin mensaje)','Funciona bien'];
+makeQuiz({boxId:'ceQuiz',scoreId:'ceScore',totalId:'ceTotal',resetId:'ceReset',xp:10,onDone:()=>flag('hunter','Cazaerrores'),data:[
+  {tag:'Fragmento 1',code:'saludar("Ana")\ndef saludar(n):\n    print("Hola", n)',opts:CE,ans:'NameError',why:'Se llama antes de definirla: en ese momento saludar no existe.'},
+  {tag:'Fragmento 2 · se quería: mostrar "Hola"',code:'def hola():\n    return "Hola"\nprint(hola)',opts:CE,ans:'Error lógico (sin mensaje)',why:'Sin paréntesis no se llama: imprime algo como <function hola at 0x…>.'},
+  {tag:'Fragmento 3',code:'def doble(x):\n    return 2 * x\nprint(doble())',opts:CE,ans:'TypeError',why:'missing 1 required positional argument: \'x\'.'},
+  {tag:'Fragmento 4',code:'def f(a=1, b):\n    return a + b',opts:CE,ans:'SyntaxError',why:'Un parámetro sin valor por defecto no puede ir después de uno que sí lo tiene.'},
+  {tag:'Fragmento 5',code:'def precio(p):\n    total = p * 1.19\nprecio(1000)\nprint(total)',opts:CE,ans:'NameError',why:'total es local de la función. Además, falta return.'},
+  {tag:'Fragmento 6',code:'def area(b, h):\n    print(b * h)\nx = area(3, 4) + 1',opts:CE,ans:'TypeError',why:'area imprime 12 pero devuelve None, y None + 1 no se puede calcular.'},
+  {tag:'Fragmento 7',code:'def resta(a, b, c):\n    return a - b - c\nprint(resta(f=3, a=5, b=7))',opts:CE,ans:'TypeError',why:'got an unexpected keyword argument \'f\': ese parámetro no existe.'},
+  {tag:'Fragmento 8 · se quería: es_primo(9) → False',code:'def es_primo(n):\n    for d in range(2, n):\n        if n % d == 0:\n            return False\n        return True\nprint(es_primo(9))',opts:CE,ans:'Error lógico (sin mensaje)',why:'return True está dentro del for: con d = 2 ya devuelve True sin revisar el 3. Debía ir después del ciclo.'},
+  {tag:'Fragmento 9',code:'def es_par(n):\n    return n % 2 == 0\nif es_par(7):\n    print("par")\nelse:\n    print("impar")',opts:CE,ans:'Funciona bien',why:'Imprime "impar".'}
+]});
+
+/* ===================== Conecta los argumentos ===================== */
+const CONN=[
+  {id:'c1',def:'def pedido(producto, cantidad, precio, envio=5000):',call:'pedido("arepa", 3, 4000)',params:['producto','cantidad','precio','envio'],vals:['arepa','3','4000','5000'],why:'Posicionales en orden; envio no se envió y toma su valor por defecto.'},
+  {id:'c2',def:'def pedido(producto, cantidad, precio, envio=5000):',call:'pedido("pizza", 2, 12000, 0)',params:['producto','cantidad','precio','envio'],vals:['pizza','2','12000','0'],why:'El cuarto argumento reemplaza el valor por defecto.'},
+  {id:'c3',def:'def pedido(producto, cantidad, precio, envio=5000):',call:'pedido(precio=2500, producto="empanada", cantidad=6)',params:['producto','cantidad','precio','envio'],vals:['empanada','6','2500','5000'],why:'Por nombre el orden no importa; envio usa su valor por defecto.'},
+  {id:'c4',def:'def potencia(base, exponente=2):',call:'potencia(exponente=3, base=5)',params:['base','exponente'],vals:['5','3'],why:'Por nombre: base = 5 y exponente = 3 → 125.'},
+  {id:'c5',def:'def cuota(monto, tasa=1.5, meses=12):',call:'cuota(2000000, meses=24)',params:['monto','tasa','meses'],vals:['2000000','1.5','24'],why:'monto por posición, meses por nombre y tasa con su valor por defecto.'}
+];
+function renderConn(){
+  const box=document.getElementById('conecta'); box.innerHTML='';
+  CONN.forEach(c=>{
+    const done=!!(S.flags['conn_'+c.id]);
+    const d=document.createElement('div'); d.className='q';
+    d.innerHTML='<pre>'+esc(c.def)+'\n    …\n\n'+esc(c.call)+'</pre><div class="conn">'+c.params.map((p,i)=>'<label><span class="mono">'+p+' =</span><input type="text" data-i="'+i+'"></label>').join('')+'</div><div class="btns"><button class="btn">🔌 Conectar</button></div><div class="feedback"></div>';
+    const ins=d.querySelectorAll('input'), fb=d.querySelector('.feedback');
+    if(done){ ins.forEach((e,i)=>{e.value=c.vals[i]; e.classList.add('good');}); fb.textContent='✔ '+c.why; fb.className='feedback ok'; }
+    d.querySelector('button').addEventListener('click',()=>{
+      let ok=0; ins.forEach((e,i)=>{ const v=e.value.trim().replace(/^["']|["']$/g,'').toLowerCase(); e.classList.remove('good','bad'); if(v===c.vals[i].toLowerCase()){ok++;e.classList.add('good');} else e.classList.add('bad'); });
+      if(ok===ins.length){ fb.textContent='✔ '+c.why; fb.className='feedback ok'; if(!S.flags['conn_'+c.id]){S.flags['conn_'+c.id]=true; save();}
+        addXP('conn:'+c.id,15,'argumentos conectados'); if(CONN.every(x=>S.flags['conn_'+x.id])) flag('connector','Conector'); }
+      else { fb.textContent='Correctos: '+ok+' de '+ins.length+'. Recuerda: primero se asignan los posicionales por orden, luego los nombrados, y los que falten toman su valor por defecto.'; fb.className='feedback no'; }
+    });
+    box.appendChild(d);
+  });
+}
+renderConn(); RESET_HOOKS.push(renderConn);
+
+/* ===================== Simulador paso a paso ===================== */
+const G=(o)=>{const r={}; Object.entries(o).forEach(([k,v])=>r['🌍 '+k]=v); return r;};
+const Lc=(f,o)=>{const r={}; Object.entries(o).forEach(([k,v])=>r['📦 '+f+' › '+k]=v); return r;};
+const q=(s)=>'"'+s+'"';
+const FN='<función>';
+makeSim({root:'sim12',xp:15,itLabel:'Ejecutando',onAll:()=>flag('tracer','Rastreador'),progs:{
+  llamada:{title:'📞 Llamar y regresar',
+    inputs:[{id:'a',label:'1.ª llamada:',type:'text',value:'Laura',w:'110px'},{id:'b',label:'2.ª llamada:',type:'text',value:'Mateo',w:'110px'}],
+    code:(v)=>['def bienvenida(nombre):','    mensaje = f"¡Hola, {nombre}!"','    return mensaje','','texto = bienvenida("'+String(v.a||'Laura').slice(0,14)+'")','print(texto)','print(bienvenida("'+String(v.b||'Mateo').slice(0,14)+'"))'],
+    trace(v){ const a=String(v.a||'Laura').slice(0,14), b=String(v.b||'Mateo').slice(0,14), st=[];
+      st.push({l:0,vars:G({bienvenida:FN}),tag:'se guarda',note:'Python lee el def y GUARDA la función. Su cuerpo todavía no se ejecuta.'});
+      st.push({l:4,vars:G({bienvenida:FN}),tag:'llamada',note:'Llamada: el programa salta a la función y el parámetro nombre recibe '+q(a)+'.'});
+      st.push({l:1,vars:Object.assign(G({bienvenida:FN}),Lc('bienvenida',{nombre:q(a),mensaje:q('¡Hola, '+a+'!')})),it:'dentro de bienvenida'});
+      st.push({l:2,vars:Object.assign(G({bienvenida:FN}),Lc('bienvenida',{nombre:q(a),mensaje:q('¡Hola, '+a+'!')})),tag:'return',note:'return entrega el mensaje y la función TERMINA.'});
+      st.push({l:4,vars:G({bienvenida:FN,texto:q('¡Hola, '+a+'!')}),tag:'regresa',it:'programa principal',note:'De vuelta en el programa: texto recibe lo devuelto. Las variables locales (📦) desaparecieron.'});
+      st.push({l:5,vars:G({bienvenida:FN,texto:q('¡Hola, '+a+'!')}),out:'¡Hola, '+a+'!\n'});
+      st.push({l:6,vars:G({bienvenida:FN,texto:q('¡Hola, '+a+'!')}),tag:'llamada',note:'Segunda llamada, ahora con '+q(b)+'. La misma función, otros datos.'});
+      st.push({l:1,vars:Object.assign(G({bienvenida:FN,texto:q('¡Hola, '+a+'!')}),Lc('bienvenida',{nombre:q(b),mensaje:q('¡Hola, '+b+'!')})),it:'dentro de bienvenida'});
+      st.push({l:2,vars:Object.assign(G({bienvenida:FN,texto:q('¡Hola, '+a+'!')}),Lc('bienvenida',{nombre:q(b),mensaje:q('¡Hola, '+b+'!')})),tag:'return'});
+      st.push({l:6,vars:G({bienvenida:FN,texto:q('¡Hola, '+a+'!')}),out:'¡Hola, '+b+'!\n',tag:'regresa',it:'programa principal',note:'Lo devuelto se usa directamente en el print, sin guardarlo.'});
+      return st; }},
+  factura:{title:'🧾 Una función dentro de un ciclo',
+    inputs:[{id:'p',label:'precios =',type:'text',value:'1000, 2500, 400',w:'170px'}],
+    code:(v)=>['def precio_con_iva(precio):','    return precio * 1.19','','total = 0','for p in ['+String(v.p||'').split(',').map(x=>parseFloat(x)).filter(x=>!isNaN(x)).slice(0,6).join(', ')+']:','    total += precio_con_iva(p)','print(f"Total: {total:.2f}")'],
+    trace(v){ const ps=String(v.p||'').split(',').map(x=>parseFloat(x)).filter(x=>!isNaN(x)).slice(0,6); const st=[]; let t=0; const r2=x=>Math.round(x*100)/100;
+      st.push({l:0,vars:G({precio_con_iva:FN}),tag:'se guarda'});
+      st.push({l:3,vars:G({precio_con_iva:FN,total:0})});
+      ps.forEach((p,k)=>{ st.push({l:4,vars:G({precio_con_iva:FN,total:r2(t),p}),tag:'p = '+p,it:'vuelta '+(k+1)+' del for'});
+        st.push({l:5,vars:G({precio_con_iva:FN,total:r2(t),p}),tag:'llamada',it:'vuelta '+(k+1)+' del for',note:'Se llama la función con precio = '+p+'.'});
+        st.push({l:1,vars:Object.assign(G({precio_con_iva:FN,total:r2(t),p}),Lc('precio_con_iva',{precio:p})),tag:'return '+r2(p*1.19),it:'vuelta '+(k+1)+' del for'});
+        t+=p*1.19; st.push({l:5,vars:G({precio_con_iva:FN,total:r2(t),p}),tag:'regresa',it:'vuelta '+(k+1)+' del for',note:'Lo devuelto se suma al acumulador: total = '+r2(t)+'.'}); });
+      st.push({l:4,s:'false',vars:G({precio_con_iva:FN,total:r2(t)}),tag:'fin del ciclo'});
+      st.push({l:6,vars:G({precio_con_iva:FN,total:r2(t)}),out:'Total: '+t.toFixed(2)+'\n',note:'La función se usó '+ps.length+' veces y solo se escribió una vez.'});
+      return st; }},
+  primo:{title:'🔍 return dentro de un for',
+    inputs:[{id:'n',label:'n =',type:'number',value:9,w:'80px'}],
+    code:(v)=>['def es_primo(n):','    if n < 2:','        return False','    for d in range(2, n):','        if n % d == 0:','            return False','    return True','','print(es_primo('+(Math.max(-3,Math.min(60,parseInt(v.n,10)||0)))+'))'],
+    trace(v){ const n=Math.max(-3,Math.min(60,parseInt(v.n,10)||0)); const st=[{l:0,vars:G({es_primo:FN}),tag:'se guarda'},{l:8,vars:G({es_primo:FN}),tag:'llamada',note:'Se llama es_primo('+n+'): el parámetro n recibe '+n+'.'}];
+      const L=(o)=>Object.assign(G({es_primo:FN}),Lc('es_primo',o));
+      const lt2=n<2; st.push({l:1,s:lt2?'true':'false',vars:L({n}),tag:lt2?'True':'False'});
+      if(lt2){ st.push({l:2,vars:L({n}),tag:'return False',note:'Los números menores que 2 no son primos: la función termina aquí.'}); st.push({l:8,vars:G({es_primo:FN}),out:'False\n',tag:'regresa'}); return st; }
+      for(let d=2; d<n; d++){ st.push({l:3,vars:L({n,d}),tag:'d = '+d,it:'es_primo, d = '+d}); const dv=n%d===0; st.push({l:4,s:dv?'true':'false',vars:L({n,d}),tag:n+' % '+d+' = '+(n%d),it:'es_primo, d = '+d});
+        if(dv){ st.push({l:5,vars:L({n,d}),tag:'return False',it:'es_primo, d = '+d,note:'¡Encontró un divisor! return sale de la función DE INMEDIATO, aunque el for no haya terminado.'}); st.push({l:8,vars:G({es_primo:FN}),out:'False\n',tag:'regresa'}); return st; } }
+      st.push({l:3,s:'false',vars:L({n}),tag:'fin del for',note:'Se probaron todos los divisores posibles sin encontrar ninguno.'});
+      st.push({l:6,vars:L({n}),tag:'return True',note:'El return True va DESPUÉS del ciclo: solo se llega aquí si ningún divisor funcionó.'});
+      st.push({l:8,vars:G({es_primo:FN}),out:'True\n',tag:'regresa'}); return st; }}
+}});
+
+/* ===================== Arma el programa ===================== */
+makeParsons({root:'parsons',xp:15,onAll:()=>flag('builder','Ensamblador'),puzzles:[
+  {id:'p1',title:'1 · Precio con descuento',goal:'Define una función que aplique un descuento y úsala con un precio que escribe el usuario.',
+   lines:['def precio_final(precio, porcentaje):','    descuento = precio * porcentaje / 100','    return precio - descuento','valor = float(input("Precio: "))','print("Pagas:", precio_final(valor, 15))'],
+   valid:[[0,1,2,3,4],[3,0,1,2,4]]},
+  {id:'p2',title:'2 · Una función booleana en un ciclo',goal:'Muestra los múltiplos de 3 entre 1 y 9 usando una función que devuelve True o False.',
+   lines:['def es_multiplo_de_3(n):','    return n % 3 == 0','for i in range(1, 10):','    if es_multiplo_de_3(i):','        print(i, end=" ")']},
+  {id:'p3',title:'3 · Un acumulador dentro de una función',goal:'Define una función que sume los números de 1 a n y muestra el resultado para n = 100.',
+   lines:['def sumar_hasta(n):','    total = 0','    for i in range(1, n + 1):','        total += i','    return total','print(sumar_hasta(100))']}
+]});
+
+/* ===================== Motor Python (Pyodide) ===================== */
+const qp=new URLSearchParams(location.search);
+const PYO_BASE=qp.get('pyo')||'https://cdn.jsdelivr.net/npm/pyodide@314.0.7/';
+const RUN_TIMEOUT=8000;
+const statusEl=document.getElementById('pyStatus');
+function setStatus(t){statusEl.textContent=t;}
+const WORKER_SRC = `
+let py=null;
+self.onmessage = async (e)=>{
+  const m=e.data;
+  if(m.type==='init'){
+    try{
+      const mod = await import(m.base+'pyodide.mjs');
+      py = await mod.loadPyodide({indexURL:m.base});
+      py.runPython(m.harness);
+      self.postMessage({type:'ready', version: py.runPython("import sys; sys.version.split()[0]")});
+    }catch(err){ self.postMessage({type:'fail', error:String(err)}); }
+  } else if(m.type==='run'){
+    let r;
+    try{
+      py.globals.set('S_', m.src); py.globals.set('I_', py.toPy(m.inputs)); py.globals.set('E_', m.echo);
+      const res = py.runPython('__run_user(S_, I_, E_)'); r=res.toJs(); res.destroy();
+      self.postMessage({type:'result', id:m.id, out:r[0], etype:r[1], err:r[2], line:(r[3]==null?null:r[3])});
+    }catch(err){ self.postMessage({type:'result', id:m.id, out:'', etype:'ErrorInterno', err:String(err), line:null}); }
+  }
+};`;
+const PY={mode:null, worker:null, ready:null, pend:{}, seq:0, main:null, version:''};
+function initWorker(){
+  return new Promise((resolve,reject)=>{
+    let w;
+    try{ w=new Worker(URL.createObjectURL(new Blob([WORKER_SRC],{type:'text/javascript'})),{type:'module'}); }catch(e){ reject(e); return; }
+    const to=setTimeout(()=>{ try{w.terminate();}catch(e){} reject(new Error('timeout de carga')); },120000);
+    w.onmessage=(e)=>{ const m=e.data;
+      if(m.type==='ready'){ clearTimeout(to); PY.version=m.version; resolve(w); }
+      else if(m.type==='fail'){ clearTimeout(to); try{w.terminate();}catch(_){} reject(new Error(m.error)); }
+      else if(m.type==='result'){ const p=PY.pend[m.id]; if(p){ delete PY.pend[m.id]; clearTimeout(p.to); p.resolve(m); } } };
+    w.onerror=(ev)=>{ clearTimeout(to); reject(new Error(ev.message||'error del worker')); };
+    w.postMessage({type:'init', base:PYO_BASE, harness:HARNESS_PY});
+  });
+}
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('No se pudo descargar '+src));document.head.appendChild(s);});}
+async function initMain(){
+  if(!window.loadPyodide) await loadScript(PYO_BASE+'pyodide.js');
+  const py=await window.loadPyodide({indexURL:PYO_BASE});
+  py.runPython(HARNESS_PY); PY.version=py.runPython("import sys; sys.version.split()[0]"); return py;
+}
+function ensurePy(){
+  if(PY.ready) return PY.ready;
+  setStatus('🟡 Cargando Python… (solo la primera vez)');
+  PY.ready=(async()=>{
+    try{ PY.worker=await initWorker(); PY.mode='worker'; }
+    catch(e1){ console.warn('Worker no disponible, uso hilo principal:',e1);
+      try{ PY.main=await initMain(); PY.mode='main'; }
+      catch(e2){ PY.ready=null; setStatus('🔴 No se pudo cargar Python'); throw e2; } }
+    setStatus('🟢 Python '+PY.version+' listo'); return true;
+  })();
+  return PY.ready;
+}
+function runPy(src,inputs,echo){
+  return ensurePy().then(()=>{
+    if(PY.mode==='main'){
+      const g=PY.main.globals; g.set('S_',src); g.set('I_',PY.main.toPy(inputs)); g.set('E_',echo);
+      const res=PY.main.runPython('__run_user(S_, I_, E_)'); const r=res.toJs(); res.destroy();
+      return {out:r[0],etype:r[1],err:r[2],line:r[3]==null?null:r[3]};
+    }
+    return new Promise(resolve=>{
+      const id=++PY.seq;
+      const to=setTimeout(()=>{ delete PY.pend[id]; try{PY.worker.terminate();}catch(e){} PY.worker=null; PY.ready=null; PY.mode=null;
+        setStatus('🟡 Python se reinició'); resolve({timeout:true,out:'',etype:'',err:'',line:null}); },RUN_TIMEOUT);
+      PY.pend[id]={resolve,to};
+      PY.worker.postMessage({type:'run',id,src,inputs,echo});
+    });
+  });
+}
+
+const HINTS={
+  SyntaxError:'Python no entiende cómo está escrito. En funciones revisa: def nombre(parámetros): con paréntesis y dos puntos; los parámetros con valor por defecto van al final; y que return esté dentro de una función.',
+  IndentationError:'Sangría incorrecta: el cuerpo de la función lleva 4 espacios más que la línea del def. El programa principal vuelve a la izquierda (sin sangría).',
+  TabError:'Mezclaste tabulaciones y espacios en la sangría. Usa solo espacios (4 por nivel).',
+  NameError:'Usas un nombre que no existe aquí: ¿definiste la función ANTES de llamarla? ¿el nombre es exactamente el que pide el enunciado? ¿usas fuera de la función una variable que solo existe dentro de ella (local)?',
+  TypeError:'Revisa la llamada: ¿pasaste todos los argumentos que pide la función, ni más ni menos, y con nombres que existen? Si dice "NoneType", tu función no tiene return (o hace print en lugar de return) y su resultado es None.',
+  ValueError:'No se pudo convertir el dato: revisa lo que escribiste en Entradas (por ejemplo, int("3.5") falla; usa float()).',
+  ZeroDivisionError:'Estás dividiendo entre cero. Valida ese caso con un if dentro de la función.',
+  EOFError:'Tu programa pidió más datos con input() de los que hay en Entradas. Si usas un menú, ¿tu ciclo reconoce la opción de salir?',
+  UnboundLocalError:'Dentro de la función usas una variable antes de asignarle valor. Si es un dato que necesitas, pásalo como parámetro.',
+  CicloInfinito:'Ciclo infinito: la condición del while nunca se vuelve False. Revisa que algo dentro del ciclo cambie la variable de la condición.',
+  DemasiadaSalida:'Tu programa imprimió muchísimo: casi siempre es un ciclo infinito con un print adentro.',
+  RecursionError:'Una función se llama a sí misma sin parar. Revisa que no estés llamando a la misma función dentro de su propio cuerpo.'
+};
+
+/* ===================== Laboratorio UI ===================== */
+const codeEl=document.getElementById('code'), stdinEl=document.getElementById('stdin'), termEl=document.getElementById('term'),
+      checkEl=document.getElementById('checkRes'), selEl=document.getElementById('retoSel'), infoEl=document.getElementById('retoInfo');
+let currentReto='libre';
+function draftKey(id){return CFG.draft+id;}
+function getDraft(id){try{return localStorage.getItem(draftKey(id));}catch(e){return null;}}
+function setDraft(id,v){try{localStorage.setItem(draftKey(id),v);}catch(e){}}
+function retoById(id){return RETOS.find(r=>r.id===id);}
+function tagHTML(r){return '<span style="font-size:.72rem;color:#2a2000;background:var(--py);padding:2px 9px;border-radius:999px;font-weight:700">'+r.tag+'</span> ';}
+function renderRetoSel(){
+  const keep=currentReto; selEl.innerHTML='';
+  const o0=document.createElement('option'); o0.value='libre'; o0.textContent='🧪 Zona libre'; selEl.appendChild(o0);
+  const groups={};
+  RETOS.forEach(r=>{ let g=groups[r.lvl]; if(!g){ g=groups[r.lvl]=document.createElement('optgroup'); g.label=LVNAME[r.lvl]; selEl.appendChild(g); }
+    const o=document.createElement('option'); o.value=r.id; o.textContent=(S.retos[r.id]?'✅ ':'🎯 ')+r.t+'  (+'+r.xp+' XP)'; g.appendChild(o); });
+  selEl.value=keep;
+}
+function renderInfo(r){ infoEl.innerHTML=tagHTML(r)+'<b>'+r.t+'</b>'+(S.retos[r.id]?' <span style="color:var(--good);font-weight:700">✅ superado</span>':'')+'<br>'+r.d; }
+function loadReto(id, extra){
+  currentReto=id; selEl.value=id; checkEl.innerHTML='';
+  const r=retoById(id), btnC=document.getElementById('checkBtn'), btnS=document.getElementById('solBtn');
+  if(!r){
+    const ex=EXTRA_CODE[extra||'libre']||EXTRA_CODE.libre;
+    infoEl.innerHTML='<b>🧪 Zona libre.</b> Experimenta con lo que quieras: prueba los ejemplos de la clase, cambia los datos y observa cuántas vueltas da cada ciclo.';
+    codeEl.value = extra? ex.code : (getDraft('libre') ?? ex.code); stdinEl.value = extra? ex.stdin : EXTRA_CODE.libre.stdin;
+    btnC.disabled=true; btnS.disabled=true;
+  } else {
+    renderInfo(r); codeEl.value = getDraft(r.id) ?? r.starter; stdinEl.value = r.tests[0].in.join('\n');
+    btnC.disabled=false; btnS.disabled=false;
+  }
+  termEl.innerHTML='<span class="sys">La salida de tu programa aparecerá aquí.</span>';
+}
+selEl.addEventListener('change',()=>loadReto(selEl.value));
+codeEl.addEventListener('input',()=>setDraft(currentReto,codeEl.value));
+codeEl.addEventListener('keydown',e=>{
+  if(e.key==='Tab'){ e.preventDefault(); const s=codeEl.selectionStart, en=codeEl.selectionEnd;
+    codeEl.value=codeEl.value.slice(0,s)+'    '+codeEl.value.slice(en); codeEl.selectionStart=codeEl.selectionEnd=s+4; setDraft(currentReto,codeEl.value); }
+  if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){ e.preventDefault(); doRun(); }
+});
+function termWrite(r){
+  termEl.innerHTML='';
+  if(r.timeout){ termEl.innerHTML='<span class="err">⏱ Tu programa tardó demasiado y se detuvo (¿quedó en un ciclo infinito?).</span>'; return; }
+  const o=document.createElement('span'); o.textContent=r.out; termEl.appendChild(o);
+  if(r.etype){
+    const e=document.createElement('span'); e.className='err';
+    e.textContent=(r.out&&!r.out.endsWith('\n')?'\n':'')+'❌ '+r.etype+(r.line?' en la línea '+r.line:'')+': '+r.err+'\n'; termEl.appendChild(e);
+    const h=HINTS[r.etype]; if(h){ const hh=document.createElement('span'); hh.className='hint'; hh.textContent='💡 '+h; termEl.appendChild(hh); }
+  } else if(!r.out){ termEl.innerHTML='<span class="sys">(El programa terminó sin mostrar nada. ¿El ciclo no dio ninguna vuelta? ¿Te faltó un print()?)</span>'; }
+}
+async function doRun(){
+  const btn=document.getElementById('runBtn'); btn.disabled=true; checkEl.innerHTML='';
+  termEl.innerHTML='<span class="sys">Ejecutando…</span>';
+  try{
+    const inputs=stdinEl.value===''?[]:stdinEl.value.replace(/\r/g,'').split('\n');
+    const r=await runPy(codeEl.value, inputs, true);
+    termWrite(r);
+    if(!r.timeout && !r.etype && r.out){ if(!S.flags.firstRun){ S.flags.firstRun=true; save(); renderXP(); setTimeout(()=>pop('🏅 Insignia: '+CFG.firstRunLabel),1600); } addXP('firstrun',10); }
+  }catch(e){
+    termEl.innerHTML='<span class="err">No se pudo cargar Python en este navegador ('+esc(e.message)+').\n</span><span class="hint">💡 Revisa tu conexión a internet y recarga la página. También puedes usar IDLE, Thonny o Google Colab.</span>';
+  }finally{ btn.disabled=false; }
+}
+document.getElementById('runBtn').addEventListener('click',doRun);
+document.getElementById('resetCode').addEventListener('click',()=>{ const r=retoById(currentReto); codeEl.value=r?r.starter:EXTRA_CODE.libre.code; setDraft(currentReto,codeEl.value); });
+document.getElementById('solBtn').addEventListener('click',()=>{
+  const r=retoById(currentReto); if(!r)return;
+  if(!S.retos[r.id] && !S.sol[r.id] && !confirm('Si ves la solución antes de superar el reto, ganarás la mitad de XP. ¿Ver la solución?'))return;
+  S.sol[r.id]=true; save(); codeEl.value=r.sol+'\n'; setDraft(r.id,codeEl.value);
+});
+document.getElementById('checkBtn').addEventListener('click',async()=>{
+  const r=retoById(currentReto); if(!r)return;
+  const btn=document.getElementById('checkBtn'); btn.disabled=true;
+  checkEl.innerHTML='<div class="row">🧪 Probando tu programa con '+r.tests.length+' casos…</div>';
+  let rows='', all=true;
+  try{
+    for(let i=0;i<r.tests.length;i++){
+      const tc=r.tests[i], res=await runPy(codeEl.value+(tc.call?'\n'+tc.call:''), tc.in, false);
+      let ok=false, why='';
+      if(res.timeout){why='tardó demasiado';}
+      else if(res.etype){ const nl=codeEl.value.split('\n').length; why=(tc.call&&res.line>nl)?('al llamar directamente a tu función → '+res.etype+': '+res.err+(/NoneType/.test(res.err)?' (¿tu función devuelve el resultado con return?)':'')):(res.etype+(res.line?' (línea '+res.line+')':'')+': '+res.err);}
+      else { const miss=tc.must.some(p=>!new RegExp(p,'i').test(res.out)), extra=(tc.not||[]).some(p=>new RegExp(p,'i').test(res.out));
+        ok=!miss&&!extra; if(miss) why='falta algo de lo esperado'; else if(extra) why='muestra algo que no debería (¿una vuelta de más? ¿un mensaje repetido?)'; }
+      all=all&&ok;
+      rows+='<div class="row '+(ok?'ok':'no')+'">'+(ok?'✅':'❌')+' <b>Caso '+(i+1)+'</b> · entradas: <code>'+esc(tc.in.join(' | '))+'</code> → se espera: <code>'+esc(tc.show)+'</code>'+(tc.callShow?'<br><small>🔧 Además se llama a tus funciones: <code>'+esc(tc.callShow)+'</code></small>':'')+
+        (ok?'':'<br><small>Tu salida: <code>'+esc((res.out||'').trim().replace(/\n/g,' ⏎ ')||'(vacía)')+'</code> — '+esc(why)+'</small>')+'</div>';
+    }
+    checkEl.innerHTML=rows;
+    if(all){
+      const first=!S.retos[r.id]; S.retos[r.id]=true; save();
+      const base=r.xp||30, amt=S.sol[r.id]?Math.round(base/2):base;
+      addXP('reto:'+r.id,amt,r.t.replace(/^[★\s]*\d*\.?\s*/,''));
+      checkEl.innerHTML+='<div class="win">🎉 ¡Reto superado!'+(first?' Nuevo ✅ en tu lista.':'')+' '+(S.sol[r.id]?'(XP reducida por ver la solución)':'')+'</div>';
+      renderRetoSel(); renderTaller(); renderXP(); renderInfo(r);
+    }
+  }catch(e){ checkEl.innerHTML='<div class="row no">No se pudo ejecutar Python ('+esc(e.message)+'). Revisa tu conexión.</div>'; }
+  finally{ btn.disabled=false; }
+});
+function openInLab(idOrExtra){ showTab('lab'); if(retoById(idOrExtra)) loadReto(idOrExtra); else loadReto('libre', idOrExtra); }
+document.querySelectorAll('[data-try]').forEach(b=>b.addEventListener('click',()=>openInLab(b.dataset.try)));
+
+RESET_HOOKS.push(()=>{renderRetoSel(); renderTaller(); loadReto(currentReto);});
+/* ===================== Taller ===================== */
+function renderTaller(){
+  const box=document.getElementById('ejercicios'); box.innerHTML='';
+  let lastLv=0;
+  RETOS.forEach(r=>{
+    if(r.lvl!==lastLv){ lastLv=r.lvl; const done=RETOS.filter(x=>x.lvl===r.lvl&&S.retos[x.id]).length, tot=RETOS.filter(x=>x.lvl===r.lvl).length;
+      const h=document.createElement('h3'); h.className='lvh'; h.innerHTML=LVNAME[r.lvl]+' <span>· '+r.xp+' XP c/u · '+done+'/'+tot+' superados</span><small>'+LVDESC[r.lvl]+'</small>'; box.appendChild(h); }
+    const c=document.createElement('div'); c.className='ex';
+    c.innerHTML='<span class="tag">'+r.tag+'</span>'+(S.retos[r.id]?'<span class="done">✅ superado en el laboratorio</span>':'')+
+      '<h3>'+r.t+'</h3><p>'+r.d+'</p><div class="btns"><button class="btn py">🐍 Resolver en el laboratorio</button></div>'+
+      '<details><summary>Ver solución en Python</summary><pre>'+esc(r.sol)+'</pre></details>';
+    c.querySelector('button').addEventListener('click',()=>openInLab(r.id));
+    c.querySelector('details').addEventListener('toggle',function(){ if(this.open && !S.retos[r.id] && !S.sol[r.id]){ S.sol[r.id]=true; save(); } });
+    box.appendChild(c);
+  });
+}
+renderRetoSel(); renderTaller(); loadReto('libre');
+
+</script>
+<!-- lp1-home:start -->
+<a id="lp1-home" href="index.html" title="Volver al índice de lecciones" aria-label="Volver al índice de lecciones"><span class="i" aria-hidden="true">🏠</span><span class="t">Lecciones</span></a>
+<style>
+#lp1-home{position:fixed;left:max(16px,env(safe-area-inset-left));bottom:max(16px,env(safe-area-inset-bottom));z-index:2147483000;display:inline-flex;align-items:center;gap:7px;padding:9px 15px 9px 12px;border-radius:999px;background:#1f4f7a;color:#fff!important;border:1px solid rgba(63,208,192,.65);box-shadow:0 6px 18px rgba(0,0,0,.35);font:600 14px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;text-decoration:none!important;letter-spacing:.2px;transition:transform .15s,background .15s}
+#lp1-home:hover{background:#2b6a9e;transform:translateY(-2px)}
+#lp1-home:focus-visible{outline:3px solid #3fd0c0;outline-offset:3px}
+#lp1-home .i{font-size:17px;line-height:1}
+@media (max-width:600px){#lp1-home{padding:0;width:46px;height:46px;justify-content:center}#lp1-home .t{display:none}#lp1-home .i{font-size:20px}}
+@media print{#lp1-home{display:none!important}}
+</style>
+<!-- lp1-home:end -->
+</body>
+</html>
