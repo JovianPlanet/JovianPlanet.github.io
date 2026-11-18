@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arreglos y listas en Python · Clase Interactiva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%9A%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#0f1720; --panel:#18222e; --panel2:#1f2c3a; --ink:#e8eef5; --muted:#9fb0c3;
+    --line:#2b3a4d; --accent:#4fd1c5; --accent2:#7c9cff; --good:#48d597; --bad:#ff7a7a;
+    --warn:#ffcf6b; --chip:#243447; --py:#ffd43b; --pyb:#4b8bbe;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(160deg,#0f1720,#111c27);color:var(--ink);line-height:1.55}
+  header{padding:22px 22px 12px;text-align:center;border-bottom:1px solid var(--line);background:radial-gradient(1200px 300px at 50% -60px,rgba(75,139,190,.22),transparent)}
+  header h1{margin:0 0 4px;font-size:clamp(1.3rem,3.4vw,2rem)}
+  header p{margin:0;color:var(--muted);font-size:.92rem}
+  .xpwrap{max-width:680px;margin:12px auto 4px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+  .xprow{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);margin-bottom:6px;gap:8px;flex-wrap:wrap}
+  .xprow b{color:var(--warn)}
+  .xpbar{height:12px;background:#0c141d;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .xpfill{height:100%;width:0;background:linear-gradient(90deg,var(--pyb),var(--py));transition:width .5s}
+  .badges2{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+  .bdg{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:.74rem;color:#5f7085;opacity:.6;transition:.3s}
+  .bdg.on{opacity:1;color:var(--ink);border-color:var(--warn);box-shadow:0 0 0 2px rgba(255,207,107,.15)}
+  .linkbtn{background:none;border:none;color:var(--muted);font-size:.74rem;cursor:pointer;text-decoration:underline;padding:0}
+  .wrap{max-width:1000px;margin:0 auto;padding:16px 16px 60px}
+  nav.tabs{position:sticky;top:0;z-index:10;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:11px 6px;background:rgba(15,23,32,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.tabs button{background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:8px 12px;border-radius:10px;cursor:pointer;font-size:.82rem;font-weight:600;transition:.15s}
+  nav.tabs button:hover{border-color:var(--accent)}
+  nav.tabs button.active{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border-color:transparent}
+  nav.tabs button.lab{border-color:var(--py)}
+  html{background:#0f1720}
+  @media(max-width:640px){
+    nav.tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:thin}
+    nav.tabs button{flex:0 0 auto}
+    .typebtns{grid-template-columns:repeat(2,1fr)}
+  }
+  section.tab{display:none;animation:fade .25s ease}
+  section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2{font-size:1.3rem;margin:20px 0 10px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:1.05rem;margin:18px 0 8px;color:var(--accent)}
+  p{color:#d5deea}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .note{background:rgba(255,207,107,.08);border:1px solid rgba(255,207,107,.35);border-radius:12px;padding:12px 14px;margin:14px 0;font-size:.92rem}
+  .note b{color:var(--warn)}
+  .tip{background:rgba(75,139,190,.12);border:1px solid rgba(75,139,190,.45);border-left:4px solid var(--pyb);border-radius:10px;padding:12px 14px;margin:14px 0;font-size:.9rem}
+  .tip b{color:#9cc4e8}
+  code{font-family:"SF Mono",Consolas,Menlo,monospace}
+  pre{background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.85rem;color:#d7e3f0;margin:10px 0}
+  .fname{display:inline-block;background:var(--chip);border:1px solid var(--line);border-bottom:none;border-radius:8px 8px 0 0;padding:3px 10px;font-family:monospace;font-size:.75rem;color:var(--muted);margin-top:8px}
+  .fname + pre{margin-top:0;border-top-left-radius:0}
+  .kw{color:#ff9d6c;font-weight:600}.st{color:#9fe6b0}.cm{color:#6f8194;font-style:italic}.fn{color:#7cc4ff}.nu{color:#c9a3ff}
+  .tout{color:#e8eef5}.tprompt{color:#9fb0c3}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.87rem;overflow:hidden;border-radius:12px}
+  th,td{padding:8px 10px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:var(--accent);font-weight:700}
+  tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+  td.mono,code.mono{font-family:"SF Mono",Consolas,monospace;color:var(--accent)}
+  .tablewrap{overflow-x:auto}
+  details{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:10px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--accent)}
+  details[open]{border-color:var(--accent)}
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+  .tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .tile b{display:block;margin-bottom:3px}
+  .tile small{color:var(--muted)}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin:14px 0;text-align:center}
+  .flow .st2{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;min-width:120px}
+  .flow .st2 small{display:block;color:var(--muted);font-size:.74rem}
+  .flow .ar{color:var(--accent);font-weight:800;font-size:1.3rem}
+  .types{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+  .type{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--panel)}
+  .type .tn{font-family:monospace;font-size:1.3rem;font-weight:800}
+  .t-int .tn{color:#7cc4ff}.t-float .tn{color:#c9a3ff}.t-str .tn{color:#9fe6b0}.t-bool .tn{color:#ffcf6b}
+  .btn{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.88rem}
+  .btn.ghost{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+  .btn.py{background:linear-gradient(180deg,#ffe066,#f2c200);color:#2a2000}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .scorebar{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:12px 0;gap:10px;flex-wrap:wrap}
+  .scorebar b{color:var(--accent);font-size:1.1rem}
+  .q{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .q .tag{font-size:.72rem;color:#0a1330;background:var(--accent2);padding:2px 9px;border-radius:999px;font-weight:700}
+  .q .scn{color:#cfe0ff;margin:8px 0 2px}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .opt{background:#0c141d;border:1px solid var(--line);color:var(--ink);padding:9px 12px;border-radius:9px;cursor:pointer;font-family:monospace;font-size:.85rem;text-align:left;transition:.12s}
+  .opt:hover{border-color:var(--accent)}
+  .opt.correct{background:var(--good);color:#052b1c;border-color:transparent;font-weight:700}
+  .opt.wrong{background:var(--bad);color:#2b0505;border-color:transparent}
+  .opt.locked{pointer-events:none}
+  .feedback{margin-top:8px;font-size:.86rem;min-height:1.1em}
+  .feedback.ok{color:var(--good)}.feedback.no{color:var(--bad)}
+  .center{text-align:center}
+  .xppop{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--warn);color:#2a1e00;font-weight:800;padding:10px 18px;border-radius:999px;opacity:0;transition:.35s;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.35);pointer-events:none}
+  .xppop.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  /* tipo-matic */
+  .game{background:linear-gradient(160deg,#16212e,#1b2a3a);border:1px solid var(--line);border-radius:16px;padding:18px;margin:12px 0}
+  .bigval{font-family:monospace;font-size:clamp(1.4rem,4vw,2.1rem);text-align:center;background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:16px;margin:10px 0;color:#fff}
+  .typebtns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .typebtns button{font-family:monospace;font-size:1rem;font-weight:800;padding:12px 6px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer}
+  .typebtns button:hover{border-color:var(--accent)}
+  .typebtns button.right{background:var(--good);color:#052b1c}
+  .typebtns button.wrongb{background:var(--bad);color:#2b0505}
+  .gstat{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:6px 0}
+  .gchip{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:6px 12px;font-family:monospace;font-size:.88rem}
+  .gchip b{color:var(--warn)}
+  .flame{font-size:1.2rem}
+  /* nombres */
+  .names{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .nm{font-family:monospace;padding:9px 13px;border-radius:10px;border:1px solid var(--line);background:#0c141d;color:var(--ink);cursor:pointer;font-size:.92rem}
+  .nm.v{border-color:var(--good);background:rgba(72,213,151,.15)}
+  .nm.x{border-color:var(--bad);background:rgba(255,122,122,.15)}
+  .nm.ok::after{content:" ✔";color:var(--good)} .nm.ko::after{content:" ✘";color:var(--bad)}
+  /* ordena */
+  .slots{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .slot{min-height:42px;border:2px dashed var(--line);border-radius:10px;display:flex;align-items:center;gap:10px;padding:7px 10px;color:var(--muted);font-size:.85rem;background:#0c141d;cursor:pointer;font-family:monospace}
+  .slot .ph{font-family:system-ui;font-size:.7rem;font-weight:700;border-radius:999px;padding:2px 8px;white-space:nowrap}
+  .ph.e{background:#1d3b5c;color:#9cc4e8}.ph.p{background:#3b2f5c;color:#c9a3ff}.ph.s{background:#1f4a3a;color:#9fe6b0}
+  .slot.filled{border-style:solid;color:var(--ink);background:var(--panel2)}
+  .slot.okk{border-color:var(--good)} .slot.noo{border-color:var(--bad)}
+  .pool{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .piece{text-align:left;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 12px;cursor:pointer;font-size:.85rem;font-family:monospace}
+  .piece:hover{border-color:var(--accent)} .piece.used{opacity:.3;pointer-events:none}
+  /* lab */
+  .lab{background:linear-gradient(160deg,#141f2b,#182636);border:1px solid #3a5168;border-radius:16px;padding:14px;margin:12px 0}
+  .labbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+  .labbar select{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:9px 10px;font-size:.88rem;max-width:100%}
+  .pystat{font-size:.8rem;color:var(--muted);background:#0c141d;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+  .retoinfo{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0;font-size:.9rem}
+  .labgrid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:820px){.labgrid{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}}
+  .lab label{display:block;font-size:.78rem;color:var(--muted);margin:6px 0 4px;font-weight:600}
+  textarea.code{width:100%;min-height:230px;background:#0b1118;color:#e8eef5;border:1px solid var(--line);border-radius:10px;padding:12px;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.88rem;line-height:1.5;resize:vertical;tab-size:4;white-space:pre}
+  textarea.stdin{width:100%;min-height:70px;background:#0b1118;color:#ffe9a8;border:1px solid var(--line);border-radius:10px;padding:10px;font-family:monospace;font-size:.85rem;resize:vertical}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .term{min-height:230px;max-height:420px;overflow:auto;background:#050a0f;border:1px solid #2b3a4d;border-radius:10px;padding:12px;font-size:.86rem;white-space:pre-wrap;word-break:break-word;margin:0}
+  .term .err{color:#ff8f8f}.term .hint{color:#ffe08a}.term .sys{color:#6f8194}
+  .chk{margin-top:10px;font-size:.88rem}
+  .chk .row{padding:6px 10px;border-radius:8px;margin:5px 0;background:var(--panel);border:1px solid var(--line)}
+  .chk .row.ok{border-color:rgba(72,213,151,.6)} .chk .row.no{border-color:rgba(255,122,122,.6)}
+  .win{background:rgba(72,213,151,.12);border:1px solid var(--good);border-radius:12px;padding:10px 12px;margin-top:8px;font-weight:700;color:var(--good)}
+  .ex{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0}
+  .ex .tag{font-size:.72rem;color:#2a2000;background:var(--py);padding:2px 9px;border-radius:999px;font-weight:700}
+  .ex h3{margin:8px 0 4px}
+  .ex .done{color:var(--good);font-weight:700;font-size:.82rem;margin-left:6px}
+  footer{text-align:center;color:var(--muted);font-size:.82rem;padding:24px 12px;border-top:1px solid var(--line)}
+  /* --- lección 9 --- */
+  .anat{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:10px 0}
+  .anat .tile code{color:var(--py)}
+  .sim{background:linear-gradient(160deg,#141f2b,#182636);border:1px solid #3a5168;border-radius:16px;padding:14px;margin:12px 0}
+  .simbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .simbar select,.simin input,.simin select{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:8px 10px;font-size:.9rem}
+  .simin{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0;font-family:monospace}
+  .simin input[type=number]{width:96px}
+  .simin input[type=text]{width:130px}
+  .simgrid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:820px){.simgrid{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)}}
+  .scode{background:#0b1118;border:1px solid var(--line);border-radius:12px;padding:8px 0;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.84rem;overflow-x:auto}
+  .sl{display:flex;align-items:center;gap:10px;padding:3px 12px;white-space:pre;transition:background .2s,opacity .2s;min-height:26px}
+  .sl .ln{color:#4f6175;width:20px;text-align:right;flex:0 0 auto}
+  .sl .tx{flex:1 1 auto}
+  .sl .st{flex:0 0 auto;font-family:system-ui;font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap}
+  .sl.dim{opacity:.38}
+  .sl.run{background:rgba(79,209,197,.13)} .sl.run .st{background:#1c4d47;color:#9ff3e8}
+  .sl.true{background:rgba(72,213,151,.13)} .sl.true .st{background:#1f4a3a;color:#9fe6b0}
+  .sl.false{background:rgba(255,122,122,.10)} .sl.false .st{background:#4a2323;color:#ffb3b3}
+  .sl.skip .st{background:#2a3442;color:#9fb0c3}
+  .sl.cur{box-shadow:inset 3px 0 0 var(--warn)}
+  .cov{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0}
+  .cov span{font-size:.78rem;border:1px dashed var(--line);border-radius:999px;padding:3px 10px;color:var(--muted)}
+  .cov span.hit{border-style:solid;border-color:var(--good);color:var(--good);background:rgba(72,213,151,.08)}
+  .slots2{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .slot2{display:flex;align-items:center;gap:10px;min-height:42px;border:2px dashed var(--line);border-radius:10px;padding:7px 12px;background:#0c141d;font-family:monospace;font-size:.88rem;cursor:pointer}
+  .slot2 .kwd{color:#ff9d6c;font-weight:700;min-width:44px}
+  .slot2.filled{border-style:solid;background:var(--panel2)}
+  .slot2.fixed{cursor:default;border-style:solid;opacity:.85}
+  .slot2.okk{border-color:var(--good)}.slot2.noo{border-color:var(--bad)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+  .chipb{font-family:monospace;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 12px;cursor:pointer;font-size:.86rem}
+  .chipb:hover{border-color:var(--accent)} .chipb.used{opacity:.3;pointer-events:none}
+  .mini{width:auto;font-size:.84rem} .mini td,.mini th{padding:5px 9px}
+  .ok{color:var(--good);font-weight:700}.ko{color:var(--bad);font-weight:700}
+  .bug{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:14px 0}
+  .bug .spec{background:rgba(75,139,190,.12);border:1px solid rgba(75,139,190,.45);border-radius:10px;padding:8px 12px;font-size:.88rem;margin:6px 0}
+  .bug .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+  .bug input{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:9px 10px;width:130px;font-family:monospace}
+  .bug.broken{border-color:var(--good)}
+  .bug .fix{display:none;margin-top:8px}
+  .bug.broken .fix{display:block}
+.lvh{margin:22px 0 8px;font-size:1.08rem}.lvh span{color:var(--muted);font-weight:500;font-size:.85rem}.lvh small{display:block;color:var(--muted);font-weight:400;font-size:.85rem;margin-top:2px}
+  /* --- componentes ciclos --- */
+  .itc{margin-left:auto;font-size:.85rem;color:var(--muted)} .itc b{color:var(--warn);font-size:1rem}
+  .vars{background:#0b1118;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .vars table{margin:0;width:100%;font-size:.84rem} .vars th,.vars td{padding:5px 10px}
+  .vars td.chg{color:var(--warn);font-weight:700;background:rgba(255,206,92,.08)}
+  .snote{font-size:.86rem;margin-top:8px;color:var(--ink);min-height:1.2em}
+  .scode{max-height:380px;overflow:auto}
+  .pz{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:14px 0}
+  .pzgrid{display:grid;grid-template-columns:1fr;gap:12px} @media(min-width:820px){.pzgrid{grid-template-columns:1fr 1fr}}
+  .pzlab{font-size:.78rem;color:var(--muted);font-weight:600;margin-bottom:5px}
+  .pzpool,.pzprog{display:flex;flex-direction:column;gap:6px;min-height:60px;background:#0b1118;border:1px dashed var(--line);border-radius:12px;padding:8px}
+  .pzline{font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.84rem;white-space:pre;text-align:left;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:7px 10px;cursor:pointer;overflow-x:auto}
+  .pzline:hover{border-color:var(--accent)} .pzline.used{opacity:.25;pointer-events:none}
+  .pzline.in{background:var(--panel2)} .pzline.good{border-color:var(--good)} .pzline.bad{border-color:var(--bad);background:rgba(255,122,122,.08)}
+  .pzempty{color:var(--muted);font-size:.82rem;text-align:center;padding:10px}
+  .tile small b{display:inline;margin:0}
+  .center{text-align:center}
+  .sl.cur{background:rgba(255,207,107,.10)}
+
+  /* --- lección 13 --- */
+  .cells{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0;align-items:flex-end}
+  .cell{display:flex;flex-direction:column;align-items:center;min-width:64px;cursor:pointer}
+  .cell .v{display:block;width:100%;text-align:center;background:#0c141d;border:2px solid var(--line);border-radius:8px;padding:8px 8px;font-family:monospace;font-size:.86rem;transition:.15s}
+  .cell .ip{font-family:monospace;font-size:.75rem;color:var(--accent);margin-top:3px}
+  .cell .in{font-family:monospace;font-size:.72rem;color:#ff9d6c}
+  .cell.sel .v{border-color:var(--py);background:rgba(255,212,59,.14);color:var(--py);font-weight:700}
+  .cells.big .cell{min-width:78px} .cells.big .cell .v{font-size:1rem;padding:12px 8px}
+  .cells.sm .cell{min-width:44px;cursor:default} .cells.sm .cell .v{padding:5px 4px;font-size:.8rem}
+  .cellnote{color:var(--muted);font-size:.82rem;align-self:center;margin-left:8px}
+  .rin{display:flex;gap:12px;flex-wrap:wrap}
+  .rin label{font-family:monospace;font-size:.88rem;color:var(--muted)}
+  .rin input{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:7px 9px;width:84px;font-family:monospace;margin-left:6px}
+  .memrow{display:flex;gap:3px;flex-wrap:wrap;margin:12px 0}
+  .mcell{display:flex;flex-direction:column;align-items:center;min-width:70px}
+  .mcell .ad{font-family:monospace;font-size:.72rem;color:var(--muted)}
+  .mcell .v{width:100%;text-align:center;background:#0c141d;border:2px solid var(--line);padding:8px;font-family:monospace}
+  .mcell .ip{font-family:monospace;font-size:.75rem;color:var(--accent)}
+  .mcell.sel .v{border-color:var(--warn);background:rgba(255,207,107,.15);color:var(--warn);font-weight:700}
+  .sn .tgt{font-size:.95rem;color:var(--py);margin-left:8px}
+  .snrow{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-top:8px}
+  .snrow input,.aimin{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:7px 9px;font-family:monospace;width:70px}
+  .snrow .btn{margin-left:8px}
+  .sn.hit{border-color:var(--good)}
+  .mechtop{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .mechtop select{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:8px 10px}
+  .mechbtns{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:10px 0}
+  .mechbtns label{font-size:.85rem;color:var(--muted)} .mechbtns input{width:80px;background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:6px 8px;font-family:monospace;margin-left:4px}
+  .mechbtns .btn{font-family:monospace;font-size:.8rem;padding:8px 10px}
+  .mg{display:grid;grid-template-columns:auto repeat(3,1fr);gap:4px;max-width:360px}
+  .mh{font-family:monospace;font-size:.75rem;color:var(--accent);text-align:center;align-self:center}
+  .mc{background:#0c141d;border:2px solid var(--line);border-radius:8px;padding:12px 6px;text-align:center;font-family:monospace;cursor:pointer}
+  .mc.sel{border-color:var(--py);color:var(--py);background:rgba(255,212,59,.12);font-weight:700}
+
+</style>
+</head>
+<body>
+<header>
+  <h1>📚 Arreglos y listas en Python</h1>
+  <p>arreglos · índices · len() · métodos · recorridos · slicing · matrices · <b>modo juego</b></p>
+  <div class="xpwrap">
+    <div class="xprow"><span>Nivel <b id="lvl">1</b> · <span id="lvlname">Novato de las listas</span></span><span><b id="xp">0</b> XP · <button class="linkbtn" id="resetProg" title="Borra tu XP e insignias en este navegador">reiniciar progreso</button></span></div>
+    <div class="xpbar"><div class="xpfill" id="xpfill"></div></div>
+    <div class="badges2" id="badges"></div>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="active" data-tab="intro">💡 Arreglos</button>
+  <button data-tab="indices">🔢 Índices</button>
+  <button data-tab="metodos">🧰 Métodos</button>
+  <button data-tab="recorridos">🔁 Recorridos</button>
+  <button data-tab="slicing">✂️ Slicing</button>
+  <button data-tab="matrices">🧱 Matrices</button>
+  <button data-tab="retos">🧨 Retos</button>
+  <button data-tab="lab" class="lab">🐍 Laboratorio</button>
+  <button data-tab="taller">🏆 Taller</button>
+</nav>
+
+<div class="wrap">
+
+<!-- ===================== ARREGLOS ===================== -->
+<section class="tab active" id="intro">
+  <h2>¿Y si fueran 40 temperaturas?</h2>
+  <p>Hasta ahora cada dato vivía en su propia variable. Pero si una estación meteorológica registra la temperatura de cada día del mes, necesitarías <code>t1</code>, <code>t2</code>, … <code>t30</code>, y un programa distinto si fueran 31. Un <b>arreglo</b> guarda muchos datos bajo <b>un solo nombre</b>, y un ciclo los recorre todos, sean 5 o 5000.</p>
+  <div class="grid3">
+    <div><span class="fname">sin_arreglo.py</span><pre>t1 = <span class="nu">24.5</span>
+t2 = <span class="nu">19.0</span>
+t3 = <span class="nu">27.3</span>
+<span class="cm"># ... 27 variables más ...</span>
+t30 = <span class="nu">22.1</span></pre></div>
+    <div><span class="fname">con_lista.py</span><pre>temperaturas = [<span class="nu">24.5</span>, <span class="nu">19.0</span>, <span class="nu">27.3</span>, <span class="nu">22.1</span>, <span class="nu">18.4</span>]
+total = <span class="nu">0</span>
+<span class="kw">for</span> t <span class="kw">in</span> temperaturas:
+    total += t
+<span class="fn">print</span>(<span class="st">f"{len(temperaturas)} días · promedio {total / len(temperaturas):.2f} °C"</span>)</pre></div>
+  </div>
+  <div class="center"><button class="btn py" data-try="conlista">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>Partes de un arreglo</h3>
+  <p>Un <b>arreglo</b> es una colección de elementos guardados <b>uno tras otro</b> en memoria e identificados por su <b>posición</b>.</p>
+  <div class="cells big" id="anatCells"></div>
+  <div class="grid3">
+    <div class="tile"><b>Elemento</b><small>Cada dato guardado (aquí, una temperatura).</small></div>
+    <div class="tile"><b>Índice</b><small>Su posición. <b>Empieza en 0</b>, no en 1.</small></div>
+    <div class="tile"><b>Tamaño</b><small>Cuántos elementos hay. El último índice es tamaño − 1.</small></div>
+  </div>
+
+  <h3>¿Cómo se guarda en memoria?</h3>
+  <p>Los elementos ocupan posiciones <b>contiguas</b>. Por eso el computador llega a cualquiera <b>directamente</b>, sin recorrer los anteriores: <code>dirección = inicio + índice × tamaño del elemento</code>.</p>
+  <div class="card">
+    <div class="rin"><label>dirección de inicio <input type="number" id="memBase" value="1000"></label><label>bytes por elemento <input type="number" id="memSize" value="8"></label><label>índice <input type="number" id="memIdx" value="3"></label></div>
+    <div class="memrow" id="memRow"></div>
+    <p class="mono" id="memCalc" style="margin-bottom:0"></p>
+  </div>
+
+  <h3>Arreglos en distintos lenguajes</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>C++</th><th>Java</th><th>Python</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">int notas[5];</td><td class="mono">int[] notas = new int[5];</td><td class="mono">notas = []</td></tr>
+      <tr><td class="mono">int edades[] = {18, 20, 19};</td><td class="mono">int[] edades = {18, 20, 19};</td><td class="mono">edades = [18, 20, 19]</td></tr>
+      <tr><td>tipo y tamaño <b>fijos</b></td><td>tipo y tamaño <b>fijos</b></td><td>la <b>lista</b> crece y se reduce (dinámica) y admite cualquier tipo</td></tr>
+    </tbody>
+  </table></div>
+  <div class="grid3">
+    <div class="tile"><b>1D · vector</b><small>Una fila: las notas de un estudiante.</small><pre>v = [5, 10, 20, 25]</pre></div>
+    <div class="tile"><b>2D · matriz</b><small>Filas y columnas: notas por estudiante y materia.</small><pre>m = [[1, 2, 3],
+     [4, 5, 6]]</pre></div>
+    <div class="tile"><b>3D</b><small>Varias matrices: lo mismo para varios grupos.</small><pre>c[grupo][fila][col]</pre></div>
+  </div>
+  <div class="tip">En Python hay tres formas de tener arreglos: la <b>lista</b> (<code>list</code>, integrada, la de esta lección), el módulo <code>array</code> (poco usado) y el <code>ndarray</code> de <b>NumPy</b> (la próxima lección).</div>
+</section>
+
+<!-- ===================== ÍNDICES ===================== -->
+<section class="tab" id="indices">
+  <h2>🔢 Crear listas e índices</h2>
+  <span class="fname">crear.py</span>
+  <pre>vacia = []                        <span class="cm"># lista vacía</span>
+numeros = [<span class="nu">5</span>, <span class="nu">10</span>, <span class="nu">15</span>, <span class="nu">20</span>]          <span class="cm"># con elementos</span>
+mixta = [<span class="st">"Ana"</span>, <span class="nu">19</span>, <span class="nu">4.5</span>, <span class="kw">True</span>]     <span class="cm"># tipos mezclados</span>
+letras = list(<span class="st">"Python"</span>)            <span class="cm"># a partir de un texto</span>
+<span class="fn">print</span>(vacia)
+<span class="fn">print</span>(numeros)
+<span class="fn">print</span>(mixta)
+<span class="fn">print</span>(letras)</pre>
+  <pre class="tout">[]
+[5, 10, 15, 20]
+['Ana', 19, 4.5, True]
+['P', 'y', 't', 'h', 'o', 'n']</pre>
+  <div class="center"><button class="btn py" data-try="crear">🐍 Probarlo en el laboratorio</button></div>
+  <div class="grid3">
+    <div class="tile"><b>Ordenadas</b><small>Conservan el orden en que se crearon.</small></div>
+    <div class="tile"><b>Indexadas</b><small>Cada elemento tiene una posición.</small></div>
+    <div class="tile"><b>Mutables</b><small>Sus elementos se pueden cambiar.</small></div>
+    <div class="tile"><b>Dinámicas</b><small>Se pueden agregar y quitar elementos.</small></div>
+    <div class="tile"><b>De cualquier tipo</b><small>Números, textos, booleanos… mezclados.</small></div>
+    <div class="tile"><b>Anidables</b><small>Una lista puede contener otras listas.</small></div>
+  </div>
+
+  <h3>Índices positivos y negativos</h3>
+  <p>Toca un elemento para ver sus dos índices, o escribe un índice para ver qué devuelve.</p>
+  <div class="card">
+    <div class="mono" style="margin-bottom:8px">planetas = ["Mercurio", "Venus", "Tierra", "Marte", "Júpiter"]</div>
+    <div class="cells" id="ixCells"></div>
+    <div class="rin" style="margin-top:10px"><label class="mono">planetas[ <input type="text" id="ixIn" value="-1" style="width:70px"> ]</label></div>
+    <div class="mono" id="ixOut" style="margin-top:8px"></div>
+  </div>
+  <span class="fname">indices.py</span>
+  <pre>planetas = [<span class="st">"Mercurio"</span>, <span class="st">"Venus"</span>, <span class="st">"Tierra"</span>, <span class="st">"Marte"</span>, <span class="st">"Júpiter"</span>]
+<span class="fn">print</span>(planetas[<span class="nu">0</span>])          <span class="cm"># el primero</span>
+<span class="fn">print</span>(planetas[-<span class="nu">1</span>])         <span class="cm"># el último</span>
+<span class="fn">print</span>(planetas[<span class="nu">2</span>])
+planetas[<span class="nu">3</span>] = <span class="st">"Marte 🔴"</span>     <span class="cm"># modificar un elemento</span>
+<span class="fn">print</span>(planetas)
+<span class="fn">print</span>(<span class="fn">len</span>(planetas), <span class="st">"planetas; último índice:"</span>, <span class="fn">len</span>(planetas) - <span class="nu">1</span>)</pre>
+  <div class="center"><button class="btn py" data-try="indices">🐍 Probarlo en el laboratorio</button></div>
+  <div class="note"><b>Regla de oro:</b> en una lista de tamaño n, los índices positivos van de <code>0</code> a <code>n − 1</code> y los negativos de <code>−1</code> a <code>−n</code>. Cualquier otro índice produce <b>IndexError: list index out of range</b>. <code>len(lista)</code> da el tamaño, y <code>len(lista) - 1</code> es el último índice.</div>
+
+  <h3>🎯 Tiro al índice</h3>
+  <p><b>Enunciado:</b> escribe el índice que se pide para llegar al elemento objetivo. Cada acierto da 8 XP; los 8, la insignia <b>Puntería</b>.</p>
+  <div class="mono" style="margin:6px 0">frutas = ["mango", "pera", "uva", "kiwi", "lulo", "coco", "piña"]</div>
+  <div class="scorebar"><span>Aciertos: <b id="aimScore">0</b> / <b id="aimTotal">8</b></span><button class="btn ghost" id="aimReset">Reiniciar</button></div>
+  <div id="aim"></div>
+
+  <h3>🎯 ¿Qué imprime?</h3>
+  <div class="scorebar"><span>Aciertos: <b id="qiScore">0</b> / <b id="qiTotal">6</b></span><button class="btn ghost" id="qiReset">Reiniciar</button></div>
+  <div id="qiQuiz"></div>
+</section>
+
+<!-- ===================== MÉTODOS ===================== -->
+<section class="tab" id="metodos">
+  <h2>🧰 Métodos de las listas</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Método</th><th>Qué hace</th><th>Si n = [3, 1, 2]…</th><th>Resultado</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">append(x)</td><td>agrega x al final</td><td class="mono">n.append(5)</td><td class="mono">[3, 1, 2, 5]</td></tr>
+      <tr><td class="mono">insert(i, x)</td><td>inserta x en la posición i</td><td class="mono">n.insert(0, 9)</td><td class="mono">[9, 3, 1, 2]</td></tr>
+      <tr><td class="mono">pop()</td><td>quita y <b>devuelve</b> el último</td><td class="mono">x = n.pop()</td><td class="mono">x = 2 · [3, 1]</td></tr>
+      <tr><td class="mono">pop(i)</td><td>quita y devuelve el de la posición i</td><td class="mono">x = n.pop(0)</td><td class="mono">x = 3 · [1, 2]</td></tr>
+      <tr><td class="mono">remove(x)</td><td>quita la <b>primera</b> aparición del valor x</td><td class="mono">n.remove(1)</td><td class="mono">[3, 2]</td></tr>
+      <tr><td class="mono">index(x)</td><td>posición de la primera aparición de x</td><td class="mono">n.index(2)</td><td class="mono">2</td></tr>
+      <tr><td class="mono">count(x)</td><td>cuántas veces aparece x</td><td class="mono">n.count(3)</td><td class="mono">1</td></tr>
+      <tr><td class="mono">sort()</td><td>ordena de menor a mayor (<code>sort(reverse=True)</code>: de mayor a menor)</td><td class="mono">n.sort()</td><td class="mono">[1, 2, 3]</td></tr>
+      <tr><td class="mono">x in n</td><td>¿está x en la lista? (operador, no método)</td><td class="mono">2 in n</td><td class="mono">True</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><b>¡Cuidado!</b> <code>append</code>, <code>insert</code>, <code>remove</code> y <code>sort</code> <b>modifican</b> la lista y devuelven <code>None</code>: escribir <code>n = n.append(5)</code> ¡borra tu lista! Y <code>remove(x)</code> e <code>index(x)</code> producen <b>ValueError</b> si x no está: pregunta antes con <code>in</code>.</div>
+  <span class="fname">fila_banco.py</span>
+  <pre>fila = [<span class="st">"Ana"</span>, <span class="st">"Luis"</span>]
+fila.append(<span class="st">"Sara"</span>)            <span class="cm"># llega al final</span>
+fila.insert(<span class="nu">0</span>, <span class="st">"Don Pedro"</span>)    <span class="cm"># turno preferencial</span>
+atendido = fila.pop(<span class="nu">0</span>)         <span class="cm"># sale el primero</span>
+fila.remove(<span class="st">"Luis"</span>)            <span class="cm"># Luis se cansó y se fue</span>
+<span class="fn">print</span>(<span class="st">"Atendido:"</span>, atendido)
+<span class="fn">print</span>(<span class="st">"En fila:"</span>, fila, <span class="st">"→"</span>, <span class="fn">len</span>(fila), <span class="st">"personas"</span>)
+<span class="fn">print</span>(<span class="st">"¿Está Sara?"</span>, <span class="st">"Sara"</span> <span class="kw">in</span> fila, <span class="st">"· posición:"</span>, fila.index(<span class="st">"Sara"</span>))</pre>
+  <div class="center"><button class="btn py" data-try="metodos">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>🔧 Taller mecánico de listas</h3>
+  <p><b>Enunciado:</b> usa los botones para transformar la lista inicial en la lista objetivo de cada misión. Cada botón muestra la línea de Python que ejecutaste. Cada misión cumplida da 15 XP; las tres, la insignia <b>Mecánico de listas</b>.</p>
+  <div class="card mech">
+    <div class="mechtop"><select id="mxSel" aria-label="Misión"></select><span id="mxGoal" class="mono"></span></div>
+    <div class="cells" id="mxCells"></div>
+    <div class="mechbtns">
+      <label>valor <input type="text" id="mxVal" value="9"></label><label>posición <input type="number" id="mxPos" value="0"></label>
+      <button class="btn ghost" data-m="append">append(valor)</button><button class="btn ghost" data-m="insert">insert(posición, valor)</button>
+      <button class="btn ghost" data-m="pop">pop()</button><button class="btn ghost" data-m="popi">pop(posición)</button>
+      <button class="btn ghost" data-m="remove">remove(valor)</button><button class="btn ghost" data-m="sort">sort()</button><button class="btn ghost" data-m="rev">sort(reverse=True)</button>
+      <button class="btn ghost" data-m="reset">↺ Reiniciar misión</button>
+    </div>
+    <pre class="term" id="mxLog" style="min-height:90px"></pre>
+    <div class="feedback" id="mxFb"></div>
+  </div>
+
+  <h3>🔮 ¿Qué queda en la lista?</h3>
+  <div class="scorebar"><span>Aciertos: <b id="pqScore">0</b> / <b id="pqTotal">5</b></span><button class="btn ghost" id="pqReset">Reiniciar</button></div>
+  <div id="pqQuiz"></div>
+</section>
+
+<!-- ===================== RECORRIDOS ===================== -->
+<section class="tab" id="recorridos">
+  <h2>🔁 Tres formas de recorrer una lista</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Forma</th><th>Te entrega</th><th>Úsala cuando…</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">for x in lista:</td><td>cada elemento</td><td>solo necesitas leer los valores</td></tr>
+      <tr><td class="mono">for i in range(len(lista)):</td><td>cada índice (y con él, <code>lista[i]</code>)</td><td>necesitas la posición o vas a <b>modificar</b> la lista</td></tr>
+      <tr><td class="mono">for i, x in enumerate(lista):</td><td>índice y elemento a la vez</td><td>vas a mostrar la posición junto al valor</td></tr>
+    </tbody>
+  </table></div>
+  <span class="fname">recorridos.py</span>
+  <pre>precios = [<span class="nu">12000</span>, <span class="nu">45000</span>, <span class="nu">8900</span>]
+<span class="kw">for</span> p <span class="kw">in</span> precios:                       <span class="cm"># por elemento: solo leer</span>
+    <span class="fn">print</span>(<span class="st">"Precio:"</span>, p)
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(precios)):           <span class="cm"># por índice: modificar</span>
+    precios[i] = precios[i] * <span class="nu">1.19</span>
+<span class="kw">for</span> i, p <span class="kw">in</span> enumerate(precios):         <span class="cm"># posición y valor</span>
+    <span class="fn">print</span>(<span class="st">f"Producto {i + 1} con IVA: {p:.2f}"</span>)</pre>
+  <div class="center"><button class="btn py" data-try="recorridos">🐍 Probarlo en el laboratorio</button></div>
+  <div class="note"><b>Trampa clásica:</b> <code>for p in precios: p = p * 1.19</code> <b>no cambia la lista</b>: <code>p</code> es una copia del valor. Para modificar los elementos se recorre por índice.</div>
+
+  <h3>Dos recorridos: el promedio y los que lo superan</h3>
+  <span class="fname">promedio.py</span>
+  <pre>ventas = [<span class="nu">320000</span>, <span class="nu">450000</span>, <span class="nu">280000</span>, <span class="nu">510000</span>, <span class="nu">390000</span>]
+total = <span class="nu">0</span>
+<span class="kw">for</span> v <span class="kw">in</span> ventas:                 <span class="cm"># 1.er recorrido: el promedio</span>
+    total += v
+promedio = total / <span class="fn">len</span>(ventas)
+buenos = []
+<span class="kw">for</span> v <span class="kw">in</span> ventas:                 <span class="cm"># 2.º recorrido: comparar con él</span>
+    <span class="kw">if</span> v &gt; promedio:
+        buenos.append(v)
+<span class="fn">print</span>(<span class="st">f"Promedio: {promedio:.2f}"</span>)
+<span class="fn">print</span>(<span class="st">"Días sobre el promedio:"</span>, buenos)</pre>
+  <div class="center"><button class="btn py" data-try="promedio">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>🧭 Paso a paso</h3>
+  <p>Avanza con <b>▶ Paso</b> y observa cómo cambian el índice, el elemento y la lista en cada vuelta. Recorre los tres programas (15 XP cada uno) para la insignia <b>Rastreador</b>.</p>
+  <div class="sim" id="sim13"></div>
+
+  <h3>🤔 ¿Qué recorrido usarías?</h3>
+  <div class="scorebar"><span>Aciertos: <b id="rcScore">0</b> / <b id="rcTotal">5</b></span><button class="btn ghost" id="rcReset">Reiniciar</button></div>
+  <div id="rcQuiz"></div>
+</section>
+
+<!-- ===================== SLICING ===================== -->
+<section class="tab" id="slicing">
+  <h2>✂️ Slicing: tomar una parte de la lista</h2>
+  <p><code>lista[inicio:fin:paso]</code> crea una <b>lista nueva</b> con los elementos desde <b>inicio</b> hasta <b>fin − 1</b> (el fin no se incluye, como en <code>range</code>), avanzando de a <b>paso</b>. Cualquiera de los tres se puede omitir: inicio por defecto es el principio, fin es el final y paso es 1.</p>
+  <div class="tablewrap"><table class="mini">
+    <thead><tr><th>Con n = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]</th><th>Significa</th><th>Resultado</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">n[2:5]</td><td>índices 2, 3 y 4</td><td class="mono">[30, 40, 50]</td></tr>
+      <tr><td class="mono">n[:3]</td><td>los primeros 3</td><td class="mono">[10, 20, 30]</td></tr>
+      <tr><td class="mono">n[7:]</td><td>desde el índice 7 hasta el final</td><td class="mono">[80, 90, 100]</td></tr>
+      <tr><td class="mono">n[-3:]</td><td>los últimos 3</td><td class="mono">[80, 90, 100]</td></tr>
+      <tr><td class="mono">n[:-3]</td><td>todos menos los últimos 3</td><td class="mono">[10, 20, 30, 40, 50, 60, 70]</td></tr>
+      <tr><td class="mono">n[::2]</td><td>de 2 en 2</td><td class="mono">[10, 30, 50, 70, 90]</td></tr>
+      <tr><td class="mono">n[::-1]</td><td>al revés</td><td class="mono">[100, 90, 80, …, 10]</td></tr>
+      <tr><td class="mono">n[4:4]</td><td>inicio igual al fin</td><td class="mono">[]</td></tr>
+      <tr><td class="mono">n[:]</td><td>copia completa</td><td class="mono">[10, 20, …, 100]</td></tr>
+    </tbody>
+  </table></div>
+  <span class="fname">meses.py</span>
+  <pre>meses = [<span class="st">"ene"</span>, <span class="st">"feb"</span>, <span class="st">"mar"</span>, <span class="st">"abr"</span>, <span class="st">"may"</span>, <span class="st">"jun"</span>, <span class="st">"jul"</span>, <span class="st">"ago"</span>, <span class="st">"sep"</span>, <span class="st">"oct"</span>, <span class="st">"nov"</span>, <span class="st">"dic"</span>]
+<span class="fn">print</span>(meses[<span class="nu">0</span>:<span class="nu">3</span>])      <span class="cm"># primer trimestre</span>
+<span class="fn">print</span>(meses[<span class="nu">6</span>:])       <span class="cm"># segundo semestre</span>
+<span class="fn">print</span>(meses[-<span class="nu">3</span>:])      <span class="cm"># los últimos tres</span>
+<span class="fn">print</span>(meses[::<span class="nu">3</span>])      <span class="cm"># uno de cada tres</span>
+<span class="fn">print</span>(meses[::-<span class="nu">1</span>])     <span class="cm"># al revés</span></pre>
+  <div class="center"><button class="btn py" data-try="slicing">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>✂️ Corta exacto</h3>
+  <p><b>Enunciado:</b> escribe la rebanada (por ejemplo <code>2:5</code> o <code>::-1</code>) que produce exactamente cada objetivo a partir de <code>n</code>. Al escribir verás resaltado lo que toma tu rebanada. Cada acierto da 10 XP; los 8, la insignia <b>Cirujano</b>.</p>
+  <div class="mono" style="margin:6px 0">n = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]</div>
+  <div class="scorebar"><span>Cortes perfectos: <b id="slScore">0</b> / <b id="slTotal">8</b></span><button class="btn ghost" id="slReset">Reiniciar</button></div>
+  <div id="slicer"></div>
+</section>
+
+<!-- ===================== MATRICES ===================== -->
+<section class="tab" id="matrices">
+  <h2>🧱 Matrices: listas de listas</h2>
+  <p>Una <b>matriz</b> es una lista cuyos elementos son listas: cada lista interna es una <b>fila</b>. Se accede con dos índices: <code>m[fila][columna]</code>, y se recorre con <b>ciclos anidados</b>: el externo por las filas y el interno por las columnas.</p>
+  <div class="grid3">
+    <div><span class="fname">matriz.py</span><pre><span class="cm"># ventas (millones) de 2 sucursales en 3 meses</span>
+ventas = [[<span class="nu">120</span>, <span class="nu">95</span>, <span class="nu">140</span>],
+          [<span class="nu">80</span>, <span class="nu">110</span>, <span class="nu">100</span>]]
+<span class="fn">print</span>(ventas[<span class="nu">1</span>][<span class="nu">2</span>])                  <span class="cm"># sucursal 1, mes 2</span>
+<span class="kw">for</span> f <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(ventas)):
+    total = <span class="nu">0</span>
+    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(ventas[f])):
+        total += ventas[f][c]
+    <span class="fn">print</span>(<span class="st">f"Sucursal {f}: {ventas[f]} → total {total}"</span>)</pre>
+    <div class="center"><button class="btn py" data-try="matriz">🐍 Probarlo en el laboratorio</button></div></div>
+    <div><div class="grid2x" id="mGrid"></div><p class="mono" id="mInfo" style="font-size:.88rem"></p></div>
+  </div>
+  <div class="tip">Toca una celda de la matriz para ver cómo se escribe su acceso. <code>len(ventas)</code> es el número de <b>filas</b> y <code>len(ventas[0])</code> el de <b>columnas</b>.</div>
+  <div class="note"><b>Cuidado al crear matrices:</b> <code>[[0] * 3] * 2</code> crea dos referencias a la <b>misma</b> fila (cambiar una cambia la otra). Crea cada fila con un ciclo: <code>for f in range(2): m.append([0] * 3)</code>.</div>
+
+  <h3>🔎 ¿Qué imprime? (matrices)</h3>
+  <div class="scorebar"><span>Aciertos: <b id="mqScore">0</b> / <b id="mqTotal">4</b></span><button class="btn ghost" id="mqReset">Reiniciar</button></div>
+  <div id="mqQuiz"></div>
+</section>
+
+<!-- ===================== RETOS ===================== -->
+<section class="tab" id="retos">
+  <h2>🧩 Arma el programa</h2>
+  <p><b>Enunciado:</b> las líneas están desordenadas (con su sangría). Arma cada programa. Cada uno da 15 XP; los tres, la insignia <b>Ensamblador</b>.</p>
+  <div id="parsons"></div>
+  <h2>🕵️ Caza el error</h2>
+  <p><b>Enunciado:</b> ¿qué pasa con cada fragmento?</p>
+  <div class="scorebar"><span>Cazados: <b id="ceScore">0</b> / <b id="ceTotal">8</b></span><button class="btn ghost" id="ceReset">Reiniciar</button></div>
+  <div id="ceQuiz"></div>
+</section>
+
+<!-- ===================== LABORATORIO ===================== -->
+<section class="tab" id="lab">
+  <h2>🐍 Laboratorio: Python de verdad en tu navegador</h2>
+  <p>Escribe tu programa, pon los datos de entrada (uno por línea) y pulsa <b>▶ Ejecutar</b>. Elige un <b>reto</b> y pulsa <b>✅ Comprobar reto</b>: el laboratorio lo prueba con varios datos y, cuando el reto pide funciones, las llama directamente. <small style="color:var(--muted)">La primera vez se descarga Python (≈ 12 MB); necesitas conexión a internet.</small></p>
+  <div class="lab">
+    <div class="labbar">
+      <select id="retoSel" aria-label="Reto"></select>
+      <span class="pystat" id="pyStatus">⚪ Python sin cargar</span>
+    </div>
+    <div class="retoinfo" id="retoInfo"></div>
+    <div class="labgrid">
+      <div>
+        <label for="code">📝 Tu programa (.py) · <span style="font-weight:400">Tab = 4 espacios · Ctrl+Enter = ejecutar</span></label>
+        <textarea id="code" class="code" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+        <label for="stdin">⌨️ Entradas: una por línea (cada <code>input()</code> toma la siguiente)</label>
+        <textarea id="stdin" class="stdin" spellcheck="false"></textarea>
+        <div class="btns">
+          <button class="btn py" id="runBtn">▶ Ejecutar</button>
+          <button class="btn" id="checkBtn">✅ Comprobar reto</button>
+          <button class="btn ghost" id="resetCode">↺ Plantilla</button>
+          <button class="btn ghost" id="solBtn">👀 Solución</button>
+        </div>
+      </div>
+      <div>
+        <label>🖥️ Terminal</label>
+        <pre class="term" id="term"><span class="sys">La salida de tu programa aparecerá aquí.</span></pre>
+        <div class="chk" id="checkRes"></div>
+      </div>
+    </div>
+  </div>
+  <div class="tip">🏅 Los retos suben de dificultad y de premio: <b>🟢 Nivel 1 = 20 XP</b> · <b>🟡 Nivel 2 = 30 XP</b> · <b>🟠 Nivel 3 = 40 XP</b> · <b>🔴 Nivel 4 ★ = 60 XP</b>. Si abres la solución antes de superarlo, da la <b>mitad</b>. Supera 6 retos para la insignia <b>Coleccionista</b>, los 3 del nivel 4 para <b>Taquillero</b> y los 12 para <b>Leyenda</b>.</div>
+</section>
+
+<!-- ===================== TALLER ===================== -->
+<section class="tab" id="taller">
+  <h2>🏆 Taller — 12 ejercicios con listas</h2>
+  <p>Los ejercicios van de menor a mayor dificultad, en <b>4 niveles</b>, y combinan listas con <b>cálculos</b>: IVA, descuentos, porcentajes, promedios, medianas, inventarios y recaudos. Antes de programar, decide: ¿qué listas necesito y cómo se llenan?, ¿qué recorrido uso (por elemento, por índice o enumerate)?, ¿necesito una lista nueva o modificar la existente?</p>
+  <div class="card">
+    <h3 style="margin-top:0">🧮 Caja de herramientas</h3>
+    <div class="tablewrap"><table class="mini"><thead><tr><th>Quiero…</th><th>En Python</th></tr></thead><tbody>
+      <tr><td>crear y llenar una lista</td><td class="mono">datos = [] · datos.append(x)</td></tr>
+      <tr><td>el primero · el último · el tamaño</td><td class="mono">datos[0] · datos[-1] · len(datos)</td></tr>
+      <tr><td>saber si está y dónde</td><td class="mono">if x in datos: i = datos.index(x)</td></tr>
+      <tr><td>modificar cada elemento</td><td class="mono">for i in range(len(datos)): datos[i] = …</td></tr>
+      <tr><td>posición del mayor</td><td class="mono">guardar el índice del mayor visto hasta ahora</td></tr>
+      <tr><td>cuántas veces aparece</td><td class="mono">datos.count(x)</td></tr>
+      <tr><td>una parte · al revés</td><td class="mono">datos[a:b] · datos[::-1]</td></tr>
+      <tr><td>intercambiar dos posiciones</td><td class="mono">datos[i], datos[j] = datos[j], datos[i]</td></tr>
+      <tr><td>matriz F × C</td><td class="mono">m = [] · for f in range(F): m.append([0] * C)</td></tr>
+      <tr><td>porcentaje de una parte</td><td class="mono">parte / total * 100</td></tr>
+    </tbody></table></div>
+  </div>
+  <div id="ejercicios"></div>
+</section>
+
+</div>
+<div class="xppop" id="xppop"></div>
+<footer>Material interactivo · Lógica de Programación 1 · Arreglos y listas en Python (Python 3.14)</footer>
+
+<script>
+const CFG = {"key": "lp1-clase13-listas-v1", "draft": "lp1-c13-draft-", "firstRunLabel": "¡Hola, lista!"};
+const RETOS = [{"id": "compras", "lvl": 1, "xp": 20, "t": "1. Lista de precios del mercado", "tag": "Nivel 1 · append + índices + len", "d": "Pide cuántos productos compraste (N) y luego el precio de cada uno; guárdalos en una lista que empieza vacía. Muestra el precio del <b>primer<\/b> producto, el del <b>último<\/b>, la <b>cantidad<\/b> de productos y el <b>total con IVA del 19 %<\/b>. Calcula el total con un acumulador, <b>sin usar <code>sum()<\/code><\/b>. Formato: <code>Primero: X<\/code>, <code>Último: X<\/code>, <code>Cantidad: N<\/code> y <code>Total con IVA: X<\/code> (dinero con 2 decimales).<br><b>Entrada:<\/b> un entero N y N reales · <b>Salida:<\/b> cuatro líneas<br><b>Ejemplo:<\/b> 3 productos: 4500, 12900 y 3200 → <code>Primero: 4500.00<\/code> · <code>Último: 3200.00<\/code> · <code>Cantidad: 3<\/code> · <code>Total con IVA: 24514.00<\/code>.<br>💡 <b>Pista:<\/b> el último elemento tiene un índice especial que no depende del tamaño de la lista. Para recorrerla y acumular no necesitas índices.", "starter": "precios = []\nn = int(input(\"¿Cuántos productos? \"))\n", "sol": "precios = []\nn = int(input(\"¿Cuántos productos? \"))\nfor i in range(n):\n    precios.append(float(input(f\"Precio {i + 1}: \")))\ntotal = 0\nfor p in precios:\n    total += p\nprint(f\"Primero: {precios[0]:.2f}\")\nprint(f\"Último: {precios[-1]:.2f}\")\nprint(f\"Cantidad: {len(precios)}\")\nprint(f\"Total con IVA: {total * 1.19:.2f}\")", "tests": [{"in": ["3", "4500", "12900", "3200"], "must": ["primero[^\\n\\d]*(?<![\\d.\\-])(?:4499\\.99|4500(?:\\.0{1,2})?|4500\\.01)(?!\\d)", "[uú]ltimo[^\\n\\d]*(?<![\\d.\\-])(?:3199\\.99|3200(?:\\.0{1,2})?|3200\\.01)(?!\\d)", "cantidad[^\\n\\d]*(?<![\\d.\\-])3(?:\\.0{1,2})?(?!\\d)", "total con iva[^\\n\\d]*(?<![\\d.\\-])(?:24513\\.99|24514(?:\\.0{1,2})?|24514\\.01)(?!\\d)"], "not": [], "show": "Primero: 4500.00 · Último: 3200.00 · Cantidad: 3 · Total con IVA: 24514.00"}, {"in": ["1", "99900"], "must": ["primero[^\\n\\d]*(?<![\\d.\\-])(?:99899\\.99|99900(?:\\.0{1,2})?|99900\\.01)(?!\\d)", "[uú]ltimo[^\\n\\d]*(?<![\\d.\\-])(?:99899\\.99|99900(?:\\.0{1,2})?|99900\\.01)(?!\\d)", "cantidad[^\\n\\d]*(?<![\\d.\\-])1(?:\\.0{1,2})?(?!\\d)", "total con iva[^\\n\\d]*(?<![\\d.\\-])(?:118880\\.99|118881(?:\\.0{1,2})?|118881\\.01)(?!\\d)"], "not": [], "show": "Primero: 99900.00 · Último: 99900.00 · Cantidad: 1 · Total con IVA: 118881.00"}, {"in": ["5", "1200.5", "800", "15000", "23990", "4100"], "must": ["primero[^\\n\\d]*(?<![\\d.\\-])(?:1200\\.49|1200\\.50?|1200\\.51)(?!\\d)", "[uú]ltimo[^\\n\\d]*(?<![\\d.\\-])(?:4099\\.99|4100(?:\\.0{1,2})?|4100\\.01)(?!\\d)", "cantidad[^\\n\\d]*(?<![\\d.\\-])5(?:\\.0{1,2})?(?!\\d)", "total con iva[^\\n\\d]*(?<![\\d.\\-])(?:53657\\.68|53657\\.69|53657\\.70?)(?!\\d)"], "not": [], "show": "Primero: 1200.50 · Último: 4100.00 · Cantidad: 5 · Total con IVA: 53657.69"}]}, {"id": "inventario", "lvl": 1, "xp": 20, "t": "2. Buscar en el inventario", "tag": "Nivel 1 · in + index() + listas paralelas", "d": "La tienda guarda su inventario en tres listas <b>paralelas<\/b> (la posición i de cada lista corresponde al mismo producto): <code>productos<\/code>, <code>stock<\/code> y <code>precios<\/code> (ya están en la plantilla). Pide el nombre de un producto (en minúsculas). Si no está, muestra <code>No existe en el inventario<\/code>. Si está pero su stock es 0, muestra <code>Agotado<\/code>. Si hay unidades, muestra <code>Posición: i<\/code>, <code>Stock: s<\/code> y <code>Valor en bodega: X<\/code> (stock × precio, 2 decimales).<br><b>Entrada:<\/b> un texto · <b>Salida:<\/b> una a tres líneas<br><b>Ejemplo:<\/b> huevos → <code>Posición: 3<\/code> · <code>Stock: 7<\/code> · <code>Valor en bodega: 132300.00<\/code>; leche → <code>Agotado<\/code>; queso → <code>No existe en el inventario<\/code>.<br>💡 <b>Pista:<\/b> antes de pedir la posición de un elemento asegúrate de que esté en la lista (si no, <code>index()<\/code> produce un error). Con esa posición puedes consultar las otras dos listas.", "starter": "productos = [\"arroz\", \"leche\", \"pan\", \"huevos\", \"café\", \"azúcar\"]\nstock = [12, 0, 25, 7, 3, 0]\nprecios = [4800, 4200, 6500, 18900, 21500, 4100]\nnombre = input(\"Producto: \")\n", "sol": "productos = [\"arroz\", \"leche\", \"pan\", \"huevos\", \"café\", \"azúcar\"]\nstock = [12, 0, 25, 7, 3, 0]\nprecios = [4800, 4200, 6500, 18900, 21500, 4100]\nnombre = input(\"Producto: \")\nif nombre not in productos:\n    print(\"No existe en el inventario\")\nelse:\n    i = productos.index(nombre)\n    if stock[i] == 0:\n        print(\"Agotado\")\n    else:\n        print(f\"Posición: {i}\")\n        print(f\"Stock: {stock[i]}\")\n        print(f\"Valor en bodega: {stock[i] * precios[i]:.2f}\")", "tests": [{"in": ["huevos"], "must": ["posici[oó]n[^\\n\\d]*(?<![\\d.\\-])3(?:\\.0{1,2})?(?!\\d)", "stock[^\\n\\d]*(?<![\\d.\\-])7(?:\\.0{1,2})?(?!\\d)", "valor en bodega[^\\n\\d]*(?<![\\d.\\-])(?:132299\\.99|132300(?:\\.0{1,2})?|132300\\.01)(?!\\d)"], "not": ["agotado", "no existe"], "show": "Posición: 3 · Stock: 7 · Valor en bodega: 132300.00"}, {"in": ["leche"], "must": ["agotado"], "not": ["no existe", "valor en bodega"], "show": "Agotado (posición 1)"}, {"in": ["queso"], "must": ["no existe"], "not": ["agotado", "posici"], "show": "No existe en el inventario"}, {"in": ["arroz"], "must": ["posici[oó]n[^\\n\\d]*(?<![\\d.\\-])0(?:\\.0{1,2})?(?!\\d)", "stock[^\\n\\d]*(?<![\\d.\\-])12(?:\\.0{1,2})?(?!\\d)", "valor en bodega[^\\n\\d]*(?<![\\d.\\-])(?:57599\\.99|57600(?:\\.0{1,2})?|57600\\.01)(?!\\d)"], "not": ["agotado", "no existe"], "show": "Posición: 0 · Stock: 12 · Valor en bodega: 57600.00"}, {"in": ["café"], "must": ["posici[oó]n[^\\n\\d]*(?<![\\d.\\-])4(?:\\.0{1,2})?(?!\\d)", "stock[^\\n\\d]*(?<![\\d.\\-])3(?:\\.0{1,2})?(?!\\d)", "valor en bodega[^\\n\\d]*(?<![\\d.\\-])(?:64499\\.99|64500(?:\\.0{1,2})?|64500\\.01)(?!\\d)"], "not": ["agotado", "no existe"], "show": "Posición: 4 · Stock: 3 · Valor en bodega: 64500.00"}]}, {"id": "aprobadas", "lvl": 1, "xp": 20, "t": "3. Notas hasta el centinela", "tag": "Nivel 1 · while + append + lista nueva", "d": "Pide notas (reales) hasta que el usuario escriba <b>−1<\/b> y guárdalas en una lista. Luego construye una <b>lista nueva<\/b> solo con las aprobadas (3.0 o más). Muestra <code>Notas: N<\/code>, <code>Aprobadas: [...]<\/code> (la lista tal como la imprime <code>print<\/code>) y <code>Porcentaje de aprobación: P%<\/code> (2 decimales). Si no se ingresó ninguna nota, muestra <code>No hay notas<\/code>.<br><b>Entrada:<\/b> reales terminados en −1 · <b>Salida:<\/b> tres líneas o el aviso<br><b>Ejemplo:<\/b> 4.5, 2.8, 3.0, 1.9, 3.7, −1 → <code>Notas: 5<\/code> · <code>Aprobadas: [4.5, 3.0, 3.7]<\/code> · <code>Porcentaje de aprobación: 60.00%<\/code>.<br>💡 <b>Pista:<\/b> el −1 es un centinela: nunca debe entrar a la lista. La lista nueva también empieza vacía y crece con <code>append<\/code> dentro de un recorrido.", "starter": "notas = []\nnota = float(input(\"Nota (-1 para terminar): \"))\n", "sol": "notas = []\nnota = float(input(\"Nota (-1 para terminar): \"))\nwhile nota != -1:\n    notas.append(nota)\n    nota = float(input(\"Nota (-1 para terminar): \"))\nif len(notas) == 0:\n    print(\"No hay notas\")\nelse:\n    aprobadas = []\n    for n in notas:\n        if n >= 3.0:\n            aprobadas.append(n)\n    print(f\"Notas: {len(notas)}\")\n    print(\"Aprobadas:\", aprobadas)\n    print(f\"Porcentaje de aprobación: {len(aprobadas) / len(notas) * 100:.2f}%\")", "tests": [{"in": ["4.5", "2.8", "3.0", "1.9", "3.7", "-1"], "must": ["notas[^\\n\\d]*(?<![\\d.\\-])5(?:\\.0{1,2})?(?!\\d)", "aprobadas\\W*\\[4\\.5,\\ 3\\.0,\\ 3\\.7\\]", "porcentaje[^\\n\\d]*(?<![\\d.\\-])(?:59\\.99|60(?:\\.0{1,2})?|60\\.01)(?!\\d)"], "not": [], "show": "Notas: 5 · Aprobadas: [4.5, 3.0, 3.7] · Porcentaje de aprobación: 60.00%"}, {"in": ["-1"], "must": ["no hay notas"], "not": ["aprobadas"], "show": "No hay notas"}, {"in": ["2.0", "2.5", "-1"], "must": ["notas[^\\n\\d]*(?<![\\d.\\-])2(?:\\.0{1,2})?(?!\\d)", "aprobadas\\W*\\[\\]", "porcentaje[^\\n\\d]*(?<![\\d.\\-])(?:-0\\.01|-?0(?:\\.0{1,2})?|0\\.01)(?!\\d)"], "not": [], "show": "Notas: 2 · Aprobadas: [] · Porcentaje de aprobación: 0.00%"}, {"in": ["5.0", "4.2", "3.3", "-1"], "must": ["notas[^\\n\\d]*(?<![\\d.\\-])3(?:\\.0{1,2})?(?!\\d)", "aprobadas\\W*\\[5\\.0,\\ 4\\.2,\\ 3\\.3\\]", "porcentaje[^\\n\\d]*(?<![\\d.\\-])(?:99\\.99|100(?:\\.0{1,2})?|100\\.01)(?!\\d)"], "not": [], "show": "Notas: 3 · Aprobadas: [5.0, 4.2, 3.3] · Porcentaje de aprobación: 100.00%"}]}, {"id": "temperaturas", "lvl": 2, "xp": 30, "t": "4. Una semana de temperaturas", "tag": "Nivel 2 · recorrido por índice + máximo y mínimo", "d": "Pide las temperaturas de los 7 días de la semana (reales) y guárdalas en una lista. <b>Sin usar <code>max()<\/code>, <code>min()<\/code> ni <code>sum()<\/code><\/b>, muestra la máxima y el día en que ocurrió (días del 1 al 7; si se repite, el primero), la mínima y su día, la <b>amplitud térmica<\/b> (máxima − mínima, 2 decimales) y cuántos días estuvieron <b>por encima del promedio<\/b>. Formato: <code>Máxima: X (día D)<\/code>, <code>Mínima: X (día D)<\/code>, <code>Amplitud: X<\/code>, <code>Días sobre el promedio: N<\/code>.<br><b>Entrada:<\/b> 7 reales · <b>Salida:<\/b> cuatro líneas<br><b>Ejemplo:<\/b> 24.5, 19.0, 27.3, 22.1, 18.4, 27.3, 20.0 → <code>Máxima: 27.3 (día 3)<\/code> · <code>Mínima: 18.4 (día 5)<\/code> · <code>Amplitud: 8.90<\/code> · <code>Días sobre el promedio: 3<\/code>.<br>💡 <b>Pista:<\/b> para saber el día necesitas la posición, no solo el valor: guarda el índice del mayor visto hasta el momento. El promedio solo se conoce después de recorrer toda la lista, así que contar los días sobre él requiere otro recorrido.", "starter": "temps = []\nfor dia in range(1, 8):\n    temps.append(float(input(f\"Temperatura del día {dia}: \")))\n", "sol": "temps = []\nfor dia in range(1, 8):\n    temps.append(float(input(f\"Temperatura del día {dia}: \")))\ni_max = 0\ni_min = 0\ntotal = 0\nfor i in range(len(temps)):\n    if temps[i] > temps[i_max]:\n        i_max = i\n    if temps[i] < temps[i_min]:\n        i_min = i\n    total += temps[i]\npromedio = total / len(temps)\nsobre = 0\nfor t in temps:\n    if t > promedio:\n        sobre += 1\nprint(f\"Máxima: {temps[i_max]} (día {i_max + 1})\")\nprint(f\"Mínima: {temps[i_min]} (día {i_min + 1})\")\nprint(f\"Amplitud: {temps[i_max] - temps[i_min]:.2f}\")\nprint(f\"Días sobre el promedio: {sobre}\")", "tests": [{"in": ["24.5", "19.0", "27.3", "22.1", "18.4", "27.3", "20.0"], "must": ["m[aá]xima[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:27\\.29|27\\.30?|27\\.31)(?!\\d)[^\\n]*d[ií]a\\D*3\\b", "m[ií]nima[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:18\\.39|18\\.40?|18\\.41)(?!\\d)[^\\n]*d[ií]a\\D*5\\b", "amplitud[^\\n\\d]*(?<![\\d.\\-])(?:8\\.89|8\\.90?|8\\.91)(?!\\d)", "sobre el promedio[^\\n\\d]*(?<![\\d.\\-])3(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "Máxima: 27.3 (día 3) · Mínima: 18.4 (día 5) · Amplitud: 8.90 · Días sobre el promedio: 3"}, {"in": ["15.0", "15.0", "15.0", "15.0", "15.0", "15.0", "15.0"], "must": ["m[aá]xima[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:14\\.99|15(?:\\.0{1,2})?|15\\.01)(?!\\d)[^\\n]*d[ií]a\\D*1\\b", "m[ií]nima[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:14\\.99|15(?:\\.0{1,2})?|15\\.01)(?!\\d)[^\\n]*d[ií]a\\D*1\\b", "amplitud[^\\n\\d]*(?<![\\d.\\-])(?:-0\\.01|-?0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "sobre el promedio[^\\n\\d]*(?<![\\d.\\-])0(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "Máxima: 15.0 (día 1) · Mínima: 15.0 (día 1) · Amplitud: 0.00 · Días sobre el promedio: 0"}, {"in": ["-2.5", "0.0", "3.1", "-4.0", "1.2", "-4.0", "2.2"], "must": ["m[aá]xima[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:3\\.09|3\\.10?|3\\.11)(?!\\d)[^\\n]*d[ií]a\\D*3\\b", "m[ií]nima[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:-4\\.01|-4(?:\\.0{1,2})?|-3\\.99)(?!\\d)[^\\n]*d[ií]a\\D*4\\b", "amplitud[^\\n\\d]*(?<![\\d.\\-])(?:7\\.09|7\\.10?|7\\.11)(?!\\d)", "sobre el promedio[^\\n\\d]*(?<![\\d.\\-])4(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "Máxima: 3.1 (día 3) · Mínima: -4.0 (día 4) · Amplitud: 7.10 · Días sobre el promedio: 4"}, {"in": ["30.1", "29.9", "31.5", "32.0", "28.4", "27.7", "33.6"], "must": ["m[aá]xima[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:33\\.59|33\\.60?|33\\.61)(?!\\d)[^\\n]*d[ií]a\\D*7\\b", "m[ií]nima[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:27\\.69|27\\.70?|27\\.71)(?!\\d)[^\\n]*d[ií]a\\D*6\\b", "amplitud[^\\n\\d]*(?<![\\d.\\-])(?:5\\.89|5\\.90?|5\\.91)(?!\\d)", "sobre el promedio[^\\n\\d]*(?<![\\d.\\-])3(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "Máxima: 33.6 (día 7) · Mínima: 27.7 (día 6) · Amplitud: 5.90 · Días sobre el promedio: 3"}]}, {"id": "liquidacion", "lvl": 2, "xp": 30, "t": "5. Temporada de liquidación", "tag": "Nivel 2 · modificar la lista por índice + validación", "d": "Pide N precios y guárdalos en una lista. Luego pide el porcentaje de descuento de la temporada; <b>mientras<\/b> no esté entre 0 y 70, muestra <code>Porcentaje inválido<\/code> y vuelve a pedirlo. Aplica el descuento <b>modificando la misma lista<\/b>; los productos que costaban <b>100000 o más<\/b> reciben <b>5 puntos porcentuales adicionales<\/b> (con 20 % pagan 25 % menos). Muestra <code>Precio k: X<\/code> para cada producto y <code>Ahorro total: X<\/code> (2 decimales).<br><b>Entrada:<\/b> un entero N, N reales y uno o más reales · <b>Salida:<\/b> una línea por precio y el ahorro<br><b>Ejemplo:<\/b> precios 80000 y 150000, descuento 20 → <code>Precio 1: 64000.00<\/code> · <code>Precio 2: 112500.00<\/code> · <code>Ahorro total: 53500.00<\/code>.<br>💡 <b>Pista:<\/b> para cambiar un elemento necesitas su posición: el recorrido por elemento solo te entrega una copia del valor. Guarda el total original antes de modificar la lista para poder calcular el ahorro.", "starter": "precios = []\nn = int(input(\"¿Cuántos productos? \"))\nfor i in range(n):\n    precios.append(float(input(f\"Precio {i + 1}: \")))\n", "sol": "precios = []\nn = int(input(\"¿Cuántos productos? \"))\nfor i in range(n):\n    precios.append(float(input(f\"Precio {i + 1}: \")))\nd = float(input(\"Descuento (%): \"))\nwhile d < 0 or d > 70:\n    print(\"Porcentaje inválido\")\n    d = float(input(\"Descuento (%): \"))\nantes = 0\nfor p in precios:\n    antes += p\nfor i in range(len(precios)):\n    porc = d\n    if precios[i] >= 100000:\n        porc = d + 5\n    precios[i] = precios[i] * (1 - porc / 100)\ndespues = 0\nfor i in range(len(precios)):\n    print(f\"Precio {i + 1}: {precios[i]:.2f}\")\n    despues += precios[i]\nprint(f\"Ahorro total: {antes - despues:.2f}\")", "tests": [{"in": ["2", "80000", "150000", "20"], "must": ["precio 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:63999\\.99|64000(?:\\.0{1,2})?|64000\\.01)(?!\\d)", "precio 2\\b[^\\n\\d]*(?<![\\d.\\-])(?:112499\\.99|112500(?:\\.0{1,2})?|112500\\.01)(?!\\d)", "ahorro total[^\\n\\d]*(?<![\\d.\\-])(?:53499\\.99|53500(?:\\.0{1,2})?|53500\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?inv[aá]lido){1}"], "show": "Precio 1: 64000.00 · Precio 2: 112500.00 · Ahorro total: 53500.00"}, {"in": ["4", "25000", "99999", "100000", "250000", "80", "-5", "30"], "must": ["precio 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:17499\\.99|17500(?:\\.0{1,2})?|17500\\.01)(?!\\d)", "precio 2\\b[^\\n\\d]*(?<![\\d.\\-])(?:69999\\.29|69999\\.30?|69999\\.31)(?!\\d)", "precio 3\\b[^\\n\\d]*(?<![\\d.\\-])(?:64999\\.99|65000(?:\\.0{1,2})?|65000\\.01)(?!\\d)", "precio 4\\b[^\\n\\d]*(?<![\\d.\\-])(?:162499\\.99|162500(?:\\.0{1,2})?|162500\\.01)(?!\\d)", "ahorro total[^\\n\\d]*(?<![\\d.\\-])(?:159999\\.69|159999\\.70?|159999\\.71)(?!\\d)", "(?:[\\s\\S]*?inv[aá]lido){2}"], "not": ["(?:[\\s\\S]*?inv[aá]lido){3}"], "show": "Precio 1: 17500.00 · Precio 2: 69999.30 · Precio 3: 65000.00 · Precio 4: 162500.00 · Ahorro total: 159999.70"}, {"in": ["1", "45900.5", "0"], "must": ["precio 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:45900\\.49|45900\\.50?|45900\\.51)(?!\\d)", "ahorro total[^\\n\\d]*(?<![\\d.\\-])(?:-0\\.01|-?0(?:\\.0{1,2})?|0\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?inv[aá]lido){1}"], "show": "Precio 1: 45900.50 · Ahorro total: 0.00"}, {"in": ["3", "120000", "60000", "300000", "70"], "must": ["precio 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:29999\\.99|30000(?:\\.0{1,2})?|30000\\.01)(?!\\d)", "precio 2\\b[^\\n\\d]*(?<![\\d.\\-])(?:17999\\.99|18000(?:\\.0{1,2})?|18000\\.01)(?!\\d)", "precio 3\\b[^\\n\\d]*(?<![\\d.\\-])(?:74999\\.99|75000(?:\\.0{1,2})?|75000\\.01)(?!\\d)", "ahorro total[^\\n\\d]*(?<![\\d.\\-])(?:356999\\.99|357000(?:\\.0{1,2})?|357000\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?inv[aá]lido){1}"], "show": "Precio 1: 30000.00 · Precio 2: 18000.00 · Precio 3: 75000.00 · Ahorro total: 357000.00"}]}, {"id": "rotar", "lvl": 2, "xp": 30, "t": "6. La fila del banco", "tag": "Nivel 2 · slicing", "d": "En el banco, los turnos se guardan en una lista. Pide N y los N números de turno (enteros); luego pide k. Usando <b>slicing<\/b> (sin ciclos para estas tres operaciones) muestra: <code>Rotada: [...]<\/code> — la lista rotada k posiciones a la <b>derecha<\/b> (los últimos k pasan al principio; si k es mayor que N, solo cuenta el residuo de k entre N) —, <code>Invertida: [...]<\/code> y <code>Centro: [...]<\/code> (todos menos el primero y el último).<br><b>Entrada:<\/b> un entero N, N enteros y un entero k · <b>Salida:<\/b> tres listas<br><b>Ejemplo:<\/b> [1, 2, 3, 4, 5] con k = 2 → <code>Rotada: [4, 5, 1, 2, 3]<\/code> · <code>Invertida: [5, 4, 3, 2, 1]<\/code> · <code>Centro: [2, 3, 4]<\/code>.<br>💡 <b>Pista:<\/b> una rotación es pegar dos rebanadas de la lista con <code>+<\/code>; piensa cuáles. Revisa qué pasa con tu fórmula cuando k es 0 o un múltiplo de N.", "starter": "turnos = []\nn = int(input(\"¿Cuántos turnos? \"))\nfor i in range(n):\n    turnos.append(int(input(f\"Turno {i + 1}: \")))\nk = int(input(\"Rotar: \"))\n", "sol": "turnos = []\nn = int(input(\"¿Cuántos turnos? \"))\nfor i in range(n):\n    turnos.append(int(input(f\"Turno {i + 1}: \")))\nk = int(input(\"Rotar: \"))\nk = k % len(turnos)\nrotada = turnos[len(turnos) - k:] + turnos[:len(turnos) - k]\nprint(\"Rotada:\", rotada)\nprint(\"Invertida:\", turnos[::-1])\nprint(\"Centro:\", turnos[1:-1])", "tests": [{"in": ["5", "1", "2", "3", "4", "5", "2"], "must": ["rotada\\W*\\[4,\\ 5,\\ 1,\\ 2,\\ 3\\]", "invertida\\W*\\[5,\\ 4,\\ 3,\\ 2,\\ 1\\]", "centro\\W*\\[2,\\ 3,\\ 4\\]"], "not": [], "show": "Rotada: [4, 5, 1, 2, 3] · Invertida: [5, 4, 3, 2, 1] · Centro: [2, 3, 4]"}, {"in": ["3", "10", "20", "30", "0"], "must": ["rotada\\W*\\[10,\\ 20,\\ 30\\]", "invertida\\W*\\[30,\\ 20,\\ 10\\]", "centro\\W*\\[20\\]"], "not": [], "show": "Rotada: [10, 20, 30] · Invertida: [30, 20, 10] · Centro: [20]"}, {"in": ["4", "7", "8", "9", "10", "9"], "must": ["rotada\\W*\\[10,\\ 7,\\ 8,\\ 9\\]", "invertida\\W*\\[10,\\ 9,\\ 8,\\ 7\\]", "centro\\W*\\[8,\\ 9\\]"], "not": [], "show": "Rotada: [10, 7, 8, 9] · Invertida: [10, 9, 8, 7] · Centro: [8, 9]"}, {"in": ["6", "101", "102", "103", "104", "105", "106", "5"], "must": ["rotada\\W*\\[102,\\ 103,\\ 104,\\ 105,\\ 106,\\ 101\\]", "invertida\\W*\\[106,\\ 105,\\ 104,\\ 103,\\ 102,\\ 101\\]", "centro\\W*\\[102,\\ 103,\\ 104,\\ 105\\]"], "not": [], "show": "Rotada: [102, 103, 104, 105, 106, 101] · Invertida: [106, 105, 104, 103, 102, 101] · Centro: [102, 103, 104, 105]"}]}, {"id": "visitas", "lvl": 3, "xp": 40, "t": "7. Visitas de los clientes", "tag": "Nivel 3 · listas sin repetidos + count()", "d": "Una cafetería registra el código (entero) de cada cliente que entra, hasta que se escribe <b>0<\/b>. Construye una lista con los códigos <b>sin repetir<\/b>, en el orden en que aparecieron por primera vez. Para cada código distinto muestra <code>Código X: N visita(s)<\/code>; luego <code>Cliente más frecuente: X<\/code> (en empate, el que apareció primero) y <code>Clientes distintos: K<\/code>.<br><b>Entrada:<\/b> enteros terminados en 0 · <b>Salida:<\/b> una línea por cliente y dos de resumen<br><b>Ejemplo:<\/b> 105, 230, 105, 87, 230, 105, 0 → <code>Código 105: 3 visita(s)<\/code> · <code>Código 230: 2 visita(s)<\/code> · <code>Código 87: 1 visita(s)<\/code> · <code>Cliente más frecuente: 105<\/code> · <code>Clientes distintos: 3<\/code>.<br>💡 <b>Pista:<\/b> necesitas dos listas: la de todas las visitas (para contar) y la de códigos distintos (para no repetir). El operador <code>in<\/code> te dice si un código ya fue agregado.", "starter": "visitas = []\ncodigo = int(input(\"Código (0 para terminar): \"))\n", "sol": "visitas = []\ncodigo = int(input(\"Código (0 para terminar): \"))\nwhile codigo != 0:\n    visitas.append(codigo)\n    codigo = int(input(\"Código (0 para terminar): \"))\ndistintos = []\nfor c in visitas:\n    if c not in distintos:\n        distintos.append(c)\nmas = distintos[0]\nfor c in distintos:\n    print(f\"Código {c}: {visitas.count(c)} visita(s)\")\n    if visitas.count(c) > visitas.count(mas):\n        mas = c\nprint(f\"Cliente más frecuente: {mas}\")\nprint(f\"Clientes distintos: {len(distintos)}\")", "tests": [{"in": ["105", "230", "105", "87", "230", "105", "0"], "must": ["c[oó]digo 105\\D*3 visita", "c[oó]digo 230\\D*2 visita", "c[oó]digo 87\\D*1 visita", "m[aá]s frecuente\\D*105\\b", "distintos[^\\n\\d]*(?<![\\d.\\-])3(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "Código 105: 3 visita(s) · Código 230: 2 visita(s) · Código 87: 1 visita(s) · Cliente más frecuente: 105 · Clientes distintos: 3"}, {"in": ["7", "0"], "must": ["c[oó]digo 7\\D*1 visita", "m[aá]s frecuente\\D*7\\b", "distintos[^\\n\\d]*(?<![\\d.\\-])1(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "Código 7: 1 visita(s) · Cliente más frecuente: 7 · Clientes distintos: 1"}, {"in": ["4", "9", "9", "4", "12", "0"], "must": ["c[oó]digo 4\\D*2 visita", "c[oó]digo 9\\D*2 visita", "c[oó]digo 12\\D*1 visita", "m[aá]s frecuente\\D*4\\b", "distintos[^\\n\\d]*(?<![\\d.\\-])3(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "Código 4: 2 visita(s) · Código 9: 2 visita(s) · Código 12: 1 visita(s) · Cliente más frecuente: 4 · Clientes distintos: 3"}, {"in": ["300", "300", "300", "300", "0"], "must": ["c[oó]digo 300\\D*4 visita", "m[aá]s frecuente\\D*300\\b", "distintos[^\\n\\d]*(?<![\\d.\\-])1(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "Código 300: 4 visita(s) · Cliente más frecuente: 300 · Clientes distintos: 1"}]}, {"id": "sobrepromedio", "lvl": 3, "xp": 40, "t": "8. Vendedores sobre el promedio", "tag": "Nivel 3 · funciones con listas", "d": "Crea <code>promedio(lista)<\/code>, que devuelva el promedio de una lista de números (sin <code>sum()<\/code>), y <code>mayores_que(lista, valor)<\/code>, que devuelva una <b>lista nueva<\/b> con los elementos mayores que valor. El programa pide N ventas (enteros), y usando las funciones muestra <code>Promedio: X<\/code>, <code>Sobre el promedio: K<\/code> y, para cada venta superior, <code>Venta V: +P%<\/code>: cuánto por ciento está por encima del promedio (2 decimales).<br><b>Entrada:<\/b> un entero N y N enteros · <b>Salida:<\/b> resumen y una línea por venta superior<br><b>Ejemplo:<\/b> 8, 3, 10, 5, 9 → <code>Promedio: 7.00<\/code> · <code>Sobre el promedio: 3<\/code> · <code>Venta 8: +14.29%<\/code> · <code>Venta 10: +42.86%<\/code> · <code>Venta 9: +28.57%<\/code>. El corrector prueba <code>mayores_que([1, 5, 3, 7], 3)<\/code> → <code>[5, 7]<\/code>.<br>💡 <b>Pista:<\/b> el porcentaje por encima es la diferencia con el promedio dividida entre el promedio. La función que construye la lista nueva no imprime nada: la devuelve.", "starter": "def promedio(lista):\n    pass\n\ndef mayores_que(lista, valor):\n    pass\n\n# Programa principal\n", "sol": "def promedio(lista):\n    total = 0\n    for x in lista:\n        total += x\n    return total / len(lista)\n\ndef mayores_que(lista, valor):\n    resultado = []\n    for x in lista:\n        if x > valor:\n            resultado.append(x)\n    return resultado\n\n# Programa principal\nn = int(input(\"¿Cuántas ventas? \"))\nventas = []\nfor i in range(n):\n    ventas.append(int(input(f\"Venta {i + 1}: \")))\np = promedio(ventas)\nsuperiores = mayores_que(ventas, p)\nprint(f\"Promedio: {p:.2f}\")\nprint(f\"Sobre el promedio: {len(superiores)}\")\nfor v in superiores:\n    print(f\"Venta {v}: +{(v / p - 1) * 100:.2f}%\")", "tests": [{"in": ["5", "8", "3", "10", "5", "9"], "must": ["promedio[^\\n\\d]*(?<![\\d.\\-])(?:6\\.99|7(?:\\.0{1,2})?|7\\.01)(?!\\d)", "sobre el promedio[^\\n\\d]*(?<![\\d.\\-])3(?:\\.0{1,2})?(?!\\d)", "venta[^\\n\\d]*(?<![\\d.\\-])8(?:\\.0{1,2})?(?!\\d)[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:14\\.28|14\\.29|14\\.30?)(?!\\d)\\s*%", "venta[^\\n\\d]*(?<![\\d.\\-])10(?:\\.0{1,2})?(?!\\d)[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:42\\.85|42\\.86|42\\.87)(?!\\d)\\s*%", "venta[^\\n\\d]*(?<![\\d.\\-])9(?:\\.0{1,2})?(?!\\d)[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:28\\.56|28\\.57|28\\.58)(?!\\d)\\s*%", "§1\\ \\[5,\\ 7\\]", "§2[^\\n\\d]*(?<![\\d.\\-])(?:3\\.99|4(?:\\.0{1,2})?|4\\.01)(?!\\d)"], "not": [], "show": "Promedio: 7.00 · Sobre el promedio: 3 · Venta 8: +14.29% · Venta 10: +42.86% · Venta 9: +28.57%", "call": "print(\"§1\", repr(mayores_que([1, 5, 3, 7], 3)))\nprint(\"§2\", f\"{float(promedio([2, 4, 6])):.2f}\")", "callShow": "mayores_que([1, 5, 3, 7], 3) → [5, 7] · promedio([2, 4, 6]) → 4.00"}, {"in": ["3", "100", "100", "100"], "must": ["promedio[^\\n\\d]*(?<![\\d.\\-])(?:99\\.99|100(?:\\.0{1,2})?|100\\.01)(?!\\d)", "sobre el promedio[^\\n\\d]*(?<![\\d.\\-])0(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "Promedio: 100.00 · Sobre el promedio: 0 · "}, {"in": ["4", "1200", "800", "1500", "500"], "must": ["promedio[^\\n\\d]*(?<![\\d.\\-])(?:999\\.99|1000(?:\\.0{1,2})?|1000\\.01)(?!\\d)", "sobre el promedio[^\\n\\d]*(?<![\\d.\\-])2(?:\\.0{1,2})?(?!\\d)", "venta[^\\n\\d]*(?<![\\d.\\-])1200(?:\\.0{1,2})?(?!\\d)[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:19\\.99|20(?:\\.0{1,2})?|20\\.01)(?!\\d)\\s*%", "venta[^\\n\\d]*(?<![\\d.\\-])1500(?:\\.0{1,2})?(?!\\d)[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:49\\.99|50(?:\\.0{1,2})?|50\\.01)(?!\\d)\\s*%", "§1\\ \\[\\]"], "not": [], "show": "Promedio: 1000.00 · Sobre el promedio: 2 · Venta 1200: +20.00% · Venta 1500: +50.00%", "call": "print(\"§1\", repr(mayores_que([2, 2], 5)))", "callShow": "mayores_que([2, 2], 5) → []"}]}, {"id": "matrizventas", "lvl": 3, "xp": 40, "t": "9. Ventas por sucursal y mes", "tag": "Nivel 3 · matriz (lista de listas) + ciclos anidados", "d": "Pide el número de sucursales F y de meses C, y luego las ventas (reales) fila por fila: primero los C meses de la sucursal 1, luego los de la 2, etc. Guárdalas en una <b>matriz<\/b> (lista de listas). Muestra el total de cada sucursal (<code>Sucursal i: X<\/code>), el total de cada mes (<code>Mes j: X<\/code>), <code>Total general: X<\/code> (2 decimales) y <code>Mejor sucursal: i<\/code> (la de mayor total; en empate, la primera).<br><b>Entrada:<\/b> dos enteros y F × C reales · <b>Salida:<\/b> totales por fila, por columna y resumen<br><b>Ejemplo:<\/b> 2 sucursales × 3 meses: 10, 20, 30 / 5, 5, 50 → <code>Sucursal 1: 60.00<\/code> · <code>Sucursal 2: 60.00<\/code> · <code>Mes 1: 15.00<\/code> · <code>Mes 2: 25.00<\/code> · <code>Mes 3: 80.00<\/code> · <code>Total general: 120.00<\/code> · <code>Mejor sucursal: 1<\/code>.<br>💡 <b>Pista:<\/b> para armar la matriz, cada fila es una lista nueva que llenas en el ciclo interno y agregas a la matriz al terminarlo. Para totalizar por mes, el ciclo externo recorre las columnas y el interno las filas.", "starter": "matriz = []\nf = int(input(\"Sucursales: \"))\nc = int(input(\"Meses: \"))\n", "sol": "matriz = []\nf = int(input(\"Sucursales: \"))\nc = int(input(\"Meses: \"))\nfor i in range(f):\n    fila = []\n    for j in range(c):\n        fila.append(float(input(f\"Sucursal {i + 1}, mes {j + 1}: \")))\n    matriz.append(fila)\nmejor = 0\ntotales = []\nfor i in range(f):\n    t = 0\n    for j in range(c):\n        t += matriz[i][j]\n    totales.append(t)\n    print(f\"Sucursal {i + 1}: {t:.2f}\")\n    if t > totales[mejor]:\n        mejor = i\nfor j in range(c):\n    t = 0\n    for i in range(f):\n        t += matriz[i][j]\n    print(f\"Mes {j + 1}: {t:.2f}\")\ngeneral = 0\nfor t in totales:\n    general += t\nprint(f\"Total general: {general:.2f}\")\nprint(f\"Mejor sucursal: {mejor + 1}\")", "tests": [{"in": ["2", "3", "10", "20", "30", "5", "5", "50"], "must": ["sucursal 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:59\\.99|60(?:\\.0{1,2})?|60\\.01)(?!\\d)", "sucursal 2\\b[^\\n\\d]*(?<![\\d.\\-])(?:59\\.99|60(?:\\.0{1,2})?|60\\.01)(?!\\d)", "mes 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:14\\.99|15(?:\\.0{1,2})?|15\\.01)(?!\\d)", "mes 2\\b[^\\n\\d]*(?<![\\d.\\-])(?:24\\.99|25(?:\\.0{1,2})?|25\\.01)(?!\\d)", "mes 3\\b[^\\n\\d]*(?<![\\d.\\-])(?:79\\.99|80(?:\\.0{1,2})?|80\\.01)(?!\\d)", "total general[^\\n\\d]*(?<![\\d.\\-])(?:119\\.99|120(?:\\.0{1,2})?|120\\.01)(?!\\d)", "mejor sucursal\\D*1\\b"], "not": [], "show": "Sucursal 1: 60.00 · Sucursal 2: 60.00 · Mes 1: 15.00 · Mes 2: 25.00 · Mes 3: 80.00 · Total general: 120.00 · Mejor sucursal: 1"}, {"in": ["3", "4", "1200.5", "800", "0", "950", "300", "300", "300", "300", "2500", "100", "90", "4000.25"], "must": ["sucursal 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:2950\\.49|2950\\.50?|2950\\.51)(?!\\d)", "sucursal 2\\b[^\\n\\d]*(?<![\\d.\\-])(?:1199\\.99|1200(?:\\.0{1,2})?|1200\\.01)(?!\\d)", "sucursal 3\\b[^\\n\\d]*(?<![\\d.\\-])(?:6690\\.24|6690\\.25|6690\\.26)(?!\\d)", "mes 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:4000\\.49|4000\\.50?|4000\\.51)(?!\\d)", "mes 2\\b[^\\n\\d]*(?<![\\d.\\-])(?:1199\\.99|1200(?:\\.0{1,2})?|1200\\.01)(?!\\d)", "mes 3\\b[^\\n\\d]*(?<![\\d.\\-])(?:389\\.99|390(?:\\.0{1,2})?|390\\.01)(?!\\d)", "mes 4\\b[^\\n\\d]*(?<![\\d.\\-])(?:5250\\.24|5250\\.25|5250\\.26)(?!\\d)", "total general[^\\n\\d]*(?<![\\d.\\-])(?:10840\\.74|10840\\.75|10840\\.76)(?!\\d)", "mejor sucursal\\D*3\\b"], "not": [], "show": "Sucursal 1: 2950.50 · Sucursal 2: 1200.00 · Sucursal 3: 6690.25 · Mes 1: 4000.50 · Mes 2: 1200.00 · Mes 3: 390.00 · Mes 4: 5250.25 · Total general: 10840.75 · Mejor sucursal: 3"}, {"in": ["1", "1", "42"], "must": ["sucursal 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:41\\.99|42(?:\\.0{1,2})?|42\\.01)(?!\\d)", "mes 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:41\\.99|42(?:\\.0{1,2})?|42\\.01)(?!\\d)", "total general[^\\n\\d]*(?<![\\d.\\-])(?:41\\.99|42(?:\\.0{1,2})?|42\\.01)(?!\\d)", "mejor sucursal\\D*1\\b"], "not": [], "show": "Sucursal 1: 42.00 · Mes 1: 42.00 · Total general: 42.00 · Mejor sucursal: 1"}]}, {"id": "mediana", "lvl": 4, "xp": 60, "t": "★ 10. Ranking y mediana sin sort()", "tag": "Nivel 4 · ordenamiento con ciclos anidados", "d": "Pide N puntajes (enteros) y guárdalos en una lista. <b>Ordénala de menor a mayor sin usar <code>sort()<\/code> ni <code>sorted()<\/code><\/b>, intercambiando elementos con ciclos anidados. Muestra <code>Ordenados: [...]<\/code>, la <code>Mediana: X<\/code> (el valor del centro; si N es par, el promedio de los dos centrales, 2 decimales) y <code>Podio: a, b, c<\/code> con los tres puntajes más altos de mayor a menor (o los que haya, si son menos de tres).<br><b>Entrada:<\/b> un entero N y N enteros · <b>Salida:<\/b> tres líneas<br><b>Ejemplo:<\/b> 7, 3, 9, 1, 5, 8 → <code>Ordenados: [1, 3, 5, 7, 8, 9]<\/code> · <code>Mediana: 6.00<\/code> · <code>Podio: 9, 8, 7<\/code>.<br>💡 <b>Pista:<\/b> una forma clásica (burbuja): recorre la lista comparando cada par de vecinos y, si están en desorden, intercámbialos; repite el recorrido N − 1 veces. Para intercambiar dos posiciones Python permite <code>a, b = b, a<\/code>. Una vez ordenada, el podio sale de una rebanada.", "starter": "puntajes = []\nn = int(input(\"¿Cuántos puntajes? \"))\nfor i in range(n):\n    puntajes.append(int(input(f\"Puntaje {i + 1}: \")))\n", "sol": "puntajes = []\nn = int(input(\"¿Cuántos puntajes? \"))\nfor i in range(n):\n    puntajes.append(int(input(f\"Puntaje {i + 1}: \")))\nfor vuelta in range(len(puntajes) - 1):\n    for i in range(len(puntajes) - 1 - vuelta):\n        if puntajes[i] > puntajes[i + 1]:\n            puntajes[i], puntajes[i + 1] = puntajes[i + 1], puntajes[i]\nprint(\"Ordenados:\", puntajes)\nm = len(puntajes) // 2\nif len(puntajes) % 2 == 1:\n    mediana = puntajes[m]\nelse:\n    mediana = (puntajes[m - 1] + puntajes[m]) / 2\nprint(f\"Mediana: {mediana:.2f}\")\npodio = puntajes[::-1][:3]\nprint(\"Podio:\", \", \".join(str(p) for p in podio))", "tests": [{"in": ["6", "7", "3", "9", "1", "5", "8"], "must": ["ordenados\\W*\\[1,\\ 3,\\ 5,\\ 7,\\ 8,\\ 9\\]", "mediana[^\\n\\d]*(?<![\\d.\\-])(?:5\\.99|6(?:\\.0{1,2})?|6\\.01)(?!\\d)", "podio\\W*9[ ,]+8[ ,]+7(?![ ,]*\\d)"], "not": [], "show": "Ordenados: [1, 3, 5, 7, 8, 9] · Mediana: 6.00 · Podio: 9, 8, 7"}, {"in": ["1", "42"], "must": ["ordenados\\W*\\[42\\]", "mediana[^\\n\\d]*(?<![\\d.\\-])(?:41\\.99|42(?:\\.0{1,2})?|42\\.01)(?!\\d)", "podio\\W*42(?![ ,]*\\d)"], "not": [], "show": "Ordenados: [42] · Mediana: 42.00 · Podio: 42"}, {"in": ["5", "10", "10", "2", "7", "10"], "must": ["ordenados\\W*\\[2,\\ 7,\\ 10,\\ 10,\\ 10\\]", "mediana[^\\n\\d]*(?<![\\d.\\-])(?:9\\.99|10(?:\\.0{1,2})?|10\\.01)(?!\\d)", "podio\\W*10[ ,]+10[ ,]+10(?![ ,]*\\d)"], "not": [], "show": "Ordenados: [2, 7, 10, 10, 10] · Mediana: 10.00 · Podio: 10, 10, 10"}, {"in": ["7", "5", "-3", "0", "12", "4", "4", "-8"], "must": ["ordenados\\W*\\[\\-8,\\ \\-3,\\ 0,\\ 4,\\ 4,\\ 5,\\ 12\\]", "mediana[^\\n\\d]*(?<![\\d.\\-])(?:3\\.99|4(?:\\.0{1,2})?|4\\.01)(?!\\d)", "podio\\W*12[ ,]+5[ ,]+4(?![ ,]*\\d)"], "not": [], "show": "Ordenados: [-8, -3, 0, 4, 4, 5, 12] · Mediana: 4.00 · Podio: 12, 5, 4"}]}, {"id": "tienda", "lvl": 4, "xp": 60, "t": "★ 11. Inventario con menú", "tag": "Nivel 4 · listas paralelas + while True", "d": "Administra el inventario de una tienda con tres listas paralelas: nombres, precios y cantidades. Menú que se repite hasta salir: <b>1<\/b> Agregar (pide el nombre; si ya existe muestra <code>Ya existe<\/code> sin pedir más datos; si no, pide precio real y cantidad entera), <b>2<\/b> Vender (pide nombre; si no existe: <code>No existe<\/code>; si existe pide la cantidad; si no hay suficientes: <code>Stock insuficiente<\/code>; si hay, descuenta y muestra <code>Venta registrada: X<\/code> con el valor <b>con IVA del 19 %<\/b>), <b>3<\/b> Reporte (una línea por producto: <code>nombre: C u · $V<\/code>, donde V = cantidad × precio), <b>4<\/b> Salir (muestra <code>Ventas totales con IVA: X<\/code>). Otra opción: <code>Opción no válida<\/code>. Dinero con 2 decimales.<br><b>Entrada:<\/b> opciones del menú con sus datos · <b>Salida:<\/b> los mensajes de cada opción y el total<br><b>Ejemplo:<\/b> 1 → pan, 500, 40 · 2 → pan, 10 · 3 · 4 → <code>Venta registrada: 5950.00<\/code> · <code>pan: 30 u · $15000.00<\/code> · <code>Ventas totales con IVA: 5950.00<\/code>.<br>💡 <b>Pista:<\/b> con <code>in<\/code> sabes si un producto existe y con <code>index()<\/code> encuentras su posición en las tres listas a la vez. Acumula el total vendido en una variable que sobreviva a todas las vueltas del menú.", "starter": "nombres = []\nprecios = []\ncantidades = []\nwhile True:\n    print(\"1. Agregar  2. Vender  3. Reporte  4. Salir\")\n    opcion = input(\"Opción: \")\n", "sol": "nombres = []\nprecios = []\ncantidades = []\nvendido = 0\nwhile True:\n    print(\"1. Agregar  2. Vender  3. Reporte  4. Salir\")\n    opcion = input(\"Opción: \")\n    if opcion == \"1\":\n        nombre = input(\"Nombre: \")\n        if nombre in nombres:\n            print(\"Ya existe\")\n        else:\n            nombres.append(nombre)\n            precios.append(float(input(\"Precio: \")))\n            cantidades.append(int(input(\"Cantidad: \")))\n    elif opcion == \"2\":\n        nombre = input(\"Nombre: \")\n        if nombre not in nombres:\n            print(\"No existe\")\n        else:\n            i = nombres.index(nombre)\n            cant = int(input(\"Cantidad: \"))\n            if cant > cantidades[i]:\n                print(\"Stock insuficiente\")\n            else:\n                cantidades[i] -= cant\n                valor = cant * precios[i] * 1.19\n                vendido += valor\n                print(f\"Venta registrada: {valor:.2f}\")\n    elif opcion == \"3\":\n        for i in range(len(nombres)):\n            print(f\"{nombres[i]}: {cantidades[i]} u · ${cantidades[i] * precios[i]:.2f}\")\n    elif opcion == \"4\":\n        break\n    else:\n        print(\"Opción no válida\")\nprint(f\"Ventas totales con IVA: {vendido:.2f}\")", "tests": [{"in": ["1", "pan", "500", "40", "2", "pan", "10", "3", "4"], "must": ["venta registrada[^\\n\\d]*(?<![\\d.\\-])(?:5949\\.99|5950(?:\\.0{1,2})?|5950\\.01)(?!\\d)", "pan\\W+30 u\\b[^\\n]*?(?<![\\d.\\-])(?:14999\\.99|15000(?:\\.0{1,2})?|15000\\.01)(?!\\d)", "ventas totales con iva[^\\n\\d]*(?<![\\d.\\-])(?:5949\\.99|5950(?:\\.0{1,2})?|5950\\.01)(?!\\d)"], "not": [], "show": "(agregado) · Venta registrada: 5950.00 · Reporte: pan: 30 u · $15000.00 · Ventas totales con IVA: 5950.00"}, {"in": ["4"], "must": ["ventas totales con iva[^\\n\\d]*(?<![\\d.\\-])(?:-0\\.01|-?0(?:\\.0{1,2})?|0\\.01)(?!\\d)"], "not": [], "show": "Ventas totales con IVA: 0.00"}, {"in": ["1", "café", "21500", "5", "1", "café", "2", "té", "2", "café", "9", "9", "1", "arroz", "4800.5", "12", "2", "arroz", "12", "2", "café", "2", "3", "4"], "must": ["ya existe", "no existe", "stock insuficiente", "no v[aá]lida", "venta registrada[^\\n\\d]*(?<![\\d.\\-])(?:68551\\.13|68551\\.14|68551\\.15)(?!\\d)", "venta registrada[^\\n\\d]*(?<![\\d.\\-])(?:51169\\.99|51170(?:\\.0{1,2})?|51170\\.01)(?!\\d)", "café\\W+3 u\\b[^\\n]*?(?<![\\d.\\-])(?:64499\\.99|64500(?:\\.0{1,2})?|64500\\.01)(?!\\d)", "arroz\\W+0 u\\b[^\\n]*?(?<![\\d.\\-])(?:-0\\.01|-?0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "ventas totales con iva[^\\n\\d]*(?<![\\d.\\-])(?:119721\\.13|119721\\.14|119721\\.15)(?!\\d)"], "not": [], "show": "(agregado) · Ya existe · No existe · Stock insuficiente · Opción no válida · (agregado) · Venta registrada: 68551.14 · Venta registrada: 51170.00 · Reporte: café: 3 u · $64500.00, arroz: 0 u · $0.00 · Ventas totales con IVA: 119721.14"}]}, {"id": "cine", "lvl": 4, "xp": 60, "t": "★ 12. Sala de cine", "tag": "Nivel 4 · matriz + while + ciclos anidados", "d": "Una sala tiene <b>5 filas y 8 asientos<\/b> por fila; guárdala como una matriz de valores <code>False<\/code> (libre) y <code>True<\/code> (ocupado). Las filas 1 y 2 son preferenciales (<b>18000<\/b>); las demás cuestan <b>12000<\/b>. Repite: pide la fila (0 para terminar) y el asiento (ambos empiezan en 1). Si están fuera de la sala: <code>Fuera de rango<\/code>; si el puesto ya está tomado: <code>Ocupado<\/code>; si no, resérvalo y muestra <code>Reservado F-A: $P<\/code>. Al terminar, muestra el mapa de la sala, una línea por fila con el formato <code>F1: L L X L L L L L<\/code> (X ocupado, L libre, separados por un espacio), y luego <code>Ocupación: P%<\/code> y <code>Recaudo: X<\/code> (2 decimales).<br><b>Entrada:<\/b> parejas de enteros (fila, asiento) terminadas con fila 0 · <b>Salida:<\/b> los mensajes, el mapa y el resumen<br><b>Ejemplo:<\/b> fila 1 asiento 1, fila 3 asiento 8, fila 1 asiento 1, fila 9 asiento 2, fila 0 → <code>Reservado 1-1: $18000<\/code> · <code>Reservado 3-8: $12000<\/code> · <code>Ocupado<\/code> · <code>Fuera de rango<\/code> · mapa con <code>F1: X L L L L L L L<\/code> y <code>F3: L L L L L L L X<\/code> · <code>Ocupación: 5.00%<\/code> · <code>Recaudo: 30000.00<\/code>.<br>💡 <b>Pista:<\/b> una matriz de 5 × 8 se puede crear con un ciclo que agregue 5 filas distintas de 8 valores cada una (cuidado: copiar la misma fila 5 veces haría que todas cambien juntas). Los usuarios cuentan desde 1, pero los índices empiezan en 0.", "starter": "sala = []\nfor f in range(5):\n    sala.append([False] * 8)\n", "sol": "sala = []\nfor f in range(5):\n    sala.append([False] * 8)\nrecaudo = 0\nwhile True:\n    fila = int(input(\"Fila (0 para terminar): \"))\n    if fila == 0:\n        break\n    asiento = int(input(\"Asiento: \"))\n    if fila < 1 or fila > 5 or asiento < 1 or asiento > 8:\n        print(\"Fuera de rango\")\n    elif sala[fila - 1][asiento - 1]:\n        print(\"Ocupado\")\n    else:\n        sala[fila - 1][asiento - 1] = True\n        precio = 18000 if fila <= 2 else 12000\n        recaudo += precio\n        print(f\"Reservado {fila}-{asiento}: ${precio}\")\nocupados = 0\nfor f in range(5):\n    linea = f\"F{f + 1}:\"\n    for a in range(8):\n        if sala[f][a]:\n            linea += \" X\"\n            ocupados += 1\n        else:\n            linea += \" L\"\n    print(linea)\nprint(f\"Ocupación: {ocupados / 40 * 100:.2f}%\")\nprint(f\"Recaudo: {recaudo:.2f}\")", "tests": [{"in": ["1", "1", "3", "8", "1", "1", "9", "2", "0"], "must": ["reservado\\W*1\\W+1[^\\n]*?(?<![\\d.\\-])(?:17999\\.99|18000(?:\\.0{1,2})?|18000\\.01)(?!\\d)", "reservado\\W*3\\W+8[^\\n]*?(?<![\\d.\\-])(?:11999\\.99|12000(?:\\.0{1,2})?|12000\\.01)(?!\\d)", "(?:[\\s\\S]*?fuera de rango){1}", "(?:[\\s\\S]*?\\bocupado){1}", "(?:^|\\n)F1: X L L L L L L L[ \\t]*(?=\\n|$)", "(?:^|\\n)F2: L L L L L L L L[ \\t]*(?=\\n|$)", "(?:^|\\n)F3: L L L L L L L X[ \\t]*(?=\\n|$)", "(?:^|\\n)F4: L L L L L L L L[ \\t]*(?=\\n|$)", "(?:^|\\n)F5: L L L L L L L L[ \\t]*(?=\\n|$)", "ocupaci[oó]n[^\\n\\d]*(?<![\\d.\\-])(?:4\\.99|5(?:\\.0{1,2})?|5\\.01)(?!\\d)", "recaudo[^\\n\\d]*(?<![\\d.\\-])(?:29999\\.99|30000(?:\\.0{1,2})?|30000\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?fuera de rango){2}", "(?:[\\s\\S]*?\\bocupado){2}"], "show": "Reservado 1-1: $18000 · Reservado 3-8: $12000 · Ocupado · Fuera de rango · mapa de 5 filas · Ocupación: 5.00% · Recaudo: 30000.00"}, {"in": ["0"], "must": ["(?:^|\\n)F1: L L L L L L L L[ \\t]*(?=\\n|$)", "(?:^|\\n)F2: L L L L L L L L[ \\t]*(?=\\n|$)", "(?:^|\\n)F3: L L L L L L L L[ \\t]*(?=\\n|$)", "(?:^|\\n)F4: L L L L L L L L[ \\t]*(?=\\n|$)", "(?:^|\\n)F5: L L L L L L L L[ \\t]*(?=\\n|$)", "ocupaci[oó]n[^\\n\\d]*(?<![\\d.\\-])(?:-0\\.01|-?0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "recaudo[^\\n\\d]*(?<![\\d.\\-])(?:-0\\.01|-?0(?:\\.0{1,2})?|0\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?fuera de rango){1}", "(?:[\\s\\S]*?\\bocupado){1}"], "show": "mapa de 5 filas · Ocupación: 0.00% · Recaudo: 0.00"}, {"in": ["2", "4", "2", "5", "5", "1", "5", "1", "5", "9", "4", "0", "2", "4", "1", "8", "0"], "must": ["reservado\\W*2\\W+4[^\\n]*?(?<![\\d.\\-])(?:17999\\.99|18000(?:\\.0{1,2})?|18000\\.01)(?!\\d)", "reservado\\W*2\\W+5[^\\n]*?(?<![\\d.\\-])(?:17999\\.99|18000(?:\\.0{1,2})?|18000\\.01)(?!\\d)", "reservado\\W*5\\W+1[^\\n]*?(?<![\\d.\\-])(?:11999\\.99|12000(?:\\.0{1,2})?|12000\\.01)(?!\\d)", "reservado\\W*1\\W+8[^\\n]*?(?<![\\d.\\-])(?:17999\\.99|18000(?:\\.0{1,2})?|18000\\.01)(?!\\d)", "(?:[\\s\\S]*?fuera de rango){2}", "(?:[\\s\\S]*?\\bocupado){2}", "(?:^|\\n)F1: L L L L L L L X[ \\t]*(?=\\n|$)", "(?:^|\\n)F2: L L L X X L L L[ \\t]*(?=\\n|$)", "(?:^|\\n)F3: L L L L L L L L[ \\t]*(?=\\n|$)", "(?:^|\\n)F4: L L L L L L L L[ \\t]*(?=\\n|$)", "(?:^|\\n)F5: X L L L L L L L[ \\t]*(?=\\n|$)", "ocupaci[oó]n[^\\n\\d]*(?<![\\d.\\-])(?:9\\.99|10(?:\\.0{1,2})?|10\\.01)(?!\\d)", "recaudo[^\\n\\d]*(?<![\\d.\\-])(?:65999\\.99|66000(?:\\.0{1,2})?|66000\\.01)(?!\\d)"], "not": ["(?:[\\s\\S]*?fuera de rango){3}", "(?:[\\s\\S]*?\\bocupado){3}"], "show": "Reservado 2-4: $18000 · Reservado 2-5: $18000 · Reservado 5-1: $12000 · Ocupado · Fuera de rango · Fuera de rango · Ocupado · Reservado 1-8: $18000 · mapa de 5 filas · Ocupación: 10.00% · Recaudo: 66000.00"}]}];
+const HARNESS_PY = "import builtins, io, contextlib, traceback, sys\nclass CicloInfinito(Exception):\n    pass\nclass DemasiadaSalida(Exception):\n    pass\nLP_MAX_PASOS = 3000000\nLP_MAX_SALIDA = 30000\nclass LP_Salida(io.StringIO):\n    def write(self, s):\n        if self.tell() + len(s) > LP_MAX_SALIDA:\n            super().write(s[:max(0, LP_MAX_SALIDA - self.tell())])\n            raise DemasiadaSalida(\"tu programa imprimió demasiado texto (más de 30 000 caracteres): ¿quedó en un ciclo infinito?\")\n        return super().write(s)\ndef __run_user(src, inputs, echo):\n    q = list(inputs)\n    def _inp(prompt=''):\n        if not q:\n            raise EOFError(\"input() pidió un dato, pero no hay más entradas\")\n        v = q.pop(0)\n        if echo:\n            print(str(prompt) + v)\n        return v\n    builtins.input = _inp\n    buf = LP_Salida()\n    pasos = [0]\n    def _local(frame, event, arg):\n        if event == 'line':\n            pasos[0] += 1\n            if pasos[0] > LP_MAX_PASOS:\n                raise CicloInfinito(\"tu programa ejecutó más de 3 millones de pasos sin terminar: revisa que la condición del ciclo pueda volverse False\")\n        return _local\n    def _global(frame, event, arg):\n        if frame.f_code.co_filename == \"tu_programa.py\":\n            return _local\n        return None\n    etype, err, line = \"\", \"\", None\n    try:\n        code = compile(src, \"tu_programa.py\", \"exec\")\n        sys.settrace(_global)\n        try:\n            with contextlib.redirect_stdout(buf):\n                exec(code, {\"__name__\": \"__main__\"})\n        finally:\n            sys.settrace(None)\n    except SyntaxError as e:\n        etype, err, line = type(e).__name__, str(e.msg), e.lineno\n    except BaseException as e:\n        etype, err = type(e).__name__, str(e)\n        for fr in traceback.extract_tb(e.__traceback__):\n            if fr.filename == \"tu_programa.py\":\n                line = fr.lineno\n    return [buf.getvalue(), etype, err, line]\n";
+const EXTRA_CODE = {
+  conlista:{code:'temperaturas = [24.5, 19.0, 27.3, 22.1, 18.4]\ntotal = 0\nfor t in temperaturas:\n    total += t\nprint(f"{len(temperaturas)} días · promedio {total / len(temperaturas):.2f} °C")\n', stdin:''},
+  crear:{code:'vacia = []\nnumeros = [5, 10, 15, 20]\nmixta = ["Ana", 19, 4.5, True]\nletras = list("Python")\nprint(vacia)\nprint(numeros)\nprint(mixta)\nprint(letras)\n', stdin:''},
+  indices:{code:'planetas = ["Mercurio", "Venus", "Tierra", "Marte", "Júpiter"]\nprint(planetas[0])         # el primero\nprint(planetas[-1])        # el último\nprint(planetas[2])\nplanetas[3] = "Marte 🔴"    # modificar un elemento\nprint(planetas)\nprint(len(planetas), "planetas; último índice:", len(planetas) - 1)\n', stdin:''},
+  metodos:{code:'fila = ["Ana", "Luis"]\nfila.append("Sara")           # llega al final\nfila.insert(0, "Don Pedro")   # turno preferencial\natendido = fila.pop(0)        # sale el primero\nfila.remove("Luis")           # Luis se cansó y se fue\nprint("Atendido:", atendido)\nprint("En fila:", fila, "→", len(fila), "personas")\nprint("¿Está Sara?", "Sara" in fila, "· posición:", fila.index("Sara"))\n', stdin:''},
+  recorridos:{code:'precios = [12000, 45000, 8900]\nfor p in precios:                       # por elemento: solo leer\n    print("Precio:", p)\nfor i in range(len(precios)):           # por índice: modificar\n    precios[i] = precios[i] * 1.19\nfor i, p in enumerate(precios):         # posición y valor\n    print(f"Producto {i + 1} con IVA: {p:.2f}")\n', stdin:''},
+  promedio:{code:'ventas = [320000, 450000, 280000, 510000, 390000]\ntotal = 0\nfor v in ventas:                 # 1.er recorrido: el promedio\n    total += v\npromedio = total / len(ventas)\nbuenos = []\nfor v in ventas:                 # 2.º recorrido: comparar con él\n    if v > promedio:\n        buenos.append(v)\nprint(f"Promedio: {promedio:.2f}")\nprint("Días sobre el promedio:", buenos)\n', stdin:''},
+  slicing:{code:'meses = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]\nprint(meses[0:3])      # primer trimestre\nprint(meses[6:])       # segundo semestre\nprint(meses[-3:])      # los últimos tres\nprint(meses[::3])      # uno de cada tres\nprint(meses[::-1])     # al revés\n', stdin:''},
+  matriz:{code:'# ventas (millones) de 2 sucursales en 3 meses\nventas = [[120, 95, 140],\n          [80, 110, 100]]\nprint(ventas[1][2])                  # sucursal 1, mes 2\nfor f in range(len(ventas)):\n    total = 0\n    for c in range(len(ventas[f])):\n        total += ventas[f][c]\n    print(f"Sucursal {f}: {ventas[f]} → total {total}")\n', stdin:''},
+  libre:{code:'# Zona libre: experimenta con listas\ncolores = ["rojo", "verde", "azul"]\ncolores.append("amarillo")\nfor i, c in enumerate(colores):\n    print(i, c)\n', stdin:''}
+};
+const LEVELS=['Novato de las listas','Aprendiz de índices','Maestro de métodos','Domador de matrices','Gran arquitecto de datos'];
+const PER=160;
+const BADGES=[
+  {icon:'🥉',label:'Primer paso',test:()=>S.xp>=30},
+  {icon:'🐍',label:'¡Hola, lista!',test:()=>!!S.flags.firstRun},
+  {icon:'🎯',label:'Puntería',test:()=>!!S.flags.aim},
+  {icon:'🔧',label:'Mecánico de listas',test:()=>!!S.flags.mech},
+  {icon:'✂️',label:'Cirujano',test:()=>!!S.flags.surgeon},
+  {icon:'🧭',label:'Rastreador',test:()=>!!S.flags.tracer},
+  {icon:'🧩',label:'Ensamblador',test:()=>!!S.flags.builder},
+  {icon:'🕵️',label:'Cazaerrores',test:()=>!!S.flags.hunter},
+  {icon:'🏅',label:'Coleccionista',test:()=>RETOS.filter(r=>S.retos[r.id]).length>=6},
+  {icon:'🎬',label:'Taquillero',test:()=>RETOS.filter(r=>r.lvl===4).every(r=>S.retos[r.id])},
+  {icon:'🧠',label:'Leyenda',test:()=>RETOS.every(r=>S.retos[r.id])}
+];
+const LVNAME={1:'🟢 Nivel 1 · Calentamiento',2:'🟡 Nivel 2 · Intermedio',3:'🟠 Nivel 3 · Avanzado',4:'🔴 Nivel 4 · Reto ★'};
+const LVDESC={1:'Crear listas, usar índices, len(), in e index().',2:'Recorridos por índice, modificar la lista, máximos y mínimos y slicing.',3:'Listas sin repetidos, funciones que reciben y devuelven listas y matrices.',4:'Ordenamiento, menús con listas paralelas y matrices con while. ¡Para valientes!'};
+
+/* ===================== Progreso / XP ===================== */
+const KEY=CFG.key;
+function freshS(){ return {xp:0, awarded:[], flags:{}, retos:{}, sol:{}, cov:{}, desk:{}, rng:{}, pz:{}, trace:{}, interp:{}}; }
+let S=freshS();
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null'); if(s&&typeof s==='object') S=Object.assign(freshS(),s);}catch(e){}
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} }
+const RESET_HOOKS=[];
+function renderXP(){
+  const lvl=Math.min(LEVELS.length,Math.floor(S.xp/PER)+1);
+  document.getElementById('lvl').textContent=lvl;
+  document.getElementById('lvlname').textContent=LEVELS[lvl-1];
+  document.getElementById('xp').textContent=S.xp;
+  document.getElementById('xpfill').style.width=(lvl===LEVELS.length?100:Math.round((S.xp%PER)/PER*100))+'%';
+  const box=document.getElementById('badges'); box.innerHTML='';
+  BADGES.forEach(b=>{const e=document.createElement('span');e.className='bdg'+(b.test()?' on':'');e.textContent=b.icon+' '+b.label;e.title=b.hint||'';box.appendChild(e);});
+}
+let popT=null;
+function pop(t){const p=document.getElementById('xppop');p.textContent=t;p.classList.add('show');clearTimeout(popT);popT=setTimeout(()=>p.classList.remove('show'),1600);}
+function addXP(key,amt,label){
+  if(S.awarded.includes(key))return false;
+  S.awarded.push(key); S.xp+=amt; save(); renderXP(); pop('+'+amt+' XP'+(label?' · '+label:'')); return true;
+}
+function flag(name,label){ if(S.flags[name])return; S.flags[name]=true; save(); renderXP(); if(label)setTimeout(()=>pop('🏅 Insignia: '+label),1700); }
+document.getElementById('resetProg').addEventListener('click',()=>{
+  if(!confirm('¿Borrar tu XP, insignias y retos superados en este navegador?'))return;
+  S=freshS(); save(); renderXP(); RESET_HOOKS.forEach(f=>{try{f();}catch(e){console.warn(e);}});
+});
+renderXP();
+
+/* ===================== Pestañas ===================== */
+const tabs=document.querySelectorAll('#tabs button');
+function showTab(name){
+  tabs.forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('active',s.id===name));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+tabs.forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+
+/* ===================== Quiz genérico ===================== */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function makeQuiz(cfg){
+  document.getElementById(cfg.totalId).textContent=cfg.data.length;
+  function build(){
+    const box=document.getElementById(cfg.boxId); box.innerHTML='';
+    let answered=0, correct=0;
+    document.getElementById(cfg.scoreId).textContent='0';
+    cfg.data.forEach((q,i)=>{
+      const c=document.createElement('div'); c.className='q';
+      c.innerHTML='<span class="tag">'+(q.tag||('#'+(i+1)))+'</span>'+(q.scn?'<p class="scn">'+q.scn+'</p>':'')+(q.code?'<pre>'+esc(q.code)+'</pre>':'');
+      const opts=document.createElement('div'); opts.className='opts';
+      const fb=document.createElement('div'); fb.className='feedback';
+      let done=false;
+      q.opts.forEach(o=>{
+        const b=document.createElement('button'); b.className='opt'; b.textContent=o;
+        b.addEventListener('click',()=>{
+          if(done)return; done=true; answered++;
+          opts.querySelectorAll('.opt').forEach(x=>x.classList.add('locked'));
+          if(o===q.ans){ b.classList.add('correct'); correct++; document.getElementById(cfg.scoreId).textContent=correct;
+            fb.textContent='✔ ¡Correcto! '+q.why; fb.className='feedback ok'; addXP(cfg.boxId+':'+i,cfg.xp||10); }
+          else{ b.classList.add('wrong'); opts.querySelectorAll('.opt').forEach(x=>{if(x.textContent===q.ans)x.classList.add('correct');});
+            fb.textContent='✘ Respuesta: '+q.ans+'. '+q.why; fb.className='feedback no'; }
+          if(answered===cfg.data.length && cfg.onDone) cfg.onDone(correct);
+        });
+        opts.appendChild(b);
+      });
+      c.appendChild(opts); c.appendChild(fb); box.appendChild(c);
+    });
+  }
+  document.getElementById(cfg.resetId).addEventListener('click',build); build();
+}
+/* ===================== Componentes: simulador paso a paso ===================== */
+function makeSim(cfg){
+  // cfg: {root, progs:{id:{title,code:[...],inputs:[...],trace(v)}} , xp, onAll}
+  const root=document.getElementById(cfg.root);
+  root.innerHTML='<div class="simbar"><select aria-label="Programa"></select><span class="itc">'+(cfg.itLabel||'Vuelta')+': <b>–</b></span></div>'+
+    '<div class="simin"></div>'+
+    '<div class="btns" style="margin-top:0"><button class="btn sstep">▶ Paso</button><button class="btn ghost sauto">⏩ Automático</button><button class="btn ghost sreset">↺ Reiniciar</button></div>'+
+    '<div class="simgrid" style="margin-top:8px"><div class="scode"></div><div><div class="vars"><table><thead><tr><th>Variable</th><th>Valor</th></tr></thead><tbody></tbody></table></div>'+
+    '<label style="display:block;font-size:.78rem;color:var(--muted);margin:8px 0 4px;font-weight:600">🖥️ Salida</label><pre class="term sout" style="min-height:90px"></pre><div class="snote"></div></div></div>';
+  const sel=root.querySelector('select'), inBox=root.querySelector('.simin'), codeBox=root.querySelector('.scode'), tb=root.querySelector('tbody'),
+        out=root.querySelector('.sout'), note=root.querySelector('.snote'), itc=root.querySelector('.itc b'),
+        bStep=root.querySelector('.sstep'), bAuto=root.querySelector('.sauto'), bReset=root.querySelector('.sreset');
+  let id=Object.keys(cfg.progs)[0], steps=[], k=-1, timer=null, prevVars={}; let lastV={};
+  Object.entries(cfg.progs).forEach(([key,p])=>{const o=document.createElement('option');o.value=key;o.textContent=(S.trace[cfg.root+':'+key]?'✅ ':'')+p.title;sel.appendChild(o);});
+  function renderInputs(){ const p=cfg.progs[id]; inBox.innerHTML='';
+    (p.inputs||[]).forEach(inp=>{ const w=document.createElement('label'); w.textContent=inp.label+' ';
+      const el=document.createElement('input'); el.type=inp.type||'text'; el.value=inp.value; el.dataset.id=inp.id; if(inp.w) el.style.width=inp.w;
+      el.addEventListener('change',reset); w.appendChild(el); inBox.appendChild(w); }); }
+  function renderCode(){ const p=cfg.progs[id]; codeBox.innerHTML='';
+    (typeof p.code==='function'?p.code(lastV):p.code).forEach((t,i)=>{ const d=document.createElement('div'); d.className='sl'; d.innerHTML='<span class="ln">'+(i+1)+'</span><span class="tx">'+esc(t)+'</span>'; codeBox.appendChild(d); }); }
+  function stop(){ if(timer){clearInterval(timer);timer=null;bAuto.textContent='⏩ Automático';} }
+  function reset(){ stop(); const p=cfg.progs[id], v={}; inBox.querySelectorAll('[data-id]').forEach(el=>v[el.dataset.id]=el.value); lastV=v;
+    try{ steps=p.trace(v); }catch(e){ steps=[]; }
+    k=-1; prevVars={}; renderCode(); tb.innerHTML='<tr><td colspan="2" style="color:var(--muted)">Pulsa ▶ Paso para empezar</td></tr>'; out.textContent=''; note.textContent=''; itc.textContent='–'; bStep.disabled=false; }
+  function show(){
+    const st=steps[k], rows=codeBox.children;
+    [...rows].forEach((r,i)=>{ r.classList.remove('cur','run','true','false'); const s=r.querySelector('.st'); if(s) s.remove(); });
+    const r=rows[st.l]; r.classList.add('cur', st.s||'run');
+    if(st.tag){ const s=document.createElement('span'); s.className='st'; s.textContent=st.tag; r.appendChild(s); }
+    r.scrollIntoView({block:'nearest'});
+    tb.innerHTML=''; Object.entries(st.vars||{}).forEach(([n,val])=>{ const tr=document.createElement('tr'); const ch=prevVars[n]!==undefined&&prevVars[n]!==val || prevVars[n]===undefined;
+      tr.innerHTML='<td class="mono">'+esc(n)+'</td><td class="mono'+(ch?' chg':'')+'">'+esc(val)+'</td>'; tb.appendChild(tr); });
+    prevVars=Object.assign({},st.vars||{});
+    if(st.out!==undefined) out.textContent+=st.out;
+    note.innerHTML=st.note?('💬 '+st.note):'';
+    itc.textContent=st.it===undefined?(itc.textContent):String(st.it);
+    if(k===steps.length-1){ bStep.disabled=true; stop(); note.innerHTML+=(note.innerHTML?'<br>':'')+'🏁 <b>Fin del programa.</b>';
+      const key=cfg.root+':'+id; if(!S.trace[key]){ S.trace[key]=true; save(); [...sel.options].forEach(o=>{ if(o.value===id && !o.textContent.startsWith('✅')) o.textContent='✅ '+o.textContent; }); }
+      addXP('trace:'+key,cfg.xp||15,'programa recorrido');
+      if(Object.keys(cfg.progs).every(x=>S.trace[cfg.root+':'+x]) && cfg.onAll) cfg.onAll(); }
+  }
+  function step(){ if(k<steps.length-1){ k++; show(); } }
+  bStep.addEventListener('click',step);
+  bAuto.addEventListener('click',()=>{ if(timer){stop();return;} if(k>=steps.length-1) reset(); bAuto.textContent='⏸ Pausa'; timer=setInterval(()=>{ if(k>=steps.length-1){stop();return;} step(); },650); });
+  bReset.addEventListener('click',reset);
+  sel.addEventListener('change',()=>{ id=sel.value; renderInputs(); reset(); });
+  renderInputs(); reset();
+  return {load(x){ id=x; sel.value=x; renderInputs(); reset(); root.scrollIntoView({behavior:'smooth'}); }};
+}
+
+/* ===================== Componentes: arma el programa (Parsons) ===================== */
+function makeParsons(cfg){
+  // cfg: {root, puzzles:[{id,title,goal,lines:[...],valid:[[...]]}], xp, onAll}
+  const root=document.getElementById(cfg.root);
+  cfg.puzzles.forEach(pz=>{
+    const box=document.createElement('div'); box.className='pz';
+    box.innerHTML='<h3 style="margin:0 0 4px">'+pz.title+(S.pz[pz.id]?' <span class="ok">✔</span>':'')+'</h3><p style="margin:2px 0 8px">'+pz.goal+'</p>'+
+      '<div class="pzgrid"><div><div class="pzlab">🧩 Piezas (toca para usar)</div><div class="pzpool"></div></div><div><div class="pzlab">📝 Tu programa (toca una línea para devolverla)</div><div class="pzprog"></div></div></div>'+
+      '<div class="btns"><button class="btn pzchk">✅ Comprobar</button><button class="btn ghost pzrst">↺ Reiniciar</button></div><div class="feedback pzfb"></div>';
+    root.appendChild(box);
+    const pool=box.querySelector('.pzpool'), prog=box.querySelector('.pzprog'), fb=box.querySelector('.pzfb');
+    let order=[];
+    const valid=pz.valid||[pz.lines.map((_,i)=>i)];
+    function build(){ order=[]; fb.textContent=''; fb.className='feedback pzfb'; pool.innerHTML=''; prog.innerHTML='';
+      const idx=pz.lines.map((_,i)=>i); for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
+      idx.forEach(i=>{ const b=document.createElement('button'); b.className='pzline'; b.dataset.i=i; b.textContent=pz.lines[i];
+        b.addEventListener('click',()=>{ if(b.classList.contains('used'))return; b.classList.add('used'); order.push(i); render(); }); pool.appendChild(b); });
+      render(); }
+    function render(){ prog.innerHTML=''; if(!order.length){ prog.innerHTML='<div class="pzempty">— vacío —</div>'; }
+      order.forEach((i,pos)=>{ const d=document.createElement('div'); d.className='pzline in'; d.textContent=pz.lines[i];
+        d.addEventListener('click',()=>{ order.splice(pos,1); pool.querySelector('[data-i="'+i+'"]').classList.remove('used'); render(); }); prog.appendChild(d); }); }
+    box.querySelector('.pzchk').addEventListener('click',()=>{
+      if(order.length<pz.lines.length){ fb.textContent='Usa todas las piezas antes de comprobar.'; fb.className='feedback no pzfb'; return; }
+      const ok=valid.some(v=>v.every((x,j)=>x===order[j]));
+      const ref=valid[0]; [...prog.children].forEach((d,j)=>d.classList.add(ref[j]===order[j]||ok?'good':'bad'));
+      if(ok){ fb.textContent='🎉 ¡Programa armado correctamente! Fíjate en la sangría: decide qué está dentro de cada ciclo.'; fb.className='feedback ok pzfb';
+        if(!S.pz[pz.id]){ S.pz[pz.id]=true; save(); box.querySelector('h3').innerHTML=pz.title+' <span class="ok">✔</span>'; }
+        addXP('pz:'+pz.id,cfg.xp||15,'programa armado');
+        if(cfg.puzzles.every(p=>S.pz[p.id]) && cfg.onAll) cfg.onAll(); }
+      else { fb.textContent='Aún no. Las líneas en rojo no están donde deberían (compáralas con el orden en que Python las necesita: primero se prepara, luego se repite, al final se muestra).'; fb.className='feedback no pzfb'; }
+    });
+    box.querySelector('.pzrst').addEventListener('click',build);
+    build();
+  });
+}
+
+/* ===================== Utilidades de listas ===================== */
+function pyRepr(v){ if(typeof v==='string') return "'"+v+"'"; if(Array.isArray(v)) return '['+v.map(pyRepr).join(', ')+']'; if(v===true) return 'True'; if(v===false) return 'False'; return String(v); }
+function cellsHTML(arr,opt){ opt=opt||{}; return arr.map((v,i)=>'<div class="cell'+(opt.sel&&opt.sel.includes(i)?' sel':'')+'" data-i="'+i+'"><span class="v">'+esc(opt.raw?String(v):pyRepr(v))+'</span><span class="ip">'+i+'</span>'+(opt.neg?'<span class="in">'+(i-arr.length)+'</span>':'')+'</div>').join(''); }
+function pySliceIdx(n,a,b,c){ const st=(c==null)?1:c; if(st===0) throw new Error('ValueError: slice step cannot be zero'); const out=[];
+  if(st>0){ let s=a==null?0:(a<0?Math.max(0,a+n):Math.min(a,n)); let e=b==null?n:(b<0?Math.max(0,b+n):Math.min(b,n)); for(let i=s;i<e;i+=st) out.push(i); }
+  else { let s=a==null?n-1:(a<0?Math.max(-1,a+n):Math.min(a,n-1)); let e=b==null?-1:(b<0?Math.max(-1,b+n):Math.min(b,n-1)); for(let i=s;i>e;i+=st) out.push(i); }
+  return out; }
+function parseSlice(txt){ let t=String(txt).trim().replace(/^n\s*\[/,'').replace(/^\[/,'').replace(/\]$/,'').trim();
+  if(!t.includes(':')) return null; const p=t.split(':'); if(p.length>3) return null;
+  const toN=s=>{ s=s.trim(); if(s==='') return null; if(!/^-?\d+$/.test(s)) throw new Error('bad'); return parseInt(s,10); };
+  return [toN(p[0]),toN(p[1]),p.length===3?toN(p[2]):null]; }
+
+/* ===================== Anatomía y memoria ===================== */
+document.getElementById('anatCells').innerHTML=cellsHTML([24.5,19.0,27.3,22.1,18.4].map(x=>x.toFixed(1)),{raw:true})+'<div class="cellnote">← índice debajo de cada elemento · tamaño = 5</div>';
+(function(){ const B=document.getElementById('memBase'),Z=document.getElementById('memSize'),I=document.getElementById('memIdx'),row=document.getElementById('memRow'),calc=document.getElementById('memCalc');
+  const vals=[11,9,17,89,1,90];
+  function upd(){ const b=parseInt(B.value,10)||0, z=parseInt(Z.value,10)||1, i=parseInt(I.value,10);
+    row.innerHTML=vals.map((v,k)=>'<div class="mcell'+(k===i?' sel':'')+'"><span class="ad">'+(b+k*z)+'</span><span class="v">'+v+'</span><span class="ip">['+k+']</span></div>').join('');
+    calc.innerHTML=(i>=0&&i<vals.length)?'dirección = '+b+' + '+i+' × '+z+' = <b style="color:var(--warn)">'+(b+i*z)+'</b> → el valor '+vals[i]+' se lee de una vez, sin recorrer los anteriores':'<span class="ko">El índice '+(isNaN(i)?'?':i)+' no existe en un arreglo de 6 elementos (0 a 5)</span>'; }
+  [B,Z,I].forEach(e=>e.addEventListener('input',upd)); upd(); })();
+
+/* ===================== Explorador de índices ===================== */
+(function(){ const P=["Mercurio","Venus","Tierra","Marte","Júpiter"], box=document.getElementById('ixCells'), inp=document.getElementById('ixIn'), out=document.getElementById('ixOut');
+  function show(k){ box.innerHTML=cellsHTML(P,{neg:true,sel:k==null?[]:[k]}); box.querySelectorAll('.cell').forEach(c=>c.addEventListener('click',()=>{ const i=+c.dataset.i; inp.value=i; upd(); })); }
+  function upd(){ const t=inp.value.trim(); if(!/^-?\d+$/.test(t)){ out.innerHTML='<span class="ko">El índice debe ser un entero (TypeError si no lo es)</span>'; show(null); return; }
+    const i=parseInt(t,10), n=P.length; if(i>=n||i<-n){ out.innerHTML='<span class="ko">IndexError: list index out of range</span> — los índices válidos van de 0 a '+(n-1)+' y de −1 a −'+n+'.'; show(null); return; }
+    const k=i<0?i+n:i; out.innerHTML='planetas['+i+'] → <b style="color:var(--py)">'+pyRepr(P[k])+'</b>  (también planetas['+(k===i?k-n:k)+'])'; show(k); }
+  inp.addEventListener('input',upd); upd(); })();
+
+/* ===================== Tiro al índice ===================== */
+const FRUTAS=["mango","pera","uva","kiwi","lulo","coco","piña"];
+const AIM=[['uva','positivo',2],['piña','negativo',-1],['mango','negativo',-7],['lulo','positivo',4],['kiwi','negativo',-4],['pera','positivo',1],['coco','negativo',-2],['piña','positivo',6]];
+function renderAim(){ const box=document.getElementById('aim'); box.innerHTML='';
+  AIM.forEach(([obj,modo,ans],k)=>{ const done=!!S.flags['aim_'+k]; const c=document.createElement('div'); c.className='q sn'+(done?' hit':'');
+    c.innerHTML='<span class="tag">Tiro '+(k+1)+'</span> Llega a <b class="mono" style="color:var(--py)">"'+obj+'"</b> con un índice <b>'+modo+'</b>: <span class="mono">frutas[</span><input type="text" class="aimin"><span class="mono">]</span> <button class="btn">🎯 Disparar</button><div class="feedback"></div>';
+    const inp=c.querySelector('input'), fb=c.querySelector('.feedback');
+    if(done){ inp.value=ans; fb.textContent='✔ ¡En el blanco!'; fb.className='feedback ok'; }
+    const go=()=>{ const t=inp.value.trim(); if(!/^-?\d+$/.test(t)){ fb.textContent='Escribe un número entero.'; fb.className='feedback no'; return; }
+      const i=parseInt(t,10), n=FRUTAS.length;
+      if(i>=n||i<-n){ fb.textContent='💥 IndexError: frutas['+i+'] no existe (la lista tiene '+n+' elementos).'; fb.className='feedback no'; return; }
+      const v=FRUTAS[i<0?i+n:i];
+      if(i===ans){ fb.textContent='✔ ¡En el blanco! frutas['+i+'] → "'+v+'"'; fb.className='feedback ok'; c.classList.add('hit');
+        if(!S.flags['aim_'+k]){S.flags['aim_'+k]=true; save();} addXP('aim:'+k,8,'¡en el blanco!');
+        document.getElementById('aimScore').textContent=AIM.filter((_,j)=>S.flags['aim_'+j]).length;
+        if(AIM.every((_,j)=>S.flags['aim_'+j])) flag('aim','Puntería'); }
+      else if(v===obj){ fb.textContent='Casi: frutas['+i+'] sí es "'+v+'", pero se pedía un índice '+modo+'.'; fb.className='feedback no'; }
+      else { fb.textContent='✘ frutas['+i+'] → "'+v+'". Cuenta otra vez: los positivos empiezan en 0 y los negativos en −1 (el último).'; fb.className='feedback no'; } };
+    c.querySelector('button').addEventListener('click',go); inp.addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+    box.appendChild(c); });
+  document.getElementById('aimScore').textContent=AIM.filter((_,j)=>S.flags['aim_'+j]).length; document.getElementById('aimTotal').textContent=AIM.length; }
+document.getElementById('aimReset').addEventListener('click',()=>{ AIM.forEach((_,j)=>delete S.flags['aim_'+j]); save(); renderAim(); });
+renderAim(); RESET_HOOKS.push(renderAim);
+
+/* ===================== Quizzes ===================== */
+makeQuiz({boxId:'qiQuiz',scoreId:'qiScore',totalId:'qiTotal',resetId:'qiReset',xp:8,data:[
+  {code:'colores = ["rojo", "verde", "azul", "negro", "blanco"]\nprint(colores[1])',opts:['rojo','verde','azul'],ans:'verde',why:'El índice 1 es el segundo elemento: se cuenta desde 0.'},
+  {code:'colores = ["rojo", "verde", "azul", "negro", "blanco"]\nprint(colores[-2])',opts:['verde','negro','blanco'],ans:'negro',why:'−1 es el último ("blanco"); −2 es el penúltimo.'},
+  {code:'colores = ["rojo", "verde", "azul", "negro", "blanco"]\nprint(len(colores))',opts:['4','5','6'],ans:'5',why:'len() cuenta elementos, no índices: hay 5.'},
+  {code:'colores = ["rojo", "verde", "azul", "negro", "blanco"]\nprint(colores[len(colores) - 1])',opts:['negro','blanco','IndexError'],ans:'blanco',why:'len − 1 = 4 es siempre el último índice.'},
+  {code:'colores = ["rojo", "verde", "azul", "negro", "blanco"]\nprint(colores[5])',opts:['blanco','rojo','IndexError'],ans:'IndexError',why:'Con 5 elementos los índices van de 0 a 4.'},
+  {code:'x = [3, 6, 9]\nx[1] = x[0] + x[2]\nprint(x)',opts:['[3, 6, 9]','[3, 12, 9]','[12, 6, 9]'],ans:'[3, 12, 9]',why:'Las listas son mutables: x[1] se reemplaza por 3 + 9 = 12.'}
+]});
+makeQuiz({boxId:'pqQuiz',scoreId:'pqScore',totalId:'pqTotal',resetId:'pqReset',xp:10,data:[
+  {code:'c = ["a", "b", "c"]\nc.append("d")\nc.insert(0, "z")\nc.pop(1)\nprint(c)',opts:["['z', 'b', 'c', 'd']","['a', 'b', 'c', 'd']","['z', 'a', 'b', 'c']"],ans:"['z', 'b', 'c', 'd']",why:'Tras insert queda [z, a, b, c, d]; pop(1) quita la "a".'},
+  {code:'n = [5, 3, 5, 1]\nn.remove(5)\nprint(n, n.count(5))',opts:['[3, 1] 0','[3, 5, 1] 1','[5, 3, 1] 1'],ans:'[3, 5, 1] 1',why:'remove quita solo la PRIMERA aparición; queda un 5.'},
+  {code:'n = [4, 1, 3]\nn = n.sort()\nprint(n)',opts:['[1, 3, 4]','None','[4, 1, 3]'],ans:'None',why:'sort() ordena la lista y devuelve None: al asignarlo, n pierde la lista.'},
+  {code:'n = [2, 8, 6]\nn.sort(reverse=True)\nprint(n[0] - n[-1])',opts:['6','-6','4'],ans:'6',why:'Ordenada de mayor a menor: [8, 6, 2]; 8 − 2 = 6.'},
+  {code:'a = [1, 2]\nb = a\nb.append(3)\nprint(a)',opts:['[1, 2]','[1, 2, 3]','Error'],ans:'[1, 2, 3]',why:'b = a NO copia la lista: los dos nombres apuntan a la misma. Para copiar se usa a[:].'}
+]});
+const R3=['for x in lista','for i in range(len(lista))','enumerate(lista)'];
+makeQuiz({boxId:'rcQuiz',scoreId:'rcScore',totalId:'rcTotal',resetId:'rcReset',xp:8,data:[
+  {scn:'Sumar todos los precios de la lista.',opts:R3,ans:'for x in lista',why:'Solo necesitas los valores.'},
+  {scn:'Aplicar un 10 % de descuento a cada precio, en la misma lista.',opts:R3,ans:'for i in range(len(lista))',why:'Para modificar un elemento necesitas su posición: lista[i] = …'},
+  {scn:'Mostrar "Puesto 1: Ana", "Puesto 2: Luis"…',opts:R3,ans:'enumerate(lista)',why:'Necesitas la posición y el valor a la vez (sumándole 1 a la posición).'},
+  {scn:'Comparar cada elemento con el siguiente para saber si la lista está ordenada.',opts:R3,ans:'for i in range(len(lista))',why:'Necesitas lista[i] y lista[i + 1]: hay que trabajar con índices (hasta len − 1).'},
+  {scn:'Contar cuántas notas son mayores que 4.0.',opts:R3,ans:'for x in lista',why:'Solo lees los valores y cuentas.'}
+]});
+makeQuiz({boxId:'mqQuiz',scoreId:'mqScore',totalId:'mqTotal',resetId:'mqReset',xp:10,data:[
+  {code:'m = [[1, 2, 3], [4, 5, 6]]\nprint(m[1][0])',opts:['2','4','IndexError'],ans:'4',why:'Fila 1 (la segunda), columna 0 (la primera).'},
+  {code:'m = [[1, 2, 3], [4, 5, 6]]\nprint(len(m), len(m[0]))',opts:['2 3','3 2','6 6'],ans:'2 3',why:'len(m) cuenta filas; len(m[0]), los elementos de una fila (columnas).'},
+  {code:'m = [[1, 2], [3, 4]]\nt = 0\nfor fila in m:\n    for x in fila:\n        t += x\nprint(t)',opts:['4','10','[4, 6]'],ans:'10',why:'El ciclo anidado visita los 4 elementos: 1 + 2 + 3 + 4.'},
+  {code:'m = [[0] * 2] * 2\nm[0][0] = 9\nprint(m)',opts:['[[9, 0], [0, 0]]','[[9, 0], [9, 0]]','Error'],ans:'[[9, 0], [9, 0]]',why:'* 2 repitió la MISMA fila dos veces: cambiar una cambia "las dos".'}
+]});
+const CE=['IndexError','ValueError','TypeError / AttributeError','Error lógico (sin mensaje)','Funciona bien'];
+makeQuiz({boxId:'ceQuiz',scoreId:'ceScore',totalId:'ceTotal',resetId:'ceReset',xp:10,onDone:()=>flag('hunter','Cazaerrores'),data:[
+  {tag:'Fragmento 1',code:'n = [1, 2, 3]\nprint(n[3])',opts:CE,ans:'IndexError',why:'Los índices llegan hasta 2.'},
+  {tag:'Fragmento 2',code:'n = [1, 2, 3]\nn.remove(5)',opts:CE,ans:'ValueError',why:'list.remove(x): x not in list. Pregunta antes con "in".'},
+  {tag:'Fragmento 3',code:'n = [3, 1]\nn = n.append(2)\nn.append(4)',opts:CE,ans:'TypeError / AttributeError',why:'append devuelve None: n quedó en None y None no tiene .append (AttributeError).'},
+  {tag:'Fragmento 4 · se quería: duplicar los precios',code:'precios = [100, 200]\nfor p in precios:\n    p = p * 2\nprint(precios)',opts:CE,ans:'Error lógico (sin mensaje)',why:'p es una copia: la lista no cambia. Hay que recorrer por índice.'},
+  {tag:'Fragmento 5',code:'n = [5, 6, 7]\nfor i in range(len(n) + 1):\n    print(n[i])',opts:CE,ans:'IndexError',why:'range(4) llega al índice 3, que no existe.'},
+  {tag:'Fragmento 6',code:'n = [4, 8]\nposicion = input("¿Qué posición? ")   # escribe 1\nprint(n[posicion])',opts:CE,ans:'TypeError / AttributeError',why:'input devuelve texto y los índices deben ser enteros: list indices must be integers. Se convierte con int().'},
+  {tag:'Fragmento 7 · se quería: [20, 30, 40]',code:'datos = [10, 20, 30, 40]\nprint(datos[1:3])',opts:CE,ans:'Error lógico (sin mensaje)',why:'Imprime [20, 30]: el fin no se incluye. Debía ser datos[1:4] o datos[1:].'},
+  {tag:'Fragmento 8',code:'m = []\nfor f in range(2):\n    m.append([0] * 3)\nm[0][1] = 5\nprint(m)',opts:CE,ans:'Funciona bien',why:'Cada fila es una lista distinta: [[0, 5, 0], [0, 0, 0]].'}
+]});
+
+/* ===================== Taller mecánico ===================== */
+const MISS=[{id:'m1',start:[3,1,2],goal:[1,2,3,9]},{id:'m2',start:["Ana","Luis","Sara"],goal:["Luis","Sara","Ana"]},{id:'m3',start:[10,20,30,40],goal:[5,20,40]}];
+(function(){ const sel=document.getElementById('mxSel'), cells=document.getElementById('mxCells'), goalEl=document.getElementById('mxGoal'), log=document.getElementById('mxLog'), fb=document.getElementById('mxFb'), V=document.getElementById('mxVal'), P=document.getElementById('mxPos');
+  let cur=0, L=[];
+  function fill(){ sel.innerHTML=''; MISS.forEach((m,k)=>{const o=document.createElement('option');o.value=k;o.textContent=(S.flags['mech_'+m.id]?'✅ ':'🔧 ')+'Misión '+(k+1);sel.appendChild(o);}); sel.value=cur; }
+  function start(){ const m=MISS[cur]; L=m.start.slice(); log.textContent='lista = '+pyRepr(L)+'\n'; fb.textContent=''; fb.className='feedback'; goalEl.innerHTML='Objetivo: <b style="color:var(--good)">'+esc(pyRepr(m.goal))+'</b>'; draw(); }
+  function draw(){ cells.innerHTML=L.length?cellsHTML(L,{neg:false}):'<span style="color:var(--muted)">[] (vacía)</span>'; }
+  function val(){ const t=V.value.trim().replace(/^["']|["']$/g,''); return /^-?\d+(\.\d+)?$/.test(t)?Number(t):t; }
+  function eq(a,b){ return a.length===b.length&&a.every((x,i)=>x===b[i]); }
+  document.querySelectorAll('.mechbtns [data-m]').forEach(b=>b.addEventListener('click',()=>{
+    const m=b.dataset.m, v=val(), p=parseInt(P.value,10)||0; let line='', res='';
+    try{
+      if(m==='reset'){ start(); return; }
+      if(m==='append'){ L.push(v); line='lista.append('+pyRepr(v)+')'; }
+      else if(m==='insert'){ const n=L.length; let q=p<0?Math.max(0,p+n):Math.min(p,n); L.splice(q,0,v); line='lista.insert('+p+', '+pyRepr(v)+')'; }
+      else if(m==='pop'){ line='lista.pop()'; if(!L.length) throw new Error('IndexError: pop from empty list'); res=' → devolvió '+pyRepr(L.pop()); }
+      else if(m==='popi'){ line='lista.pop('+p+')'; const n=L.length; if(p>=n||p<-n) throw new Error('IndexError: pop index out of range'); res=' → devolvió '+pyRepr(L.splice(p<0?p+n:p,1)[0]); }
+      else if(m==='remove'){ line='lista.remove('+pyRepr(v)+')'; const i=L.findIndex(x=>x===v); if(i<0) throw new Error('ValueError: list.remove(x): x not in list'); L.splice(i,1); }
+      else if(m==='sort'||m==='rev'){ line=m==='sort'?'lista.sort()':'lista.sort(reverse=True)'; if(L.some(x=>typeof x!==typeof L[0])) throw new Error("TypeError: '<' not supported between instances of 'str' and 'int'"); L.sort((a,b)=>a<b?-1:a>b?1:0); if(m==='rev') L.reverse(); }
+      log.textContent+=line+res+'\n        lista = '+pyRepr(L)+'\n';
+    }catch(e){ log.textContent+=line+'\n❌ '+e.message+'\n'; }
+    log.scrollTop=log.scrollHeight; draw();
+    if(eq(L,MISS[cur].goal)){ fb.textContent='🎉 ¡Misión cumplida!'; fb.className='feedback ok'; const id=MISS[cur].id;
+      if(!S.flags['mech_'+id]){ S.flags['mech_'+id]=true; save(); fill(); } addXP('mech:'+id,15,'misión cumplida');
+      if(MISS.every(x=>S.flags['mech_'+x.id])) flag('mech','Mecánico de listas'); }
+  }));
+  sel.addEventListener('change',()=>{ cur=+sel.value; start(); });
+  fill(); start(); RESET_HOOKS.push(()=>{fill(); start();});
+})();
+
+/* ===================== Corta exacto ===================== */
+const NUMS=[10,20,30,40,50,60,70,80,90,100];
+const SLT=[[30,40,50],[10,20,30,40],[70,80,90,100],[10,30,50,70,90],[100,90,80,70,60,50,40,30,20,10],[20,50,80],[90,70,50],[60,70]];
+function renderSlicer(){ const box=document.getElementById('slicer'); box.innerHTML='';
+  SLT.forEach((t,k)=>{ const done=S.flags['sl_'+k]; const c=document.createElement('div'); c.className='q sn'+(done?' hit':'');
+    c.innerHTML='<span class="tag">Corte '+(k+1)+'</span> Objetivo: <span class="mono tgt">'+esc(pyRepr(t))+'</span><div class="cells sm"></div><div class="snrow"><span class="mono">n[</span><input type="text" placeholder="inicio:fin:paso" style="width:150px"><span class="mono">]</span><button class="btn">✂️ Cortar</button></div><div class="feedback"></div>';
+    const inp=c.querySelector('input'), fb=c.querySelector('.feedback'), cl=c.querySelector('.cells');
+    function preview(){ let idx=[]; try{ const p=parseSlice(inp.value); if(p) idx=pySliceIdx(NUMS.length,p[0],p[1],p[2]); }catch(e){} cl.innerHTML=cellsHTML(NUMS,{sel:idx,raw:true}); return idx; }
+    if(done){ inp.value=S.flags['sl_'+k]; fb.textContent='✔ ¡Corte perfecto!'; fb.className='feedback ok'; }
+    preview(); inp.addEventListener('input',preview);
+    const go=()=>{ let p; try{ p=parseSlice(inp.value); }catch(e){ p=undefined; }
+      if(!p){ fb.textContent='Escribe una rebanada con dos puntos, por ejemplo 2:5 o ::-1 (solo números enteros).'; fb.className='feedback no'; return; }
+      let idx; try{ idx=pySliceIdx(NUMS.length,p[0],p[1],p[2]); }catch(e){ fb.textContent='❌ '+e.message; fb.className='feedback no'; return; }
+      const got=idx.map(i=>NUMS[i]);
+      if(got.length===t.length&&got.every((x,i)=>x===t[i])){ fb.textContent='✔ ¡Corte perfecto! n['+inp.value.trim()+'] → '+pyRepr(got); fb.className='feedback ok'; c.classList.add('hit');
+        if(!S.flags['sl_'+k]){ S.flags['sl_'+k]=inp.value.trim(); save(); } addXP('sl:'+k,10,'corte perfecto');
+        document.getElementById('slScore').textContent=SLT.filter((_,j)=>S.flags['sl_'+j]).length;
+        if(SLT.every((_,j)=>S.flags['sl_'+j])) flag('surgeon','Cirujano'); }
+      else { fb.textContent='✘ Tu corte da '+pyRepr(got)+'. '+(got.length&&got[0]!==t[0]?'Revisa el inicio.':got.length!==t.length?'Revisa el fin: no se incluye.':'Revisa el paso.'); fb.className='feedback no'; } };
+    c.querySelector('button').addEventListener('click',go); inp.addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+    box.appendChild(c); });
+  document.getElementById('slScore').textContent=SLT.filter((_,j)=>S.flags['sl_'+j]).length; document.getElementById('slTotal').textContent=SLT.length; }
+document.getElementById('slReset').addEventListener('click',()=>{ SLT.forEach((_,j)=>delete S.flags['sl_'+j]); save(); renderSlicer(); });
+renderSlicer(); RESET_HOOKS.push(renderSlicer);
+
+/* ===================== Matriz interactiva ===================== */
+(function(){ const M=[[120,95,140],[80,110,100]], g=document.getElementById('mGrid'), info=document.getElementById('mInfo');
+  let h='<div class="mg"><div></div>'+M[0].map((_,c)=>'<div class="mh">col '+c+'</div>').join('');
+  M.forEach((r,f)=>{ h+='<div class="mh">fila '+f+'</div>'+r.map((v,c)=>'<div class="mc" data-f="'+f+'" data-c="'+c+'">'+v+'</div>').join(''); }); g.innerHTML=h+'</div>';
+  g.querySelectorAll('.mc').forEach(e=>e.addEventListener('click',()=>{ g.querySelectorAll('.mc').forEach(x=>x.classList.remove('sel')); e.classList.add('sel'); const f=+e.dataset.f,c=+e.dataset.c;
+    info.innerHTML='ventas['+f+']['+c+'] → <b style="color:var(--py)">'+M[f][c]+'</b> · la fila completa ventas['+f+'] es '+pyRepr(M[f]); }));
+  info.textContent='Toca una celda.'; })();
+
+/* ===================== Simulador ===================== */
+const r2=x=>Math.round(x*100)/100;
+function numsFrom(s,max){ return String(s||'').split(',').map(x=>parseFloat(x)).filter(x=>!isNaN(x)).slice(0,max||8); }
+makeSim({root:'sim13',xp:15,onAll:()=>flag('tracer','Rastreador'),progs:{
+  promedio:{title:'📊 Promedio y mayores (dos recorridos)',
+    inputs:[{id:'v',label:'valores =',type:'text',value:'8, 3, 10, 5, 9',w:'170px'}],
+    code:(v)=>['valores = ['+numsFrom(v.v).join(', ')+']','total = 0','for x in valores:','    total += x','promedio = total / len(valores)','mayores = []','for x in valores:','    if x > promedio:','        mayores.append(x)','print(promedio, mayores)'],
+    trace(v){ const a=numsFrom(v.v); const st=[]; let t=0; const L=pyRepr(a);
+      st.push({l:0,vars:{valores:L},note:'La lista tiene '+a.length+' elementos.'}); st.push({l:1,vars:{valores:L,total:0}});
+      a.forEach((x,k)=>{ st.push({l:2,vars:{valores:L,total:r2(t),x},tag:'x = '+x,it:'1.er recorrido · vuelta '+(k+1)}); t+=x; st.push({l:3,vars:{valores:L,total:r2(t),x},it:'1.er recorrido · vuelta '+(k+1)}); });
+      if(!a.length){ st.push({l:4,vars:{valores:L,total:0},note:'Lista vacía: len es 0 y dividir produciría ZeroDivisionError.'}); return st; }
+      const p=t/a.length; st.push({l:4,vars:{valores:L,total:r2(t),promedio:r2(p)},note:'El promedio solo se conoce al terminar el primer recorrido: '+r2(t)+' / '+a.length+'.'});
+      const m=[]; st.push({l:5,vars:{valores:L,promedio:r2(p),mayores:'[]'}});
+      a.forEach((x,k)=>{ st.push({l:6,vars:{valores:L,promedio:r2(p),mayores:pyRepr(m),x},tag:'x = '+x,it:'2.º recorrido · vuelta '+(k+1)}); const c=x>p; st.push({l:7,s:c?'true':'false',vars:{valores:L,promedio:r2(p),mayores:pyRepr(m),x},tag:c?'True':'False',it:'2.º recorrido · vuelta '+(k+1)});
+        if(c){ m.push(x); st.push({l:8,vars:{valores:L,promedio:r2(p),mayores:pyRepr(m),x},it:'2.º recorrido · vuelta '+(k+1),note:'append agrega '+x+' al final de mayores.'}); } });
+      st.push({l:9,vars:{valores:L,promedio:r2(p),mayores:pyRepr(m)},out:(Number.isInteger(p)?p.toFixed(1):String(p))+' '+pyRepr(m)+'\n'}); return st; }},
+  iva:{title:'🧾 Modificar por índice (IVA)',
+    inputs:[{id:'v',label:'precios =',type:'text',value:'12000, 45000, 8900',w:'170px'}],
+    code:(v)=>['precios = ['+numsFrom(v.v,6).join(', ')+']','for i in range(len(precios)):','    precios[i] = round(precios[i] * 1.19)','print(precios)'],
+    trace(v){ const a=numsFrom(v.v,6); const st=[{l:0,vars:{precios:pyRepr(a),'len(precios)':a.length},note:'range(len(precios)) generará los índices 0 a '+(a.length-1)+'.'}];
+      a.forEach((x,k)=>{ st.push({l:1,vars:{precios:pyRepr(a),i:k,'precios[i]':a[k]},tag:'i = '+k,it:'vuelta '+(k+1)}); a[k]=Math.round(a[k]*1.19); st.push({l:2,vars:{precios:pyRepr(a),i:k,'precios[i]':a[k]},it:'vuelta '+(k+1),note:'Se reemplaza el elemento de la posición '+k+': la lista sí cambia.'}); });
+      st.push({l:1,s:'false',vars:{precios:pyRepr(a)},tag:'fin'}); st.push({l:3,vars:{precios:pyRepr(a)},out:pyRepr(a)+'\n'}); return st; }},
+  matriz:{title:'🧱 Totales por fila de una matriz',
+    code:['m = [[2, 4, 6], [1, 3, 5]]','for f in range(len(m)):','    total = 0','    for c in range(len(m[f])):','        total += m[f][c]','    print("Fila", f, "→", total)'],
+    trace(){ const M=[[2,4,6],[1,3,5]]; const st=[{l:0,vars:{m:pyRepr(M)},note:'2 filas y 3 columnas.'}];
+      M.forEach((row,f)=>{ st.push({l:1,vars:{m:pyRepr(M),f},tag:'f = '+f,it:'fila '+f}); let t=0; st.push({l:2,vars:{m:pyRepr(M),f,total:0},it:'fila '+f,note:'El acumulador se reinicia para cada fila.'});
+        row.forEach((x,c)=>{ st.push({l:3,vars:{m:pyRepr(M),f,c,total:t},tag:'c = '+c,it:'fila '+f+' · col '+c}); t+=x; st.push({l:4,vars:{m:pyRepr(M),f,c,'m[f][c]':x,total:t},it:'fila '+f+' · col '+c}); });
+        st.push({l:5,vars:{m:pyRepr(M),f,total:t},out:'Fila '+f+' → '+t+'\n',it:'fila '+f}); });
+      return st; }}
+}});
+
+/* ===================== Arma el programa ===================== */
+makeParsons({root:'parsons',xp:15,onAll:()=>flag('builder','Ensamblador'),puzzles:[
+  {id:'p1',title:'1 · Lista de cuadrados',goal:'Construye la lista [1, 4, 9, 16, 25] con append y muéstrala.',
+   lines:['cuadrados = []','for i in range(1, 6):','    cuadrados.append(i * i)','print(cuadrados)']},
+  {id:'p2',title:'2 · Descuento a cada precio',goal:'Aplica 10 % de descuento a cada precio modificando la misma lista.',
+   lines:['precios = [20000, 35000, 12000]','for i in range(len(precios)):','    precios[i] = precios[i] * 0.9','print(precios)']},
+  {id:'p3',title:'3 · El mayor y su posición',goal:'Encuentra la nota más alta y en qué posición está, sin max().',
+   lines:['notas = [3.5, 4.8, 2.9, 4.1]','pos = 0','for i in range(1, len(notas)):','    if notas[i] > notas[pos]:','        pos = i','print("Mayor:", notas[pos], "en la posición", pos)'],
+   valid:[[0,1,2,3,4,5],[1,0,2,3,4,5]]}
+]});
+
+/* ===================== Motor Python (Pyodide) ===================== */
+const qp=new URLSearchParams(location.search);
+const PYO_BASE=qp.get('pyo')||'https://cdn.jsdelivr.net/npm/pyodide@314.0.7/';
+const RUN_TIMEOUT=8000;
+const statusEl=document.getElementById('pyStatus');
+function setStatus(t){statusEl.textContent=t;}
+const WORKER_SRC = `
+let py=null;
+self.onmessage = async (e)=>{
+  const m=e.data;
+  if(m.type==='init'){
+    try{
+      const mod = await import(m.base+'pyodide.mjs');
+      py = await mod.loadPyodide({indexURL:m.base});
+      py.runPython(m.harness);
+      self.postMessage({type:'ready', version: py.runPython("import sys; sys.version.split()[0]")});
+    }catch(err){ self.postMessage({type:'fail', error:String(err)}); }
+  } else if(m.type==='run'){
+    let r;
+    try{
+      py.globals.set('S_', m.src); py.globals.set('I_', py.toPy(m.inputs)); py.globals.set('E_', m.echo);
+      const res = py.runPython('__run_user(S_, I_, E_)'); r=res.toJs(); res.destroy();
+      self.postMessage({type:'result', id:m.id, out:r[0], etype:r[1], err:r[2], line:(r[3]==null?null:r[3])});
+    }catch(err){ self.postMessage({type:'result', id:m.id, out:'', etype:'ErrorInterno', err:String(err), line:null}); }
+  }
+};`;
+const PY={mode:null, worker:null, ready:null, pend:{}, seq:0, main:null, version:''};
+function initWorker(){
+  return new Promise((resolve,reject)=>{
+    let w;
+    try{ w=new Worker(URL.createObjectURL(new Blob([WORKER_SRC],{type:'text/javascript'})),{type:'module'}); }catch(e){ reject(e); return; }
+    const to=setTimeout(()=>{ try{w.terminate();}catch(e){} reject(new Error('timeout de carga')); },120000);
+    w.onmessage=(e)=>{ const m=e.data;
+      if(m.type==='ready'){ clearTimeout(to); PY.version=m.version; resolve(w); }
+      else if(m.type==='fail'){ clearTimeout(to); try{w.terminate();}catch(_){} reject(new Error(m.error)); }
+      else if(m.type==='result'){ const p=PY.pend[m.id]; if(p){ delete PY.pend[m.id]; clearTimeout(p.to); p.resolve(m); } } };
+    w.onerror=(ev)=>{ clearTimeout(to); reject(new Error(ev.message||'error del worker')); };
+    w.postMessage({type:'init', base:PYO_BASE, harness:HARNESS_PY});
+  });
+}
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('No se pudo descargar '+src));document.head.appendChild(s);});}
+async function initMain(){
+  if(!window.loadPyodide) await loadScript(PYO_BASE+'pyodide.js');
+  const py=await window.loadPyodide({indexURL:PYO_BASE});
+  py.runPython(HARNESS_PY); PY.version=py.runPython("import sys; sys.version.split()[0]"); return py;
+}
+function ensurePy(){
+  if(PY.ready) return PY.ready;
+  setStatus('🟡 Cargando Python… (solo la primera vez)');
+  PY.ready=(async()=>{
+    try{ PY.worker=await initWorker(); PY.mode='worker'; }
+    catch(e1){ console.warn('Worker no disponible, uso hilo principal:',e1);
+      try{ PY.main=await initMain(); PY.mode='main'; }
+      catch(e2){ PY.ready=null; setStatus('🔴 No se pudo cargar Python'); throw e2; } }
+    setStatus('🟢 Python '+PY.version+' listo'); return true;
+  })();
+  return PY.ready;
+}
+function runPy(src,inputs,echo){
+  return ensurePy().then(()=>{
+    if(PY.mode==='main'){
+      const g=PY.main.globals; g.set('S_',src); g.set('I_',PY.main.toPy(inputs)); g.set('E_',echo);
+      const res=PY.main.runPython('__run_user(S_, I_, E_)'); const r=res.toJs(); res.destroy();
+      return {out:r[0],etype:r[1],err:r[2],line:r[3]==null?null:r[3]};
+    }
+    return new Promise(resolve=>{
+      const id=++PY.seq;
+      const to=setTimeout(()=>{ delete PY.pend[id]; try{PY.worker.terminate();}catch(e){} PY.worker=null; PY.ready=null; PY.mode=null;
+        setStatus('🟡 Python se reinició'); resolve({timeout:true,out:'',etype:'',err:'',line:null}); },RUN_TIMEOUT);
+      PY.pend[id]={resolve,to};
+      PY.worker.postMessage({type:'run',id,src,inputs,echo});
+    });
+  });
+}
+
+const HINTS={
+  SyntaxError:'Python no entiende cómo está escrito. Revisa los corchetes [ ] de las listas, las comas entre elementos, los dos puntos de for/while/if y las comillas de los textos.',
+  IndentationError:'Sangría incorrecta: el cuerpo de cada ciclo, if o función lleva 4 espacios más que su línea de encabezado.',
+  TabError:'Mezclaste tabulaciones y espacios en la sangría. Usa solo espacios (4 por nivel).',
+  IndexError:'Usaste una posición que no existe. Los índices van de 0 a len(lista) - 1 (o de -1 a -len(lista)). ¿La lista está vacía? ¿Tu range llega a len(lista) + 1?',
+  ValueError:'Un valor no sirve: remove() o index() buscan un elemento que no está en la lista (pregunta antes con "in"), o int()/float() recibió un texto que no es número.',
+  AttributeError:'Usas un método que ese valor no tiene. Ojo: append(), sort(), insert() y remove() modifican la lista y devuelven None; no escribas lista = lista.append(x).',
+  TypeError:'Operación con tipos incompatibles: los índices deben ser enteros (usa int()), no puedes sumar una lista con un número y None (el resultado de append o sort) no se puede usar como lista.',
+  NameError:'Usas un nombre que no existe: ¿creaste la lista antes de usarla? ¿el nombre está bien escrito?',
+  ZeroDivisionError:'Estás dividiendo entre cero: ¿la lista está vacía? Revisa len(lista) antes de calcular un promedio.',
+  EOFError:'Tu programa pidió más datos con input() de los que hay en Entradas. ¿Reconoce el centinela o la opción de salir?',
+  CicloInfinito:'Ciclo infinito: la condición del while nunca se vuelve False. Revisa que algo dentro del ciclo cambie la variable de la condición.',
+  DemasiadaSalida:'Tu programa imprimió muchísimo: casi siempre es un ciclo infinito con un print adentro.'
+};
+
+/* ===================== Laboratorio UI ===================== */
+const codeEl=document.getElementById('code'), stdinEl=document.getElementById('stdin'), termEl=document.getElementById('term'),
+      checkEl=document.getElementById('checkRes'), selEl=document.getElementById('retoSel'), infoEl=document.getElementById('retoInfo');
+let currentReto='libre';
+function draftKey(id){return CFG.draft+id;}
+function getDraft(id){try{return localStorage.getItem(draftKey(id));}catch(e){return null;}}
+function setDraft(id,v){try{localStorage.setItem(draftKey(id),v);}catch(e){}}
+function retoById(id){return RETOS.find(r=>r.id===id);}
+function tagHTML(r){return '<span style="font-size:.72rem;color:#2a2000;background:var(--py);padding:2px 9px;border-radius:999px;font-weight:700">'+r.tag+'</span> ';}
+function renderRetoSel(){
+  const keep=currentReto; selEl.innerHTML='';
+  const o0=document.createElement('option'); o0.value='libre'; o0.textContent='🧪 Zona libre'; selEl.appendChild(o0);
+  const groups={};
+  RETOS.forEach(r=>{ let g=groups[r.lvl]; if(!g){ g=groups[r.lvl]=document.createElement('optgroup'); g.label=LVNAME[r.lvl]; selEl.appendChild(g); }
+    const o=document.createElement('option'); o.value=r.id; o.textContent=(S.retos[r.id]?'✅ ':'🎯 ')+r.t+'  (+'+r.xp+' XP)'; g.appendChild(o); });
+  selEl.value=keep;
+}
+function renderInfo(r){ infoEl.innerHTML=tagHTML(r)+'<b>'+r.t+'</b>'+(S.retos[r.id]?' <span style="color:var(--good);font-weight:700">✅ superado</span>':'')+'<br>'+r.d; }
+function loadReto(id, extra){
+  currentReto=id; selEl.value=id; checkEl.innerHTML='';
+  const r=retoById(id), btnC=document.getElementById('checkBtn'), btnS=document.getElementById('solBtn');
+  if(!r){
+    const ex=EXTRA_CODE[extra||'libre']||EXTRA_CODE.libre;
+    infoEl.innerHTML='<b>🧪 Zona libre.</b> Experimenta con lo que quieras: prueba los ejemplos de la clase, cambia los datos y observa cuántas vueltas da cada ciclo.';
+    codeEl.value = extra? ex.code : (getDraft('libre') ?? ex.code); stdinEl.value = extra? ex.stdin : EXTRA_CODE.libre.stdin;
+    btnC.disabled=true; btnS.disabled=true;
+  } else {
+    renderInfo(r); codeEl.value = getDraft(r.id) ?? r.starter; stdinEl.value = r.tests[0].in.join('\n');
+    btnC.disabled=false; btnS.disabled=false;
+  }
+  termEl.innerHTML='<span class="sys">La salida de tu programa aparecerá aquí.</span>';
+}
+selEl.addEventListener('change',()=>loadReto(selEl.value));
+codeEl.addEventListener('input',()=>setDraft(currentReto,codeEl.value));
+codeEl.addEventListener('keydown',e=>{
+  if(e.key==='Tab'){ e.preventDefault(); const s=codeEl.selectionStart, en=codeEl.selectionEnd;
+    codeEl.value=codeEl.value.slice(0,s)+'    '+codeEl.value.slice(en); codeEl.selectionStart=codeEl.selectionEnd=s+4; setDraft(currentReto,codeEl.value); }
+  if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){ e.preventDefault(); doRun(); }
+});
+function termWrite(r){
+  termEl.innerHTML='';
+  if(r.timeout){ termEl.innerHTML='<span class="err">⏱ Tu programa tardó demasiado y se detuvo (¿quedó en un ciclo infinito?).</span>'; return; }
+  const o=document.createElement('span'); o.textContent=r.out; termEl.appendChild(o);
+  if(r.etype){
+    const e=document.createElement('span'); e.className='err';
+    e.textContent=(r.out&&!r.out.endsWith('\n')?'\n':'')+'❌ '+r.etype+(r.line?' en la línea '+r.line:'')+': '+r.err+'\n'; termEl.appendChild(e);
+    const h=HINTS[r.etype]; if(h){ const hh=document.createElement('span'); hh.className='hint'; hh.textContent='💡 '+h; termEl.appendChild(hh); }
+  } else if(!r.out){ termEl.innerHTML='<span class="sys">(El programa terminó sin mostrar nada. ¿El ciclo no dio ninguna vuelta? ¿Te faltó un print()?)</span>'; }
+}
+async function doRun(){
+  const btn=document.getElementById('runBtn'); btn.disabled=true; checkEl.innerHTML='';
+  termEl.innerHTML='<span class="sys">Ejecutando…</span>';
+  try{
+    const inputs=stdinEl.value===''?[]:stdinEl.value.replace(/\r/g,'').split('\n');
+    const r=await runPy(codeEl.value, inputs, true);
+    termWrite(r);
+    if(!r.timeout && !r.etype && r.out){ if(!S.flags.firstRun){ S.flags.firstRun=true; save(); renderXP(); setTimeout(()=>pop('🏅 Insignia: '+CFG.firstRunLabel),1600); } addXP('firstrun',10); }
+  }catch(e){
+    termEl.innerHTML='<span class="err">No se pudo cargar Python en este navegador ('+esc(e.message)+').\n</span><span class="hint">💡 Revisa tu conexión a internet y recarga la página. También puedes usar IDLE, Thonny o Google Colab.</span>';
+  }finally{ btn.disabled=false; }
+}
+document.getElementById('runBtn').addEventListener('click',doRun);
+document.getElementById('resetCode').addEventListener('click',()=>{ const r=retoById(currentReto); codeEl.value=r?r.starter:EXTRA_CODE.libre.code; setDraft(currentReto,codeEl.value); });
+document.getElementById('solBtn').addEventListener('click',()=>{
+  const r=retoById(currentReto); if(!r)return;
+  if(!S.retos[r.id] && !S.sol[r.id] && !confirm('Si ves la solución antes de superar el reto, ganarás la mitad de XP. ¿Ver la solución?'))return;
+  S.sol[r.id]=true; save(); codeEl.value=r.sol+'\n'; setDraft(r.id,codeEl.value);
+});
+document.getElementById('checkBtn').addEventListener('click',async()=>{
+  const r=retoById(currentReto); if(!r)return;
+  const btn=document.getElementById('checkBtn'); btn.disabled=true;
+  checkEl.innerHTML='<div class="row">🧪 Probando tu programa con '+r.tests.length+' casos…</div>';
+  let rows='', all=true;
+  try{
+    for(let i=0;i<r.tests.length;i++){
+      const tc=r.tests[i], res=await runPy(codeEl.value+(tc.call?'\n'+tc.call:''), tc.in, false);
+      let ok=false, why='';
+      if(res.timeout){why='tardó demasiado';}
+      else if(res.etype){ const nl=codeEl.value.split('\n').length; why=(tc.call&&res.line>nl)?('al llamar directamente a tu función → '+res.etype+': '+res.err+(/NoneType/.test(res.err)?' (¿tu función devuelve el resultado con return?)':'')):(res.etype+(res.line?' (línea '+res.line+')':'')+': '+res.err);}
+      else { const miss=tc.must.some(p=>!new RegExp(p,'i').test(res.out)), extra=(tc.not||[]).some(p=>new RegExp(p,'i').test(res.out));
+        ok=!miss&&!extra; if(miss) why='falta algo de lo esperado'; else if(extra) why='muestra algo que no debería (¿una vuelta de más? ¿un mensaje repetido?)'; }
+      all=all&&ok;
+      rows+='<div class="row '+(ok?'ok':'no')+'">'+(ok?'✅':'❌')+' <b>Caso '+(i+1)+'</b> · entradas: <code>'+esc(tc.in.join(' | '))+'</code> → se espera: <code>'+esc(tc.show)+'</code>'+(tc.callShow?'<br><small>🔧 Además se llama a tus funciones: <code>'+esc(tc.callShow)+'</code></small>':'')+
+        (ok?'':'<br><small>Tu salida: <code>'+esc((res.out||'').trim().replace(/\n/g,' ⏎ ')||'(vacía)')+'</code> — '+esc(why)+'</small>')+'</div>';
+    }
+    checkEl.innerHTML=rows;
+    if(all){
+      const first=!S.retos[r.id]; S.retos[r.id]=true; save();
+      const base=r.xp||30, amt=S.sol[r.id]?Math.round(base/2):base;
+      addXP('reto:'+r.id,amt,r.t.replace(/^[★\s]*\d*\.?\s*/,''));
+      checkEl.innerHTML+='<div class="win">🎉 ¡Reto superado!'+(first?' Nuevo ✅ en tu lista.':'')+' '+(S.sol[r.id]?'(XP reducida por ver la solución)':'')+'</div>';
+      renderRetoSel(); renderTaller(); renderXP(); renderInfo(r);
+    }
+  }catch(e){ checkEl.innerHTML='<div class="row no">No se pudo ejecutar Python ('+esc(e.message)+'). Revisa tu conexión.</div>'; }
+  finally{ btn.disabled=false; }
+});
+function openInLab(idOrExtra){ showTab('lab'); if(retoById(idOrExtra)) loadReto(idOrExtra); else loadReto('libre', idOrExtra); }
+document.querySelectorAll('[data-try]').forEach(b=>b.addEventListener('click',()=>openInLab(b.dataset.try)));
+
+RESET_HOOKS.push(()=>{renderRetoSel(); renderTaller(); loadReto(currentReto);});
+/* ===================== Taller ===================== */
+function renderTaller(){
+  const box=document.getElementById('ejercicios'); box.innerHTML='';
+  let lastLv=0;
+  RETOS.forEach(r=>{
+    if(r.lvl!==lastLv){ lastLv=r.lvl; const done=RETOS.filter(x=>x.lvl===r.lvl&&S.retos[x.id]).length, tot=RETOS.filter(x=>x.lvl===r.lvl).length;
+      const h=document.createElement('h3'); h.className='lvh'; h.innerHTML=LVNAME[r.lvl]+' <span>· '+r.xp+' XP c/u · '+done+'/'+tot+' superados</span><small>'+LVDESC[r.lvl]+'</small>'; box.appendChild(h); }
+    const c=document.createElement('div'); c.className='ex';
+    c.innerHTML='<span class="tag">'+r.tag+'</span>'+(S.retos[r.id]?'<span class="done">✅ superado en el laboratorio</span>':'')+
+      '<h3>'+r.t+'</h3><p>'+r.d+'</p><div class="btns"><button class="btn py">🐍 Resolver en el laboratorio</button></div>'+
+      '<details><summary>Ver solución en Python</summary><pre>'+esc(r.sol)+'</pre></details>';
+    c.querySelector('button').addEventListener('click',()=>openInLab(r.id));
+    c.querySelector('details').addEventListener('toggle',function(){ if(this.open && !S.retos[r.id] && !S.sol[r.id]){ S.sol[r.id]=true; save(); } });
+    box.appendChild(c);
+  });
+}
+renderRetoSel(); renderTaller(); loadReto('libre');
+
+</script>
+<!-- lp1-home:start -->
+<a id="lp1-home" href="index.html" title="Volver al índice de lecciones" aria-label="Volver al índice de lecciones"><span class="i" aria-hidden="true">🏠</span><span class="t">Lecciones</span></a>
+<style>
+#lp1-home{position:fixed;left:max(16px,env(safe-area-inset-left));bottom:max(16px,env(safe-area-inset-bottom));z-index:2147483000;display:inline-flex;align-items:center;gap:7px;padding:9px 15px 9px 12px;border-radius:999px;background:#1f4f7a;color:#fff!important;border:1px solid rgba(63,208,192,.65);box-shadow:0 6px 18px rgba(0,0,0,.35);font:600 14px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;text-decoration:none!important;letter-spacing:.2px;transition:transform .15s,background .15s}
+#lp1-home:hover{background:#2b6a9e;transform:translateY(-2px)}
+#lp1-home:focus-visible{outline:3px solid #3fd0c0;outline-offset:3px}
+#lp1-home .i{font-size:17px;line-height:1}
+@media (max-width:600px){#lp1-home{padding:0;width:46px;height:46px;justify-content:center}#lp1-home .t{display:none}#lp1-home .i{font-size:20px}}
+@media print{#lp1-home{display:none!important}}
+</style>
+<!-- lp1-home:end -->
+</body>
+</html>

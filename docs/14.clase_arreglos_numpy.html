@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arreglos con NumPy · Clase Interactiva</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%A2%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#0f1720; --panel:#18222e; --panel2:#1f2c3a; --ink:#e8eef5; --muted:#9fb0c3;
+    --line:#2b3a4d; --accent:#4fd1c5; --accent2:#7c9cff; --good:#48d597; --bad:#ff7a7a;
+    --warn:#ffcf6b; --chip:#243447; --py:#ffd43b; --pyb:#4b8bbe;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(160deg,#0f1720,#111c27);color:var(--ink);line-height:1.55}
+  header{padding:22px 22px 12px;text-align:center;border-bottom:1px solid var(--line);background:radial-gradient(1200px 300px at 50% -60px,rgba(75,139,190,.22),transparent)}
+  header h1{margin:0 0 4px;font-size:clamp(1.3rem,3.4vw,2rem)}
+  header p{margin:0;color:var(--muted);font-size:.92rem}
+  .xpwrap{max-width:680px;margin:12px auto 4px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+  .xprow{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);margin-bottom:6px;gap:8px;flex-wrap:wrap}
+  .xprow b{color:var(--warn)}
+  .xpbar{height:12px;background:#0c141d;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .xpfill{height:100%;width:0;background:linear-gradient(90deg,var(--pyb),var(--py));transition:width .5s}
+  .badges2{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+  .bdg{background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:.74rem;color:#5f7085;opacity:.6;transition:.3s}
+  .bdg.on{opacity:1;color:var(--ink);border-color:var(--warn);box-shadow:0 0 0 2px rgba(255,207,107,.15)}
+  .linkbtn{background:none;border:none;color:var(--muted);font-size:.74rem;cursor:pointer;text-decoration:underline;padding:0}
+  .wrap{max-width:1000px;margin:0 auto;padding:16px 16px 60px}
+  nav.tabs{position:sticky;top:0;z-index:10;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:11px 6px;background:rgba(15,23,32,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.tabs button{background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:8px 12px;border-radius:10px;cursor:pointer;font-size:.82rem;font-weight:600;transition:.15s}
+  nav.tabs button:hover{border-color:var(--accent)}
+  nav.tabs button.active{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border-color:transparent}
+  nav.tabs button.lab{border-color:var(--py)}
+  html{background:#0f1720}
+  @media(max-width:640px){
+    nav.tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:thin}
+    nav.tabs button{flex:0 0 auto}
+    .typebtns{grid-template-columns:repeat(2,1fr)}
+  }
+  section.tab{display:none;animation:fade .25s ease}
+  section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2{font-size:1.3rem;margin:20px 0 10px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:1.05rem;margin:18px 0 8px;color:var(--accent)}
+  p{color:#d5deea}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .note{background:rgba(255,207,107,.08);border:1px solid rgba(255,207,107,.35);border-radius:12px;padding:12px 14px;margin:14px 0;font-size:.92rem}
+  .note b{color:var(--warn)}
+  .tip{background:rgba(75,139,190,.12);border:1px solid rgba(75,139,190,.45);border-left:4px solid var(--pyb);border-radius:10px;padding:12px 14px;margin:14px 0;font-size:.9rem}
+  .tip b{color:#9cc4e8}
+  code{font-family:"SF Mono",Consolas,Menlo,monospace}
+  pre{background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.85rem;color:#d7e3f0;margin:10px 0}
+  .fname{display:inline-block;background:var(--chip);border:1px solid var(--line);border-bottom:none;border-radius:8px 8px 0 0;padding:3px 10px;font-family:monospace;font-size:.75rem;color:var(--muted);margin-top:8px}
+  .fname + pre{margin-top:0;border-top-left-radius:0}
+  .kw{color:#ff9d6c;font-weight:600}.st{color:#9fe6b0}.cm{color:#6f8194;font-style:italic}.fn{color:#7cc4ff}.nu{color:#c9a3ff}
+  .tout{color:#e8eef5}.tprompt{color:#9fb0c3}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.87rem;overflow:hidden;border-radius:12px}
+  th,td{padding:8px 10px;border:1px solid var(--line);text-align:left;vertical-align:top}
+  th{background:var(--panel2);color:var(--accent);font-weight:700}
+  tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+  td.mono,code.mono{font-family:"SF Mono",Consolas,monospace;color:var(--accent)}
+  .tablewrap{overflow-x:auto}
+  details{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:10px 0}
+  summary{cursor:pointer;font-weight:600;color:var(--accent)}
+  details[open]{border-color:var(--accent)}
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+  .tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .tile b{display:block;margin-bottom:3px}
+  .tile small{color:var(--muted)}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin:14px 0;text-align:center}
+  .flow .st2{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;min-width:120px}
+  .flow .st2 small{display:block;color:var(--muted);font-size:.74rem}
+  .flow .ar{color:var(--accent);font-weight:800;font-size:1.3rem}
+  .types{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+  .type{border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--panel)}
+  .type .tn{font-family:monospace;font-size:1.3rem;font-weight:800}
+  .t-int .tn{color:#7cc4ff}.t-float .tn{color:#c9a3ff}.t-str .tn{color:#9fe6b0}.t-bool .tn{color:#ffcf6b}
+  .btn{background:linear-gradient(180deg,var(--accent),#37b3a8);color:#06231f;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:700;font-size:.88rem}
+  .btn.ghost{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+  .btn.py{background:linear-gradient(180deg,#ffe066,#f2c200);color:#2a2000}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .scorebar{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:12px 0;gap:10px;flex-wrap:wrap}
+  .scorebar b{color:var(--accent);font-size:1.1rem}
+  .q{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+  .q .tag{font-size:.72rem;color:#0a1330;background:var(--accent2);padding:2px 9px;border-radius:999px;font-weight:700}
+  .q .scn{color:#cfe0ff;margin:8px 0 2px}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .opt{background:#0c141d;border:1px solid var(--line);color:var(--ink);padding:9px 12px;border-radius:9px;cursor:pointer;font-family:monospace;font-size:.85rem;text-align:left;transition:.12s}
+  .opt:hover{border-color:var(--accent)}
+  .opt.correct{background:var(--good);color:#052b1c;border-color:transparent;font-weight:700}
+  .opt.wrong{background:var(--bad);color:#2b0505;border-color:transparent}
+  .opt.locked{pointer-events:none}
+  .feedback{margin-top:8px;font-size:.86rem;min-height:1.1em}
+  .feedback.ok{color:var(--good)}.feedback.no{color:var(--bad)}
+  .center{text-align:center}
+  .xppop{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--warn);color:#2a1e00;font-weight:800;padding:10px 18px;border-radius:999px;opacity:0;transition:.35s;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.35);pointer-events:none}
+  .xppop.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  /* tipo-matic */
+  .game{background:linear-gradient(160deg,#16212e,#1b2a3a);border:1px solid var(--line);border-radius:16px;padding:18px;margin:12px 0}
+  .bigval{font-family:monospace;font-size:clamp(1.4rem,4vw,2.1rem);text-align:center;background:#0c141d;border:1px solid var(--line);border-radius:12px;padding:16px;margin:10px 0;color:#fff}
+  .typebtns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .typebtns button{font-family:monospace;font-size:1rem;font-weight:800;padding:12px 6px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer}
+  .typebtns button:hover{border-color:var(--accent)}
+  .typebtns button.right{background:var(--good);color:#052b1c}
+  .typebtns button.wrongb{background:var(--bad);color:#2b0505}
+  .gstat{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:6px 0}
+  .gchip{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:6px 12px;font-family:monospace;font-size:.88rem}
+  .gchip b{color:var(--warn)}
+  .flame{font-size:1.2rem}
+  /* nombres */
+  .names{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .nm{font-family:monospace;padding:9px 13px;border-radius:10px;border:1px solid var(--line);background:#0c141d;color:var(--ink);cursor:pointer;font-size:.92rem}
+  .nm.v{border-color:var(--good);background:rgba(72,213,151,.15)}
+  .nm.x{border-color:var(--bad);background:rgba(255,122,122,.15)}
+  .nm.ok::after{content:" ✔";color:var(--good)} .nm.ko::after{content:" ✘";color:var(--bad)}
+  /* ordena */
+  .slots{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .slot{min-height:42px;border:2px dashed var(--line);border-radius:10px;display:flex;align-items:center;gap:10px;padding:7px 10px;color:var(--muted);font-size:.85rem;background:#0c141d;cursor:pointer;font-family:monospace}
+  .slot .ph{font-family:system-ui;font-size:.7rem;font-weight:700;border-radius:999px;padding:2px 8px;white-space:nowrap}
+  .ph.e{background:#1d3b5c;color:#9cc4e8}.ph.p{background:#3b2f5c;color:#c9a3ff}.ph.s{background:#1f4a3a;color:#9fe6b0}
+  .slot.filled{border-style:solid;color:var(--ink);background:var(--panel2)}
+  .slot.okk{border-color:var(--good)} .slot.noo{border-color:var(--bad)}
+  .pool{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .piece{text-align:left;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 12px;cursor:pointer;font-size:.85rem;font-family:monospace}
+  .piece:hover{border-color:var(--accent)} .piece.used{opacity:.3;pointer-events:none}
+  /* lab */
+  .lab{background:linear-gradient(160deg,#141f2b,#182636);border:1px solid #3a5168;border-radius:16px;padding:14px;margin:12px 0}
+  .labbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+  .labbar select{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:9px 10px;font-size:.88rem;max-width:100%}
+  .pystat{font-size:.8rem;color:var(--muted);background:#0c141d;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+  .retoinfo{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0;font-size:.9rem}
+  .labgrid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:820px){.labgrid{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}}
+  .lab label{display:block;font-size:.78rem;color:var(--muted);margin:6px 0 4px;font-weight:600}
+  textarea.code{width:100%;min-height:230px;background:#0b1118;color:#e8eef5;border:1px solid var(--line);border-radius:10px;padding:12px;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.88rem;line-height:1.5;resize:vertical;tab-size:4;white-space:pre}
+  textarea.stdin{width:100%;min-height:70px;background:#0b1118;color:#ffe9a8;border:1px solid var(--line);border-radius:10px;padding:10px;font-family:monospace;font-size:.85rem;resize:vertical}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .term{min-height:230px;max-height:420px;overflow:auto;background:#050a0f;border:1px solid #2b3a4d;border-radius:10px;padding:12px;font-size:.86rem;white-space:pre-wrap;word-break:break-word;margin:0}
+  .term .err{color:#ff8f8f}.term .hint{color:#ffe08a}.term .sys{color:#6f8194}
+  .chk{margin-top:10px;font-size:.88rem}
+  .chk .row{padding:6px 10px;border-radius:8px;margin:5px 0;background:var(--panel);border:1px solid var(--line)}
+  .chk .row.ok{border-color:rgba(72,213,151,.6)} .chk .row.no{border-color:rgba(255,122,122,.6)}
+  .win{background:rgba(72,213,151,.12);border:1px solid var(--good);border-radius:12px;padding:10px 12px;margin-top:8px;font-weight:700;color:var(--good)}
+  .ex{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0}
+  .ex .tag{font-size:.72rem;color:#2a2000;background:var(--py);padding:2px 9px;border-radius:999px;font-weight:700}
+  .ex h3{margin:8px 0 4px}
+  .ex .done{color:var(--good);font-weight:700;font-size:.82rem;margin-left:6px}
+  footer{text-align:center;color:var(--muted);font-size:.82rem;padding:24px 12px;border-top:1px solid var(--line)}
+  /* --- lección 9 --- */
+  .anat{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:10px 0}
+  .anat .tile code{color:var(--py)}
+  .sim{background:linear-gradient(160deg,#141f2b,#182636);border:1px solid #3a5168;border-radius:16px;padding:14px;margin:12px 0}
+  .simbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .simbar select,.simin input,.simin select{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:8px 10px;font-size:.9rem}
+  .simin{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0;font-family:monospace}
+  .simin input[type=number]{width:96px}
+  .simin input[type=text]{width:130px}
+  .simgrid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:820px){.simgrid{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)}}
+  .scode{background:#0b1118;border:1px solid var(--line);border-radius:12px;padding:8px 0;font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.84rem;overflow-x:auto}
+  .sl{display:flex;align-items:center;gap:10px;padding:3px 12px;white-space:pre;transition:background .2s,opacity .2s;min-height:26px}
+  .sl .ln{color:#4f6175;width:20px;text-align:right;flex:0 0 auto}
+  .sl .tx{flex:1 1 auto}
+  .sl .st{flex:0 0 auto;font-family:system-ui;font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap}
+  .sl.dim{opacity:.38}
+  .sl.run{background:rgba(79,209,197,.13)} .sl.run .st{background:#1c4d47;color:#9ff3e8}
+  .sl.true{background:rgba(72,213,151,.13)} .sl.true .st{background:#1f4a3a;color:#9fe6b0}
+  .sl.false{background:rgba(255,122,122,.10)} .sl.false .st{background:#4a2323;color:#ffb3b3}
+  .sl.skip .st{background:#2a3442;color:#9fb0c3}
+  .sl.cur{box-shadow:inset 3px 0 0 var(--warn)}
+  .cov{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0}
+  .cov span{font-size:.78rem;border:1px dashed var(--line);border-radius:999px;padding:3px 10px;color:var(--muted)}
+  .cov span.hit{border-style:solid;border-color:var(--good);color:var(--good);background:rgba(72,213,151,.08)}
+  .slots2{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+  .slot2{display:flex;align-items:center;gap:10px;min-height:42px;border:2px dashed var(--line);border-radius:10px;padding:7px 12px;background:#0c141d;font-family:monospace;font-size:.88rem;cursor:pointer}
+  .slot2 .kwd{color:#ff9d6c;font-weight:700;min-width:44px}
+  .slot2.filled{border-style:solid;background:var(--panel2)}
+  .slot2.fixed{cursor:default;border-style:solid;opacity:.85}
+  .slot2.okk{border-color:var(--good)}.slot2.noo{border-color:var(--bad)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+  .chipb{font-family:monospace;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 12px;cursor:pointer;font-size:.86rem}
+  .chipb:hover{border-color:var(--accent)} .chipb.used{opacity:.3;pointer-events:none}
+  .mini{width:auto;font-size:.84rem} .mini td,.mini th{padding:5px 9px}
+  .ok{color:var(--good);font-weight:700}.ko{color:var(--bad);font-weight:700}
+  .bug{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:14px 0}
+  .bug .spec{background:rgba(75,139,190,.12);border:1px solid rgba(75,139,190,.45);border-radius:10px;padding:8px 12px;font-size:.88rem;margin:6px 0}
+  .bug .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+  .bug input{background:#0c141d;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:9px 10px;width:130px;font-family:monospace}
+  .bug.broken{border-color:var(--good)}
+  .bug .fix{display:none;margin-top:8px}
+  .bug.broken .fix{display:block}
+.lvh{margin:22px 0 8px;font-size:1.08rem}.lvh span{color:var(--muted);font-weight:500;font-size:.85rem}.lvh small{display:block;color:var(--muted);font-weight:400;font-size:.85rem;margin-top:2px}
+  /* --- componentes ciclos --- */
+  .itc{margin-left:auto;font-size:.85rem;color:var(--muted)} .itc b{color:var(--warn);font-size:1rem}
+  .vars{background:#0b1118;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .vars table{margin:0;width:100%;font-size:.84rem} .vars th,.vars td{padding:5px 10px}
+  .vars td.chg{color:var(--warn);font-weight:700;background:rgba(255,206,92,.08)}
+  .snote{font-size:.86rem;margin-top:8px;color:var(--ink);min-height:1.2em}
+  .scode{max-height:380px;overflow:auto}
+  .pz{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:14px 0}
+  .pzgrid{display:grid;grid-template-columns:1fr;gap:12px} @media(min-width:820px){.pzgrid{grid-template-columns:1fr 1fr}}
+  .pzlab{font-size:.78rem;color:var(--muted);font-weight:600;margin-bottom:5px}
+  .pzpool,.pzprog{display:flex;flex-direction:column;gap:6px;min-height:60px;background:#0b1118;border:1px dashed var(--line);border-radius:12px;padding:8px}
+  .pzline{font-family:"SF Mono",Consolas,Menlo,monospace;font-size:.84rem;white-space:pre;text-align:left;background:var(--chip);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:7px 10px;cursor:pointer;overflow-x:auto}
+  .pzline:hover{border-color:var(--accent)} .pzline.used{opacity:.25;pointer-events:none}
+  .pzline.in{background:var(--panel2)} .pzline.good{border-color:var(--good)} .pzline.bad{border-color:var(--bad);background:rgba(255,122,122,.08)}
+  .pzempty{color:var(--muted);font-size:.82rem;text-align:center;padding:10px}
+  .tile small b{display:inline;margin:0}
+  .center{text-align:center}
+  .sl.cur{background:rgba(255,207,107,.10)}
+
+  /* --- lección 14 --- */
+  .cells{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0;align-items:flex-end}
+  .cell{display:flex;flex-direction:column;align-items:center;min-width:58px}
+  .cell .v{display:block;width:100%;text-align:center;background:#0c141d;border:2px solid var(--line);border-radius:8px;padding:8px 6px;font-family:monospace;font-size:.86rem}
+  .cell .ip{font-family:monospace;font-size:.72rem;color:var(--accent);margin-top:3px}
+  .cell.sel .v{border-color:var(--py);background:rgba(255,212,59,.14);color:var(--py);font-weight:700}
+  .opsel{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+  .opsel .btn{font-size:.8rem;padding:7px 10px;font-family:monospace}
+  .opsel .btn.on{border-color:var(--py);color:var(--py)}
+  .exres{font-size:.95rem;margin-top:6px;color:var(--ink)}
+  .exnote{font-size:.88rem;margin:6px 0;min-height:1.2em}
+  .scalar{display:inline-block;font-family:monospace;font-size:1.3rem;color:var(--py);background:#0c141d;border:2px solid var(--py);border-radius:10px;padding:8px 18px;margin:8px 0}
+  .mini2 .cells{margin:2px 0}
+  .axm{display:grid;gap:4px;max-width:420px}
+  .mh{font-family:monospace;font-size:.75rem;color:var(--accent);text-align:center;align-self:center}
+  .mc{background:#0c141d;border:2px solid var(--line);border-radius:8px;padding:12px 6px;text-align:center;font-family:monospace}
+  .mc.sel{border-color:var(--py);color:var(--py);background:rgba(255,212,59,.12);font-weight:700}
+  .mc.h0{border-color:#4fd1c5;background:rgba(79,209,197,.14)} .mc.h1{border-color:#7c9cff;background:rgba(124,156,255,.14)}
+  .mc.h2{border-color:#ffcf6b;background:rgba(255,207,107,.14)} .mc.h3{border-color:#ff9d6c;background:rgba(255,157,108,.14)}
+
+</style>
+</head>
+<body>
+<header>
+  <h1>🔢 Arreglos con NumPy</h1>
+  <p>ndarray · arange · linspace · operaciones vectorizadas · máscaras · estadística · matrices · axis · @ · <b>modo juego</b></p>
+  <div class="xpwrap">
+    <div class="xprow"><span>Nivel <b id="lvl">1</b> · <span id="lvlname">Novato de NumPy</span></span><span><b id="xp">0</b> XP · <button class="linkbtn" id="resetProg" title="Borra tu XP e insignias en este navegador">reiniciar progreso</button></span></div>
+    <div class="xpbar"><div class="xpfill" id="xpfill"></div></div>
+    <div class="badges2" id="badges"></div>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="active" data-tab="intro">💡 ¿Por qué?</button>
+  <button data-tab="crear">🏗️ Crear</button>
+  <button data-tab="operar">⚡ Operar</button>
+  <button data-tab="filtrar">🎭 Filtrar</button>
+  <button data-tab="estad">📊 Estadística</button>
+  <button data-tab="matrices">🧱 Matrices</button>
+  <button data-tab="retos">🧨 Retos</button>
+  <button data-tab="lab" class="lab">🐍 Laboratorio</button>
+  <button data-tab="taller">🏆 Taller</button>
+</nav>
+
+<div class="wrap">
+
+<!-- ===================== POR QUÉ ===================== -->
+<section class="tab active" id="intro">
+  <h2>Listas que saben hacer cuentas</h2>
+  <p>Una lista de Python guarda datos de cualquier tipo, pero <b>no sabe hacer matemáticas con ellos</b>: para subirle el IVA a 1000 precios necesitas un ciclo. <b>NumPy</b> es la librería de cálculo numérico más usada en ciencia, ingeniería, finanzas e inteligencia artificial. Su <b>arreglo</b> (<code>ndarray</code>) guarda datos de <b>un solo tipo</b> y aplica cada operación a <b>todos los elementos a la vez</b>: es lo que se llama <b>vectorizar</b>.</p>
+  <div class="grid3">
+    <div><span class="fname">con_lista.py</span><pre>precios = [<span class="nu">12000</span>, <span class="nu">45000</span>, <span class="nu">8900</span>]
+con_iva = []
+<span class="kw">for</span> p <span class="kw">in</span> precios:
+    con_iva.append(p * <span class="nu">1.19</span>)</pre></div>
+    <div><span class="fname">con_numpy.py</span><pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+precios = np.array([<span class="nu">12000</span>, <span class="nu">45000</span>, <span class="nu">8900</span>])
+con_iva = precios * <span class="nu">1.19</span>          <span class="cm"># ¡sin ciclo!</span></pre></div>
+  </div>
+  <div class="tablewrap"><table>
+    <thead><tr><th></th><th>Lista (<code>list</code>)</th><th>Arreglo de NumPy (<code>ndarray</code>)</th></tr></thead>
+    <tbody>
+      <tr><td><b>Tipos</b></td><td>mezclados</td><td>uno solo (<code>dtype</code>): todos enteros o todos reales…</td></tr>
+      <tr><td><b>Tamaño</b></td><td>crece con append</td><td>fijo al crearlo (se crean arreglos nuevos)</td></tr>
+      <tr><td><b><code>x * 2</code></b></td><td>repite la lista</td><td>multiplica cada elemento</td></tr>
+      <tr><td><b><code>x + y</code></b></td><td>pega las dos listas</td><td>suma elemento a elemento</td></tr>
+      <tr><td><b>Velocidad</b></td><td>normal</td><td>mucho más rápida con muchos datos (está hecha en C)</td></tr>
+    </tbody>
+  </table></div>
+  <span class="fname">lista_vs_arreglo.py</span>
+  <pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+lista = [<span class="nu">10</span>, <span class="nu">20</span>, <span class="nu">30</span>]
+arreglo = np.array(lista)
+<span class="fn">print</span>(lista * <span class="nu">2</span>)        <span class="cm"># repite la lista</span>
+<span class="fn">print</span>(arreglo * <span class="nu">2</span>)      <span class="cm"># multiplica cada elemento</span>
+<span class="fn">print</span>(arreglo + <span class="nu">5</span>)      <span class="cm"># suma 5 a cada elemento</span>
+<span class="fn">print</span>(arreglo.shape, arreglo.dtype, arreglo.size)</pre>
+  <pre class="tout">[10, 20, 30, 10, 20, 30]
+[20 40 60]
+[15 25 35]
+(3,) int32 3</pre>
+  <p style="color:var(--muted);font-size:.88rem">Fíjate: NumPy imprime los arreglos <b>sin comas</b>. <code>shape</code> es la forma (aquí, 3 elementos en una dimensión), <code>dtype</code> el tipo de los elementos (entero: en el navegador aparece int32; en tu computador probablemente int64) y <code>size</code> la cantidad total.</p>
+  <div class="center"><button class="btn py" data-try="listavs">🐍 Probarlo en el laboratorio</button></div>
+  <div class="tip"><b>Para usar NumPy en tu computador:</b> instálala una sola vez con <code>pip install numpy</code> (o <code>py -m pip install numpy</code> en Windows) y escribe <code>import numpy as np</code> al inicio de cada programa. En el laboratorio de esta lección ya viene incluida.</div>
+
+  <h3>🤔 ¿Lista o arreglo?</h3>
+  <p><b>Enunciado:</b> predice qué imprime cada línea.</p>
+  <div class="scorebar"><span>Aciertos: <b id="lvScore">0</b> / <b id="lvTotal">6</b></span><button class="btn ghost" id="lvReset">Reiniciar</button></div>
+  <div id="lvQuiz"></div>
+</section>
+
+<!-- ===================== CREAR ===================== -->
+<section class="tab" id="crear">
+  <h2>🏗️ Formas de crear arreglos</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Función</th><th>Ejemplo</th><th>Resultado</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">np.array(lista)</td><td class="mono">np.array([4, 8, 15])</td><td class="mono">[ 4  8 15]</td></tr>
+      <tr><td class="mono">np.arange(inicio, fin, paso)</td><td class="mono">np.arange(0, 20, 5)</td><td class="mono">[ 0  5 10 15]</td></tr>
+      <tr><td class="mono">np.linspace(inicio, fin, cantidad)</td><td class="mono">np.linspace(0, 1, 5)</td><td class="mono">[0.   0.25 0.5  0.75 1.  ]</td></tr>
+      <tr><td class="mono">np.zeros(forma)</td><td class="mono">np.zeros((2, 3))</td><td class="mono">matriz 2 × 3 de 0.</td></tr>
+      <tr><td class="mono">np.ones(forma)</td><td class="mono">np.ones(4)</td><td class="mono">[1. 1. 1. 1.]</td></tr>
+      <tr><td class="mono">np.full(forma, valor)</td><td class="mono">np.full(3, 7)</td><td class="mono">[7 7 7]</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><b>arange vs linspace:</b> <code>arange</code> avanza con un <b>paso</b> y, como <code>range</code>, <b>no incluye el fin</b>; <code>linspace</code> reparte una <b>cantidad</b> de puntos y <b>sí incluye</b> el fin. Para una forma de 2 dimensiones se usan <b>paréntesis dobles</b>: <code>np.zeros((2, 3))</code>.</div>
+  <span class="fname">crear.py</span>
+  <pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="fn">print</span>(np.arange(<span class="nu">0</span>, <span class="nu">20</span>, <span class="nu">5</span>))
+<span class="fn">print</span>(np.linspace(<span class="nu">0</span>, <span class="nu">1</span>, <span class="nu">5</span>))
+<span class="fn">print</span>(np.zeros((<span class="nu">2</span>, <span class="nu">3</span>)))
+<span class="fn">print</span>(np.ones(<span class="nu">4</span>))
+<span class="fn">print</span>(np.full(<span class="nu">3</span>, <span class="nu">7</span>))</pre>
+  <div class="center"><button class="btn py" data-try="crear">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>🏭 Fábrica de arreglos</h3>
+  <p><b>Enunciado:</b> cada caja muestra lo que imprime un arreglo. Elige la instrucción que lo fabrica. Termina todas para la insignia <b>Fabricante</b>.</p>
+  <div class="scorebar"><span>Aciertos: <b id="fbScore">0</b> / <b id="fbTotal">6</b></span><button class="btn ghost" id="fbReset">Reiniciar</button></div>
+  <div id="fbQuiz"></div>
+</section>
+
+<!-- ===================== OPERAR ===================== -->
+<section class="tab" id="operar">
+  <h2>⚡ Operaciones vectorizadas</h2>
+  <div class="grid3">
+    <div class="tile"><b>Arreglo y número</b><small>La operación se aplica a cada elemento: <code>precios * 1.19</code>, <code>notas + 0.5</code>, <code>a ** 2</code>.</small></div>
+    <div class="tile"><b>Dos arreglos del mismo tamaño</b><small>Se operan <b>elemento a elemento</b>: <code>cantidades * precios</code>. Si los tamaños no coinciden: <b>ValueError</b>.</small></div>
+    <div class="tile"><b>Funciones de NumPy</b><small><code>np.sqrt(a)</code>, <code>np.abs(a)</code>, <code>np.round(a, 2)</code> también trabajan sobre todo el arreglo.</small></div>
+  </div>
+  <span class="fname">factura.py</span>
+  <pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+precios = np.array([<span class="nu">12000</span>, <span class="nu">45000</span>, <span class="nu">8900</span>, <span class="nu">23000</span>])
+con_iva = precios * <span class="nu">1.19</span>
+descuento = np.where(precios &gt;= <span class="nu">20000</span>, <span class="nu">0.10</span>, <span class="nu">0.0</span>)   <span class="cm"># 10 % a los de 20000 o más</span>
+final = con_iva * (<span class="nu">1</span> - descuento)
+<span class="fn">print</span>(con_iva)
+<span class="fn">print</span>(final.<span class="fn">round</span>(<span class="nu">2</span>))
+<span class="fn">print</span>(<span class="st">f"Total a pagar: {final.sum():.2f}"</span>)</pre>
+  <pre class="tout">[14280. 53550. 10591. 27370.]
+[14280. 48195. 10591. 24633.]
+Total a pagar: 97699.00</pre>
+  <div class="center"><button class="btn py" data-try="vector">🐍 Probarlo en el laboratorio</button></div>
+  <div class="tip"><code>np.where(condición, valor_si, valor_no)</code> es el "if" de los arreglos: decide elemento por elemento, sin ciclos.</div>
+
+  <h3>🔬 Explorador de arreglos</h3>
+  <p>Elige una operación y mira qué produce sobre <code>a</code>. Prueba al menos 10 distintas para la insignia <b>Explorador</b>.</p>
+  <div class="card">
+    <div class="mono">a = np.array([12, 45, 7, 30, 18, 50])</div>
+    <div class="cells" id="exA"></div>
+    <div class="opsel" id="exOps"></div>
+    <div class="mono exres" id="exExpr"></div>
+    <div class="cells" id="exOut"></div>
+    <div class="exnote" id="exNote"></div>
+    <div style="font-size:.82rem;color:var(--muted)">Operaciones probadas: <b id="exCount">0</b> / 10</div>
+  </div>
+
+  <h3>🎯 ¿Qué produce?</h3>
+  <div class="scorebar"><span>Aciertos: <b id="opScore">0</b> / <b id="opTotal">5</b></span><button class="btn ghost" id="opReset">Reiniciar</button></div>
+  <div id="opQuiz"></div>
+</section>
+
+<!-- ===================== FILTRAR ===================== -->
+<section class="tab" id="filtrar">
+  <h2>🎭 Índices, slicing y máscaras</h2>
+  <p>Los índices y el slicing funcionan como en las listas: <code>a[0]</code>, <code>a[-1]</code>, <code>a[1:4]</code>, <code>a[::-1]</code>. Lo nuevo son las <b>máscaras booleanas</b>: una comparación como <code>a &gt; 25</code> produce un arreglo de <code>True</code>/<code>False</code>, y <code>a[mascara]</code> se queda solo con los elementos donde hay <code>True</code>.</p>
+  <span class="fname">filtros.py</span>
+  <pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+temps = np.array([<span class="nu">24.5</span>, <span class="nu">19.0</span>, <span class="nu">27.3</span>, <span class="nu">22.1</span>, <span class="nu">18.4</span>, <span class="nu">29.0</span>, <span class="nu">21.7</span>])
+calurosos = temps &gt; <span class="nu">25</span>                       <span class="cm"># máscara</span>
+<span class="fn">print</span>(calurosos)
+<span class="fn">print</span>(temps[calurosos])                      <span class="cm"># solo los True</span>
+<span class="fn">print</span>(<span class="st">"Días calurosos:"</span>, calurosos.<span class="fn">sum</span>())    <span class="cm"># True cuenta como 1</span>
+<span class="fn">print</span>(<span class="st">"Posiciones:"</span>, np.where(calurosos)[<span class="nu">0</span>])
+<span class="fn">print</span>(temps[<span class="nu">1</span>:<span class="nu">4</span>], temps[::-<span class="nu">1</span>])</pre>
+  <pre class="tout">[False False  True False False  True False]
+[27.3 29. ]
+Días calurosos: 2
+Posiciones: [2 5]
+[19.  27.3 22.1] [21.7 29.  18.4 22.1 27.3 19.  24.5]</pre>
+  <div class="center"><button class="btn py" data-try="filtros">🐍 Probarlo en el laboratorio</button></div>
+  <div class="note"><b>Para combinar condiciones</b> se usan <code>&amp;</code> (y) y <code>|</code> (o), con paréntesis: <code>a[(a &gt; 10) &amp; (a &lt; 40)]</code>. Con <code>and</code>/<code>or</code> obtienes <b>ValueError</b>: <i>the truth value of an array … is ambiguous</i>.</div>
+
+  <h3>🎭 Elige la máscara</h3>
+  <p><b>Enunciado:</b> con <code>v = np.array([12, 45, 7, 30, 18, 50])</code>, elige la expresión que produce cada resultado. Termina todas para la insignia <b>Enmascarado</b>.</p>
+  <div class="scorebar"><span>Aciertos: <b id="mkScore">0</b> / <b id="mkTotal">6</b></span><button class="btn ghost" id="mkReset">Reiniciar</button></div>
+  <div id="mkQuiz"></div>
+</section>
+
+<!-- ===================== ESTADÍSTICA ===================== -->
+<section class="tab" id="estad">
+  <h2>📊 Estadística en una línea</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Quiero…</th><th>NumPy</th><th>Con notas = [4.5, 3.2, 5.0, 2.8, 3.9, 4.1]</th></tr></thead>
+    <tbody>
+      <tr><td>suma · promedio</td><td class="mono">a.sum() · a.mean()</td><td class="mono">23.5 · 3.9166…</td></tr>
+      <tr><td>mayor · menor</td><td class="mono">a.max() · a.min()</td><td class="mono">5.0 · 2.8</td></tr>
+      <tr><td>posición del mayor · del menor</td><td class="mono">a.argmax() · a.argmin()</td><td class="mono">2 · 3</td></tr>
+      <tr><td>mediana</td><td class="mono">np.median(a)</td><td class="mono">4.0</td></tr>
+      <tr><td>desviación estándar</td><td class="mono">a.std()</td><td class="mono">0.74…</td></tr>
+      <tr><td>copia ordenada</td><td class="mono">np.sort(a)</td><td class="mono">[2.8 3.2 3.9 4.1 4.5 5. ]</td></tr>
+      <tr><td>suma acumulada</td><td class="mono">np.cumsum(a)</td><td class="mono">[ 4.5  7.7 12.7 15.5 19.4 23.5]</td></tr>
+      <tr><td>redondear</td><td class="mono">np.round(a, 1) · a.round(1)</td><td class="mono">a 1 decimal</td></tr>
+    </tbody>
+  </table></div>
+  <span class="fname">estadistica.py</span>
+  <pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+notas = np.array([<span class="nu">4.5</span>, <span class="nu">3.2</span>, <span class="nu">5.0</span>, <span class="nu">2.8</span>, <span class="nu">3.9</span>, <span class="nu">4.1</span>])
+<span class="fn">print</span>(<span class="st">"Promedio:"</span>, notas.mean().<span class="fn">round</span>(<span class="nu">2</span>))
+<span class="fn">print</span>(<span class="st">"Mediana:"</span>, np.median(notas))
+<span class="fn">print</span>(<span class="st">"Máx:"</span>, notas.<span class="fn">max</span>(), <span class="st">"en la posición"</span>, notas.argmax())
+<span class="fn">print</span>(<span class="st">"Desviación:"</span>, notas.std().<span class="fn">round</span>(<span class="nu">2</span>))
+<span class="fn">print</span>(<span class="st">"Ordenadas:"</span>, np.sort(notas))
+<span class="fn">print</span>(<span class="st">"Acumulado:"</span>, np.cumsum(notas))</pre>
+  <div class="center"><button class="btn py" data-try="estadistica">🐍 Probarlo en el laboratorio</button></div>
+  <div class="tip"><b>Para mostrar resultados</b> usa f-strings con formato: <code>f"{notas.mean():.2f}"</code>. Si metes valores de NumPy en una lista de Python y la imprimes, verás algo como <code>[np.float64(4.5)]</code>; conviértela antes con <code>.tolist()</code>.</div>
+</section>
+
+<!-- ===================== MATRICES ===================== -->
+<section class="tab" id="matrices">
+  <h2>🧱 Matrices con NumPy</h2>
+  <p>Una matriz es un arreglo de 2 dimensiones: <code>shape</code> es <code>(filas, columnas)</code>. Se accede con <b>un solo par de corchetes</b>: <code>m[fila, columna]</code>, y con slicing se toman filas, columnas o submatrices: <code>m[1]</code>, <code>m[:, 2]</code>, <code>m[0:2, 1:3]</code>. Las funciones estadísticas reciben <code>axis</code>: <code>axis=0</code> opera <b>hacia abajo</b> (un resultado por columna) y <code>axis=1</code> <b>hacia la derecha</b> (uno por fila).</p>
+  <span class="fname">matriz.py</span>
+  <pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+ventas = np.array([[<span class="nu">120</span>, <span class="nu">95</span>, <span class="nu">140</span>],
+                   [<span class="nu">80</span>, <span class="nu">110</span>, <span class="nu">100</span>]])
+<span class="fn">print</span>(ventas.shape)
+<span class="fn">print</span>(ventas[<span class="nu">1</span>, <span class="nu">2</span>])          <span class="cm"># fila 1, columna 2</span>
+<span class="fn">print</span>(ventas[:, <span class="nu">0</span>])          <span class="cm"># primera columna</span>
+<span class="fn">print</span>(ventas.<span class="fn">sum</span>(axis=<span class="nu">1</span>))    <span class="cm"># total por sucursal (filas)</span>
+<span class="fn">print</span>(ventas.<span class="fn">sum</span>(axis=<span class="nu">0</span>))    <span class="cm"># total por mes (columnas)</span>
+<span class="fn">print</span>(ventas.T)              <span class="cm"># transpuesta</span></pre>
+  <div class="center"><button class="btn py" data-try="matriz">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>🧭 Navegante de ejes</h3>
+  <p>Pulsa cada operación sobre <code>m</code> y observa qué celdas participan y qué resultado da. Pruébalas todas para la insignia <b>Navegante de ejes</b>.</p>
+  <div class="card">
+    <div class="axgrid" id="axGrid"></div>
+    <div class="opsel" id="axOps"></div>
+    <div class="mono exres" id="axExpr"></div>
+    <div class="exnote" id="axNote"></div>
+  </div>
+
+  <h3>✖️ Elemento a elemento vs producto matricial</h3>
+  <span class="fname">matmul.py</span>
+  <pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+cantidades = np.array([[<span class="nu">2</span>, <span class="nu">1</span>, <span class="nu">0</span>],
+                       [<span class="nu">0</span>, <span class="nu">3</span>, <span class="nu">4</span>]])   <span class="cm"># 2 clientes × 3 productos</span>
+precios = np.array([<span class="nu">3500</span>, <span class="nu">1200</span>, <span class="nu">800</span>])
+<span class="fn">print</span>(cantidades * <span class="nu">2</span>)                 <span class="cm"># elemento a elemento</span>
+<span class="fn">print</span>(cantidades @ precios)           <span class="cm"># total por cliente</span></pre>
+  <pre class="tout">[[4 2 0]
+ [0 6 8]]
+[8200 6800]</pre>
+  <p><code>@</code> (producto matricial) combina cada fila con el vector: cliente 1 = 2·3500 + 1·1200 + 0·800 = 8200. Es la forma más rápida de calcular muchos totales a la vez.</p>
+  <div class="center"><button class="btn py" data-try="matmul">🐍 Probarlo en el laboratorio</button></div>
+
+  <h3>🔎 ¿Qué produce? (matrices)</h3>
+  <p>Con <code>m = np.array([[1, 2, 3], [4, 5, 6]])</code>:</p>
+  <div class="scorebar"><span>Aciertos: <b id="axqScore">0</b> / <b id="axqTotal">5</b></span><button class="btn ghost" id="axqReset">Reiniciar</button></div>
+  <div id="axqQuiz"></div>
+</section>
+
+<!-- ===================== RETOS ===================== -->
+<section class="tab" id="retos">
+  <h2>🧩 Arma el programa</h2>
+  <p><b>Enunciado:</b> las líneas están desordenadas. Arma cada programa. Cada uno da 15 XP; los tres, la insignia <b>Ensamblador</b>.</p>
+  <div id="parsons"></div>
+  <h2>🕵️ Caza el error</h2>
+  <p><b>Enunciado:</b> ¿qué pasa con cada fragmento? (todos empiezan con <code>import numpy as np</code>).</p>
+  <div class="scorebar"><span>Cazados: <b id="ceScore">0</b> / <b id="ceTotal">8</b></span><button class="btn ghost" id="ceReset">Reiniciar</button></div>
+  <div id="ceQuiz"></div>
+</section>
+
+<!-- ===================== LABORATORIO ===================== -->
+<section class="tab" id="lab">
+  <h2>🐍 Laboratorio: Python + NumPy en tu navegador</h2>
+  <p>Escribe tu programa, pon los datos de entrada (uno por línea) y pulsa <b>▶ Ejecutar</b>. Elige un <b>reto</b> y pulsa <b>✅ Comprobar reto</b>. <small style="color:var(--muted)">La primera vez se descargan Python y NumPy (≈ 20 MB, puede tardar un poco); necesitas conexión a internet.</small></p>
+  <div class="lab">
+    <div class="labbar">
+      <select id="retoSel" aria-label="Reto"></select>
+      <span class="pystat" id="pyStatus">⚪ Python sin cargar</span>
+    </div>
+    <div class="retoinfo" id="retoInfo"></div>
+    <div class="labgrid">
+      <div>
+        <label for="code">📝 Tu programa (.py) · <span style="font-weight:400">Tab = 4 espacios · Ctrl+Enter = ejecutar</span></label>
+        <textarea id="code" class="code" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+        <label for="stdin">⌨️ Entradas: una por línea (cada <code>input()</code> toma la siguiente)</label>
+        <textarea id="stdin" class="stdin" spellcheck="false"></textarea>
+        <div class="btns">
+          <button class="btn py" id="runBtn">▶ Ejecutar</button>
+          <button class="btn" id="checkBtn">✅ Comprobar reto</button>
+          <button class="btn ghost" id="resetCode">↺ Plantilla</button>
+          <button class="btn ghost" id="solBtn">👀 Solución</button>
+        </div>
+      </div>
+      <div>
+        <label>🖥️ Terminal</label>
+        <pre class="term" id="term"><span class="sys">La salida de tu programa aparecerá aquí.</span></pre>
+        <div class="chk" id="checkRes"></div>
+      </div>
+    </div>
+  </div>
+  <div class="tip">🏅 Los retos suben de dificultad y de premio: <b>🟢 Nivel 1 = 20 XP</b> · <b>🟡 Nivel 2 = 30 XP</b> · <b>🟠 Nivel 3 = 40 XP</b> · <b>🔴 Nivel 4 ★ = 60 XP</b>. Si abres la solución antes de superarlo, da la <b>mitad</b>. Supera 6 retos para la insignia <b>Vectorizador</b>, los 3 del nivel 4 para <b>Científico de datos</b> y los 12 para <b>Leyenda</b>.</div>
+</section>
+
+<!-- ===================== TALLER ===================== -->
+<section class="tab" id="taller">
+  <h2>🏆 Taller — 12 ejercicios con NumPy</h2>
+  <p>Los ejercicios van de menor a mayor dificultad, en <b>4 niveles</b>. La regla del juego: los datos se <b>leen</b> con ciclos (o con una lista por comprensión), pero los <b>cálculos</b> se hacen con operaciones de NumPy sobre arreglos completos, sin ciclos. Las plantillas ya traen <code>import numpy as np</code> y la lectura de datos.</p>
+  <div class="card">
+    <h3 style="margin-top:0">🧮 Caja de herramientas</h3>
+    <div class="tablewrap"><table class="mini"><thead><tr><th>Quiero…</th><th>En NumPy</th></tr></thead><tbody>
+      <tr><td>leer N números en un arreglo</td><td class="mono">a = np.array([float(input()) for i in range(n)])</td></tr>
+      <tr><td>operar todos los elementos</td><td class="mono">a * 1.19 · a * (1 - d / 100) · (1 + i) ** meses</td></tr>
+      <tr><td>totales y estadísticas</td><td class="mono">a.sum() · a.mean() · a.max() · a.std() · np.median(a)</td></tr>
+      <tr><td>posición del mayor</td><td class="mono">a.argmax()  (desde 0)</td></tr>
+      <tr><td>filtrar y contar</td><td class="mono">a[a > p] · (a > p).sum() · np.where(a > p)[0]</td></tr>
+      <tr><td>decidir por elemento</td><td class="mono">np.where(cond, valor_si, valor_no)</td></tr>
+      <tr><td>matriz desde datos</td><td class="mono">np.array([[…] for i in range(f)])</td></tr>
+      <tr><td>por columna · por fila</td><td class="mono">m.sum(axis=0) · m.sum(axis=1)</td></tr>
+      <tr><td>una columna · un elemento</td><td class="mono">m[:, j] · m[i, j]</td></tr>
+      <tr><td>totales ponderados</td><td class="mono">m @ pesos</td></tr>
+      <tr><td>mostrar con 2 decimales</td><td class="mono">f"{x:.2f}"</td></tr>
+    </tbody></table></div>
+  </div>
+  <div id="ejercicios"></div>
+</section>
+
+</div>
+<div class="xppop" id="xppop"></div>
+<footer>Material interactivo · Lógica de Programación 1 · Arreglos con NumPy (Python 3.14 · NumPy 2.4)</footer>
+
+<script>
+const CFG = {"key": "lp1-clase14-numpy-v1", "draft": "lp1-c14-draft-", "firstRunLabel": "¡Hola, NumPy!", "packages": ["numpy"]};
+const RETOS = [{"id": "catalogo", "lvl": 1, "xp": 20, "t": "1. IVA a todo el catálogo", "tag": "Nivel 1 · np.array + operaciones vectorizadas", "d": "Pide cuántos productos tiene el catálogo (N) y el precio sin IVA de cada uno; conviértelos en un arreglo de NumPy. <b>Sin ciclos para los cálculos<\/b> (solo para leer), obtén en un arreglo los precios con IVA del 19 % y muestra <code>Total sin IVA: X<\/code>, <code>Total con IVA: X<\/code>, <code>IVA cobrado: X<\/code> y <code>Más caro con IVA: X<\/code> (2 decimales).<br><b>Entrada:<\/b> un entero N y N reales · <b>Salida:<\/b> cuatro líneas<br><b>Ejemplo:<\/b> 3 productos: 10000, 25000 y 4500 → <code>Total sin IVA: 39500.00<\/code> · <code>Total con IVA: 47005.00<\/code> · <code>IVA cobrado: 7505.00<\/code> · <code>Más caro con IVA: 29750.00<\/code>.<br>💡 <b>Pista:<\/b> con NumPy, una operación entre un arreglo y un número se aplica a <b>todos<\/b> los elementos a la vez. Los arreglos traen métodos para sumar y para encontrar el máximo.", "starter": "import numpy as np\n\nn = int(input(\"¿Cuántos productos? \"))\nlista = []\nfor i in range(n):\n    lista.append(float(input(f\"Precio {i + 1}: \")))\nprecios = np.array(lista)\n", "sol": "import numpy as np\n\nn = int(input(\"¿Cuántos productos? \"))\nlista = []\nfor i in range(n):\n    lista.append(float(input(f\"Precio {i + 1}: \")))\nprecios = np.array(lista)\ncon_iva = precios * 1.19\nprint(f\"Total sin IVA: {precios.sum():.2f}\")\nprint(f\"Total con IVA: {con_iva.sum():.2f}\")\nprint(f\"IVA cobrado: {con_iva.sum() - precios.sum():.2f}\")\nprint(f\"Más caro con IVA: {con_iva.max():.2f}\")", "tests": [{"in": ["3", "10000", "25000", "4500"], "must": ["total sin iva[^\\n\\d]*(?<![\\d.\\-])(?:39499\\.99|39500(?:\\.0{1,2})?|39500\\.01)(?!\\d)", "total con iva[^\\n\\d]*(?<![\\d.\\-])(?:47004\\.99|47005(?:\\.0{1,2})?|47005\\.01)(?!\\d)", "iva cobrado[^\\n\\d]*(?<![\\d.\\-])(?:7504\\.99|7505(?:\\.0{1,2})?|7505\\.01)(?!\\d)", "m[aá]s caro con iva[^\\n\\d]*(?<![\\d.\\-])(?:29749\\.99|29750(?:\\.0{1,2})?|29750\\.01)(?!\\d)"], "not": [], "show": "Total sin IVA: 39500.00 · Total con IVA: 47005.00 · IVA cobrado: 7505.00 · Más caro con IVA: 29750.00"}, {"in": ["1", "99900"], "must": ["total sin iva[^\\n\\d]*(?<![\\d.\\-])(?:99899\\.99|99900(?:\\.0{1,2})?|99900\\.01)(?!\\d)", "total con iva[^\\n\\d]*(?<![\\d.\\-])(?:118880\\.99|118881(?:\\.0{1,2})?|118881\\.01)(?!\\d)", "iva cobrado[^\\n\\d]*(?<![\\d.\\-])(?:18980\\.99|18981(?:\\.0{1,2})?|18981\\.01)(?!\\d)", "m[aá]s caro con iva[^\\n\\d]*(?<![\\d.\\-])(?:118880\\.99|118881(?:\\.0{1,2})?|118881\\.01)(?!\\d)"], "not": [], "show": "Total sin IVA: 99900.00 · Total con IVA: 118881.00 · IVA cobrado: 18981.00 · Más caro con IVA: 118881.00"}, {"in": ["5", "1250.5", "3999.9", "15000", "72000", "8.5"], "must": ["total sin iva[^\\n\\d]*(?<![\\d.\\-])(?:92258\\.89|92258\\.90?|92258\\.91)(?!\\d)", "total con iva[^\\n\\d]*(?<![\\d.\\-])(?:109788\\.08|109788\\.09|109788\\.10?)(?!\\d)", "iva cobrado[^\\n\\d]*(?<![\\d.\\-])(?:17529\\.18|17529\\.19|17529\\.20?)(?!\\d)", "m[aá]s caro con iva[^\\n\\d]*(?<![\\d.\\-])(?:85679\\.99|85680(?:\\.0{1,2})?|85680\\.01)(?!\\d)"], "not": [], "show": "Total sin IVA: 92258.90 · Total con IVA: 109788.09 · IVA cobrado: 17529.19 · Más caro con IVA: 85680.00"}]}, {"id": "grupo", "lvl": 1, "xp": 20, "t": "2. Estadísticas del grupo", "tag": "Nivel 1 · funciones estadísticas + máscara", "d": "Pide N notas (reales) y guárdalas en un arreglo de NumPy. Usando funciones de NumPy (sin ciclos para los cálculos) muestra <code>Promedio: X<\/code>, <code>Máxima: X<\/code>, <code>Mínima: X<\/code>, <code>Desviación: X<\/code> (la desviación estándar que calcula NumPy por defecto), <code>Aprobados: K<\/code> (nota de 3.0 o más) y <code>Porcentaje de aprobación: P%<\/code>. Todo con 2 decimales, salvo K.<br><b>Entrada:<\/b> un entero N y N reales · <b>Salida:<\/b> seis líneas<br><b>Ejemplo:<\/b> 4.5, 2.8, 3.0, 1.9, 3.7 → <code>Promedio: 3.18<\/code> · <code>Máxima: 4.50<\/code> · <code>Mínima: 1.90<\/code> · <code>Desviación: 0.87<\/code> · <code>Aprobados: 3<\/code> · <code>Porcentaje de aprobación: 60.00%<\/code>.<br>💡 <b>Pista:<\/b> una comparación como <code>notas &gt;= 3.0<\/code> produce un arreglo de True y False; True cuenta como 1 al sumarlo.", "starter": "import numpy as np\n\nn = int(input(\"¿Cuántas notas? \"))\nlista = []\nfor i in range(n):\n    lista.append(float(input(f\"Nota {i + 1}: \")))\nnotas = np.array(lista)\n", "sol": "import numpy as np\n\nn = int(input(\"¿Cuántas notas? \"))\nlista = []\nfor i in range(n):\n    lista.append(float(input(f\"Nota {i + 1}: \")))\nnotas = np.array(lista)\naprobados = (notas >= 3.0).sum()\nprint(f\"Promedio: {notas.mean():.2f}\")\nprint(f\"Máxima: {notas.max():.2f}\")\nprint(f\"Mínima: {notas.min():.2f}\")\nprint(f\"Desviación: {notas.std():.2f}\")\nprint(f\"Aprobados: {aprobados}\")\nprint(f\"Porcentaje de aprobación: {aprobados / len(notas) * 100:.2f}%\")", "tests": [{"in": ["5", "4.5", "2.8", "3.0", "1.9", "3.7"], "must": ["promedio[^\\n\\d]*(?<![\\d.\\-])(?:3\\.17|3\\.18|3\\.19)(?!\\d)", "m[aá]xima[^\\n\\d]*(?<![\\d.\\-])(?:4\\.49|4\\.50?|4\\.51)(?!\\d)", "m[ií]nima[^\\n\\d]*(?<![\\d.\\-])(?:1\\.89|1\\.90?|1\\.91)(?!\\d)", "desviaci[oó]n[^\\n\\d]*(?<![\\d.\\-])(?:0\\.86|0\\.87|0\\.88)(?!\\d)", "aprobados[^\\n\\d]*(?<![\\d.\\-])3(?:\\.0{1,2})?(?!\\d)", "porcentaje[^\\n\\d]*(?<![\\d.\\-])(?:59\\.99|60(?:\\.0{1,2})?|60\\.01)(?!\\d)"], "not": [], "show": "Promedio: 3.18 · Máxima: 4.50 · Mínima: 1.90 · Desviación: 0.87 · Aprobados: 3 · Porcentaje de aprobación: 60.00%"}, {"in": ["3", "5", "5", "5"], "must": ["promedio[^\\n\\d]*(?<![\\d.\\-])(?:4\\.99|5(?:\\.0{1,2})?|5\\.01)(?!\\d)", "m[aá]xima[^\\n\\d]*(?<![\\d.\\-])(?:4\\.99|5(?:\\.0{1,2})?|5\\.01)(?!\\d)", "m[ií]nima[^\\n\\d]*(?<![\\d.\\-])(?:4\\.99|5(?:\\.0{1,2})?|5\\.01)(?!\\d)", "desviaci[oó]n[^\\n\\d]*(?<![\\d.\\-])(?:-0\\.01|-?0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "aprobados[^\\n\\d]*(?<![\\d.\\-])3(?:\\.0{1,2})?(?!\\d)", "porcentaje[^\\n\\d]*(?<![\\d.\\-])(?:99\\.99|100(?:\\.0{1,2})?|100\\.01)(?!\\d)"], "not": [], "show": "Promedio: 5.00 · Máxima: 5.00 · Mínima: 5.00 · Desviación: 0.00 · Aprobados: 3 · Porcentaje de aprobación: 100.00%"}, {"in": ["4", "2.0", "2.5", "1.0", "0.5"], "must": ["promedio[^\\n\\d]*(?<![\\d.\\-])(?:1\\.49|1\\.50?|1\\.51)(?!\\d)", "m[aá]xima[^\\n\\d]*(?<![\\d.\\-])(?:2\\.49|2\\.50?|2\\.51)(?!\\d)", "m[ií]nima[^\\n\\d]*(?<![\\d.\\-])(?:0\\.49|0\\.50?|0\\.51)(?!\\d)", "desviaci[oó]n[^\\n\\d]*(?<![\\d.\\-])(?:0\\.78|0\\.79|0\\.80?)(?!\\d)", "aprobados[^\\n\\d]*(?<![\\d.\\-])0(?:\\.0{1,2})?(?!\\d)", "porcentaje[^\\n\\d]*(?<![\\d.\\-])(?:-0\\.01|-?0(?:\\.0{1,2})?|0\\.01)(?!\\d)"], "not": [], "show": "Promedio: 1.50 · Máxima: 2.50 · Mínima: 0.50 · Desviación: 0.79 · Aprobados: 0 · Porcentaje de aprobación: 0.00%"}, {"in": ["1", "3.0"], "must": ["promedio[^\\n\\d]*(?<![\\d.\\-])(?:2\\.99|3(?:\\.0{1,2})?|3\\.01)(?!\\d)", "m[aá]xima[^\\n\\d]*(?<![\\d.\\-])(?:2\\.99|3(?:\\.0{1,2})?|3\\.01)(?!\\d)", "m[ií]nima[^\\n\\d]*(?<![\\d.\\-])(?:2\\.99|3(?:\\.0{1,2})?|3\\.01)(?!\\d)", "desviaci[oó]n[^\\n\\d]*(?<![\\d.\\-])(?:-0\\.01|-?0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "aprobados[^\\n\\d]*(?<![\\d.\\-])1(?:\\.0{1,2})?(?!\\d)", "porcentaje[^\\n\\d]*(?<![\\d.\\-])(?:99\\.99|100(?:\\.0{1,2})?|100\\.01)(?!\\d)"], "not": [], "show": "Promedio: 3.00 · Máxima: 3.00 · Mínima: 3.00 · Desviación: 0.00 · Aprobados: 1 · Porcentaje de aprobación: 100.00%"}]}, {"id": "conversion", "lvl": 1, "xp": 20, "t": "3. Tabla de temperaturas con arange", "tag": "Nivel 1 · np.arange + vectorización", "d": "Pide una temperatura inicial, una final y un paso (enteros, en °C) y crea con <code>np.arange<\/code> un arreglo desde la inicial hasta la final <b>incluida<\/b> (si la final cae en la secuencia). Convierte <b>todo el arreglo<\/b> a Fahrenheit en una sola operación (°F = °C × 9/5 + 32) y muestra una fila por temperatura con el formato <code>C °C = F °F<\/code> (F con 1 decimal). Al final muestra <code>Filas: N<\/code>.<br><b>Entrada:<\/b> tres enteros · <b>Salida:<\/b> una fila por temperatura y el conteo<br><b>Ejemplo:<\/b> 0, 30 y 10 → <code>0 °C = 32.0 °F<\/code> · <code>10 °C = 50.0 °F<\/code> · <code>20 °C = 68.0 °F<\/code> · <code>30 °C = 86.0 °F<\/code> · <code>Filas: 4<\/code>.<br>💡 <b>Pista:<\/b> como en <code>range<\/code>, el fin de <code>np.arange<\/code> no se incluye: ajústalo para que la temperatura final aparezca. Para mostrar las filas puedes recorrer los dos arreglos con el mismo índice.", "starter": "import numpy as np\n\ninicio = int(input(\"Desde (°C): \"))\nfin = int(input(\"Hasta (°C): \"))\npaso = int(input(\"Paso: \"))\n", "sol": "import numpy as np\n\ninicio = int(input(\"Desde (°C): \"))\nfin = int(input(\"Hasta (°C): \"))\npaso = int(input(\"Paso: \"))\ncelsius = np.arange(inicio, fin + 1, paso)\nfahrenheit = celsius * 9 / 5 + 32\nfor i in range(len(celsius)):\n    print(f\"{celsius[i]} °C = {fahrenheit[i]:.1f} °F\")\nprint(f\"Filas: {len(celsius)}\")", "tests": [{"in": ["0", "30", "10"], "must": ["(?:^|\\n)\\s*0\\s*°?\\s*C\\s*=\\s*(?<![\\d.\\-])(?:31\\.99|32(?:\\.0{1,2})?|32\\.01)(?!\\d)", "(?:^|\\n)\\s*10\\s*°?\\s*C\\s*=\\s*(?<![\\d.\\-])(?:49\\.99|50(?:\\.0{1,2})?|50\\.01)(?!\\d)", "(?:^|\\n)\\s*20\\s*°?\\s*C\\s*=\\s*(?<![\\d.\\-])(?:67\\.99|68(?:\\.0{1,2})?|68\\.01)(?!\\d)", "(?:^|\\n)\\s*30\\s*°?\\s*C\\s*=\\s*(?<![\\d.\\-])(?:85\\.99|86(?:\\.0{1,2})?|86\\.01)(?!\\d)", "filas[^\\n\\d]*(?<![\\d.\\-])4(?:\\.0{1,2})?(?!\\d)"], "not": ["(?:^|\\n)\\s*40\\s*°?\\s*C\\s*="], "show": "0 °C = 32.0 °F · 10 °C = 50.0 °F · 20 °C = 68.0 °F … · Filas: 4"}, {"in": ["-10", "5", "5"], "must": ["(?:^|\\n)\\s*-10\\s*°?\\s*C\\s*=\\s*(?<![\\d.\\-])(?:13\\.99|14(?:\\.0{1,2})?|14\\.01)(?!\\d)", "(?:^|\\n)\\s*-5\\s*°?\\s*C\\s*=\\s*(?<![\\d.\\-])(?:22\\.99|23(?:\\.0{1,2})?|23\\.01)(?!\\d)", "(?:^|\\n)\\s*0\\s*°?\\s*C\\s*=\\s*(?<![\\d.\\-])(?:31\\.99|32(?:\\.0{1,2})?|32\\.01)(?!\\d)", "(?:^|\\n)\\s*5\\s*°?\\s*C\\s*=\\s*(?<![\\d.\\-])(?:40\\.99|41(?:\\.0{1,2})?|41\\.01)(?!\\d)", "filas[^\\n\\d]*(?<![\\d.\\-])4(?:\\.0{1,2})?(?!\\d)"], "not": ["(?:^|\\n)\\s*10\\s*°?\\s*C\\s*="], "show": "-10 °C = 14.0 °F · -5 °C = 23.0 °F · 0 °C = 32.0 °F … · Filas: 4"}, {"in": ["36", "40", "1"], "must": ["(?:^|\\n)\\s*36\\s*°?\\s*C\\s*=\\s*(?<![\\d.\\-])(?:96\\.79|96\\.80?|96\\.81)(?!\\d)", "(?:^|\\n)\\s*37\\s*°?\\s*C\\s*=\\s*(?<![\\d.\\-])(?:98\\.59|98\\.60?|98\\.61)(?!\\d)", "(?:^|\\n)\\s*38\\s*°?\\s*C\\s*=\\s*(?<![\\d.\\-])(?:100\\.39|100\\.40?|100\\.41)(?!\\d)", "(?:^|\\n)\\s*39\\s*°?\\s*C\\s*=\\s*(?<![\\d.\\-])(?:102\\.19|102\\.20?|102\\.21)(?!\\d)", "(?:^|\\n)\\s*40\\s*°?\\s*C\\s*=\\s*(?<![\\d.\\-])(?:103\\.99|104(?:\\.0{1,2})?|104\\.01)(?!\\d)", "filas[^\\n\\d]*(?<![\\d.\\-])5(?:\\.0{1,2})?(?!\\d)"], "not": ["(?:^|\\n)\\s*41\\s*°?\\s*C\\s*="], "show": "36 °C = 96.8 °F · 37 °C = 98.6 °F · 38 °C = 100.4 °F … · Filas: 5"}, {"in": ["1", "20", "7"], "must": ["(?:^|\\n)\\s*1\\s*°?\\s*C\\s*=\\s*(?<![\\d.\\-])(?:33\\.79|33\\.80?|33\\.81)(?!\\d)", "(?:^|\\n)\\s*8\\s*°?\\s*C\\s*=\\s*(?<![\\d.\\-])(?:46\\.39|46\\.40?|46\\.41)(?!\\d)", "(?:^|\\n)\\s*15\\s*°?\\s*C\\s*=\\s*(?<![\\d.\\-])(?:58\\.99|59(?:\\.0{1,2})?|59\\.01)(?!\\d)", "filas[^\\n\\d]*(?<![\\d.\\-])3(?:\\.0{1,2})?(?!\\d)"], "not": ["(?:^|\\n)\\s*22\\s*°?\\s*C\\s*="], "show": "1 °C = 33.8 °F · 8 °C = 46.4 °F · 15 °C = 59.0 °F · Filas: 3"}]}, {"id": "destacadas", "lvl": 2, "xp": 30, "t": "4. Ventas destacadas", "tag": "Nivel 2 · máscaras booleanas + np.where", "d": "Pide N ventas (reales) y guárdalas en un arreglo. Una venta es <b>destacada<\/b> si supera el promedio. Usando una <b>máscara booleana<\/b> (sin ciclos), muestra <code>Promedio: X<\/code>, <code>Destacadas: K<\/code>, <code>Suma destacadas: X<\/code>, <code>Representan: P% del total<\/code> (qué porcentaje de todo lo vendido suman las destacadas) y <code>Posiciones: [...]<\/code> con los índices de las ventas destacadas (empezando en 0). Valores con 2 decimales.<br><b>Entrada:<\/b> un entero N y N reales · <b>Salida:<\/b> cinco líneas<br><b>Ejemplo:<\/b> 100, 400, 250, 50, 700 → <code>Promedio: 300.00<\/code> · <code>Destacadas: 2<\/code> · <code>Suma destacadas: 1100.00<\/code> · <code>Representan: 73.33% del total<\/code> · <code>Posiciones: [1 4]<\/code>.<br>💡 <b>Pista:<\/b> un arreglo se puede indexar con otro arreglo de True/False del mismo tamaño: se quedan solo los elementos donde hay True. Hay una función de NumPy que devuelve las posiciones donde una condición es True.", "starter": "import numpy as np\n\nn = int(input(\"¿Cuántas ventas? \"))\nventas = np.array([float(input(f\"Venta {i + 1}: \")) for i in range(n)])\n", "sol": "import numpy as np\n\nn = int(input(\"¿Cuántas ventas? \"))\nventas = np.array([float(input(f\"Venta {i + 1}: \")) for i in range(n)])\npromedio = ventas.mean()\nmascara = ventas > promedio\ndestacadas = ventas[mascara]\nprint(f\"Promedio: {promedio:.2f}\")\nprint(f\"Destacadas: {len(destacadas)}\")\nprint(f\"Suma destacadas: {destacadas.sum():.2f}\")\nprint(f\"Representan: {destacadas.sum() / ventas.sum() * 100:.2f}% del total\")\nprint(\"Posiciones:\", np.where(mascara)[0])", "tests": [{"in": ["5", "100", "400", "250", "50", "700"], "must": ["promedio[^\\n\\d]*(?<![\\d.\\-])(?:299\\.99|300(?:\\.0{1,2})?|300\\.01)(?!\\d)", "destacadas[^\\n\\d]*(?<![\\d.\\-])2(?:\\.0{1,2})?(?!\\d)", "suma destacadas[^\\n\\d]*(?<![\\d.\\-])(?:1099\\.99|1100(?:\\.0{1,2})?|1100\\.01)(?!\\d)", "representan[^\\n\\d]*(?<![\\d.\\-])(?:73\\.32|73\\.33|73\\.34)(?!\\d)", "posiciones\\D*1[ ,]+4(?![ ,]*\\d)"], "not": [], "show": "Promedio: 300.00 · Destacadas: 2 · Suma destacadas: 1100.00 · Representan: 73.33% del total · Posiciones: [1, 4]"}, {"in": ["4", "5", "5", "5", "5"], "must": ["promedio[^\\n\\d]*(?<![\\d.\\-])(?:4\\.99|5(?:\\.0{1,2})?|5\\.01)(?!\\d)", "destacadas[^\\n\\d]*(?<![\\d.\\-])0(?:\\.0{1,2})?(?!\\d)", "suma destacadas[^\\n\\d]*(?<![\\d.\\-])(?:-0\\.01|-?0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "representan[^\\n\\d]*(?<![\\d.\\-])(?:-0\\.01|-?0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "posiciones\\D*(?![ ,]*\\d)"], "not": [], "show": "Promedio: 5.00 · Destacadas: 0 · Suma destacadas: 0.00 · Representan: 0.00% del total · Posiciones: []"}, {"in": ["6", "1200.5", "980", "3100", "2900.75", "15", "4000"], "must": ["promedio[^\\n\\d]*(?<![\\d.\\-])(?:2032\\.70?|2032\\.71|2032\\.72)(?!\\d)", "destacadas[^\\n\\d]*(?<![\\d.\\-])3(?:\\.0{1,2})?(?!\\d)", "suma destacadas[^\\n\\d]*(?<![\\d.\\-])(?:10000\\.74|10000\\.75|10000\\.76)(?!\\d)", "representan[^\\n\\d]*(?<![\\d.\\-])(?:81\\.99|82(?:\\.0{1,2})?|82\\.01)(?!\\d)", "posiciones\\D*2[ ,]+3[ ,]+5(?![ ,]*\\d)"], "not": [], "show": "Promedio: 2032.71 · Destacadas: 3 · Suma destacadas: 10000.75 · Representan: 82.00% del total · Posiciones: [2, 3, 5]"}]}, {"id": "escalonado", "lvl": 2, "xp": 30, "t": "5. Descuentos escalonados con np.where", "tag": "Nivel 2 · np.where anidado", "d": "Una tienda aplica descuentos según el precio de cada producto: <b>20 %<\/b> si cuesta <b>100000 o más<\/b>, <b>10 %<\/b> si cuesta <b>50000 o más<\/b> y <b>0 %<\/b> en otro caso. Pide N precios, guárdalos en un arreglo y calcula <b>sin ciclos<\/b> (con <code>np.where<\/code>) el arreglo de porcentajes y el de precios finales. Muestra <code>Precio k: X<\/code> para cada producto, <code>Ahorro total: X<\/code> y <code>Productos con descuento: K<\/code>.<br><b>Entrada:<\/b> un entero N y N reales · <b>Salida:<\/b> una línea por precio y dos de resumen<br><b>Ejemplo:<\/b> 30000, 50000, 120000 → <code>Precio 1: 30000.00<\/code> · <code>Precio 2: 45000.00<\/code> · <code>Precio 3: 96000.00<\/code> · <code>Ahorro total: 29000.00<\/code> · <code>Productos con descuento: 2<\/code>.<br>💡 <b>Pista:<\/b> <code>np.where(condición, valor_si, valor_no)<\/code> elige elemento por elemento; el <i>valor_no<\/i> puede ser, a su vez, otro <code>np.where<\/code>.", "starter": "import numpy as np\n\nn = int(input(\"¿Cuántos productos? \"))\nprecios = np.array([float(input(f\"Precio {i + 1}: \")) for i in range(n)])\n", "sol": "import numpy as np\n\nn = int(input(\"¿Cuántos productos? \"))\nprecios = np.array([float(input(f\"Precio {i + 1}: \")) for i in range(n)])\nporc = np.where(precios >= 100000, 0.20, np.where(precios >= 50000, 0.10, 0.0))\nfinales = precios * (1 - porc)\nfor i in range(n):\n    print(f\"Precio {i + 1}: {finales[i]:.2f}\")\nprint(f\"Ahorro total: {(precios - finales).sum():.2f}\")\nprint(f\"Productos con descuento: {(porc > 0).sum()}\")", "tests": [{"in": ["3", "30000", "50000", "120000"], "must": ["precio 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:29999\\.99|30000(?:\\.0{1,2})?|30000\\.01)(?!\\d)", "precio 2\\b[^\\n\\d]*(?<![\\d.\\-])(?:44999\\.99|45000(?:\\.0{1,2})?|45000\\.01)(?!\\d)", "precio 3\\b[^\\n\\d]*(?<![\\d.\\-])(?:95999\\.99|96000(?:\\.0{1,2})?|96000\\.01)(?!\\d)", "ahorro total[^\\n\\d]*(?<![\\d.\\-])(?:28999\\.99|29000(?:\\.0{1,2})?|29000\\.01)(?!\\d)", "con descuento[^\\n\\d]*(?<![\\d.\\-])2(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "Precio 1: 30000.00 · Precio 2: 45000.00 · Precio 3: 96000.00 · Ahorro total: 29000.00 · Productos con descuento: 2"}, {"in": ["4", "49999.99", "100000", "99999", "250000.5"], "must": ["precio 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:49999\\.98|49999\\.99|50000(?:\\.0{1,2})?)(?!\\d)", "precio 2\\b[^\\n\\d]*(?<![\\d.\\-])(?:79999\\.99|80000(?:\\.0{1,2})?|80000\\.01)(?!\\d)", "precio 3\\b[^\\n\\d]*(?<![\\d.\\-])(?:89999\\.09|89999\\.10?|89999\\.11)(?!\\d)", "precio 4\\b[^\\n\\d]*(?<![\\d.\\-])(?:200000\\.39|200000\\.40?|200000\\.41)(?!\\d)", "ahorro total[^\\n\\d]*(?<![\\d.\\-])(?:79999\\.99|80000(?:\\.0{1,2})?|80000\\.01)(?!\\d)", "con descuento[^\\n\\d]*(?<![\\d.\\-])3(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "Precio 1: 49999.99 · Precio 2: 80000.00 · Precio 3: 89999.10 · Precio 4: 200000.40 · Ahorro total: 80000.00 · Productos con descuento: 3"}, {"in": ["2", "1000", "2000"], "must": ["precio 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:999\\.99|1000(?:\\.0{1,2})?|1000\\.01)(?!\\d)", "precio 2\\b[^\\n\\d]*(?<![\\d.\\-])(?:1999\\.99|2000(?:\\.0{1,2})?|2000\\.01)(?!\\d)", "ahorro total[^\\n\\d]*(?<![\\d.\\-])(?:-0\\.01|-?0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "con descuento[^\\n\\d]*(?<![\\d.\\-])0(?:\\.0{1,2})?(?!\\d)"], "not": [], "show": "Precio 1: 1000.00 · Precio 2: 2000.00 · Ahorro total: 0.00 · Productos con descuento: 0"}]}, {"id": "cdt", "lvl": 2, "xp": 30, "t": "6. Proyección de un CDT", "tag": "Nivel 2 · arange + potencias vectorizadas + argmax", "d": "Un CDT crece con interés compuesto: después de k meses el saldo es <code>capital × (1 + i)<sup>k<\/sup><\/code>, con i la tasa mensual en decimal. Pide el capital, la tasa mensual en % (reales), el número de meses n (entero) y una meta (real). Crea con NumPy el arreglo de meses 1…n y calcula <b>todos los saldos en una sola operación<\/b>. Muestra <code>Mes k: X<\/code> para cada mes (2 decimales) y luego <code>Meta alcanzada en el mes M<\/code> (el primer mes con saldo de al menos la meta) o <code>La meta no se alcanza en n meses<\/code>.<br><b>Entrada:<\/b> un real, un real, un entero y un real · <b>Salida:<\/b> una línea por mes y el resultado<br><b>Ejemplo:<\/b> 1000000, 2, 4 meses, meta 1050000 → <code>Mes 1: 1020000.00<\/code> · <code>Mes 2: 1040400.00<\/code> · <code>Mes 3: 1061208.00<\/code> · <code>Mes 4: 1082432.16<\/code> · <code>Meta alcanzada en el mes 3<\/code>.<br>💡 <b>Pista:<\/b> el operador <code>**<\/code> también funciona con un arreglo como exponente. Para encontrar el primer True de una máscara, piensa en qué devuelve <code>argmax<\/code> cuando los valores son solo True (1) y False (0); revisa primero si hay alguno.", "starter": "import numpy as np\n\ncapital = float(input(\"Capital: \"))\ntasa = float(input(\"Tasa mensual (%): \"))\nn = int(input(\"Meses: \"))\nmeta = float(input(\"Meta: \"))\n", "sol": "import numpy as np\n\ncapital = float(input(\"Capital: \"))\ntasa = float(input(\"Tasa mensual (%): \"))\nn = int(input(\"Meses: \"))\nmeta = float(input(\"Meta: \"))\nmeses = np.arange(1, n + 1)\nsaldos = capital * (1 + tasa / 100) ** meses\nfor k in range(n):\n    print(f\"Mes {meses[k]}: {saldos[k]:.2f}\")\nalcanza = saldos >= meta\nif alcanza.any():\n    print(f\"Meta alcanzada en el mes {np.argmax(alcanza) + 1}\")\nelse:\n    print(f\"La meta no se alcanza en {n} meses\")", "tests": [{"in": ["1000000", "2", "4", "1050000"], "must": ["mes 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:1019999\\.99|1020000(?:\\.0{1,2})?|1020000\\.01)(?!\\d)", "mes 2\\b[^\\n\\d]*(?<![\\d.\\-])(?:1040399\\.99|1040400(?:\\.0{1,2})?|1040400\\.01)(?!\\d)", "mes 3\\b[^\\n\\d]*(?<![\\d.\\-])(?:1061207\\.99|1061208(?:\\.0{1,2})?|1061208\\.01)(?!\\d)", "mes 4\\b[^\\n\\d]*(?<![\\d.\\-])(?:1082432\\.15|1082432\\.16|1082432\\.17)(?!\\d)", "meta alcanzada en el mes 3\\b"], "not": ["no se alcanza", "mes 5\\b"], "show": "4 líneas «Mes k: saldo»; Mes 4: 1082432.16 · Meta alcanzada en el mes 3"}, {"in": ["500000", "1", "6", "600000"], "must": ["mes 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:504999\\.99|505000(?:\\.0{1,2})?|505000\\.01)(?!\\d)", "mes 2\\b[^\\n\\d]*(?<![\\d.\\-])(?:510049\\.99|510050(?:\\.0{1,2})?|510050\\.01)(?!\\d)", "mes 3\\b[^\\n\\d]*(?<![\\d.\\-])(?:515150\\.49|515150\\.50?|515150\\.51)(?!\\d)", "mes 4\\b[^\\n\\d]*(?<![\\d.\\-])(?:520302(?:\\.0{1,2})?|520302\\.01|520302\\.02)(?!\\d)", "mes 5\\b[^\\n\\d]*(?<![\\d.\\-])(?:525505\\.02|525505\\.03|525505\\.04)(?!\\d)", "mes 6\\b[^\\n\\d]*(?<![\\d.\\-])(?:530760\\.07|530760\\.08|530760\\.09)(?!\\d)", "no se alcanza"], "not": ["alcanzada", "mes 7\\b"], "show": "6 líneas «Mes k: saldo»; Mes 6: 530760.08 · La meta no se alcanza en 6 meses"}, {"in": ["2000000", "0.8", "12", "2000000"], "must": ["mes 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:2015999\\.99|2016000(?:\\.0{1,2})?|2016000\\.01)(?!\\d)", "mes 2\\b[^\\n\\d]*(?<![\\d.\\-])(?:2032127\\.99|2032128(?:\\.0{1,2})?|2032128\\.01)(?!\\d)", "mes 3\\b[^\\n\\d]*(?<![\\d.\\-])(?:2048385\\.01|2048385\\.02|2048385\\.03)(?!\\d)", "mes 4\\b[^\\n\\d]*(?<![\\d.\\-])(?:2064772\\.09|2064772\\.10?|2064772\\.11)(?!\\d)", "mes 5\\b[^\\n\\d]*(?<![\\d.\\-])(?:2081290\\.27|2081290\\.28|2081290\\.29)(?!\\d)", "mes 6\\b[^\\n\\d]*(?<![\\d.\\-])(?:2097940\\.59|2097940\\.60?|2097940\\.61)(?!\\d)", "mes 7\\b[^\\n\\d]*(?<![\\d.\\-])(?:2114724\\.12|2114724\\.13|2114724\\.14)(?!\\d)", "mes 8\\b[^\\n\\d]*(?<![\\d.\\-])(?:2131641\\.91|2131641\\.92|2131641\\.93)(?!\\d)", "mes 9\\b[^\\n\\d]*(?<![\\d.\\-])(?:2148695\\.05|2148695\\.06|2148695\\.07)(?!\\d)", "mes 10\\b[^\\n\\d]*(?<![\\d.\\-])(?:2165884\\.61|2165884\\.62|2165884\\.63)(?!\\d)", "mes 11\\b[^\\n\\d]*(?<![\\d.\\-])(?:2183211\\.68|2183211\\.69|2183211\\.70?)(?!\\d)", "mes 12\\b[^\\n\\d]*(?<![\\d.\\-])(?:2200677\\.38|2200677\\.39|2200677\\.40?)(?!\\d)", "meta alcanzada en el mes 1\\b"], "not": ["no se alcanza", "mes 13\\b"], "show": "12 líneas «Mes k: saldo»; Mes 12: 2200677.39 · Meta alcanzada en el mes 1"}, {"in": ["750000", "3", "1", "780000"], "must": ["mes 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:772499\\.99|772500(?:\\.0{1,2})?|772500\\.01)(?!\\d)", "no se alcanza"], "not": ["alcanzada", "mes 2\\b"], "show": "1 líneas «Mes k: saldo»; Mes 1: 772500.00 · La meta no se alcanza en 1 meses"}]}, {"id": "planilla", "lvl": 3, "xp": 40, "t": "7. Planilla de notas", "tag": "Nivel 3 · matriz 2D + producto matricial + axis", "d": "En el curso, el parcial 1 vale 30 %, el parcial 2 vale 30 % y el final vale 40 %. Pide cuántos estudiantes hay (E) y las 3 notas de cada uno; guárdalas en una <b>matriz<\/b> de NumPy de E × 3. Con el arreglo de pesos <code>[0.3, 0.3, 0.4]<\/code>, calcula <b>sin ciclos<\/b> todas las definitivas. Muestra <code>Estudiante k: X Aprueba<\/code> (o <code>Reprueba<\/code>, si la definitiva es menor que 3.0), luego <code>Promedio por evaluación: a, b, c<\/code> (promedio de cada columna) y <code>Mejor estudiante: k<\/code>. Notas con 2 decimales.<br><b>Entrada:<\/b> un entero E y E × 3 reales · <b>Salida:<\/b> una línea por estudiante y dos de resumen<br><b>Ejemplo:<\/b> 3 estudiantes: 4.0 3.5 4.5 / 2.5 3.0 2.0 / 5.0 4.5 4.0 → <code>Estudiante 1: 4.05 Aprueba<\/code> · <code>Estudiante 2: 2.45 Reprueba<\/code> · <code>Estudiante 3: 4.45 Aprueba<\/code> · <code>Promedio por evaluación: 3.83, 3.67, 3.50<\/code> · <code>Mejor estudiante: 3<\/code>.<br>💡 <b>Pista:<\/b> multiplicar una matriz por un vector con <code>@<\/code> combina cada fila con los pesos. Para operar sobre las columnas, las funciones estadísticas reciben el parámetro <code>axis<\/code>: piensa cuál de los dos ejes recorre las filas.", "starter": "import numpy as np\n\ne = int(input(\"¿Cuántos estudiantes? \"))\nfilas = []\nfor k in range(e):\n    fila = []\n    for j in range(3):\n        fila.append(float(input(f\"Estudiante {k + 1}, nota {j + 1}: \")))\n    filas.append(fila)\nnotas = np.array(filas)\npesos = np.array([0.3, 0.3, 0.4])\n", "sol": "import numpy as np\n\ne = int(input(\"¿Cuántos estudiantes? \"))\nfilas = []\nfor k in range(e):\n    fila = []\n    for j in range(3):\n        fila.append(float(input(f\"Estudiante {k + 1}, nota {j + 1}: \")))\n    filas.append(fila)\nnotas = np.array(filas)\npesos = np.array([0.3, 0.3, 0.4])\ndefinitivas = notas @ pesos\nfor k in range(e):\n    estado = \"Aprueba\" if round(definitivas[k], 2) >= 3.0 else \"Reprueba\"\n    print(f\"Estudiante {k + 1}: {definitivas[k]:.2f} {estado}\")\nprom = notas.mean(axis=0)\nprint(f\"Promedio por evaluación: {prom[0]:.2f}, {prom[1]:.2f}, {prom[2]:.2f}\")\nprint(f\"Mejor estudiante: {np.argmax(definitivas) + 1}\")", "tests": [{"in": ["3", "4.0", "3.5", "4.5", "2.5", "3.0", "2.0", "5.0", "4.5", "4.0"], "must": ["estudiante 1\\b[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:4\\.04|4\\.05|4\\.06)(?!\\d)[^\\n]*aprueba", "estudiante 2\\b[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:2\\.44|2\\.45|2\\.46)(?!\\d)[^\\n]*reprueba", "estudiante 3\\b[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:4\\.44|4\\.45|4\\.46)(?!\\d)[^\\n]*aprueba", "promedio por evaluaci[oó]n\\D*(?<![\\d.\\-])(?:3\\.82|3\\.83|3\\.84)(?!\\d)[^\\n\\d]+(?<![\\d.\\-])(?:3\\.66|3\\.67|3\\.68)(?!\\d)[^\\n\\d]+(?<![\\d.\\-])(?:3\\.49|3\\.50?|3\\.51)(?!\\d)", "mejor estudiante\\D*3\\b"], "not": [], "show": "Estudiante 1: 4.05 Aprueba · Estudiante 2: 2.45 Reprueba · Estudiante 3: 4.45 Aprueba · Promedio por evaluación: 3.83, 3.67, 3.50 · Mejor estudiante: 3"}, {"in": ["1", "3.0", "3.0", "3.0"], "must": ["estudiante 1\\b[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:2\\.99|3(?:\\.0{1,2})?|3\\.01)(?!\\d)[^\\n]*aprueba", "promedio por evaluaci[oó]n\\D*(?<![\\d.\\-])(?:2\\.99|3(?:\\.0{1,2})?|3\\.01)(?!\\d)[^\\n\\d]+(?<![\\d.\\-])(?:2\\.99|3(?:\\.0{1,2})?|3\\.01)(?!\\d)[^\\n\\d]+(?<![\\d.\\-])(?:2\\.99|3(?:\\.0{1,2})?|3\\.01)(?!\\d)", "mejor estudiante\\D*1\\b"], "not": [], "show": "Estudiante 1: 3.00 Aprueba · Promedio por evaluación: 3.00, 3.00, 3.00 · Mejor estudiante: 1"}, {"in": ["4", "1.0", "2.0", "3.5", "4.8", "4.9", "5.0", "2.0", "5.0", "2.5", "3.2", "2.8", "3.0"], "must": ["estudiante 1\\b[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:2\\.29|2\\.30?|2\\.31)(?!\\d)[^\\n]*reprueba", "estudiante 2\\b[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:4\\.90?|4\\.91|4\\.92)(?!\\d)[^\\n]*aprueba", "estudiante 3\\b[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:3\\.09|3\\.10?|3\\.11)(?!\\d)[^\\n]*aprueba", "estudiante 4\\b[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:2\\.99|3(?:\\.0{1,2})?|3\\.01)(?!\\d)[^\\n]*aprueba", "promedio por evaluaci[oó]n\\D*(?<![\\d.\\-])(?:2\\.74|2\\.75|2\\.76)(?!\\d)[^\\n\\d]+(?<![\\d.\\-])(?:3\\.66|3\\.67|3\\.68)(?!\\d)[^\\n\\d]+(?<![\\d.\\-])(?:3\\.49|3\\.50?|3\\.51)(?!\\d)", "mejor estudiante\\D*2\\b"], "not": [], "show": "Estudiante 1: 2.30 Reprueba · Estudiante 2: 4.91 Aprueba · Estudiante 3: 3.10 Aprueba · Estudiante 4: 3.00 Aprueba · Promedio por evaluación: 2.75, 3.67, 3.50 · Mejor estudiante: 2"}]}, {"id": "sucursalesnp", "lvl": 3, "xp": 40, "t": "8. Sucursales y meses", "tag": "Nivel 3 · sum(axis) + argmax/argmin + slicing 2D", "d": "Pide el número de sucursales F y de meses C (C ≥ 2) y las ventas fila por fila (todas positivas); guárdalas en una matriz de NumPy F × C. Usando <code>axis<\/code> y slicing (sin ciclos para los cálculos) muestra: <code>Sucursal i: total X<\/code> por fila, <code>Mes j: total X<\/code> por columna, <code>Mes con más ventas: j<\/code>, <code>Sucursal con menos ventas: i<\/code> y, para cada sucursal, <code>Crecimiento sucursal i: P%<\/code>, que compara su último mes con el primero ((último − primero) ÷ primero × 100). Números desde 1; valores con 2 decimales; en empates, el primero.<br><b>Entrada:<\/b> dos enteros y F × C reales · <b>Salida:<\/b> totales, ganadores y crecimientos<br><b>Ejemplo:<\/b> 2 × 3: 100, 120, 150 / 200, 180, 190 → <code>Sucursal 1: total 370.00<\/code> · <code>Sucursal 2: total 570.00<\/code> · <code>Mes 1: total 300.00<\/code> · <code>Mes 2: total 300.00<\/code> · <code>Mes 3: total 340.00<\/code> · <code>Mes con más ventas: 3<\/code> · <code>Sucursal con menos ventas: 1<\/code> · <code>Crecimiento sucursal 1: 50.00%<\/code> · <code>Crecimiento sucursal 2: -5.00%<\/code>.<br>💡 <b>Pista:<\/b> <code>m[:, 0]<\/code> es la primera columna completa y <code>m[:, -1]<\/code> la última: con ellas calculas todos los crecimientos en una sola operación.", "starter": "import numpy as np\n\nf = int(input(\"Sucursales: \"))\nc = int(input(\"Meses: \"))\nventas = np.array([[float(input(f\"Sucursal {i + 1}, mes {j + 1}: \")) for j in range(c)] for i in range(f)])\n", "sol": "import numpy as np\n\nf = int(input(\"Sucursales: \"))\nc = int(input(\"Meses: \"))\nventas = np.array([[float(input(f\"Sucursal {i + 1}, mes {j + 1}: \")) for j in range(c)] for i in range(f)])\npor_sucursal = ventas.sum(axis=1)\npor_mes = ventas.sum(axis=0)\nfor i in range(f):\n    print(f\"Sucursal {i + 1}: total {por_sucursal[i]:.2f}\")\nfor j in range(c):\n    print(f\"Mes {j + 1}: total {por_mes[j]:.2f}\")\nprint(f\"Mes con más ventas: {np.argmax(por_mes) + 1}\")\nprint(f\"Sucursal con menos ventas: {np.argmin(por_sucursal) + 1}\")\ncrec = (ventas[:, -1] - ventas[:, 0]) / ventas[:, 0] * 100\nfor i in range(f):\n    print(f\"Crecimiento sucursal {i + 1}: {crec[i]:.2f}%\")", "tests": [{"in": ["2", "3", "100", "120", "150", "200", "180", "190"], "must": ["sucursal 1\\b[^\\n]*total[^\\n\\d]*(?<![\\d.\\-])(?:369\\.99|370(?:\\.0{1,2})?|370\\.01)(?!\\d)", "sucursal 2\\b[^\\n]*total[^\\n\\d]*(?<![\\d.\\-])(?:569\\.99|570(?:\\.0{1,2})?|570\\.01)(?!\\d)", "mes 1\\b[^\\n]*total[^\\n\\d]*(?<![\\d.\\-])(?:299\\.99|300(?:\\.0{1,2})?|300\\.01)(?!\\d)", "mes 2\\b[^\\n]*total[^\\n\\d]*(?<![\\d.\\-])(?:299\\.99|300(?:\\.0{1,2})?|300\\.01)(?!\\d)", "mes 3\\b[^\\n]*total[^\\n\\d]*(?<![\\d.\\-])(?:339\\.99|340(?:\\.0{1,2})?|340\\.01)(?!\\d)", "mes con m[aá]s ventas\\D*3\\b", "sucursal con menos ventas\\D*1\\b", "crecimiento sucursal 1\\b[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:49\\.99|50(?:\\.0{1,2})?|50\\.01)(?!\\d)", "crecimiento sucursal 2\\b[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:-5\\.01|-5(?:\\.0{1,2})?|-4\\.99)(?!\\d)"], "not": [], "show": "Sucursal 1: total 370.00 · Sucursal 2: total 570.00 · Mes 1: total 300.00 · Mes 2: total 300.00 · Mes 3: total 340.00 · Mes con más ventas: 3 · Sucursal con menos ventas: 1 · Crecimiento sucursal 1: 50.00% · Crecimiento sucursal 2: -5.00%"}, {"in": ["3", "2", "50", "50", "80", "40", "10", "30"], "must": ["sucursal 1\\b[^\\n]*total[^\\n\\d]*(?<![\\d.\\-])(?:99\\.99|100(?:\\.0{1,2})?|100\\.01)(?!\\d)", "sucursal 2\\b[^\\n]*total[^\\n\\d]*(?<![\\d.\\-])(?:119\\.99|120(?:\\.0{1,2})?|120\\.01)(?!\\d)", "sucursal 3\\b[^\\n]*total[^\\n\\d]*(?<![\\d.\\-])(?:39\\.99|40(?:\\.0{1,2})?|40\\.01)(?!\\d)", "mes 1\\b[^\\n]*total[^\\n\\d]*(?<![\\d.\\-])(?:139\\.99|140(?:\\.0{1,2})?|140\\.01)(?!\\d)", "mes 2\\b[^\\n]*total[^\\n\\d]*(?<![\\d.\\-])(?:119\\.99|120(?:\\.0{1,2})?|120\\.01)(?!\\d)", "mes con m[aá]s ventas\\D*1\\b", "sucursal con menos ventas\\D*3\\b", "crecimiento sucursal 1\\b[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:-0\\.01|-?0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "crecimiento sucursal 2\\b[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:-50\\.01|-50(?:\\.0{1,2})?|-49\\.99)(?!\\d)", "crecimiento sucursal 3\\b[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:199\\.99|200(?:\\.0{1,2})?|200\\.01)(?!\\d)"], "not": [], "show": "Sucursal 1: total 100.00 · Sucursal 2: total 120.00 · Sucursal 3: total 40.00 · Mes 1: total 140.00 · Mes 2: total 120.00 · Mes con más ventas: 1 · Sucursal con menos ventas: 3 · Crecimiento sucursal 1: 0.00% · Crecimiento sucursal 2: -50.00% · Crecimiento sucursal 3: 200.00%"}, {"in": ["2", "4", "1200.5", "1300", "1250", "1500.25", "900", "950", "1000", "880"], "must": ["sucursal 1\\b[^\\n]*total[^\\n\\d]*(?<![\\d.\\-])(?:5250\\.74|5250\\.75|5250\\.76)(?!\\d)", "sucursal 2\\b[^\\n]*total[^\\n\\d]*(?<![\\d.\\-])(?:3729\\.99|3730(?:\\.0{1,2})?|3730\\.01)(?!\\d)", "mes 1\\b[^\\n]*total[^\\n\\d]*(?<![\\d.\\-])(?:2100\\.49|2100\\.50?|2100\\.51)(?!\\d)", "mes 2\\b[^\\n]*total[^\\n\\d]*(?<![\\d.\\-])(?:2249\\.99|2250(?:\\.0{1,2})?|2250\\.01)(?!\\d)", "mes 3\\b[^\\n]*total[^\\n\\d]*(?<![\\d.\\-])(?:2249\\.99|2250(?:\\.0{1,2})?|2250\\.01)(?!\\d)", "mes 4\\b[^\\n]*total[^\\n\\d]*(?<![\\d.\\-])(?:2380\\.24|2380\\.25|2380\\.26)(?!\\d)", "mes con m[aá]s ventas\\D*4\\b", "sucursal con menos ventas\\D*2\\b", "crecimiento sucursal 1\\b[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:24\\.96|24\\.97|24\\.98)(?!\\d)", "crecimiento sucursal 2\\b[^\\n]*?[^\\n\\d]*(?<![\\d.\\-])(?:-2\\.23|-2\\.22|-2\\.21)(?!\\d)"], "not": [], "show": "Sucursal 1: total 5250.75 · Sucursal 2: total 3730.00 · Mes 1: total 2100.50 · Mes 2: total 2250.00 · Mes 3: total 2250.00 · Mes 4: total 2380.25 · Mes con más ventas: 4 · Sucursal con menos ventas: 2 · Crecimiento sucursal 1: 24.97% · Crecimiento sucursal 2: -2.22%"}]}, {"id": "curva", "lvl": 3, "xp": 40, "t": "9. Curva de notas", "tag": "Nivel 3 · normalizar un arreglo", "d": "Un examen se calificó con puntajes de 0 a 100 y el docente decide <b>reescalarlos<\/b> a notas de 1.0 a 5.0: el puntaje más bajo recibe 1.0, el más alto 5.0 y los demás quedan proporcionalmente en medio: <code>nota = 1 + 4 × (p − mínimo) ÷ (máximo − mínimo)<\/code>. Si todos los puntajes son iguales, todos reciben 5.0. Pide N puntajes (enteros), calcula <b>todas<\/b> las notas con NumPy y muestra <code>Puntaje P → nota X<\/code> (en el orden original, nota con 2 decimales), <code>Aprueban: K<\/code> (nota de 3.0 o más) y <code>Promedio de notas: X<\/code>.<br><b>Entrada:<\/b> un entero N y N enteros · <b>Salida:<\/b> una línea por estudiante y dos de resumen<br><b>Ejemplo:<\/b> 40, 70, 100, 55 → <code>Puntaje 40 → nota 1.00<\/code> · <code>Puntaje 70 → nota 3.00<\/code> · <code>Puntaje 100 → nota 5.00<\/code> · <code>Puntaje 55 → nota 2.00<\/code> · <code>Aprueban: 2<\/code> · <code>Promedio de notas: 2.75<\/code>.<br>💡 <b>Pista:<\/b> con <code>.min()<\/code> y <code>.max()<\/code> obtienes los extremos; la fórmula se escribe una sola vez sobre el arreglo completo. Antes de dividir, revisa el caso en que el máximo y el mínimo coinciden.", "starter": "import numpy as np\n\nn = int(input(\"¿Cuántos puntajes? \"))\npuntajes = np.array([int(input(f\"Puntaje {i + 1}: \")) for i in range(n)])\n", "sol": "import numpy as np\n\nn = int(input(\"¿Cuántos puntajes? \"))\npuntajes = np.array([int(input(f\"Puntaje {i + 1}: \")) for i in range(n)])\nminimo = puntajes.min()\nmaximo = puntajes.max()\nif maximo == minimo:\n    notas = np.full(n, 5.0)\nelse:\n    notas = 1 + 4 * (puntajes - minimo) / (maximo - minimo)\nfor i in range(n):\n    print(f\"Puntaje {puntajes[i]} → nota {notas[i]:.2f}\")\nprint(f\"Aprueban: {(np.round(notas, 2) >= 3.0).sum()}\")\nprint(f\"Promedio de notas: {notas.mean():.2f}\")", "tests": [{"in": ["4", "40", "70", "100", "55"], "must": ["puntaje 40\\s*→\\s*nota\\s*(?<![\\d.\\-])(?:0\\.99|1(?:\\.0{1,2})?|1\\.01)(?!\\d)", "puntaje 70\\s*→\\s*nota\\s*(?<![\\d.\\-])(?:2\\.99|3(?:\\.0{1,2})?|3\\.01)(?!\\d)", "puntaje 100\\s*→\\s*nota\\s*(?<![\\d.\\-])(?:4\\.99|5(?:\\.0{1,2})?|5\\.01)(?!\\d)", "puntaje 55\\s*→\\s*nota\\s*(?<![\\d.\\-])(?:1\\.99|2(?:\\.0{1,2})?|2\\.01)(?!\\d)", "aprueban[^\\n\\d]*(?<![\\d.\\-])2(?:\\.0{1,2})?(?!\\d)", "promedio de notas[^\\n\\d]*(?<![\\d.\\-])(?:2\\.74|2\\.75|2\\.76)(?!\\d)"], "not": [], "show": "Puntaje 40 → nota 1.00 · Puntaje 70 → nota 3.00 · Puntaje 100 → nota 5.00 · Puntaje 55 → nota 2.00 · Aprueban: 2 · Promedio de notas: 2.75"}, {"in": ["3", "80", "80", "80"], "must": ["puntaje 80\\s*→\\s*nota\\s*(?<![\\d.\\-])(?:4\\.99|5(?:\\.0{1,2})?|5\\.01)(?!\\d)", "puntaje 80\\s*→\\s*nota\\s*(?<![\\d.\\-])(?:4\\.99|5(?:\\.0{1,2})?|5\\.01)(?!\\d)", "puntaje 80\\s*→\\s*nota\\s*(?<![\\d.\\-])(?:4\\.99|5(?:\\.0{1,2})?|5\\.01)(?!\\d)", "aprueban[^\\n\\d]*(?<![\\d.\\-])3(?:\\.0{1,2})?(?!\\d)", "promedio de notas[^\\n\\d]*(?<![\\d.\\-])(?:4\\.99|5(?:\\.0{1,2})?|5\\.01)(?!\\d)"], "not": [], "show": "Puntaje 80 → nota 5.00 · Puntaje 80 → nota 5.00 · Puntaje 80 → nota 5.00 · Aprueban: 3 · Promedio de notas: 5.00"}, {"in": ["6", "12", "95", "63", "48", "77", "30"], "must": ["puntaje 12\\s*→\\s*nota\\s*(?<![\\d.\\-])(?:0\\.99|1(?:\\.0{1,2})?|1\\.01)(?!\\d)", "puntaje 95\\s*→\\s*nota\\s*(?<![\\d.\\-])(?:4\\.99|5(?:\\.0{1,2})?|5\\.01)(?!\\d)", "puntaje 63\\s*→\\s*nota\\s*(?<![\\d.\\-])(?:3\\.45|3\\.46|3\\.47)(?!\\d)", "puntaje 48\\s*→\\s*nota\\s*(?<![\\d.\\-])(?:2\\.72|2\\.73|2\\.74)(?!\\d)", "puntaje 77\\s*→\\s*nota\\s*(?<![\\d.\\-])(?:4\\.12|4\\.13|4\\.14)(?!\\d)", "puntaje 30\\s*→\\s*nota\\s*(?<![\\d.\\-])(?:1\\.86|1\\.87|1\\.88)(?!\\d)", "aprueban[^\\n\\d]*(?<![\\d.\\-])3(?:\\.0{1,2})?(?!\\d)", "promedio de notas[^\\n\\d]*(?<![\\d.\\-])(?:3\\.02|3\\.03|3\\.04)(?!\\d)"], "not": [], "show": "Puntaje 12 → nota 1.00 · Puntaje 95 → nota 5.00 · Puntaje 63 → nota 3.46 · Puntaje 48 → nota 2.73 · Puntaje 77 → nota 4.13 · Puntaje 30 → nota 1.87 · Aprueban: 3 · Promedio de notas: 3.03"}]}, {"id": "bodegas", "lvl": 4, "xp": 60, "t": "★ 10. Inventario en bodegas", "tag": "Nivel 4 · matriz + while + vectorización", "d": "Una empresa guarda su inventario en una matriz de NumPy (enteros): cada fila es un producto y cada columna una bodega. Pide el número de productos P y de bodegas B, el stock fila por fila y luego el precio de cada producto. Después, repite: pide el número de producto (0 para terminar), la bodega y la cantidad (numerados desde 1). Si el producto o la bodega no existen: <code>Fuera de rango<\/code>; si esa bodega no tiene suficiente: <code>Stock insuficiente<\/code>; si no, descuenta y muestra <code>Despachado: X<\/code> (cantidad × precio). Al final, usando operaciones de NumPy, muestra <code>Producto k: N unidades<\/code> (total en todas las bodegas), <code>Valor del inventario: X<\/code> (2 decimales) y <code>Productos con bajo stock: a, b<\/code> (los que tienen menos de 10 unidades en total) o <code>ninguno<\/code>.<br><b>Entrada:<\/b> enteros y reales según el enunciado, y pedidos terminados en 0 · <b>Salida:<\/b> los mensajes de cada pedido y el resumen<br><b>Ejemplo:<\/b> 2 productos × 2 bodegas, stock 5 8 / 20 1, precios 1000 y 250; pedido 1, 2, 6 → <code>Despachado: 6000.00<\/code> · pedido 0 → <code>Producto 1: 7 unidades<\/code> · <code>Producto 2: 21 unidades<\/code> · <code>Valor del inventario: 12250.00<\/code> · <code>Productos con bajo stock: 1<\/code>.<br>💡 <b>Pista:<\/b> a una matriz de NumPy se accede con <code>m[fila, columna]<\/code> (índices desde 0) y se puede modificar con <code>-=<\/code>. Los totales por producto son una suma sobre un eje, y el valor del inventario combina esos totales con los precios en un solo producto.", "starter": "import numpy as np\n\np = int(input(\"Productos: \"))\nb = int(input(\"Bodegas: \"))\nstock = np.array([[int(input(f\"Producto {i + 1}, bodega {j + 1}: \")) for j in range(b)] for i in range(p)])\nprecios = np.array([float(input(f\"Precio del producto {i + 1}: \")) for i in range(p)])\n", "sol": "import numpy as np\n\np = int(input(\"Productos: \"))\nb = int(input(\"Bodegas: \"))\nstock = np.array([[int(input(f\"Producto {i + 1}, bodega {j + 1}: \")) for j in range(b)] for i in range(p)])\nprecios = np.array([float(input(f\"Precio del producto {i + 1}: \")) for i in range(p)])\nwhile True:\n    prod = int(input(\"Producto (0 para terminar): \"))\n    if prod == 0:\n        break\n    bod = int(input(\"Bodega: \"))\n    cant = int(input(\"Cantidad: \"))\n    if prod < 1 or prod > p or bod < 1 or bod > b:\n        print(\"Fuera de rango\")\n    elif cant > stock[prod - 1, bod - 1]:\n        print(\"Stock insuficiente\")\n    else:\n        stock[prod - 1, bod - 1] -= cant\n        print(f\"Despachado: {cant * precios[prod - 1]:.2f}\")\ntotales = stock.sum(axis=1)\nfor i in range(p):\n    print(f\"Producto {i + 1}: {totales[i]} unidades\")\nprint(f\"Valor del inventario: {totales @ precios:.2f}\")\nbajos = np.where(totales < 10)[0] + 1\nif len(bajos) == 0:\n    print(\"Productos con bajo stock: ninguno\")\nelse:\n    print(\"Productos con bajo stock:\", \", \".join(str(x) for x in bajos))", "tests": [{"in": ["2", "2", "5", "8", "20", "1", "1000", "250", "1", "2", "6", "0"], "must": ["despachado[^\\n\\d]*(?<![\\d.\\-])(?:5999\\.99|6000(?:\\.0{1,2})?|6000\\.01)(?!\\d)", "producto 1\\D*7 unidades", "producto 2\\D*21 unidades", "valor del inventario[^\\n\\d]*(?<![\\d.\\-])(?:12249\\.99|12250(?:\\.0{1,2})?|12250\\.01)(?!\\d)", "bajo stock\\W*1(?![ ,]*\\d)"], "not": ["(?:[\\s\\S]*?fuera de rango){1}", "(?:[\\s\\S]*?stock insuficiente){1}"], "show": "Despachado: 6000.00 · Producto 1: 7 unidades · Producto 2: 21 unidades · Valor del inventario: 12250.00 · Productos con bajo stock: 1"}, {"in": ["1", "3", "30", "40", "50", "99.5", "0"], "must": ["producto 1\\D*120 unidades", "valor del inventario[^\\n\\d]*(?<![\\d.\\-])(?:11939\\.99|11940(?:\\.0{1,2})?|11940\\.01)(?!\\d)", "bajo stock\\W*ninguno"], "not": ["(?:[\\s\\S]*?fuera de rango){1}", "(?:[\\s\\S]*?stock insuficiente){1}"], "show": "Producto 1: 120 unidades · Valor del inventario: 11940.00 · Productos con bajo stock: ninguno"}, {"in": ["3", "3", "10", "0", "4", "3", "3", "3", "50", "60", "70", "12000", "8500.5", "300", "2", "3", "4", "4", "1", "1", "1", "3", "5", "1", "1", "10", "3", "0", "1", "3", "2", "59", "0"], "must": ["despachado[^\\n\\d]*(?<![\\d.\\-])(?:119999\\.99|120000(?:\\.0{1,2})?|120000\\.01)(?!\\d)", "despachado[^\\n\\d]*(?<![\\d.\\-])(?:17699\\.99|17700(?:\\.0{1,2})?|17700\\.01)(?!\\d)", "producto 1\\D*4 unidades", "producto 2\\D*9 unidades", "producto 3\\D*121 unidades", "valor del inventario[^\\n\\d]*(?<![\\d.\\-])(?:160804\\.49|160804\\.50?|160804\\.51)(?!\\d)", "bajo stock\\W*1[ ,]+2(?![ ,]*\\d)", "(?:[\\s\\S]*?fuera de rango){2}", "(?:[\\s\\S]*?stock insuficiente){2}"], "not": ["(?:[\\s\\S]*?fuera de rango){3}", "(?:[\\s\\S]*?stock insuficiente){3}"], "show": "Stock insuficiente · Fuera de rango · Stock insuficiente · Despachado: 120000.00 · Fuera de rango · Despachado: 17700.00 · Producto 1: 4 unidades · Producto 2: 9 unidades · Producto 3: 121 unidades · Valor del inventario: 160804.50 · Productos con bajo stock: 1, 2"}]}, {"id": "tendencia", "lvl": 4, "xp": 60, "t": "★ 11. Tendencia de ventas", "tag": "Nivel 4 · sumas vectorizadas + fórmula de mínimos cuadrados", "d": "Una tienda quiere predecir sus ventas con una <b>recta de tendencia<\/b> y = m·x + b, donde x es el número del mes (1, 2, …, n). Por <b>mínimos cuadrados<\/b>: <code>m = (n·Σxy − Σx·Σy) ÷ (n·Σx² − (Σx)²)<\/code> y <code>b = (Σy − m·Σx) ÷ n<\/code>. Pide n (al menos 2) y las ventas de cada mes; con arreglos de NumPy calcula todas las sumas sin ciclos y muestra <code>Pendiente: X<\/code>, <code>Intercepto: X<\/code>, <code>Pronóstico mes n+1: X<\/code>, <code>Error promedio: X<\/code> (el promedio de |venta real − venta de la recta| en los n meses) y <code>Tendencia: creciente<\/code>, <code>decreciente<\/code> o <code>estable<\/code> (pendiente 0). Valores con 2 decimales.<br><b>Entrada:<\/b> un entero n y n reales · <b>Salida:<\/b> cinco líneas<br><b>Ejemplo:<\/b> 100, 120, 130, 160 → <code>Pendiente: 19.00<\/code> · <code>Intercepto: 80.00<\/code> · <code>Pronóstico mes 5: 175.00<\/code> · <code>Error promedio: 3.50<\/code> · <code>Tendencia: creciente<\/code>.<br>💡 <b>Pista:<\/b> construye el arreglo x con los números de mes; Σxy es la suma del producto elemento a elemento. <code>np.abs<\/code> trabaja sobre todo un arreglo.", "starter": "import numpy as np\n\nn = int(input(\"¿Cuántos meses? \"))\nventas = np.array([float(input(f\"Ventas del mes {i + 1}: \")) for i in range(n)])\n", "sol": "import numpy as np\n\nn = int(input(\"¿Cuántos meses? \"))\nventas = np.array([float(input(f\"Ventas del mes {i + 1}: \")) for i in range(n)])\nx = np.arange(1, n + 1)\ny = ventas\nm = (n * (x * y).sum() - x.sum() * y.sum()) / (n * (x ** 2).sum() - x.sum() ** 2)\nb = (y.sum() - m * x.sum()) / n\nerror = np.abs(y - (m * x + b)).mean()\nprint(f\"Pendiente: {m:.2f}\")\nprint(f\"Intercepto: {b:.2f}\")\nprint(f\"Pronóstico mes {n + 1}: {m * (n + 1) + b:.2f}\")\nprint(f\"Error promedio: {error:.2f}\")\nif abs(m) < 1e-9:\n    print(\"Tendencia: estable\")\nelif m > 0:\n    print(\"Tendencia: creciente\")\nelse:\n    print(\"Tendencia: decreciente\")", "tests": [{"in": ["4", "100", "120", "130", "160"], "must": ["pendiente[^\\n\\d]*(?<![\\d.\\-])(?:18\\.99|19(?:\\.0{1,2})?|19\\.01)(?!\\d)", "intercepto[^\\n\\d]*(?<![\\d.\\-])(?:79\\.99|80(?:\\.0{1,2})?|80\\.01)(?!\\d)", "pron[oó]stico mes 5\\b[^\\n\\d]*(?<![\\d.\\-])(?:174\\.99|175(?:\\.0{1,2})?|175\\.01)(?!\\d)", "error promedio[^\\n\\d]*(?<![\\d.\\-])(?:3\\.49|3\\.50?|3\\.51)(?!\\d)", "tendencia\\W*creciente"], "not": ["\\bdecreciente", "\\bestable"], "show": "Pendiente: 19.00 · Intercepto: 80.00 · Pronóstico mes 5: 175.00 · Error promedio: 3.50 · Tendencia: creciente"}, {"in": ["3", "500", "500", "500"], "must": ["pendiente[^\\n\\d]*(?<![\\d.\\-])(?:-0\\.01|-?0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "intercepto[^\\n\\d]*(?<![\\d.\\-])(?:499\\.99|500(?:\\.0{1,2})?|500\\.01)(?!\\d)", "pron[oó]stico mes 4\\b[^\\n\\d]*(?<![\\d.\\-])(?:499\\.99|500(?:\\.0{1,2})?|500\\.01)(?!\\d)", "error promedio[^\\n\\d]*(?<![\\d.\\-])(?:-0\\.01|-?0(?:\\.0{1,2})?|0\\.01)(?!\\d)", "tendencia\\W*estable"], "not": ["\\bcreciente", "\\bdecreciente"], "show": "Pendiente: 0.00 · Intercepto: 500.00 · Pronóstico mes 4: 500.00 · Error promedio: 0.00 · Tendencia: estable"}, {"in": ["6", "980.5", "950", "910.25", "905", "870", "860.75"], "must": ["pendiente[^\\n\\d]*(?<![\\d.\\-])(?:-24\\.12|-24\\.11|-24\\.10?)(?!\\d)", "intercepto[^\\n\\d]*(?<![\\d.\\-])(?:997\\.14|997\\.15|997\\.16)(?!\\d)", "pron[oó]stico mes 7\\b[^\\n\\d]*(?<![\\d.\\-])(?:828\\.34|828\\.35|828\\.36)(?!\\d)", "error promedio[^\\n\\d]*(?<![\\d.\\-])(?:7\\.04|7\\.05|7\\.06)(?!\\d)", "tendencia\\W*decreciente"], "not": ["\\bcreciente", "\\bestable"], "show": "Pendiente: -24.11 · Intercepto: 997.15 · Pronóstico mes 7: 828.35 · Error promedio: 7.05 · Tendencia: decreciente"}]}, {"id": "facturacion", "lvl": 4, "xp": 60, "t": "★ 12. Facturación con producto matricial", "tag": "Nivel 4 · @ + broadcasting + axis", "d": "Una distribuidora factura a varios clientes. Pide el número de clientes C y de productos P; luego la matriz de cantidades C × P (enteros, fila por fila), el precio de cada producto (reales) y el porcentaje de descuento de cada cliente (reales). Con NumPy y <b>sin ciclos<\/b> para los cálculos: el subtotal de cada cliente es su fila de cantidades por los precios (producto matricial); a ese subtotal se le aplica su descuento y después el IVA del 19 %. Muestra <code>Cliente k: X<\/code> (valor final), <code>Facturación total: X<\/code>, <code>Cliente que más paga: k<\/code> y <code>Producto más vendido: j<\/code> (más unidades en total). Desde 1; 2 decimales; empates: el primero.<br><b>Entrada:<\/b> enteros y reales según el enunciado · <b>Salida:<\/b> una línea por cliente y tres de resumen<br><b>Ejemplo:<\/b> 2 clientes × 2 productos: cantidades 10 5 / 2 20, precios 1000 y 300, descuentos 10 y 0 → <code>Cliente 1: 12316.50<\/code> · <code>Cliente 2: 9520.00<\/code> · <code>Facturación total: 21836.50<\/code> · <code>Cliente que más paga: 1<\/code> · <code>Producto más vendido: 2<\/code>.<br>💡 <b>Pista:<\/b> <code>matriz @ vector<\/code> da un valor por fila. Una operación entre dos arreglos del mismo tamaño se hace elemento a elemento, así que los descuentos se aplican a todos los subtotales a la vez.", "starter": "import numpy as np\n\nc = int(input(\"Clientes: \"))\np = int(input(\"Productos: \"))\ncantidades = np.array([[int(input(f\"Cliente {i + 1}, producto {j + 1}: \")) for j in range(p)] for i in range(c)])\nprecios = np.array([float(input(f\"Precio del producto {j + 1}: \")) for j in range(p)])\ndescuentos = np.array([float(input(f\"Descuento del cliente {i + 1} (%): \")) for i in range(c)])\n", "sol": "import numpy as np\n\nc = int(input(\"Clientes: \"))\np = int(input(\"Productos: \"))\ncantidades = np.array([[int(input(f\"Cliente {i + 1}, producto {j + 1}: \")) for j in range(p)] for i in range(c)])\nprecios = np.array([float(input(f\"Precio del producto {j + 1}: \")) for j in range(p)])\ndescuentos = np.array([float(input(f\"Descuento del cliente {i + 1} (%): \")) for i in range(c)])\nsubtotales = cantidades @ precios\nfinales = subtotales * (1 - descuentos / 100) * 1.19\nfor i in range(c):\n    print(f\"Cliente {i + 1}: {finales[i]:.2f}\")\nprint(f\"Facturación total: {finales.sum():.2f}\")\nprint(f\"Cliente que más paga: {np.argmax(finales) + 1}\")\nprint(f\"Producto más vendido: {np.argmax(cantidades.sum(axis=0)) + 1}\")", "tests": [{"in": ["2", "2", "10", "5", "2", "20", "1000", "300", "10", "0"], "must": ["cliente 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:12316\\.49|12316\\.50?|12316\\.51)(?!\\d)", "cliente 2\\b[^\\n\\d]*(?<![\\d.\\-])(?:9519\\.99|9520(?:\\.0{1,2})?|9520\\.01)(?!\\d)", "facturaci[oó]n total[^\\n\\d]*(?<![\\d.\\-])(?:21836\\.49|21836\\.50?|21836\\.51)(?!\\d)", "cliente que m[aá]s paga\\D*1\\b", "producto m[aá]s vendido\\D*2\\b"], "not": [], "show": "Cliente 1: 12316.50 · Cliente 2: 9520.00 · Facturación total: 21836.50 · Cliente que más paga: 1 · Producto más vendido: 2"}, {"in": ["1", "3", "1", "2", "3", "500", "250.5", "100", "5"], "must": ["cliente 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:1470\\.77|1470\\.78|1470\\.79)(?!\\d)", "facturaci[oó]n total[^\\n\\d]*(?<![\\d.\\-])(?:1470\\.77|1470\\.78|1470\\.79)(?!\\d)", "cliente que m[aá]s paga\\D*1\\b", "producto m[aá]s vendido\\D*3\\b"], "not": [], "show": "Cliente 1: 1470.78 · Facturación total: 1470.78 · Cliente que más paga: 1 · Producto más vendido: 3"}, {"in": ["3", "3", "0", "4", "1", "7", "0", "2", "3", "3", "3", "12000", "8500", "2300.5", "0", "12.5", "20"], "must": ["cliente 1\\b[^\\n\\d]*(?<![\\d.\\-])(?:43197\\.59|43197\\.60?|43197\\.61)(?!\\d)", "cliente 2\\b[^\\n\\d]*(?<![\\d.\\-])(?:92255\\.78|92255\\.79|92255\\.80?)(?!\\d)", "cliente 3\\b[^\\n\\d]*(?<![\\d.\\-])(?:65118\\.22|65118\\.23|65118\\.24)(?!\\d)", "facturaci[oó]n total[^\\n\\d]*(?<![\\d.\\-])(?:200571\\.60?|200571\\.61|200571\\.62)(?!\\d)", "cliente que m[aá]s paga\\D*2\\b", "producto m[aá]s vendido\\D*1\\b"], "not": [], "show": "Cliente 1: 43197.60 · Cliente 2: 92255.79 · Cliente 3: 65118.23 · Facturación total: 200571.61 · Cliente que más paga: 2 · Producto más vendido: 1"}]}];
+const HARNESS_PY = "import builtins, io, contextlib, traceback, sys\nclass CicloInfinito(Exception):\n    pass\nclass DemasiadaSalida(Exception):\n    pass\nLP_MAX_PASOS = 3000000\nLP_MAX_SALIDA = 30000\nclass LP_Salida(io.StringIO):\n    def write(self, s):\n        if self.tell() + len(s) > LP_MAX_SALIDA:\n            super().write(s[:max(0, LP_MAX_SALIDA - self.tell())])\n            raise DemasiadaSalida(\"tu programa imprimió demasiado texto (más de 30 000 caracteres): ¿quedó en un ciclo infinito?\")\n        return super().write(s)\ndef __run_user(src, inputs, echo):\n    q = list(inputs)\n    def _inp(prompt=''):\n        if not q:\n            raise EOFError(\"input() pidió un dato, pero no hay más entradas\")\n        v = q.pop(0)\n        if echo:\n            print(str(prompt) + v)\n        return v\n    builtins.input = _inp\n    buf = LP_Salida()\n    pasos = [0]\n    def _local(frame, event, arg):\n        if event == 'line':\n            pasos[0] += 1\n            if pasos[0] > LP_MAX_PASOS:\n                raise CicloInfinito(\"tu programa ejecutó más de 3 millones de pasos sin terminar: revisa que la condición del ciclo pueda volverse False\")\n        return _local\n    def _global(frame, event, arg):\n        if frame.f_code.co_filename == \"tu_programa.py\":\n            return _local\n        return None\n    etype, err, line = \"\", \"\", None\n    try:\n        code = compile(src, \"tu_programa.py\", \"exec\")\n        sys.settrace(_global)\n        try:\n            with contextlib.redirect_stdout(buf):\n                exec(code, {\"__name__\": \"__main__\"})\n        finally:\n            sys.settrace(None)\n    except SyntaxError as e:\n        etype, err, line = type(e).__name__, str(e.msg), e.lineno\n    except BaseException as e:\n        etype, err = type(e).__name__, str(e)\n        for fr in traceback.extract_tb(e.__traceback__):\n            if fr.filename == \"tu_programa.py\":\n                line = fr.lineno\n    return [buf.getvalue(), etype, err, line]\n";
+const EXTRA_CODE = {
+  listavs:{code:'import numpy as np\n\nlista = [10, 20, 30]\narreglo = np.array(lista)\nprint(lista * 2)        # repite la lista\nprint(arreglo * 2)      # multiplica cada elemento\nprint(arreglo + 5)      # suma 5 a cada elemento\nprint(arreglo.shape, arreglo.dtype, arreglo.size)\n', stdin:''},
+  crear:{code:'import numpy as np\n\nprint(np.arange(0, 20, 5))\nprint(np.linspace(0, 1, 5))\nprint(np.zeros((2, 3)))\nprint(np.ones(4))\nprint(np.full(3, 7))\n', stdin:''},
+  vector:{code:'import numpy as np\n\nprecios = np.array([12000, 45000, 8900, 23000])\ncon_iva = precios * 1.19\ndescuento = np.where(precios >= 20000, 0.10, 0.0)\nfinal = con_iva * (1 - descuento)\nprint(con_iva)\nprint(final.round(2))\nprint(f"Total a pagar: {final.sum():.2f}")\n', stdin:''},
+  filtros:{code:'import numpy as np\n\ntemps = np.array([24.5, 19.0, 27.3, 22.1, 18.4, 29.0, 21.7])\ncalurosos = temps > 25\nprint(calurosos)\nprint(temps[calurosos])\nprint("Días calurosos:", calurosos.sum())\nprint("Posiciones:", np.where(calurosos)[0])\nprint(temps[1:4], temps[::-1])\n', stdin:''},
+  estadistica:{code:'import numpy as np\n\nnotas = np.array([4.5, 3.2, 5.0, 2.8, 3.9, 4.1])\nprint("Promedio:", notas.mean().round(2))\nprint("Mediana:", np.median(notas))\nprint("Máx:", notas.max(), "en la posición", notas.argmax())\nprint("Desviación:", notas.std().round(2))\nprint("Ordenadas:", np.sort(notas))\nprint("Acumulado:", np.cumsum(notas))\n', stdin:''},
+  matriz:{code:'import numpy as np\n\nventas = np.array([[120, 95, 140],\n                   [80, 110, 100]])\nprint(ventas.shape)\nprint(ventas[1, 2])          # fila 1, columna 2\nprint(ventas[:, 0])          # primera columna\nprint(ventas.sum(axis=1))    # total por sucursal (filas)\nprint(ventas.sum(axis=0))    # total por mes (columnas)\nprint(ventas.T)              # transpuesta\n', stdin:''},
+  matmul:{code:'import numpy as np\n\ncantidades = np.array([[2, 1, 0],\n                       [0, 3, 4]])   # 2 clientes × 3 productos\nprecios = np.array([3500, 1200, 800])\nprint(cantidades * 2)                 # elemento a elemento\nprint(cantidades @ precios)           # total por cliente\n', stdin:''},
+  libre:{code:'# Zona libre: experimenta con NumPy\nimport numpy as np\n\na = np.arange(1, 11)\nprint(a)\nprint(a[a % 2 == 0] ** 2)\n', stdin:''}
+};
+const LEVELS=['Novato de NumPy','Aprendiz vectorial','Domador de máscaras','Maestro de los ejes','Científico de datos'];
+const PER=160;
+const BADGES=[
+  {icon:'🥉',label:'Primer paso',test:()=>S.xp>=30},
+  {icon:'🐍',label:'¡Hola, NumPy!',test:()=>!!S.flags.firstRun},
+  {icon:'🏭',label:'Fabricante',test:()=>!!S.flags.factory},
+  {icon:'🔬',label:'Explorador',test:()=>!!S.flags.explorer},
+  {icon:'🎭',label:'Enmascarado',test:()=>!!S.flags.masks},
+  {icon:'🧭',label:'Navegante de ejes',test:()=>!!S.flags.axes},
+  {icon:'🧩',label:'Ensamblador',test:()=>!!S.flags.builder},
+  {icon:'🕵️',label:'Cazaerrores',test:()=>!!S.flags.hunter},
+  {icon:'🏅',label:'Vectorizador',test:()=>RETOS.filter(r=>S.retos[r.id]).length>=6},
+  {icon:'🚀',label:'Científico de datos',test:()=>RETOS.filter(r=>r.lvl===4).every(r=>S.retos[r.id])},
+  {icon:'🧠',label:'Leyenda',test:()=>RETOS.every(r=>S.retos[r.id])}
+];
+const LVNAME={1:'🟢 Nivel 1 · Calentamiento',2:'🟡 Nivel 2 · Intermedio',3:'🟠 Nivel 3 · Avanzado',4:'🔴 Nivel 4 · Reto ★'};
+const LVDESC={1:'Crear arreglos y aplicar operaciones y estadísticas a todo el arreglo.',2:'Máscaras booleanas, np.where y potencias vectorizadas.',3:'Matrices 2D, producto matricial, axis y normalización.',4:'Programas completos con matrices, while y fórmulas de análisis de datos. ¡Para valientes!'};
+
+/* ===================== Progreso / XP ===================== */
+const KEY=CFG.key;
+function freshS(){ return {xp:0, awarded:[], flags:{}, retos:{}, sol:{}, cov:{}, desk:{}, rng:{}, pz:{}, trace:{}, interp:{}}; }
+let S=freshS();
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null'); if(s&&typeof s==='object') S=Object.assign(freshS(),s);}catch(e){}
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} }
+const RESET_HOOKS=[];
+function renderXP(){
+  const lvl=Math.min(LEVELS.length,Math.floor(S.xp/PER)+1);
+  document.getElementById('lvl').textContent=lvl;
+  document.getElementById('lvlname').textContent=LEVELS[lvl-1];
+  document.getElementById('xp').textContent=S.xp;
+  document.getElementById('xpfill').style.width=(lvl===LEVELS.length?100:Math.round((S.xp%PER)/PER*100))+'%';
+  const box=document.getElementById('badges'); box.innerHTML='';
+  BADGES.forEach(b=>{const e=document.createElement('span');e.className='bdg'+(b.test()?' on':'');e.textContent=b.icon+' '+b.label;e.title=b.hint||'';box.appendChild(e);});
+}
+let popT=null;
+function pop(t){const p=document.getElementById('xppop');p.textContent=t;p.classList.add('show');clearTimeout(popT);popT=setTimeout(()=>p.classList.remove('show'),1600);}
+function addXP(key,amt,label){
+  if(S.awarded.includes(key))return false;
+  S.awarded.push(key); S.xp+=amt; save(); renderXP(); pop('+'+amt+' XP'+(label?' · '+label:'')); return true;
+}
+function flag(name,label){ if(S.flags[name])return; S.flags[name]=true; save(); renderXP(); if(label)setTimeout(()=>pop('🏅 Insignia: '+label),1700); }
+document.getElementById('resetProg').addEventListener('click',()=>{
+  if(!confirm('¿Borrar tu XP, insignias y retos superados en este navegador?'))return;
+  S=freshS(); save(); renderXP(); RESET_HOOKS.forEach(f=>{try{f();}catch(e){console.warn(e);}});
+});
+renderXP();
+
+/* ===================== Pestañas ===================== */
+const tabs=document.querySelectorAll('#tabs button');
+function showTab(name){
+  tabs.forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('active',s.id===name));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+tabs.forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+
+/* ===================== Quiz genérico ===================== */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function makeQuiz(cfg){
+  document.getElementById(cfg.totalId).textContent=cfg.data.length;
+  function build(){
+    const box=document.getElementById(cfg.boxId); box.innerHTML='';
+    let answered=0, correct=0;
+    document.getElementById(cfg.scoreId).textContent='0';
+    cfg.data.forEach((q,i)=>{
+      const c=document.createElement('div'); c.className='q';
+      c.innerHTML='<span class="tag">'+(q.tag||('#'+(i+1)))+'</span>'+(q.scn?'<p class="scn">'+q.scn+'</p>':'')+(q.code?'<pre>'+esc(q.code)+'</pre>':'');
+      const opts=document.createElement('div'); opts.className='opts';
+      const fb=document.createElement('div'); fb.className='feedback';
+      let done=false;
+      q.opts.forEach(o=>{
+        const b=document.createElement('button'); b.className='opt'; b.textContent=o;
+        b.addEventListener('click',()=>{
+          if(done)return; done=true; answered++;
+          opts.querySelectorAll('.opt').forEach(x=>x.classList.add('locked'));
+          if(o===q.ans){ b.classList.add('correct'); correct++; document.getElementById(cfg.scoreId).textContent=correct;
+            fb.textContent='✔ ¡Correcto! '+q.why; fb.className='feedback ok'; addXP(cfg.boxId+':'+i,cfg.xp||10); }
+          else{ b.classList.add('wrong'); opts.querySelectorAll('.opt').forEach(x=>{if(x.textContent===q.ans)x.classList.add('correct');});
+            fb.textContent='✘ Respuesta: '+q.ans+'. '+q.why; fb.className='feedback no'; }
+          if(answered===cfg.data.length && cfg.onDone) cfg.onDone(correct);
+        });
+        opts.appendChild(b);
+      });
+      c.appendChild(opts); c.appendChild(fb); box.appendChild(c);
+    });
+  }
+  document.getElementById(cfg.resetId).addEventListener('click',build); build();
+}
+/* ===================== Componentes: simulador paso a paso ===================== */
+function makeSim(cfg){
+  // cfg: {root, progs:{id:{title,code:[...],inputs:[...],trace(v)}} , xp, onAll}
+  const root=document.getElementById(cfg.root);
+  root.innerHTML='<div class="simbar"><select aria-label="Programa"></select><span class="itc">'+(cfg.itLabel||'Vuelta')+': <b>–</b></span></div>'+
+    '<div class="simin"></div>'+
+    '<div class="btns" style="margin-top:0"><button class="btn sstep">▶ Paso</button><button class="btn ghost sauto">⏩ Automático</button><button class="btn ghost sreset">↺ Reiniciar</button></div>'+
+    '<div class="simgrid" style="margin-top:8px"><div class="scode"></div><div><div class="vars"><table><thead><tr><th>Variable</th><th>Valor</th></tr></thead><tbody></tbody></table></div>'+
+    '<label style="display:block;font-size:.78rem;color:var(--muted);margin:8px 0 4px;font-weight:600">🖥️ Salida</label><pre class="term sout" style="min-height:90px"></pre><div class="snote"></div></div></div>';
+  const sel=root.querySelector('select'), inBox=root.querySelector('.simin'), codeBox=root.querySelector('.scode'), tb=root.querySelector('tbody'),
+        out=root.querySelector('.sout'), note=root.querySelector('.snote'), itc=root.querySelector('.itc b'),
+        bStep=root.querySelector('.sstep'), bAuto=root.querySelector('.sauto'), bReset=root.querySelector('.sreset');
+  let id=Object.keys(cfg.progs)[0], steps=[], k=-1, timer=null, prevVars={}; let lastV={};
+  Object.entries(cfg.progs).forEach(([key,p])=>{const o=document.createElement('option');o.value=key;o.textContent=(S.trace[cfg.root+':'+key]?'✅ ':'')+p.title;sel.appendChild(o);});
+  function renderInputs(){ const p=cfg.progs[id]; inBox.innerHTML='';
+    (p.inputs||[]).forEach(inp=>{ const w=document.createElement('label'); w.textContent=inp.label+' ';
+      const el=document.createElement('input'); el.type=inp.type||'text'; el.value=inp.value; el.dataset.id=inp.id; if(inp.w) el.style.width=inp.w;
+      el.addEventListener('change',reset); w.appendChild(el); inBox.appendChild(w); }); }
+  function renderCode(){ const p=cfg.progs[id]; codeBox.innerHTML='';
+    (typeof p.code==='function'?p.code(lastV):p.code).forEach((t,i)=>{ const d=document.createElement('div'); d.className='sl'; d.innerHTML='<span class="ln">'+(i+1)+'</span><span class="tx">'+esc(t)+'</span>'; codeBox.appendChild(d); }); }
+  function stop(){ if(timer){clearInterval(timer);timer=null;bAuto.textContent='⏩ Automático';} }
+  function reset(){ stop(); const p=cfg.progs[id], v={}; inBox.querySelectorAll('[data-id]').forEach(el=>v[el.dataset.id]=el.value); lastV=v;
+    try{ steps=p.trace(v); }catch(e){ steps=[]; }
+    k=-1; prevVars={}; renderCode(); tb.innerHTML='<tr><td colspan="2" style="color:var(--muted)">Pulsa ▶ Paso para empezar</td></tr>'; out.textContent=''; note.textContent=''; itc.textContent='–'; bStep.disabled=false; }
+  function show(){
+    const st=steps[k], rows=codeBox.children;
+    [...rows].forEach((r,i)=>{ r.classList.remove('cur','run','true','false'); const s=r.querySelector('.st'); if(s) s.remove(); });
+    const r=rows[st.l]; r.classList.add('cur', st.s||'run');
+    if(st.tag){ const s=document.createElement('span'); s.className='st'; s.textContent=st.tag; r.appendChild(s); }
+    r.scrollIntoView({block:'nearest'});
+    tb.innerHTML=''; Object.entries(st.vars||{}).forEach(([n,val])=>{ const tr=document.createElement('tr'); const ch=prevVars[n]!==undefined&&prevVars[n]!==val || prevVars[n]===undefined;
+      tr.innerHTML='<td class="mono">'+esc(n)+'</td><td class="mono'+(ch?' chg':'')+'">'+esc(val)+'</td>'; tb.appendChild(tr); });
+    prevVars=Object.assign({},st.vars||{});
+    if(st.out!==undefined) out.textContent+=st.out;
+    note.innerHTML=st.note?('💬 '+st.note):'';
+    itc.textContent=st.it===undefined?(itc.textContent):String(st.it);
+    if(k===steps.length-1){ bStep.disabled=true; stop(); note.innerHTML+=(note.innerHTML?'<br>':'')+'🏁 <b>Fin del programa.</b>';
+      const key=cfg.root+':'+id; if(!S.trace[key]){ S.trace[key]=true; save(); [...sel.options].forEach(o=>{ if(o.value===id && !o.textContent.startsWith('✅')) o.textContent='✅ '+o.textContent; }); }
+      addXP('trace:'+key,cfg.xp||15,'programa recorrido');
+      if(Object.keys(cfg.progs).every(x=>S.trace[cfg.root+':'+x]) && cfg.onAll) cfg.onAll(); }
+  }
+  function step(){ if(k<steps.length-1){ k++; show(); } }
+  bStep.addEventListener('click',step);
+  bAuto.addEventListener('click',()=>{ if(timer){stop();return;} if(k>=steps.length-1) reset(); bAuto.textContent='⏸ Pausa'; timer=setInterval(()=>{ if(k>=steps.length-1){stop();return;} step(); },650); });
+  bReset.addEventListener('click',reset);
+  sel.addEventListener('change',()=>{ id=sel.value; renderInputs(); reset(); });
+  renderInputs(); reset();
+  return {load(x){ id=x; sel.value=x; renderInputs(); reset(); root.scrollIntoView({behavior:'smooth'}); }};
+}
+
+/* ===================== Componentes: arma el programa (Parsons) ===================== */
+function makeParsons(cfg){
+  // cfg: {root, puzzles:[{id,title,goal,lines:[...],valid:[[...]]}], xp, onAll}
+  const root=document.getElementById(cfg.root);
+  cfg.puzzles.forEach(pz=>{
+    const box=document.createElement('div'); box.className='pz';
+    box.innerHTML='<h3 style="margin:0 0 4px">'+pz.title+(S.pz[pz.id]?' <span class="ok">✔</span>':'')+'</h3><p style="margin:2px 0 8px">'+pz.goal+'</p>'+
+      '<div class="pzgrid"><div><div class="pzlab">🧩 Piezas (toca para usar)</div><div class="pzpool"></div></div><div><div class="pzlab">📝 Tu programa (toca una línea para devolverla)</div><div class="pzprog"></div></div></div>'+
+      '<div class="btns"><button class="btn pzchk">✅ Comprobar</button><button class="btn ghost pzrst">↺ Reiniciar</button></div><div class="feedback pzfb"></div>';
+    root.appendChild(box);
+    const pool=box.querySelector('.pzpool'), prog=box.querySelector('.pzprog'), fb=box.querySelector('.pzfb');
+    let order=[];
+    const valid=pz.valid||[pz.lines.map((_,i)=>i)];
+    function build(){ order=[]; fb.textContent=''; fb.className='feedback pzfb'; pool.innerHTML=''; prog.innerHTML='';
+      const idx=pz.lines.map((_,i)=>i); for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
+      idx.forEach(i=>{ const b=document.createElement('button'); b.className='pzline'; b.dataset.i=i; b.textContent=pz.lines[i];
+        b.addEventListener('click',()=>{ if(b.classList.contains('used'))return; b.classList.add('used'); order.push(i); render(); }); pool.appendChild(b); });
+      render(); }
+    function render(){ prog.innerHTML=''; if(!order.length){ prog.innerHTML='<div class="pzempty">— vacío —</div>'; }
+      order.forEach((i,pos)=>{ const d=document.createElement('div'); d.className='pzline in'; d.textContent=pz.lines[i];
+        d.addEventListener('click',()=>{ order.splice(pos,1); pool.querySelector('[data-i="'+i+'"]').classList.remove('used'); render(); }); prog.appendChild(d); }); }
+    box.querySelector('.pzchk').addEventListener('click',()=>{
+      if(order.length<pz.lines.length){ fb.textContent='Usa todas las piezas antes de comprobar.'; fb.className='feedback no pzfb'; return; }
+      const ok=valid.some(v=>v.every((x,j)=>x===order[j]));
+      const ref=valid[0]; [...prog.children].forEach((d,j)=>d.classList.add(ref[j]===order[j]||ok?'good':'bad'));
+      if(ok){ fb.textContent='🎉 ¡Programa armado correctamente! Fíjate en la sangría: decide qué está dentro de cada ciclo.'; fb.className='feedback ok pzfb';
+        if(!S.pz[pz.id]){ S.pz[pz.id]=true; save(); box.querySelector('h3').innerHTML=pz.title+' <span class="ok">✔</span>'; }
+        addXP('pz:'+pz.id,cfg.xp||15,'programa armado');
+        if(cfg.puzzles.every(p=>S.pz[p.id]) && cfg.onAll) cfg.onAll(); }
+      else { fb.textContent='Aún no. Las líneas en rojo no están donde deberían (compáralas con el orden en que Python las necesita: primero se prepara, luego se repite, al final se muestra).'; fb.className='feedback no pzfb'; }
+    });
+    box.querySelector('.pzrst').addEventListener('click',build);
+    build();
+  });
+}
+
+/* ===================== Utilidades ===================== */
+function fmtN(v){ if(typeof v==='boolean') return v?'True':'False'; if(Number.isInteger(v)&&!v.__f) return String(v); const s=(Math.round(v*10000)/10000).toString(); return s.includes('.')?s:s+'.'; }
+function F(x){ const o=new Number(x); o.__f=true; return o; }  // marca de flotante
+function show(v){ if(v instanceof Number) { const x=+v; return Number.isInteger(x)?x+'.':(Math.round(x*10000)/10000).toString(); } return fmtN(v); }
+function cellsHTML(arr,sel){ return arr.map((v,i)=>'<div class="cell'+(sel&&sel.includes(i)?' sel':'')+'"><span class="v">'+esc(show(v))+'</span><span class="ip">'+i+'</span></div>').join(''); }
+
+/* ===================== Quizzes ===================== */
+makeQuiz({boxId:'lvQuiz',scoreId:'lvScore',totalId:'lvTotal',resetId:'lvReset',xp:8,data:[
+  {code:'lista = [1, 2, 3]\nprint(lista * 2)',opts:['[2, 4, 6]','[1, 2, 3, 1, 2, 3]','[2 4 6]'],ans:'[1, 2, 3, 1, 2, 3]',why:'Con una lista, * repite sus elementos.'},
+  {code:'a = np.array([1, 2, 3])\nprint(a * 2)',opts:['[1 2 3 1 2 3]','[2 4 6]','[2, 4, 6]'],ans:'[2 4 6]',why:'Con un arreglo, * multiplica cada elemento. NumPy imprime sin comas.'},
+  {code:'print([1, 2] + [3, 4])',opts:['[4, 6]','[1, 2, 3, 4]','[4 6]'],ans:'[1, 2, 3, 4]',why:'+ entre listas las pega (concatena).'},
+  {code:'print(np.array([1, 2]) + np.array([3, 4]))',opts:['[1 2 3 4]','[4 6]','[4, 6]'],ans:'[4 6]',why:'+ entre arreglos suma elemento a elemento: 1+3 y 2+4.'},
+  {code:'print([1, 2, 3] + 1)',opts:['[2, 3, 4]','[1, 2, 3, 1]','TypeError'],ans:'TypeError',why:'A una lista no se le puede sumar un número. Con np.array sí: [2 3 4].'},
+  {code:'a = np.array([1, 2.5, 3])\nprint(a.dtype)',opts:['int64','float64','mixto'],ans:'float64',why:'Un arreglo tiene un solo tipo: como hay un decimal, todos se vuelven reales.'}
+]});
+makeQuiz({boxId:'fbQuiz',scoreId:'fbScore',totalId:'fbTotal',resetId:'fbReset',xp:10,onDone:()=>flag('factory','Fabricante'),data:[
+  {tag:'Caja 1',code:'[1 3 5 7 9]',opts:['np.arange(1, 10, 2)','np.arange(1, 9, 2)','np.linspace(1, 9, 2)'],ans:'np.arange(1, 10, 2)',why:'arange no incluye el fin: con fin 9 se detendría en 7.'},
+  {tag:'Caja 2',code:'[0.   0.25 0.5  0.75 1.  ]',opts:['np.arange(0, 1, 0.25)','np.linspace(0, 1, 5)','np.linspace(0, 1, 4)'],ans:'np.linspace(0, 1, 5)',why:'linspace reparte 5 puntos e incluye el 1. arange(0, 1, 0.25) se detiene en 0.75.'},
+  {tag:'Caja 3',code:'[[0. 0. 0.]\n [0. 0. 0.]]',opts:['np.zeros((2, 3))','np.zeros((3, 2))','np.zeros(2, 3)'],ans:'np.zeros((2, 3))',why:'2 filas y 3 columnas, con la forma entre paréntesis dobles. np.zeros(2, 3) es un error.'},
+  {tag:'Caja 4',code:'[7 7 7 7]',opts:['np.ones(4) * 7','np.full(4, 7)','np.full(7, 4)'],ans:'np.full(4, 7)',why:'full(forma, valor). ones(4) * 7 daría reales: [7. 7. 7. 7.].'},
+  {tag:'Caja 5',code:'[10  8  6  4  2]',opts:['np.arange(10, 0, -2)','np.arange(10, 2, -2)','np.arange(2, 11, 2)'],ans:'np.arange(10, 0, -2)',why:'Paso negativo; el fin 0 no se incluye. Con fin 2, se detendría en 4.'},
+  {tag:'Caja 6',code:'np.ones((3, 4)).shape',opts:['(3, 4)','(4, 3)','12'],ans:'(3, 4)',why:'shape da (filas, columnas). El total de elementos (12) es .size.'}
+]});
+makeQuiz({boxId:'opQuiz',scoreId:'opScore',totalId:'opTotal',resetId:'opReset',xp:10,data:[
+  {code:'a = np.array([10, 20, 30])\nprint(a / 10)',opts:['[1 2 3]','[1. 2. 3.]','[0.1 0.2 0.3]'],ans:'[1. 2. 3.]',why:'La división / siempre produce reales.'},
+  {code:'a = np.array([2, 4, 6])\nb = np.array([1, 2, 3])\nprint(a * b)',opts:['28','[ 2  8 18]','[3 6 9]'],ans:'[ 2  8 18]',why:'Elemento a elemento: 2·1, 4·2, 6·3. (El producto punto, 28, se obtiene con a @ b.)'},
+  {code:'p = np.array([100, 200])\nprint(p * 1.19)',opts:['[119. 238.]','[100, 200, 1.19]','[119 238]'],ans:'[119. 238.]',why:'El IVA se aplica a todos los precios a la vez.'},
+  {code:'a = np.array([1, 2, 3])\nprint(a ** 2 + 1)',opts:['[ 2  5 10]','[3 5 7]','[ 4  9 16]'],ans:'[ 2  5 10]',why:'Primero la potencia (1, 4, 9) y luego + 1.'},
+  {code:'a = np.array([5, 15, 25])\nprint(np.where(a > 10, a * 2, 0))',opts:['[ 0 30 50]','[10 30 50]','[False True True]'],ans:'[ 0 30 50]',why:'Donde a > 10 toma a * 2; donde no, 0.'}
+]});
+makeQuiz({boxId:'mkQuiz',scoreId:'mkScore',totalId:'mkTotal',resetId:'mkReset',xp:10,onDone:()=>flag('masks','Enmascarado'),data:[
+  {tag:'Resultado: [45 30 50]',opts:['v[v > 20]','v[v >= 18]','v[v > 30]'],ans:'v[v > 20]',why:'Los mayores que 20: 45, 30 y 50. Con >= 18 también entraría el 18.'},
+  {tag:'Resultado: [12  7 18]',opts:['v[v <= 12]','v[v < 20]','v[v < 18]'],ans:'v[v < 20]',why:'Los menores que 20, en su orden original.'},
+  {tag:'Resultado: [45 50]',opts:['v[v < 40]','v[v >= 30]','v[v > 40]'],ans:'v[v > 40]',why:'v >= 30 también incluiría el 30.'},
+  {tag:'Resultado: [12 30 18 50]',opts:['v[v % 2 == 0]','v[v % 2 == 1]','v[v > 10]'],ans:'v[v % 2 == 0]',why:'Los pares: el residuo entre 2 es 0.'},
+  {tag:'Resultado: 3',opts:['(v > 20).sum()','v[v > 20].sum()','len(v) > 20'],ans:'(v > 20).sum()',why:'Sumar una máscara cuenta los True. v[v > 20].sum() daría 125.'},
+  {tag:'Resultado: [30 18]',opts:['v[(v > 15) & (v < 40)]','v[(v > 15) | (v < 40)]','v[v > 15 and v < 40]'],ans:'v[(v > 15) & (v < 40)]',why:'& exige las dos condiciones. | toma todos, y and produce ValueError.'}
+]});
+makeQuiz({boxId:'axqQuiz',scoreId:'axqScore',totalId:'axqTotal',resetId:'axqReset',xp:10,data:[
+  {code:'print(m.sum(axis=0))',opts:['[ 6 15]','[5 7 9]','21'],ans:'[5 7 9]',why:'axis=0 suma hacia abajo: un total por columna (1+4, 2+5, 3+6).'},
+  {code:'print(m.sum(axis=1))',opts:['[ 6 15]','[5 7 9]','21'],ans:'[ 6 15]',why:'axis=1 suma hacia la derecha: un total por fila.'},
+  {code:'print(m[:, 1])',opts:['[4 5 6]','[2 5]','[1 2 3]'],ans:'[2 5]',why:'Todas las filas (:) de la columna 1.'},
+  {code:'print(m.shape)',opts:['(3, 2)','(2, 3)','6'],ans:'(2, 3)',why:'2 filas y 3 columnas.'},
+  {code:'print(m @ np.array([1, 0, 1]))',opts:['[ 4 10]','[1 0 3]','[[1 0 3] [4 0 6]]'],ans:'[ 4 10]',why:'Cada fila por el vector: 1+0+3 = 4 y 4+0+6 = 10.'}
+]});
+const CE=['TypeError','ValueError','IndexError','Error lógico (sin mensaje)','Funciona bien'];
+makeQuiz({boxId:'ceQuiz',scoreId:'ceScore',totalId:'ceTotal',resetId:'ceReset',xp:10,onDone:()=>flag('hunter','Cazaerrores'),data:[
+  {tag:'Fragmento 1',code:'z = np.zeros(2, 3)',opts:CE,ans:'TypeError',why:'"Cannot interpret \'3\' as a data type": la forma va entre paréntesis dobles, np.zeros((2, 3)).'},
+  {tag:'Fragmento 2',code:'a = np.array([1, 2, 3])\nb = np.array([1, 2])\nprint(a + b)',opts:CE,ans:'ValueError',why:'"operands could not be broadcast together": los tamaños no coinciden.'},
+  {tag:'Fragmento 3 · se quería: [2.75 20 30]',code:'a = np.array([10, 20, 30])\na[0] = 2.75\nprint(a)',opts:CE,ans:'Error lógico (sin mensaje)',why:'El arreglo es de enteros: 2.75 se trunca a 2 y queda [ 2 20 30]. Debía crearse con reales.'},
+  {tag:'Fragmento 4',code:'m = np.array([[1, 2], [3, 4]])\nprint(m[2, 0])',opts:CE,ans:'IndexError',why:'Solo hay filas 0 y 1.'},
+  {tag:'Fragmento 5',code:'lista = [10, 20, 30]\nprint(lista * 1.19)',opts:CE,ans:'TypeError',why:'"can\'t multiply sequence by non-int": una lista no se multiplica por un real. Conviértela con np.array().'},
+  {tag:'Fragmento 6',code:'v = np.array([5, 15, 25])\nprint(v[v > 10 and v < 30])',opts:CE,ans:'ValueError',why:'"The truth value of an array … is ambiguous": se usa (v > 10) & (v < 30).'},
+  {tag:'Fragmento 7 · se quería: total de cada fila',code:'m = np.array([[1, 2, 3], [4, 5, 6]])\nprint(m.sum(axis=0))',opts:CE,ans:'Error lógico (sin mensaje)',why:'axis=0 da el total de cada COLUMNA ([5 7 9]). Para filas: axis=1.'},
+  {tag:'Fragmento 8',code:'notas = np.array([4.5, 3.0, 2.0])\nprint((notas >= 3).sum())',opts:CE,ans:'Funciona bien',why:'Cuenta las notas de 3 o más: 2.'}
+]});
+
+/* ===================== Explorador de arreglos ===================== */
+(function(){
+  const A=[12,45,7,30,18,50];
+  const OPS=[
+    ['a * 2',()=>({arr:A.map(x=>x*2)}),'Cada elemento se multiplica por 2.'],
+    ['a + 10',()=>({arr:A.map(x=>x+10)}),'Se suma 10 a cada elemento.'],
+    ['a / 2',()=>({arr:A.map(x=>F(x/2))}),'La división siempre da reales (por eso los puntos).'],
+    ['a * 1.19',()=>({arr:A.map(x=>F(x*1.19))}),'El IVA del 19 % aplicado a todos.'],
+    ['a ** 2',()=>({arr:A.map(x=>x*x)}),'Cada elemento al cuadrado.'],
+    ['a > 20',()=>({arr:A.map(x=>x>20),sel:A.map((x,i)=>x>20?i:-1)}),'Una máscara: True donde se cumple.'],
+    ['a[a > 20]',()=>({arr:A.filter(x=>x>20),sel:A.map((x,i)=>x>20?i:-1)}),'Solo los elementos con True en la máscara.'],
+    ['a % 2 == 0',()=>({arr:A.map(x=>x%2===0),sel:A.map((x,i)=>x%2===0?i:-1)}),'¿Es par?'],
+    ['a[1:4]',()=>({arr:A.slice(1,4),sel:[1,2,3]}),'Slicing: índices 1, 2 y 3.'],
+    ['a[::-1]',()=>({arr:A.slice().reverse()}),'Al revés.'],
+    ['np.where(a > 20, a, 0)',()=>({arr:A.map(x=>x>20?x:0)}),'Conserva los mayores que 20 y pone 0 en los demás.'],
+    ['np.sort(a)',()=>({arr:A.slice().sort((x,y)=>x-y)}),'Copia ordenada (a no cambia).'],
+    ['np.cumsum(a)',()=>{let s=0; return {arr:A.map(x=>s+=x)};},'Suma acumulada: cada posición suma todo lo anterior.'],
+    ['a.sum()',()=>({val:A.reduce((x,y)=>x+y,0)}),'Un solo número: la suma total.'],
+    ['a.mean()',()=>({val:F(A.reduce((x,y)=>x+y,0)/A.length)}),'El promedio (real).'],
+    ['a.max()',()=>({val:Math.max(...A)}),'El mayor.'],
+    ['a.argmax()',()=>({val:A.indexOf(Math.max(...A)),sel:[A.indexOf(Math.max(...A))]}),'La POSICIÓN del mayor (desde 0).'],
+    ['a.reshape(2, 3)',()=>({mat:[A.slice(0,3),A.slice(3)]}),'Los mismos 6 datos en forma de matriz 2 × 3.']
+  ];
+  const boxA=document.getElementById('exA'), ops=document.getElementById('exOps'), expr=document.getElementById('exExpr'), out=document.getElementById('exOut'), note=document.getElementById('exNote'), cnt=document.getElementById('exCount');
+  boxA.innerHTML=cellsHTML(A);
+  function count(){ const n=OPS.filter((_,k)=>S.flags['ex_'+k]).length; cnt.textContent=n; return n; }
+  OPS.forEach(([lab,fn,nt],k)=>{ const b=document.createElement('button'); b.className='btn ghost mono'; b.textContent=lab;
+    b.addEventListener('click',()=>{ const r=fn(); ops.querySelectorAll('.btn').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+      boxA.innerHTML=cellsHTML(A,(r.sel||[]).filter(i=>i>=0));
+      expr.innerHTML=lab+'  →  ';
+      if(r.arr){ out.innerHTML=cellsHTML(r.arr); expr.innerHTML+='<span style="color:var(--muted)">arreglo de '+r.arr.length+' elementos'+(typeof r.arr[0]==='boolean'?' (bool)':'')+'</span>'; }
+      else if(r.mat){ out.innerHTML='<div class="mini2">'+r.mat.map(row=>'<div class="cells">'+cellsHTML(row)+'</div>').join('')+'</div>'; expr.innerHTML+='<span style="color:var(--muted)">shape (2, 3)</span>'; }
+      else { out.innerHTML='<div class="scalar">'+esc(r.val instanceof Number&&Number.isInteger(+r.val)?(+r.val)+'.0':show(r.val))+'</div>'; expr.innerHTML+='<span style="color:var(--muted)">un solo valor</span>'; }
+      note.textContent='💬 '+nt;
+      if(!S.flags['ex_'+k]){ S.flags['ex_'+k]=true; save(); } if(count()>=10) flag('explorer','Explorador'); addXP('ex:'+k,2); });
+    ops.appendChild(b); });
+  count(); RESET_HOOKS.push(count);
+})();
+
+/* ===================== Navegante de ejes ===================== */
+(function(){
+  const M=[[3,8,1,6],[7,2,9,4],[5,5,0,8]], R=M.length, C=M[0].length;
+  const g=document.getElementById('axGrid'), ops=document.getElementById('axOps'), expr=document.getElementById('axExpr'), note=document.getElementById('axNote');
+  function draw(hl,cls){ let h='<div class="axm" style="grid-template-columns:auto repeat('+C+',1fr)"><div></div>'+M[0].map((_,c)=>'<div class="mh">col '+c+'</div>').join('');
+    M.forEach((row,f)=>{ h+='<div class="mh">fila '+f+'</div>'+row.map((v,c)=>'<div class="mc '+((hl&&hl(f,c))?(typeof cls==='function'?cls(f,c):cls):'')+'">'+v+'</div>').join(''); }); g.innerHTML=h+'</div>'; }
+  const sumc=c=>M.reduce((s,r)=>s+r[c],0), sumr=f=>M[f].reduce((s,x)=>s+x,0);
+  const pal=['h0','h1','h2','h3'];
+  const OPS=[
+    ['m.shape',()=>{draw(null);return '(3, 4)';},'3 filas y 4 columnas.'],
+    ['m[1, 2]',()=>{draw((f,c)=>f===1&&c===2,'sel');return '9';},'Un elemento: fila 1, columna 2.'],
+    ['m[1]',()=>{draw((f)=>f===1,'sel');return '['+M[1].join(' ')+']';},'Una fila completa.'],
+    ['m[:, 2]',()=>{draw((f,c)=>c===2,'sel');return '['+M.map(r=>r[2]).join(' ')+']';},'Todas las filas de la columna 2.'],
+    ['m[0:2, 1:3]',()=>{draw((f,c)=>f<2&&c>=1&&c<3,'sel');return '[[8 1]\n [2 9]]';},'Submatriz: filas 0–1 y columnas 1–2.'],
+    ['m.sum(axis=0)',()=>{draw(()=>true,(f,c)=>pal[c%4]);return '['+[0,1,2,3].map(sumc).join(' ')+']';},'axis=0 baja por cada columna: un resultado por columna (mismo color = misma suma).'],
+    ['m.sum(axis=1)',()=>{draw(()=>true,(f)=>pal[f%4]);return '['+[0,1,2].map(sumr).join(' ')+']';},'axis=1 recorre cada fila: un resultado por fila.'],
+    ['m.sum()',()=>{draw(()=>true,'sel');return String([0,1,2].map(sumr).reduce((a,b)=>a+b,0));},'Sin axis: todos los elementos.'],
+    ['m.max(axis=1)',()=>{draw((f,c)=>M[f][c]===Math.max(...M[f]),'sel');return '['+M.map(r=>Math.max(...r)).join(' ')+']';},'El mayor de cada fila.'],
+    ['m.argmax(axis=0)',()=>{draw((f,c)=>{const col=M.map(r=>r[c]);return col.indexOf(Math.max(...col))===f;},'sel');return '['+[0,1,2,3].map(c=>{const col=M.map(r=>r[c]);return col.indexOf(Math.max(...col));}).join(' ')+']';},'En qué FILA está el mayor de cada columna.'],
+    ['m > 5',()=>{draw((f,c)=>M[f][c]>5,'sel');return '['+M.map(r=>'['+r.map(x=>x>5?' True':'False').join(' ')+']').join('\n ')+']';},'Una máscara del mismo tamaño que la matriz.'],
+    ['m[m > 5]',()=>{draw((f,c)=>M[f][c]>5,'sel');return '['+M.flat().filter(x=>x>5).join(' ')+']';},'Filtrar una matriz da un arreglo 1D (recorrido por filas).'],
+    ['m.T',()=>{draw(null);return '['+M[0].map((_,c)=>'['+M.map(r=>r[c]).join(' ')+']').join('\n ')+']';},'La transpuesta: las filas se vuelven columnas (shape (4, 3)).']
+  ];
+  OPS.forEach(([lab,fn,nt],k)=>{ const b=document.createElement('button'); b.className='btn ghost mono'; b.textContent=lab;
+    b.addEventListener('click',()=>{ ops.querySelectorAll('.btn').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+      const r=fn(); expr.innerHTML=esc(lab)+'  →<pre style="margin:6px 0 0">'+esc(r)+'</pre>';
+      note.textContent='💬 '+nt; if(!S.flags['ax_'+k]){S.flags['ax_'+k]=true; save();} addXP('ax:'+k,3);
+      if(OPS.every((_,j)=>S.flags['ax_'+j])) flag('axes','Navegante de ejes'); });
+    ops.appendChild(b); });
+  draw(null);
+})();
+
+/* ===================== Arma el programa ===================== */
+makeParsons({root:'parsons',xp:15,onAll:()=>flag('builder','Ensamblador'),puzzles:[
+  {id:'p1',title:'1 · IVA vectorizado',goal:'Calcula el total con IVA de tres precios sin ciclos.',
+   lines:['import numpy as np','precios = np.array([1000, 2500, 400])','con_iva = precios * 1.19','print(con_iva.sum())']},
+  {id:'p2',title:'2 · Filtrar aprobados',goal:'Cuenta las notas aprobadas y calcula su promedio.',
+   lines:['import numpy as np','notas = np.array([4.5, 2.8, 3.6, 1.9])','aprobadas = notas[notas >= 3.0]','print(len(aprobadas), aprobadas.mean())']},
+  {id:'p3',title:'3 · Totales de una matriz',goal:'Calcula el total de cada fila y de cada columna.',
+   lines:['import numpy as np','m = np.array([[1, 2, 3], [4, 5, 6]])','por_fila = m.sum(axis=1)','por_columna = m.sum(axis=0)','print(por_fila, por_columna)'],
+   valid:[[0,1,2,3,4],[0,1,3,2,4]]}
+]});
+
+/* ===================== Motor Python (Pyodide) ===================== */
+const qp=new URLSearchParams(location.search);
+const PYO_BASE=qp.get('pyo')||'https://cdn.jsdelivr.net/pyodide/v314.0.7/full/';
+const RUN_TIMEOUT=10000;
+const PKGS=(new URLSearchParams(location.search).get('nopkg')?[]:(CFG.packages||[]));
+const statusEl=document.getElementById('pyStatus');
+function setStatus(t){statusEl.textContent=t;}
+const WORKER_SRC = `
+let py=null;
+self.onmessage = async (e)=>{
+  const m=e.data;
+  if(m.type==='init'){
+    try{
+      const mod = await import(m.base+'pyodide.mjs');
+      py = await mod.loadPyodide({indexURL:m.base});
+      if(m.packages&&m.packages.length) await py.loadPackage(m.packages);
+      py.runPython(m.harness);
+      self.postMessage({type:'ready', version: py.runPython("import sys; sys.version.split()[0]")});
+    }catch(err){ self.postMessage({type:'fail', error:String(err)}); }
+  } else if(m.type==='run'){
+    let r;
+    try{
+      py.globals.set('S_', m.src); py.globals.set('I_', py.toPy(m.inputs)); py.globals.set('E_', m.echo);
+      const res = py.runPython('__run_user(S_, I_, E_)'); r=res.toJs(); res.destroy();
+      self.postMessage({type:'result', id:m.id, out:r[0], etype:r[1], err:r[2], line:(r[3]==null?null:r[3])});
+    }catch(err){ self.postMessage({type:'result', id:m.id, out:'', etype:'ErrorInterno', err:String(err), line:null}); }
+  }
+};`;
+const PY={mode:null, worker:null, ready:null, pend:{}, seq:0, main:null, version:''};
+function initWorker(){
+  return new Promise((resolve,reject)=>{
+    let w;
+    try{ w=new Worker(URL.createObjectURL(new Blob([WORKER_SRC],{type:'text/javascript'})),{type:'module'}); }catch(e){ reject(e); return; }
+    const to=setTimeout(()=>{ try{w.terminate();}catch(e){} reject(new Error('timeout de carga')); },240000);
+    w.onmessage=(e)=>{ const m=e.data;
+      if(m.type==='ready'){ clearTimeout(to); PY.version=m.version; resolve(w); }
+      else if(m.type==='fail'){ clearTimeout(to); try{w.terminate();}catch(_){} reject(new Error(m.error)); }
+      else if(m.type==='result'){ const p=PY.pend[m.id]; if(p){ delete PY.pend[m.id]; clearTimeout(p.to); p.resolve(m); } } };
+    w.onerror=(ev)=>{ clearTimeout(to); reject(new Error(ev.message||'error del worker')); };
+    w.postMessage({type:'init', base:PYO_BASE, harness:HARNESS_PY, packages:PKGS});
+  });
+}
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('No se pudo descargar '+src));document.head.appendChild(s);});}
+async function initMain(){
+  if(!window.loadPyodide) await loadScript(PYO_BASE+'pyodide.js');
+  const py=await window.loadPyodide({indexURL:PYO_BASE});
+  if(PKGS.length) await py.loadPackage(PKGS);
+  py.runPython(HARNESS_PY); PY.version=py.runPython("import sys; sys.version.split()[0]"); return py;
+}
+function ensurePy(){
+  if(PY.ready) return PY.ready;
+  setStatus('🟡 Cargando Python'+(PKGS.length?' y NumPy':'')+'… (solo la primera vez)');
+  PY.ready=(async()=>{
+    try{ PY.worker=await initWorker(); PY.mode='worker'; }
+    catch(e1){ console.warn('Worker no disponible, uso hilo principal:',e1);
+      try{ PY.main=await initMain(); PY.mode='main'; }
+      catch(e2){ PY.ready=null; setStatus('🔴 No se pudo cargar Python'); throw e2; } }
+    setStatus('🟢 Python '+PY.version+' listo'); return true;
+  })();
+  return PY.ready;
+}
+function runPy(src,inputs,echo){
+  return ensurePy().then(()=>{
+    if(PY.mode==='main'){
+      const g=PY.main.globals; g.set('S_',src); g.set('I_',PY.main.toPy(inputs)); g.set('E_',echo);
+      const res=PY.main.runPython('__run_user(S_, I_, E_)'); const r=res.toJs(); res.destroy();
+      return {out:r[0],etype:r[1],err:r[2],line:r[3]==null?null:r[3]};
+    }
+    return new Promise(resolve=>{
+      const id=++PY.seq;
+      const to=setTimeout(()=>{ delete PY.pend[id]; try{PY.worker.terminate();}catch(e){} PY.worker=null; PY.ready=null; PY.mode=null;
+        setStatus('🟡 Python se reinició'); resolve({timeout:true,out:'',etype:'',err:'',line:null}); },RUN_TIMEOUT);
+      PY.pend[id]={resolve,to};
+      PY.worker.postMessage({type:'run',id,src,inputs,echo});
+    });
+  });
+}
+
+const HINTS={
+  SyntaxError:'Python no entiende cómo está escrito. Revisa paréntesis y corchetes (una matriz es np.array([[…], […]])), las comas y los dos puntos de for/while/if.',
+  IndentationError:'Sangría incorrecta: el cuerpo de cada ciclo o if lleva 4 espacios más que su línea de encabezado.',
+  ModuleNotFoundError:'No se encontró el módulo. Escribe exactamente: import numpy as np (en tu computador, instálalo antes con pip install numpy).',
+  NameError:'Usas un nombre que no existe: ¿escribiste import numpy as np al inicio? ¿Usas np. antes de cada función de NumPy? ¿Creaste el arreglo antes de usarlo?',
+  TypeError:'Tipos incompatibles. Las formas van entre paréntesis dobles: np.zeros((2, 3)). Una lista de Python no se multiplica por un decimal: conviértela con np.array().',
+  ValueError:'Los arreglos no encajan o una condición es ambigua. Para operar elemento a elemento deben tener el mismo tamaño (revisa .shape). Para combinar condiciones usa & y | con paréntesis, no and/or: (a > 1) & (a < 5).',
+  IndexError:'Índice fuera del arreglo: en una matriz m[fila, columna] cada índice va de 0 a tamaño − 1 (revisa m.shape).',
+  AttributeError:'Ese valor no tiene el método que usas. ¿Es una lista de Python en vez de un arreglo de NumPy? Conviértela con np.array().',
+  ZeroDivisionError:'Estás dividiendo entre cero. Revisa el caso especial antes de dividir.',
+  EOFError:'Tu programa pidió más datos con input() de los que hay en Entradas. ¿Reconoce el valor para terminar?',
+  CicloInfinito:'Ciclo infinito: la condición del while nunca se vuelve False. Revisa que algo dentro del ciclo cambie la variable de la condición.',
+  DemasiadaSalida:'Tu programa imprimió muchísimo: casi siempre es un ciclo infinito con un print adentro.'
+};
+
+/* ===================== Laboratorio UI ===================== */
+const codeEl=document.getElementById('code'), stdinEl=document.getElementById('stdin'), termEl=document.getElementById('term'),
+      checkEl=document.getElementById('checkRes'), selEl=document.getElementById('retoSel'), infoEl=document.getElementById('retoInfo');
+let currentReto='libre';
+function draftKey(id){return CFG.draft+id;}
+function getDraft(id){try{return localStorage.getItem(draftKey(id));}catch(e){return null;}}
+function setDraft(id,v){try{localStorage.setItem(draftKey(id),v);}catch(e){}}
+function retoById(id){return RETOS.find(r=>r.id===id);}
+function tagHTML(r){return '<span style="font-size:.72rem;color:#2a2000;background:var(--py);padding:2px 9px;border-radius:999px;font-weight:700">'+r.tag+'</span> ';}
+function renderRetoSel(){
+  const keep=currentReto; selEl.innerHTML='';
+  const o0=document.createElement('option'); o0.value='libre'; o0.textContent='🧪 Zona libre'; selEl.appendChild(o0);
+  const groups={};
+  RETOS.forEach(r=>{ let g=groups[r.lvl]; if(!g){ g=groups[r.lvl]=document.createElement('optgroup'); g.label=LVNAME[r.lvl]; selEl.appendChild(g); }
+    const o=document.createElement('option'); o.value=r.id; o.textContent=(S.retos[r.id]?'✅ ':'🎯 ')+r.t+'  (+'+r.xp+' XP)'; g.appendChild(o); });
+  selEl.value=keep;
+}
+function renderInfo(r){ infoEl.innerHTML=tagHTML(r)+'<b>'+r.t+'</b>'+(S.retos[r.id]?' <span style="color:var(--good);font-weight:700">✅ superado</span>':'')+'<br>'+r.d; }
+function loadReto(id, extra){
+  currentReto=id; selEl.value=id; checkEl.innerHTML='';
+  const r=retoById(id), btnC=document.getElementById('checkBtn'), btnS=document.getElementById('solBtn');
+  if(!r){
+    const ex=EXTRA_CODE[extra||'libre']||EXTRA_CODE.libre;
+    infoEl.innerHTML='<b>🧪 Zona libre.</b> Experimenta con lo que quieras: prueba los ejemplos de la clase, cambia los datos y observa cuántas vueltas da cada ciclo.';
+    codeEl.value = extra? ex.code : (getDraft('libre') ?? ex.code); stdinEl.value = extra? ex.stdin : EXTRA_CODE.libre.stdin;
+    btnC.disabled=true; btnS.disabled=true;
+  } else {
+    renderInfo(r); codeEl.value = getDraft(r.id) ?? r.starter; stdinEl.value = r.tests[0].in.join('\n');
+    btnC.disabled=false; btnS.disabled=false;
+  }
+  termEl.innerHTML='<span class="sys">La salida de tu programa aparecerá aquí.</span>';
+}
+selEl.addEventListener('change',()=>loadReto(selEl.value));
+codeEl.addEventListener('input',()=>setDraft(currentReto,codeEl.value));
+codeEl.addEventListener('keydown',e=>{
+  if(e.key==='Tab'){ e.preventDefault(); const s=codeEl.selectionStart, en=codeEl.selectionEnd;
+    codeEl.value=codeEl.value.slice(0,s)+'    '+codeEl.value.slice(en); codeEl.selectionStart=codeEl.selectionEnd=s+4; setDraft(currentReto,codeEl.value); }
+  if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){ e.preventDefault(); doRun(); }
+});
+function termWrite(r){
+  termEl.innerHTML='';
+  if(r.timeout){ termEl.innerHTML='<span class="err">⏱ Tu programa tardó demasiado y se detuvo (¿quedó en un ciclo infinito?).</span>'; return; }
+  const o=document.createElement('span'); o.textContent=r.out; termEl.appendChild(o);
+  if(r.etype){
+    const e=document.createElement('span'); e.className='err';
+    e.textContent=(r.out&&!r.out.endsWith('\n')?'\n':'')+'❌ '+r.etype+(r.line?' en la línea '+r.line:'')+': '+r.err+'\n'; termEl.appendChild(e);
+    const h=HINTS[r.etype]; if(h){ const hh=document.createElement('span'); hh.className='hint'; hh.textContent='💡 '+h; termEl.appendChild(hh); }
+  } else if(!r.out){ termEl.innerHTML='<span class="sys">(El programa terminó sin mostrar nada. ¿El ciclo no dio ninguna vuelta? ¿Te faltó un print()?)</span>'; }
+}
+async function doRun(){
+  const btn=document.getElementById('runBtn'); btn.disabled=true; checkEl.innerHTML='';
+  termEl.innerHTML='<span class="sys">Ejecutando…</span>';
+  try{
+    const inputs=stdinEl.value===''?[]:stdinEl.value.replace(/\r/g,'').split('\n');
+    const r=await runPy(codeEl.value, inputs, true);
+    termWrite(r);
+    if(!r.timeout && !r.etype && r.out){ if(!S.flags.firstRun){ S.flags.firstRun=true; save(); renderXP(); setTimeout(()=>pop('🏅 Insignia: '+CFG.firstRunLabel),1600); } addXP('firstrun',10); }
+  }catch(e){
+    termEl.innerHTML='<span class="err">No se pudo cargar Python en este navegador ('+esc(e.message)+').\n</span><span class="hint">💡 Revisa tu conexión a internet y recarga la página. También puedes usar IDLE, Thonny o Google Colab.</span>';
+  }finally{ btn.disabled=false; }
+}
+document.getElementById('runBtn').addEventListener('click',doRun);
+document.getElementById('resetCode').addEventListener('click',()=>{ const r=retoById(currentReto); codeEl.value=r?r.starter:EXTRA_CODE.libre.code; setDraft(currentReto,codeEl.value); });
+document.getElementById('solBtn').addEventListener('click',()=>{
+  const r=retoById(currentReto); if(!r)return;
+  if(!S.retos[r.id] && !S.sol[r.id] && !confirm('Si ves la solución antes de superar el reto, ganarás la mitad de XP. ¿Ver la solución?'))return;
+  S.sol[r.id]=true; save(); codeEl.value=r.sol+'\n'; setDraft(r.id,codeEl.value);
+});
+document.getElementById('checkBtn').addEventListener('click',async()=>{
+  const r=retoById(currentReto); if(!r)return;
+  const btn=document.getElementById('checkBtn'); btn.disabled=true;
+  checkEl.innerHTML='<div class="row">🧪 Probando tu programa con '+r.tests.length+' casos…</div>';
+  let rows='', all=true;
+  try{
+    for(let i=0;i<r.tests.length;i++){
+      const tc=r.tests[i], res=await runPy(codeEl.value+(tc.call?'\n'+tc.call:''), tc.in, false);
+      let ok=false, why='';
+      if(res.timeout){why='tardó demasiado';}
+      else if(res.etype){ const nl=codeEl.value.split('\n').length; why=(tc.call&&res.line>nl)?('al llamar directamente a tu función → '+res.etype+': '+res.err+(/NoneType/.test(res.err)?' (¿tu función devuelve el resultado con return?)':'')):(res.etype+(res.line?' (línea '+res.line+')':'')+': '+res.err);}
+      else { const miss=tc.must.some(p=>!new RegExp(p,'i').test(res.out)), extra=(tc.not||[]).some(p=>new RegExp(p,'i').test(res.out));
+        ok=!miss&&!extra; if(miss) why='falta algo de lo esperado'; else if(extra) why='muestra algo que no debería (¿una vuelta de más? ¿un mensaje repetido?)'; }
+      all=all&&ok;
+      rows+='<div class="row '+(ok?'ok':'no')+'">'+(ok?'✅':'❌')+' <b>Caso '+(i+1)+'</b> · entradas: <code>'+esc(tc.in.join(' | '))+'</code> → se espera: <code>'+esc(tc.show)+'</code>'+(tc.callShow?'<br><small>🔧 Además se llama a tus funciones: <code>'+esc(tc.callShow)+'</code></small>':'')+
+        (ok?'':'<br><small>Tu salida: <code>'+esc((res.out||'').trim().replace(/\n/g,' ⏎ ')||'(vacía)')+'</code> — '+esc(why)+'</small>')+'</div>';
+    }
+    checkEl.innerHTML=rows;
+    if(all){
+      const first=!S.retos[r.id]; S.retos[r.id]=true; save();
+      const base=r.xp||30, amt=S.sol[r.id]?Math.round(base/2):base;
+      addXP('reto:'+r.id,amt,r.t.replace(/^[★\s]*\d*\.?\s*/,''));
+      checkEl.innerHTML+='<div class="win">🎉 ¡Reto superado!'+(first?' Nuevo ✅ en tu lista.':'')+' '+(S.sol[r.id]?'(XP reducida por ver la solución)':'')+'</div>';
+      renderRetoSel(); renderTaller(); renderXP(); renderInfo(r);
+    }
+  }catch(e){ checkEl.innerHTML='<div class="row no">No se pudo ejecutar Python ('+esc(e.message)+'). Revisa tu conexión.</div>'; }
+  finally{ btn.disabled=false; }
+});
+function openInLab(idOrExtra){ showTab('lab'); if(retoById(idOrExtra)) loadReto(idOrExtra); else loadReto('libre', idOrExtra); }
+document.querySelectorAll('[data-try]').forEach(b=>b.addEventListener('click',()=>openInLab(b.dataset.try)));
+
+RESET_HOOKS.push(()=>{renderRetoSel(); renderTaller(); loadReto(currentReto);});
+/* ===================== Taller ===================== */
+function renderTaller(){
+  const box=document.getElementById('ejercicios'); box.innerHTML='';
+  let lastLv=0;
+  RETOS.forEach(r=>{
+    if(r.lvl!==lastLv){ lastLv=r.lvl; const done=RETOS.filter(x=>x.lvl===r.lvl&&S.retos[x.id]).length, tot=RETOS.filter(x=>x.lvl===r.lvl).length;
+      const h=document.createElement('h3'); h.className='lvh'; h.innerHTML=LVNAME[r.lvl]+' <span>· '+r.xp+' XP c/u · '+done+'/'+tot+' superados</span><small>'+LVDESC[r.lvl]+'</small>'; box.appendChild(h); }
+    const c=document.createElement('div'); c.className='ex';
+    c.innerHTML='<span class="tag">'+r.tag+'</span>'+(S.retos[r.id]?'<span class="done">✅ superado en el laboratorio</span>':'')+
+      '<h3>'+r.t+'</h3><p>'+r.d+'</p><div class="btns"><button class="btn py">🐍 Resolver en el laboratorio</button></div>'+
+      '<details><summary>Ver solución en Python</summary><pre>'+esc(r.sol)+'</pre></details>';
+    c.querySelector('button').addEventListener('click',()=>openInLab(r.id));
+    c.querySelector('details').addEventListener('toggle',function(){ if(this.open && !S.retos[r.id] && !S.sol[r.id]){ S.sol[r.id]=true; save(); } });
+    box.appendChild(c);
+  });
+}
+renderRetoSel(); renderTaller(); loadReto('libre');
+
+</script>
+<!-- lp1-home:start -->
+<a id="lp1-home" href="index.html" title="Volver al índice de lecciones" aria-label="Volver al índice de lecciones"><span class="i" aria-hidden="true">🏠</span><span class="t">Lecciones</span></a>
+<style>
+#lp1-home{position:fixed;left:max(16px,env(safe-area-inset-left));bottom:max(16px,env(safe-area-inset-bottom));z-index:2147483000;display:inline-flex;align-items:center;gap:7px;padding:9px 15px 9px 12px;border-radius:999px;background:#1f4f7a;color:#fff!important;border:1px solid rgba(63,208,192,.65);box-shadow:0 6px 18px rgba(0,0,0,.35);font:600 14px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;text-decoration:none!important;letter-spacing:.2px;transition:transform .15s,background .15s}
+#lp1-home:hover{background:#2b6a9e;transform:translateY(-2px)}
+#lp1-home:focus-visible{outline:3px solid #3fd0c0;outline-offset:3px}
+#lp1-home .i{font-size:17px;line-height:1}
+@media (max-width:600px){#lp1-home{padding:0;width:46px;height:46px;justify-content:center}#lp1-home .t{display:none}#lp1-home .i{font-size:20px}}
+@media print{#lp1-home{display:none!important}}
+</style>
+<!-- lp1-home:end -->
+</body>
+</html>
